@@ -17,7 +17,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	//TODO ResourceBundlify
 	public static final Unit SKELETON_WARRIOR = new ModifiableUnit("X")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
-			.setDescription("Once a noble knight in service of his kingdom, the skeleton warrior once again takes up the blade for the lich king.")
+			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
 			.setImgPath("resources/images/x.png")
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.addActiveAbilities(ActiveAbility.SWORD)

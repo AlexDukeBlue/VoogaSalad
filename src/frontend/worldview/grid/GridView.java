@@ -24,7 +24,7 @@ import javafx.scene.layout.Region;
  * Created 3/29/2017
  */
 public class GridView extends BaseUIManager<Region> {
-	private static final double MIN = 10, MAX = 100, SCALE = 0.50;
+	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 
 	private ScrollPane myScrollPane;
 	private Group cellViewObjects;
