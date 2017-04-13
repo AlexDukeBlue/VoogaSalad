@@ -38,7 +38,7 @@ public interface Terrain extends VoogaEntity {
 			.setDefaultMoveCost(2)
 			.addDefensiveModifiers(new InteractionModifier<>("Default Mountain Terrain Defense", (originalValue, agent, target, game) -> game.random() < .5 ? originalValue : 0, "Units have 50% evasion on Mountain terrain by default."))
 			.setDescription("Rugged mountains that are difficult to navigate through")
-			.setImgPath("resources/images/testImage.jpg");
+			.setImgPath("resources/images/EverestfromKalarPatarcrop.JPG");
 	Terrain FORTIFIED = new ModifiableTerrain("Fortified")
 			.setDefaultMoveCost(1)
 			.addDefensiveModifiers(new InteractionModifier<>("Default Fortified Terrain Defense", (originalValue, agent, target, game) -> game.random() < .3 ? originalValue : 0, "Units have 70% evasion on Fortified terrain by default."))

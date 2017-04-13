@@ -90,7 +90,7 @@ public class CellView extends BaseUIManager<Parent>{
 		polygon.setStrokeWidth(10);
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().stream().forEach(unit -> {
-			ImageView imageView = new ImageView(new Image("resources/images/skeleton.jpg"));
+			ImageView imageView = new ImageView(new Image(unit.getImgPath()));
 			imageView.setFitWidth(50);
 			imageView.setFitHeight(50);
 			if (polygon.getPoints().size() >= 2){
