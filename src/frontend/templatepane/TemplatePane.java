@@ -4,17 +4,16 @@ import java.util.Collection;
 
 import backend.cell.Terrain;
 import backend.unit.Unit;
-import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 /**
  * @author Faith Rodriguez
@@ -61,7 +60,7 @@ public class TemplatePane extends BaseUIManager<Region> {
 		for (VoogaEntity sprite : sprites) {
 			VBox spriteContent = new VBox();
 			// fix getName and getImage once communication sorted
-			Text spriteName = new Text(sprite.getName());
+			Label spriteName = new Label(sprite.getName());
 			spriteContent.getChildren().add(spriteName);
 			setOnDrag(spriteContent, sprite, spriteType);
 			setOnClick(spriteContent, sprite, spriteType);
