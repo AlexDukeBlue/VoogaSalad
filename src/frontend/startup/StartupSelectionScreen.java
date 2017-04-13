@@ -1,5 +1,15 @@
 package frontend.startup;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Objects;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 import backend.util.AuthoringGameState;
 import controller.CommunicationController;
 import controller.Controller;
@@ -17,12 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.*;
 
 public class StartupSelectionScreen extends VBox {
 

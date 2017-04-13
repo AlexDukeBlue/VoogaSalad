@@ -1,16 +1,5 @@
 package frontend.menubar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import backend.util.AuthoringGameState;
 import backend.util.io.XMLSerializer;
 import controller.CommunicationController;
@@ -23,15 +12,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
@@ -45,7 +41,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
 			@Override
 			public void changed(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldLanguage,
-					ResourceBundle newLanguage) {
+			                    ResourceBundle newLanguage) {
 				populateMenuBar();
 			}
 		});

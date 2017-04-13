@@ -2,7 +2,8 @@ package frontend.wizards.selection_strategies;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.Locale;
+import java.util.ResourceBundle;
 import frontend.util.BaseUIManager;
 import frontend.wizards.wizard_pages.WizardPage;
 import javafx.beans.property.BooleanProperty;
@@ -24,6 +25,8 @@ public abstract class BaseSelectionStrategy<T> extends BaseUIManager<Region> imp
 	private VBox titleDescriptionBox;
 	private Label title;
 	private Label description;
+	private ResourceBundle bundle = ResourceBundle.getBundle("frontend.wizards.selection_strategies.properties/BaseSelection");
+	//, new Locale("es", "MX")
 	private ObservableList<WizardPage> pages;
 
 	public BaseSelectionStrategy() {
@@ -136,5 +139,12 @@ public abstract class BaseSelectionStrategy<T> extends BaseUIManager<Region> imp
 		});
 		this.pages.addAll(pages);
 	}
-
+	
+	protected ResourceBundle getBundle(){
+		return bundle;
+	}
+	protected String getString(String string){
+		return bundle.getString(string);
+	}
 }
+

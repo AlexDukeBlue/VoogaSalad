@@ -34,9 +34,9 @@ public class NewGameSelectionStrategy extends BaseSelectionStrategy<AuthoringGam
 	}
 
 	private void initialize() {
-		gameNamePage = new ImageNameDescriptionPage("Create New Game", "Enter the icon, name, and description");
-		boardNamePage = new ImageNameDescriptionPage("Create New Board",
-				"Enter the background image, board name, and board description.");
+		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
+		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"),
+				getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
 	}
