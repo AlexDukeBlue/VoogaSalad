@@ -18,6 +18,14 @@ import javafx.scene.layout.VBox;
 /**
  * @author Faith Rodriguez
  *         Created 3/29/2017
+ *         
+ *         This class is responsible for creating the sidebar that contains dropdown boxes of all of the created
+ *         units and terrains.  These units, when clicked, appear in a Display Pane on the bottom of the screen 
+ *         with their relevant information and included abilities.
+ *         When dragged, these sprites can be added to the game board in development board
+ *         
+ *         This class is dependent on the DetailPane.java class and the CellView.java classes to make the clicking
+ *         and dragging features work
  */
 
 public class TemplatePane extends BaseUIManager<Region> {
@@ -86,12 +94,13 @@ public class TemplatePane extends BaseUIManager<Region> {
 		createCollabsible("Unit", units);
 	}
 
-	public void updateUnits(Collection<? extends Unit> unitsIn) {
+	private void updateUnits(Collection<? extends Unit> unitsIn) {
 		//sprites will (I am fairly certain) contain all available sprites, not just the new ones
 		units = unitsIn;
 	}
 
-	public void updateTerrains(Collection<? extends Terrain> terrainsIn) {
+
+	private void updateTerrains(Collection<? extends Terrain> terrainsIn) {
 		terrains = terrainsIn;
 	}
 	

@@ -12,6 +12,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
+/**
+ * NumericInputRow extends the BaseUIManager and is a UI structure used in the creation of
+ * many wizard pages used to create objects that allows users to specify a numeric value of interaction between two
+ * objects "name" and "label"
+ * @author Andreas
+ *
+ */
 public class NumericInputRow extends BaseUIManager<Region> {
 
 	private HBox myNumericInputRow;

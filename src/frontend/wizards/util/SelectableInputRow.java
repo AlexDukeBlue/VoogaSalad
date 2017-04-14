@@ -9,6 +9,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
+/**
+ * SelectableInputRow extends the BaseUIManager and is a UI structure used in the creation of
+ * many wizard pages used to create objects, that allows the user to select items with check boxes
+ * @author Andreas
+ *
+ */
 public class SelectableInputRow extends BaseUIManager<Region> {
 
 	HBox hbox;

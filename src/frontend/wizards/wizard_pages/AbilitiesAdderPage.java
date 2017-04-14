@@ -12,6 +12,11 @@ import frontend.wizards.util.VerticalTableInputView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 
+/**
+ * The WizardPage for letting users add abilities
+ * @author Andreas
+ *
+ */
 public class AbilitiesAdderPage extends WizardPage {
 
 	private VerticalTableInputView table;

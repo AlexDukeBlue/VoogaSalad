@@ -110,36 +110,59 @@ public class CellView extends BaseUIManager<Parent> {
 	CoordinateTuple getCoordinateTuple() {
 		return cellModel.getLocation();
 	}
-
-	double getX() {
-		return polygon.getLayoutX();
-	}
-
-	void setX(double x) {
+	
+	
+	/**
+	 * sets the x position of a polygon
+	 * @param x
+	 */
+	public void setX(double x){
 		polygon.setLayoutX(x);
 	}
-
-	double getY() {
-		return polygon.getLayoutY();
-	}
-
-	void setY(double y) {
+	
+	/**
+	 * sets the y position of a polygon
+	 * @param y
+	 */
+	public void setY(double y){
 		polygon.setLayoutY(y);
 	}
+	
 
-	Polygon getPolygon() {
+	/**
+	 * returns the polygon that serves as the shape of the cell
+	 * @return polygon
+	 */
+	public Polygon getPolygon(){
 		return polygon;
 	}
-
-	void setPolygon(Polygon polygon) {
-		if (group.getChildren().contains(polygon)) {
+	
+	/**
+	 * sets the group to contain a different polygon
+	 * @param cellModel
+	 * an instance of a cell
+	 */
+	public void setPolygon(Polygon polygon){
+		if (group.getChildren().contains(polygon)){
 			group.getChildren().remove(polygon);
 		}
 		this.polygon = polygon;
 		update(cellModel);
 	}
-
-	private void update(Cell cellModel) {
+	
+	/**
+	 * passes a cell's location to the controller for the backend to use, and determine its validity
+	 */
+	public void update(){
+		update(getController().getAuthoringGameState().getGrid().get(cellModel.getLocation()));
+	}
+	
+	/**
+	 * sets a cell's visual shape to a polygon as described in the following method
+	 * @param cellModel
+	 * an instance of a cell
+	 */
+	public void update(Cell cellModel){
 		this.cellModel = cellModel;
 		group.getChildren().clear();
 		Image polygonImage = new Image(cellModel.getTerrain().getImgPath());
@@ -160,4 +183,30 @@ public class CellView extends BaseUIManager<Parent> {
 
 	}
 
+	
+	/**
+	 * sets an action event when a cell is clicked on
+	 */
+	public void setOnCellClick(Consumer<CellView> consumer){
+		polygon.setOnMouseClicked(event -> consumer.accept(this));
+	}
+	
+	/**
+	 * Adds a new copy of a sprite to the gamestate by sending controller request
+	 * @param sprite
+	 * either a terrain or unit
+	 */
+	public void add(VoogaEntity sprite){
+		Modifier<GameplayState> toSend = game -> {
+			game.getGrid().get(cellModel.getLocation()).arrive((Unit) sprite.copy(), game);
+			return game;
+		};
+		getController().sendModifier(toSend);
+	}
+	
+	@Override
+	public Parent getObject() {
+		return group;
+	}
+	
 }

@@ -1,7 +1,3 @@
-/**
- * Holds a grid to be displayed in the development and player GUI. It can have Sprites added to a particular cell or 
- * have all cells updated after something occurs in the game.
- */
 package frontend.worldview.grid;
 
 import java.util.ArrayList;
@@ -19,8 +15,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 
 /**
- * Andreas
- * @author Stone Mathers
+ * Holds a grid to be displayed in the development and player GUI inside a ScrollPane. 
+ * It can have Sprites added to a particular cell or have all cells updated after something occurs in the game.
+ * Contains a group of CellView objects and a collection of CellView's, when update method is called, it can tell
+ * all of the units/cells to update themselves
+ * 
+ * @author Andreas Santos
  * Created 3/29/2017
  */
 public class GridView extends BaseUIManager<Region> {
@@ -43,6 +43,9 @@ public class GridView extends BaseUIManager<Region> {
 		cellViews = new ArrayList<CellView>();
 	}
 	
+	/**
+	 * instructs CellViews to update themselves
+	 */
 	public void update(){
 		cellViewObjects.getChildren().clear();
 
@@ -67,6 +70,10 @@ public class GridView extends BaseUIManager<Region> {
 		myScrollPane.setContent(cellViewObjects);
 	}
 	
+	/**
+	 * set on clicked method for each cell
+	 * @param consumer
+	 */
 	public void setOnCellClick(Consumer<CellView> consumer){
 		cellViews.stream().forEach(cellView -> cellView.setOnCellClick(consumer));
 	}
