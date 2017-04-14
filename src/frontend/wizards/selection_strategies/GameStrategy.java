@@ -6,14 +6,20 @@ import backend.util.AuthoringGameState;
 import frontend.wizards.wizard_pages.GridInstantiationPage;
 import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
 
-public class NewGameSelectionStrategy extends BaseSelectionStrategy<AuthoringGameState>
-		implements WizardSelectionStrategy<AuthoringGameState> {
+/**
+ * GameStrategy implements the SelectionStrategy interface in order to allow the
+ * user to instantiate new AuthoringGameStates.
+ * 
+ * @author Dylan Peters
+ *
+ */
+public class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStrategy<AuthoringGameState> {
 
 	private ImageNameDescriptionPage gameNamePage;
 	private ImageNameDescriptionPage boardNamePage;
 	private GridInstantiationPage gridInstantiationPage;
 
-	public NewGameSelectionStrategy() {
+	public GameStrategy() {
 		initialize();
 	}
 
@@ -35,8 +41,7 @@ public class NewGameSelectionStrategy extends BaseSelectionStrategy<AuthoringGam
 
 	private void initialize() {
 		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
-		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"),
-				getString("CreateNewBoardDesc"));
+		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
 	}
