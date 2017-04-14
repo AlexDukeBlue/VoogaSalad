@@ -15,6 +15,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * The WizardPage for creating and specifying a grid for a game
+ * @author Andreas
+ *
+ */
 public class GridInstantiationPage extends WizardPage {
 	private static final String DEFAULT_TITLE = "Set Grid Attributes";
 	private static final String DEFAULT_DESCRIPTION = "Choose the default cell type for the grid.";

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package frontend.wizards.util;
 
 import frontend.util.CellShape;
@@ -11,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 /**
+ * SettingNode for the shape of cells in the game
  * @author Stone Mathers
  * Created 4/5/2017
  */

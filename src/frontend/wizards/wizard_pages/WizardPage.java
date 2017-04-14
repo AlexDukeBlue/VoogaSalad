@@ -6,6 +6,13 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Region;
 
+/**
+ * WizardPage is an abstract class who's sub-classes implement the full UI's of a single
+ * page dialogue in a specific wizard. It is composed with wizards.util package classes and also knows if it 
+ * can Next.
+ * @author Andreas
+ *
+ */
 public abstract class WizardPage extends BaseUIManager<Region> {
 
 	private BooleanProperty canNext;
