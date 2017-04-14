@@ -8,6 +8,11 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 
+/**
+ * a horizontal implementation of the TableInputView
+ * @author Andreas
+ *
+ */
 public class HorizontalTableInputView extends TableInputView {
 
 	public HorizontalTableInputView() {

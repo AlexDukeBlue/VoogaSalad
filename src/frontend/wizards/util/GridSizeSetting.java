@@ -1,6 +1,3 @@
-/**
- * 
- */
 package frontend.wizards.util;
 
 import javafx.scene.control.TextField;
@@ -8,6 +5,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 /**
+ * SettingNode for the Grid Size
  * @author Stone Mathers
  * Created 4/5/2017
  */

@@ -12,6 +12,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 
+/**
+ * TableInputView extends the BaseUIManager and is a UI structure used in the creation of
+ * many wizard pages used to create objects that creates a table that other UI utils can go into in a
+ * table format
+ * @author Andreas
+ *
+ */
 public abstract class TableInputView extends BaseUIManager<Region> {
 
 	private ObservableList<BaseUIManager<? extends Parent>> children;

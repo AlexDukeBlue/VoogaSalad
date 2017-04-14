@@ -11,6 +11,11 @@ import frontend.wizards.util.VerticalTableInputView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 
+/**
+ * The WizardPage for setting the move cost of different types of units across a terrain
+ * @author Andreas
+ *
+ */
 public class TerrainMovePointPage extends WizardPage {
 	private static final String DEFAULT_TITLE = "Set Movement Points";
 	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for each unit to cross the terrain type.";

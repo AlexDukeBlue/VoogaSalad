@@ -1,6 +1,3 @@
-/**
- * 
- */
 package frontend.wizards.util;
 
 import java.util.ResourceBundle;
@@ -10,6 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
 /**
+ * SettingNode extends the BaseUIManager and is a UI structure used in the creation of
+ * many wizard pages used to create objects.
  * @author Stone Mathers
  * Created 4/5/2017
  */
