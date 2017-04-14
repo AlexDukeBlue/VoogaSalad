@@ -154,13 +154,52 @@
 
 20. Tavo: 1234
 
-21. Alex: 5678
+21. Alex: The user wants to write a BiConsumer to set a turn event:
 
-22. Alex: qwer
+    a. The user clicks a button to pop-up an authoring code-box. 
+    
+    b. The user writes their desired code in java. Technically, the user can write whatever they want as long as it compiles in java.
+    
+    c. The String gets sent to the back-end. 
+    
+    d. The Java script-engine will write the string to a file and compile it at run-time and return execute the code.
+    
+    e. If a bi-consumer is written, the user can specify that it’s a turn event through the naming of the object or a simple button on the front-end.
 
-23. Alex: tyui
+22. Alex: The user wants to save the state of their game (both for editing and playing):
+    
+    a. The user presses a save button on the front-end. 
 
-24. Alex: op[]
+    b. The controller gets this input and contacts the server through a request.
+    
+    c. The server takes the gamestate that is on server-side and with the help of the game-engine saves that gamestate to XML through the use of an XStream XMLSerializer.
+    
+    d. Once the game is saved to a file, all unit-templates, terrains, cells, players, etc. is saved to the file to be loaded.
+
+23. Alex: The user wants to choose from a variety of preset rules:
+
+    a. The user interacts with the UI to bring up a pane that displays all pre-set and already set rules. 
+
+    b. From this pane, the user can by clicking (without needing to code), choose from a variety of default rules.
+    
+    c. It is necessary to keep in mind that the rules pane will contain few rules as turn-based strategy is a little too broad to really rely on pre-sets.
+
+    d. There will be a button that the user can click to better learn about scripting though.
+
+24. Alex: The user loses connection and wants to quickly join a game again:
+
+    a. The user fixes their connectivity issues.
+
+    b. The user then runs the program again and connects to the same server.
+
+    c. The server sends the user’s client the most recent game-state.
+
+    d. The game-engine loads the game-state through XML.
+
+    e. The client rejoins the game if they retain the same user-name because all the information was saved server-side.
+
+    f. This can already be seen in the chat-client, as chat history is saved to a server.
+
 
 25. Noah: User creates a new unit in the frontend
 
