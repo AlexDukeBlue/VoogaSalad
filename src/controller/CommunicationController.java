@@ -9,12 +9,15 @@ import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
+import backend.util.io.XMLSerializer;
 import frontend.util.Updatable;
 import util.net.Modifier;
 import util.net.ObservableClient;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.Executors;
 
 /**
  * @author Created by ncp14
@@ -24,20 +27,20 @@ import java.util.Collection;
  */
 public class CommunicationController implements Controller {
 	private ReadonlyGameplayState mGameState;
-	private ObservableClient<? extends ReadonlyGameplayState> mClient;
+	private ObservableClient<ReadonlyGameplayState> mClient;
 	private Collection<Updatable> thingsToUpdate;
 
-	public <U extends ReadonlyGameplayState> CommunicationController(U gameState, Collection<Updatable> thingsToUpdate) {
+	public CommunicationController(ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
 		this.mGameState = gameState;
-//		try {
-//			mClient = new ObservableClient<T>("127.0.0.1", 10023, new XMLSerializer<T>(), new XMLSerializer<T>(), Duration.ofSeconds(60));
-//			mClient.addListener(e -> updateGameState(e));
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-//		Executors.newSingleThreadExecutor().submit(mClient);
-//		mClient.addToOutbox(gameState);
-		this.thingsToUpdate = new ArrayList<Updatable>();
+		try {
+			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
+			mClient.addListener(e -> updateGameState(e));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		this.thingsToUpdate = new ArrayList<>();
+		mClient.addToOutbox(gameState);
+		Executors.newSingleThreadExecutor().submit(mClient);
 		if (thingsToUpdate != null) {
 			this.thingsToUpdate.addAll(thingsToUpdate);
 		}
@@ -54,7 +57,7 @@ public class CommunicationController implements Controller {
 		updateAll();
 	}
 
-	public void setClient(ObservableClient<? extends ReadonlyGameplayState> client) {
+	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
 		this.mClient = client;
 		updateAll();
 	}
@@ -96,10 +99,10 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
-//		mClient.addToOutbox(modifier);
+		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 		//lol this is so unsafe
-		mGameState = modifier.modify((U) mGameState);
-		updateAll();
+//		mGameState = modifier.modify((U) mGameState);
+//		updateAll();
 	}
 
 	@Override

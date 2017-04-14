@@ -3,6 +3,7 @@ package backend.unit.properties;
 import backend.unit.Unit;
 import backend.util.GameplayState;
 import backend.util.ImmutableVoogaObject;
+import backend.util.PassiveAbility;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author Created by th174 on 3/28/2017.
  */
-public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModifier<T>> {
+public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModifier<T>> implements PassiveAbility,Serializable {
 	//TODO: ResourceBundlify all this shit
 	public transient static final InteractionModifier<?> DUMMY = new InteractionModifier<>("Dummy", (originalValue, agent, target, game) -> originalValue, "Dummy modifier that doesn't change anything", "Nothing.png");
 	public transient static final InteractionModifier<Double> NO_EFFECT = new InteractionModifier<>("No effect", (originalValue, agent, target, game) -> 0.0, "Literally nothing", "The_abyss_stares_back.png");

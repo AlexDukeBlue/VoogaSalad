@@ -2,12 +2,13 @@ package backend.unit.properties;
 
 import backend.util.ModifiableVoogaObject;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * @author Created by th174 on 4/6/2017.
  */
-public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVoogaObject<ModifiableUnitStat<T>> implements UnitStat<T> {
+public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVoogaObject<ModifiableUnitStat<T>> implements UnitStat<T>, Serializable {
 	//TODO ResourceBundlify
 	//For units
 	public transient static final ModifiableUnitStat<Double> HITPOINTS = new ModifiableUnitStat<Double>("Hitpoints")

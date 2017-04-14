@@ -2,15 +2,15 @@ package backend.grid;
 
 import backend.util.ImmutableVoogaObject;
 
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> {
+public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> implements Serializable {
 	//TODO ResourceBundlify this
 	public transient static final BoundsHandler INFINITE_BOUNDS = new BoundsHandler("Infinite Bounds", (input, grid) -> input, "Allows grid to expand to accommodate out of bounds coordinates.");
 	public transient static final BoundsHandler FINITE_BOUNDS = new BoundsHandler("Finite Bounds",
@@ -27,19 +27,19 @@ public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> {
 			"Wraps out of bounds coordinates to the opposite side of a square grid.",
 			"Torus.png");
 
-	private final BiFunction<CoordinateTuple, GameBoard, CoordinateTuple> boundsGetter;
+	private final CoordinateMapper boundsGetter;
 
-	public BoundsHandler(String name, BiFunction<CoordinateTuple, GameBoard, CoordinateTuple> boundsGetter, String description) {
+	public BoundsHandler(String name, CoordinateMapper boundsGetter, String description) {
 		this(name, boundsGetter, description, "");
 	}
 
-	public BoundsHandler(String name, BiFunction<CoordinateTuple, GameBoard, CoordinateTuple> boundsGetter, String description, String imgPath) {
+	public BoundsHandler(String name, CoordinateMapper boundsGetter, String description, String imgPath) {
 		super(name, description, imgPath);
 		this.boundsGetter = boundsGetter;
 	}
 
 	public CoordinateTuple getMappedCoordinate(GameBoard grid, CoordinateTuple input) {
-		return boundsGetter.apply(input, grid);
+		return boundsGetter.mapCoordinate(input, grid);
 	}
 
 	@Override
@@ -50,6 +50,11 @@ public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> {
 	@Deprecated
 	public static Collection<BoundsHandler> getPredefinedBoundsHandlers() {
 		return getPredefined(BoundsHandler.class);
+	}
+
+	@FunctionalInterface
+	public interface CoordinateMapper extends Serializable {
+		CoordinateTuple mapCoordinate(CoordinateTuple input, GameBoard grid);
 	}
 
 	private static CoordinateTuple fitToBound(CoordinateTuple input, GameBoard.GridBounds bounds) {

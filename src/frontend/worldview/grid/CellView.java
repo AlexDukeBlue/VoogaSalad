@@ -2,7 +2,6 @@ package frontend.worldview.grid;
 
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
-import backend.unit.Unit;
 import backend.util.GameplayState;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -71,8 +70,9 @@ public class CellView extends BaseUIManager<Parent> {
 	 * @param sprite sprite to copy and add to the cell
 	 */
 	public void add(VoogaEntity sprite) {
+		CoordinateTuple location = cellModel.getLocation();
 		Modifier<? extends GameplayState> toSend = game -> {
-			game.getGrid().get(cellModel.getLocation()).arrive((Unit) sprite.copy(), game);
+			game.getGrid().get(location).arrive(sprite.copy(), game);
 			return game;
 		};
 		getController().sendModifier(toSend);

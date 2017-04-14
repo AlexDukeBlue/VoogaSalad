@@ -135,12 +135,12 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	}
 
 	@Deprecated
-	public static Collection<ModifiableTriggeredEffect> getPredefinedUnitPassives() {
+	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredUnitAbilities() {
 		return Arrays.asList(REGENERATION, HEALER, SHADOWSTALKER, POISONED);
 	}
 
 	@Deprecated
-	public static Collection<ModifiableTriggeredEffect> getPredefinedCellPassives() {
+	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredCellAbilities() {
 		return Arrays.asList(FULL_HEAL, POISON, ON_FIRE);
 	}
 }

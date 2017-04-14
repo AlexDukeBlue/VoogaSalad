@@ -28,7 +28,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	public static final String LOCALHOST = "127.0.0.1";
 	private final Serializer<? super T> serializer;
 	private final Unserializer<? extends T> unserializer;
-	private final Collection<Consumer<T>> stateUpdateListeners;
+	private final Collection<Consumer<? super T>> stateUpdateListeners;
 	private final Duration timeout;
 	private final Map<Class<? extends Request>, Consumer<? super Request>> requestHandlers;
 	private final Map<Class<? extends Request>, Predicate<? super Request>> requestValidators;
@@ -193,7 +193,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	 * @param modifier Modifier and sent to the remote host
 	 * @return Returns a request that contains a modification of the state
 	 */
-	public final Request getRequest(Modifier<T> modifier) {
+	public final Request getRequest(Modifier<? super T> modifier) {
 		return new ModifierRequest<>(modifier);
 	}
 
@@ -235,7 +235,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	 *
 	 * @param stateUpdateListener The listener to register
 	 */
-	public final void addListener(Consumer<T> stateUpdateListener) {
+	public final void addListener(Consumer<? super T> stateUpdateListener) {
 		stateUpdateListeners.add(stateUpdateListener);
 	}
 
@@ -244,7 +244,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	 *
 	 * @param stateUpdateListener The listener to remove
 	 */
-	public final void removeListener(Consumer<T> stateUpdateListener) {
+	public final void removeListener(Consumer<? super T> stateUpdateListener) {
 		stateUpdateListeners.remove(stateUpdateListener);
 	}
 

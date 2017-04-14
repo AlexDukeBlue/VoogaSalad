@@ -1,5 +1,6 @@
 package backend.grid;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -8,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public final class CoordinateTuple implements Iterable<Integer> {
+public final class CoordinateTuple implements Iterable<Integer>, Serializable {
 	public transient static final CoordinateTuple EMPTY = new CoordinateTuple();
 	private static final Map<Integer, Shape> shapeDimensions = new HashMap<>();
 

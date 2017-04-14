@@ -7,13 +7,14 @@ import backend.player.Player;
 import backend.unit.properties.*;
 import backend.util.*;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/30/2017.
  */
-public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
+public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit, Serializable {
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("X")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
@@ -30,8 +31,6 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
 			.addActiveAbilities(ActiveAbility.BOW);
-	
-	
 
 	private final ActiveAbilitySet activeAbilities;
 	private final TriggeredAbilitySet triggeredAbilities;
@@ -128,7 +127,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public final Map<Terrain, Integer> getTerrainMoveCosts() {
 		return Collections.unmodifiableMap(terrainMoveCosts);
 	}
-	
+
 	public final ModifiableUnit setTerrainMoveCosts(Map<Terrain, Integer> terrainMoveCosts) {
 		this.terrainMoveCosts.clear();
 		terrainMoveCosts.keySet().stream()
