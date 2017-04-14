@@ -19,6 +19,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+/**
+ * The WizardPage for creating any object that needs to include an image, name, and/or description
+ * @author Andreas
+ *
+ */
 public class ImageNameDescriptionPage extends WizardPage {
 	private static final String DEFAULT_TITLE = "Set Image, Name, and Description";
 	private static final String DEFAULT_DESCRIPTION = "You must choose a file for the image and set the name. The description is optional.";

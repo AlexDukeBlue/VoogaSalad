@@ -8,6 +8,11 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 
+/**
+ * a vertical implementation of the TableInputView
+ * @author Andreas
+ *
+ */
 public class VerticalTableInputView extends TableInputView {
 
 	public VerticalTableInputView() {

@@ -9,13 +9,20 @@ import frontend.wizards.wizard_pages.AbilitiesAdderPage;
 import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
 import frontend.wizards.wizard_pages.TerrainMovePointPage;
 
-public class NewUnitSelectionStrategy extends BaseSelectionStrategy<Unit> {
+/**
+ * UnitStrategy implements the SelectionStrategy interface in order to allow the
+ * user to instantiate new Units.
+ * 
+ * @author Dylan Peters
+ *
+ */
+public class UnitStrategy extends BaseStrategy<Unit> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
 	private AbilitiesAdderPage abilitiesAdderPage;
 	private TerrainMovePointPage terrainMovePointPage;
 
-	public NewUnitSelectionStrategy(AuthoringGameState gameState) {
+	public UnitStrategy(AuthoringGameState gameState) {
 		initialize(gameState);
 	}
 

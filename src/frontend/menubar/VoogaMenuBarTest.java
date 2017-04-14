@@ -5,19 +5,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class VoogaMenuBarTest extends Application {
+class VoogaMenuBarTest extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane bp = new BorderPane();
 		VoogaMenuBar voogaMenuBar = new VoogaMenuBar();
 		bp.setTop(voogaMenuBar.getObject());
-		ButtonManager buttonManager = new ButtonManager();
-//		buttonManager.getLanguage().bind(voogaMenuBar.getLanguage());
-//		buttonManager.getStyleSheet().bind(voogaMenuBar.getStyleSheet());
-		voogaMenuBar.getLanguage().addListener((observable, oldValue, newValue) -> buttonManager.setLanguage(newValue));
-		voogaMenuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> buttonManager.setStyleSheet(newValue));
-		bp.setCenter(buttonManager.getObject());
 		primaryStage.setScene(new Scene(bp));
 		primaryStage.show();
 	}

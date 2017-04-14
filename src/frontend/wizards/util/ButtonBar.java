@@ -12,6 +12,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
+/**
+ * ButtonBar extends the BaseUIManager and is a UI structure used in the creation of
+ * many wizard pages used to create objects that creates a bar of buttons
+ * @author Andreas
+ *
+ */
 public class ButtonBar extends BaseUIManager<Region> {
 
 	private HBox hbox;

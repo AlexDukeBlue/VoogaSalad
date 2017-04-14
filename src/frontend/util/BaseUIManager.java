@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 
+import backend.util.ReadonlyGameplayState;
 import controller.Controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -51,8 +52,7 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 
 	private ObjectProperty<ResourceBundle> language;
 	private ObjectProperty<String> styleSheet;
-	private Controller controller;
-//	private ObservableQueue<Modifier<AuthoringGameState>> requests;
+	private Controller<? extends ReadonlyGameplayState> controller;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
@@ -61,8 +61,8 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 	public BaseUIManager() {
 		this(null);
 	}
-	
-	public BaseUIManager(Controller controller){
+
+	public BaseUIManager(Controller<? extends ReadonlyGameplayState> controller) {
 		language = new SimpleObjectProperty<ResourceBundle>();
 		language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<String>();
@@ -73,25 +73,16 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 				getObject().getStylesheets().add(newValue);
 			}
 		});
-//		requests = new ObservableQueue<>();
 		setController(controller);
 	}
-	
-	public void setController(Controller controller){
+
+	public void setController(Controller<? extends ReadonlyGameplayState> controller) {
 		this.controller = controller;
 	}
-	
-	public Controller getController(){
+
+	public Controller getController() {
 		return controller;
 	}
-
-//	public ObservableQueue<Modifier<AuthoringGameState>> getRequests() {
-//		return requests;
-//	}
-//
-//	public void addRequest(Modifier<AuthoringGameState> request) {
-//		requests.add(request);
-//	}
 
 	/**
 	 * Gets an ObjectProperty containing the ResourceBundle that this class uses
@@ -121,6 +112,15 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 	 */
 	public ObjectProperty<String> getStyleSheet() {
 		return styleSheet;
+	}
+
+	/**
+	 * Tells BaseUIManager to update when the state of the program has changed.
+	 * The default behavior is empty. Subclasses can add more behavior by
+	 * Overriding the update method.
+	 */
+	public void update() {
+
 	}
 
 	/**
@@ -182,10 +182,6 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 	 */
 	protected String createDefaultStyleSheet() {
 		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(DEFAULT_STYLE_KEY);
-	}
-	
-	public void update(){
-		
 	}
 
 }

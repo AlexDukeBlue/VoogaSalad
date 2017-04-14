@@ -2,8 +2,8 @@ package frontend.wizards.selection_strategies;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.ResourceBundle;
+
 import frontend.util.BaseUIManager;
 import frontend.wizards.wizard_pages.WizardPage;
 import javafx.beans.property.BooleanProperty;
@@ -18,22 +18,40 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-public abstract class BaseSelectionStrategy<T> extends BaseUIManager<Region> implements WizardSelectionStrategy<T> {
+/**
+ * BaseStrategy implements default behavior for the SelectionStrategy interface.
+ * It prevents duplicated code in the classes that extend it by implementing the
+ * behavior that is common to all of them: having multiple pages that are
+ * flipped through when the user clicks the next, previous, and finish button.
+ * 
+ * @author Dylan Peters
+ *
+ * @param <T>
+ *            type of Object instantiated by BaseStrategy
+ */
+public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
 	private BooleanProperty canPrevious, canNext, canFinish;
 	private BorderPane borderPane;
 	private VBox titleDescriptionBox;
 	private Label title;
 	private Label description;
-	private ResourceBundle bundle = ResourceBundle.getBundle("frontend.wizards.selection_strategies.properties/BaseSelection");
-	//, new Locale("es", "MX")
+	private ResourceBundle bundle = ResourceBundle
+			.getBundle("frontend.wizards.selection_strategies.properties/BaseSelection");
+	// , new Locale("es", "MX")
 	private ObservableList<WizardPage> pages;
 
-	public BaseSelectionStrategy() {
+	/**
+	 * Instantiates the BaseStrategy with an empty set of pages.
+	 */
+	public BaseStrategy() {
 		this(new ArrayList<>());
 	}
 
-	public BaseSelectionStrategy(Collection<WizardPage> pages) {
+	/**
+	 * Instantiates the BaseStrategy with the pages specified.
+	 */
+	public BaseStrategy(Collection<WizardPage> pages) {
 		initialize(pages);
 	}
 
@@ -139,12 +157,12 @@ public abstract class BaseSelectionStrategy<T> extends BaseUIManager<Region> imp
 		});
 		this.pages.addAll(pages);
 	}
-	
-	protected ResourceBundle getBundle(){
+
+	protected ResourceBundle getBundle() {
 		return bundle;
 	}
-	protected String getString(String string){
+
+	protected String getString(String string) {
 		return bundle.getString(string);
 	}
 }
-
