@@ -1,3 +1,9 @@
+/**
+ * 
+ * 
+ * @author Faith Rodriguez
+ * Created 4/9/2017
+ */
 package frontend.detailpane;
 
 import java.util.Collection;
