@@ -52,7 +52,7 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 
 	private ObjectProperty<ResourceBundle> language;
 	private ObjectProperty<String> styleSheet;
-	private Controller<? extends ReadonlyGameplayState> controller;
+	private Controller controller;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
@@ -62,7 +62,7 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 		this(null);
 	}
 
-	public BaseUIManager(Controller<? extends ReadonlyGameplayState> controller) {
+	public BaseUIManager(Controller controller) {
 		language = new SimpleObjectProperty<ResourceBundle>();
 		language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<String>();
@@ -76,7 +76,7 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 		setController(controller);
 	}
 
-	public void setController(Controller<? extends ReadonlyGameplayState> controller) {
+	public void setController(Controller controller) {
 		this.controller = controller;
 	}
 
