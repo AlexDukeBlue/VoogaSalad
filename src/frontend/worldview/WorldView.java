@@ -34,7 +34,7 @@ public class WorldView extends BaseUIManager<Region> {
 	 *            the controller whose state will be displayed within the
 	 *            WorldView
 	 */
-	public WorldView(Controller<? extends ReadonlyGameplayState> controller) {
+	public WorldView(Controller controller) {
 		setController(controller);
 		initialize();
 	}
