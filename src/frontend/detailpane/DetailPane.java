@@ -21,6 +21,17 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+
+/**
+ * 
+ * @author Faith Rodriguez
+ * 
+ * This class displays details about the units, as well as lets the user change aspects of a sprite 
+ * and activate a unit or terrain's abilities.
+ * 
+ * This class is dependent on TemplatePane and CellView classes for its ActionEvents to work effectively
+ *
+ */
 public class DetailPane extends BaseUIManager<Region>{
 
 	VBox pane = new VBox();
@@ -47,6 +58,13 @@ public class DetailPane extends BaseUIManager<Region>{
 		}));
 	}
 
+	/**
+	 * Updates the content of the detail pane to information relating to the VoogaEntity sprite
+	 * @param sprite 
+	 * A sprite that has just been clicked on in the TemplatePane
+	 * @param spriteType
+	 * A string revealing whether the sprite is a unit or terrain
+	 */
 	public void setContent(VoogaEntity sprite, String spriteType) {
 		clearContent();
 		addString("Name", sprite.getName());
