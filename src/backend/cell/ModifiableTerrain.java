@@ -17,12 +17,11 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 4/11/2017.
  */
 public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> implements Terrain {
-
 	public static final int DEFAULT_DEFAULT_MOVE_COST = 1;
-	private int defaultMoveCost;
 	private final TriggeredAbilitySet triggeredAbilities;
 	private final OffensiveModifierSet offensiveModifiers;
 	private final DefensiveModifierSet defensiveModifiers;
+	private int defaultMoveCost;
 
 	public ModifiableTerrain(String name) {
 		this(name, DEFAULT_DEFAULT_MOVE_COST, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), "", "");
@@ -119,6 +118,5 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 				getImgPath()
 		);
 	}
-
 
 }

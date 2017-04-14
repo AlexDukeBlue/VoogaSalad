@@ -1,13 +1,10 @@
 package backend.util;
 
 import backend.unit.Unit;
-import backend.unit.properties.InteractionModifier;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Created by th174 on 3/31/2017.

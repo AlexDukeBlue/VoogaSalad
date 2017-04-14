@@ -41,4 +41,6 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 
 	@Override
 	ReadonlyGameplayState copy();
+
+	boolean isAuthoringMode();
 }

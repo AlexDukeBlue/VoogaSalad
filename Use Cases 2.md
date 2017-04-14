@@ -198,11 +198,9 @@
 
     54. Asks user for name, description, and img
 
-    55. New 
+    55. Allow user to script effect
 
-    56. Timmy: asdf
-
-31. Timmy: jkl;
+31. Timmy: User 
 
 32. Sam: asdf
 
@@ -250,3 +248,13 @@
 
         7. If the unit is dragged off the screen or to a non-legal cell, then the unit will remain in its cell (as if not moved)
 
+40. Timmy: User disconnects in the middle of the game
+    
+    1. User reconnects
+    
+    2. Client sends error request to server 
+    
+    3. Server responds with the game state, including all of user's previous moves
+    
+    4. User picks up where they left off
+    

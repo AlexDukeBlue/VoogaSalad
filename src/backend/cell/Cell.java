@@ -7,7 +7,6 @@ import backend.unit.Unit;
 import backend.util.GameplayState;
 import backend.util.ModifiableTriggeredEffect;
 import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
 
 import java.util.Collection;
 import java.util.Map;

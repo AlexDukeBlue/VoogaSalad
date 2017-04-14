@@ -1,14 +1,13 @@
 package frontend.worldview;
 
-import java.util.function.Consumer;
-
-import backend.util.ReadonlyGameplayState;
 import controller.Controller;
 import frontend.util.BaseUIManager;
 import frontend.worldview.grid.CellView;
 import frontend.worldview.grid.GridView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+
+import java.util.function.Consumer;
 
 /**
  * WorldView sets up and displays a Region object that contains a grid of
@@ -34,7 +33,7 @@ public class WorldView extends BaseUIManager<Region> {
 	 *            the controller whose state will be displayed within the
 	 *            WorldView
 	 */
-	public WorldView(Controller<? extends ReadonlyGameplayState> controller) {
+	public WorldView(Controller controller) {
 		setController(controller);
 		initialize();
 	}

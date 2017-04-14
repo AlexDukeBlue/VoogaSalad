@@ -105,11 +105,6 @@ public class ModifiableCell implements Cell {
 		return this;
 	}
 
-	private void processTriggers(Event event, GameplayState gameState) {
-		occupants.values().forEach(unit -> getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, event, gameState)));
-		getTerrain().removeTriggeredAbilitiesIf(TriggeredEffect::isExpired);
-	}
-
 	public ModifiableCell addOccupants(Unit... units) {
 		Arrays.stream(units).forEach(unit -> occupants.put(unit.getName(), unit));
 		return this;
@@ -209,13 +204,18 @@ public class ModifiableCell implements Cell {
 		return new ModifiableCell(getLocation(), getShape(), getTerrain());
 	}
 
-	@Deprecated
-	public static Collection<ModifiableCell> getPredefinedCells() {
-		return getPredefined(ModifiableCell.class);
-	}
-
 	@Override
 	public String toString() {
 		return "\n" + terrain.toString() + " @ " + getLocation() + "\tOccupants: " + getOccupants().size();
+	}
+
+	private void processTriggers(Event event, GameplayState gameState) {
+		occupants.values().forEach(unit -> getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, event, gameState)));
+		getTerrain().removeTriggeredAbilitiesIf(TriggeredEffect::isExpired);
+	}
+
+	@Deprecated
+	public static Collection<ModifiableCell> getPredefinedCells() {
+		return getPredefined(ModifiableCell.class);
 	}
 }
