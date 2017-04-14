@@ -91,8 +91,8 @@ public class CellView extends BaseUIManager<Parent>{
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().stream().forEach(unit -> {
 			ImageView imageView = new ImageView(new Image(unit.getImgPath()));
-			imageView.setFitWidth(50);
-			imageView.setFitHeight(50);
+			imageView.setFitWidth(75);
+			imageView.setFitHeight(75);
 			if (polygon.getPoints().size() >= 2){
 				imageView.setX(polygon.getPoints().get(0));
 				imageView.setY(polygon.getPoints().get(1));

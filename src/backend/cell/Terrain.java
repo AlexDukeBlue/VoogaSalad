@@ -18,7 +18,7 @@ public interface Terrain extends VoogaEntity {
 	Terrain EMPTY = new ModifiableTerrain("Empty")
 			.setDefaultMoveCost(IMPASSABLE)
 			.setDescription("Literally nothing")
-			.setImgPath("resources/images/blackScreen.jpg");
+			.setImgPath("resources/images/blackScreen.png");
 	Terrain FLAT = new ModifiableTerrain("Flat")
 			.setDefaultMoveCost(1)
 			.addDefensiveModifiers(new InteractionModifier<>("Default Flat Terrain Defense", (originalValue, agent, target, game) -> game.random() < .7 ? originalValue : 0, "Units have 30% evasion on Flat terrain by default."))
