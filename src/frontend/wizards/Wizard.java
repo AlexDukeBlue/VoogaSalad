@@ -44,7 +44,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	protected void finish() {
 		setChanged();
 		notifyObservers(selectionStrategy.finish());
-		clearChanged();
+//		clearChanged();
 		stage.close();
 	}
 

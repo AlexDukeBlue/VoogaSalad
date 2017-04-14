@@ -228,7 +228,6 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	public GameplayState messageTeam(String message, ImmutablePlayer sender) {
 		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.TEAM, sender, message);
 		sender.getTeam().forEach(player -> player.receiveMessage(chatMessage));
-		System.out.println(sender.getTeam().size());
 		return this;
 	}
 

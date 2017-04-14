@@ -1,3 +1,5 @@
+import backend.grid.GridPattern;
+import frontend.startup.StartupScreen;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 
@@ -6,6 +8,8 @@ import util.scripting.VoogaScriptEngineManager;
  */
 public class Test {
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
+		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		String script = "return 5 + 5";
 		long start = System.currentTimeMillis();
 		VoogaScriptEngine engine = VoogaScriptEngineManager.read("lua", script);

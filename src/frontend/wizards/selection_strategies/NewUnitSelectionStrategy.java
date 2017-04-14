@@ -27,7 +27,6 @@ public class NewUnitSelectionStrategy extends BaseSelectionStrategy<Unit> {
 		unit.removeActiveAbilities(unit.getActiveAbilities());
 		unit.addActiveAbilities(abilitiesAdderPage.getSelectedAbilities());
 		unit.setTerrainMoveCosts(terrainMovePointPage.getTerrainMovePoints());
-		System.out.println(unit.toString());
 		return unit;
 	}
 

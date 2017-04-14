@@ -213,6 +213,6 @@ public class ModifiableCell implements Cell {
 
 	@Override
 	public String toString() {
-		return "\n" + super.toString() + " @ " + getLocation();
+		return "\n" + super.toString() + " @ " + getLocation() + getOccupants().size();
 	}
 }

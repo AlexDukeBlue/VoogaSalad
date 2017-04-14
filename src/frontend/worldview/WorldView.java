@@ -18,12 +18,6 @@ public class WorldView extends BaseUIManager<Region> {
 	public WorldView(Controller controller) {
 		setController(controller);
 		initialize();
-		update();
-	}
-
-	@Override
-	public void update() {
-		myGrid.update();
 	}
 
 	@Override

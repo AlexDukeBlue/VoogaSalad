@@ -15,6 +15,7 @@ import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
@@ -35,6 +36,9 @@ public class CellView extends BaseUIManager<Parent>{
 		this.cellModel = cellModel;
 		polygon = new Polygon();
 		group = new Group();
+		group.translateXProperty().bind(polygon.translateXProperty());
+		group.translateYProperty().bind(polygon.translateYProperty());
+		
 		update(cellModel);
 	}
 	
@@ -73,18 +77,29 @@ public class CellView extends BaseUIManager<Parent>{
 		update(cellModel);
 	}
 	
+	public void update(){
+		update(getController().getAuthoringGameState().getGrid().get(cellModel.getLocation()));
+	}
+	
 	public void update(Cell cellModel){
 		this.cellModel = cellModel;
 		group.getChildren().clear();
-		group.getChildren().add(polygon);
 		Image polygonImage = new Image(cellModel.getTerrain().getImgPath());
 		Paint polygonFill = new ImagePattern(polygonImage);
 		polygon.setFill(polygonFill);
 		polygon.setStrokeWidth(10);
+		group.getChildren().add(polygon);
 		cellModel.getOccupants().stream().forEach(unit -> {
-			group.getChildren().add(new UnitView(unit).getObject());
-			System.out.println("added unit");
+			ImageView imageView = new ImageView(new Image(unit.getImgPath()));
+			imageView.setFitWidth(75);
+			imageView.setFitHeight(75);
+			if (polygon.getPoints().size() >= 2){
+				imageView.setX(polygon.getPoints().get(0));
+				imageView.setY(polygon.getPoints().get(1));
+			}
+			group.getChildren().add(imageView);
 		});
+
 	}
 
 	public void setOnCellClick(Consumer<CellView> consumer){
@@ -92,10 +107,8 @@ public class CellView extends BaseUIManager<Parent>{
 	}
 	
 	public void add(VoogaEntity sprite){
-		System.out.println("Creating modifier");
 		Modifier<GameplayState> toSend = game -> {
 			game.getGrid().get(cellModel.getLocation()).arrive((Unit) sprite.copy(), game);
-			System.out.println("Executing modifier");
 			return game;
 		};
 		getController().sendModifier(toSend);

@@ -38,7 +38,6 @@ public abstract class Sprite extends BaseUIManager<Region> {
 	            @Override
 				public void handle(MouseEvent event) {
 	                /* drag was detected, run drag-and-drop gesture*/
-	                System.out.println("onDragDetected");
 	                
 	                /* create dragboard */
 	                Dragboard db = (Dragboard) Dragboard.getSystemClipboard();

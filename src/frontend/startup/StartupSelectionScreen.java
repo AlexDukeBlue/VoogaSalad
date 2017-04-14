@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.Locale;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
@@ -88,7 +86,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	private void createGame(AuthoringGameState state, boolean editable) {
-		Controller control = new CommunicationController(state,null);
+		Controller control = new CommunicationController(state, null);
 		View view = new View(control);
 		control.addToUpdated(view);
 		//myClient.setGameState(state);
@@ -107,7 +105,6 @@ public class StartupSelectionScreen extends VBox {
 		fileChooser.setTitle("Open Resource File");
 		Window stage = null;
 		File file = fileChooser.showOpenDialog(stage);
-		System.out.println(saveOrLoad);
 
 		try {
 
