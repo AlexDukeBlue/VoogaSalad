@@ -24,7 +24,6 @@ import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.TemplatePane;
-import frontend.toolspane.ToolsPane;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
 import javafx.beans.value.ChangeListener;
@@ -39,7 +38,6 @@ public class View extends BaseUIManager<Region> {
 	private BorderPane myBorder;
 	private VoogaMenuBar menuBar;
 	private WorldView worldView;
-	private ToolsPane toolsPane;
 	private DetailPane detailPane;
 	private TemplatePane tempPane;
 
@@ -107,7 +105,7 @@ public class View extends BaseUIManager<Region> {
 	private void initBorderPane() {
 		initPanesAndListeners();
 		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
-				detailPane.getObject(), toolsPane.getObject());
+				detailPane.getObject(), null);
 	}
 
 	/**
@@ -124,7 +122,6 @@ public class View extends BaseUIManager<Region> {
 			}
 		});
 		worldView = new WorldView(getController());
-		toolsPane = new ToolsPane();
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
 	}
@@ -133,7 +130,6 @@ public class View extends BaseUIManager<Region> {
 	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
 	 */
 	private void addSidePanes() {
-		myBorder.setLeft(toolsPane.getObject());
 		myBorder.setRight(tempPane.getObject());
 	}
 

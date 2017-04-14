@@ -14,7 +14,7 @@ import backend.util.AuthoringGameState;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
-import frontend.wizards.NewGameWizard;
+import frontend.wizards.GameWizard;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -73,7 +73,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	private void create() {
-		NewGameWizard wiz = new NewGameWizard();
+		GameWizard wiz = new GameWizard();
 		wiz.addObserver(new Observer() {
 
 			@Override
