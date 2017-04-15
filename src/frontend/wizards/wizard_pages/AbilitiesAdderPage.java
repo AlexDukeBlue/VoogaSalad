@@ -1,16 +1,17 @@
 package frontend.wizards.wizard_pages;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
+import frontend.View;
 import frontend.wizards.util.SelectableInputRow;
 import frontend.wizards.util.VerticalTableInputView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The WizardPage for letting users add abilities
@@ -37,7 +38,7 @@ public class AbilitiesAdderPage extends WizardPage {
 		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).forEach(ability -> {
 			Image image;
 			try {
-				image = new Image(ability.getImgPath());
+				image = View.getImg(ability.getImgPath());
 			} catch (Exception e) {
 				image = null;
 			}

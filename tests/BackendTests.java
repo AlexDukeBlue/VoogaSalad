@@ -40,14 +40,12 @@ public class BackendTests {
 	public void testCoordinateConversion() {
 		GridPattern lol = GridPattern.HEXAGONAL_ADJACENT;
 		GameBoard testBoard = new ModifiableGameBoard("test", ModifiableCell.BASIC_SQUARE_FLAT, 10, 10, BoundsHandler.TOROIDAL_BOUNDS, "", "");
-		System.out.println(testBoard.toString());
 	}
 
 	@Test
 	public void testBoundsHandlers() {
 		GridPattern lol = GridPattern.HEXAGONAL_ADJACENT;
 		GameBoard testBoard = new ModifiableGameBoard("test", ModifiableCell.BASIC_SQUARE_FLAT, 10, 10, BoundsHandler.TOROIDAL_BOUNDS, "", "");
-		System.out.println(testBoard.toString());
 		CoordinateTuple newTuple = BoundsHandler.TOROIDAL_BOUNDS.getMappedCoordinate(testBoard, new CoordinateTuple(14, -4));
 		assertEquals(new CoordinateTuple(4, 6), newTuple);
 	}

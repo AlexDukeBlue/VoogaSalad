@@ -1,7 +1,6 @@
 package frontend.wizards.wizard_pages;
 
-import java.io.File;
-
+import frontend.View;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -19,10 +18,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+import java.io.File;
+
 /**
  * The WizardPage for creating any object that needs to include an image, name, and/or description
- * @author Andreas
  *
+ * @author Andreas
  */
 public class ImageNameDescriptionPage extends WizardPage {
 	private static final String DEFAULT_TITLE = "Set Image, Name, and Description";
@@ -36,13 +37,13 @@ public class ImageNameDescriptionPage extends WizardPage {
 	private String imagePath;
 	private TextField nameField;
 	private TextArea descriptionField;
-	
-	public ImageNameDescriptionPage(){
+
+	public ImageNameDescriptionPage() {
 		this(DEFAULT_TITLE);
 	}
-	
-	public ImageNameDescriptionPage(String title){
-		this(title,DEFAULT_DESCRIPTION);
+
+	public ImageNameDescriptionPage(String title) {
+		this(title, DEFAULT_DESCRIPTION);
 	}
 
 	public ImageNameDescriptionPage(String title, String description) {
@@ -126,7 +127,7 @@ public class ImageNameDescriptionPage extends WizardPage {
 		choose.getExtensionFilters().setAll(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File file = choose.showOpenDialog(null);
 		if (file != null) {
-			imageView.setImage(new Image(file.toURI().toString()));
+			imageView.setImage(View.getImg(file.toURI().toString()));
 			imagePath = file.toURI().toString();
 		}
 	}

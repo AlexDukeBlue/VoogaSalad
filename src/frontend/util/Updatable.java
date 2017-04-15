@@ -22,5 +22,4 @@ public interface Updatable {
 	 * code.
 	 */
 	void update();
-
 }

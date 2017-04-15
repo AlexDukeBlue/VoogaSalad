@@ -11,12 +11,13 @@ import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import frontend.util.Updatable;
+import javafx.application.Platform;
 import util.net.Modifier;
 import util.net.ObservableClient;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 
 /**
@@ -32,19 +33,18 @@ public class CommunicationController implements Controller {
 
 	public CommunicationController(ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
 		this.mGameState = gameState;
-		try {
-			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
-			mClient.addListener(e -> updateGameState(e));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		this.thingsToUpdate = new ArrayList<>();
-		mClient.addToOutbox(gameState);
-		Executors.newSingleThreadExecutor().submit(mClient);
+		this.thingsToUpdate = new CopyOnWriteArrayList<>();
 		if (thingsToUpdate != null) {
 			this.thingsToUpdate.addAll(thingsToUpdate);
 		}
-
+		try {
+			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
+			mClient.addListener(this::updateGameState);
+			setGameState(gameState);
+			Executors.newSingleThreadExecutor().submit(mClient);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -52,24 +52,23 @@ public class CommunicationController implements Controller {
 		return mGameState.getGrid();
 	}
 
-	public <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
+	private <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
 		mGameState = newGameState;
 		updateAll();
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
 		this.mClient = client;
-		updateAll();
 	}
 
-	public ObservableClient<? extends ReadonlyGameplayState> getClient() {
+	public ObservableClient<ReadonlyGameplayState> getClient() {
 		return mClient;
 	}
 
 	@Override
 	public <U extends ReadonlyGameplayState> void setGameState(U gameState) {
-		this.mGameState = gameState;
-		updateAll();
+//		this.mGameState = gameState;
+		getClient().addToOutbox(gameState);
 	}
 
 	@Override
@@ -102,7 +101,6 @@ public class CommunicationController implements Controller {
 		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 		//lol this is so unsafe
 //		mGameState = modifier.modify((U) mGameState);
-//		updateAll();
 	}
 
 	@Override
@@ -141,7 +139,8 @@ public class CommunicationController implements Controller {
 	}
 
 	private void updateAll() {
-		thingsToUpdate.forEach(Updatable::update);
+		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
+		//This one doesn't suffer from multithreading hell
+//		Platform.runLater(() -> thingsToUpdate.forEach(Updatable::update));
 	}
-
 }

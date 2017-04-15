@@ -5,13 +5,12 @@ import backend.grid.CoordinateTuple;
 import backend.util.GameplayState;
 import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.View;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import util.net.Modifier;
 
@@ -31,10 +30,9 @@ import java.util.function.Consumer;
  * @author Dylan Peters
  */
 public class CellView extends BaseUIManager<Parent> {
-
-	Cell cellModel;
-	Polygon polygon;
-	Group group;
+	private Cell cellModel;
+	private Polygon polygon;
+	private Group group;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -50,7 +48,6 @@ public class CellView extends BaseUIManager<Parent> {
 		group = new Group();
 		group.translateXProperty().bind(polygon.translateXProperty());
 		group.translateYProperty().bind(polygon.translateYProperty());
-
 		update(cellModel);
 	}
 
@@ -84,15 +81,6 @@ public class CellView extends BaseUIManager<Parent> {
 	@Override
 	public Parent getObject() {
 		return group;
-	}
-
-	/**
-	 * Returns the coordinateTuple at which the CellView is displayed
-	 *
-	 * @return DisplayCoordinates at which the CellView is displayed.
-	 */
-	CoordinateTuple getCoordinateTuple() {
-		return cellModel.getLocation();
 	}
 
 	/**
@@ -138,7 +126,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 * passes a cell's location to the controller for the backend to use, and determine its validity
 	 */
 	public void update() {
-		update(getController().getAuthoringGameState().getGrid().get(cellModel.getLocation()));
+		update(getController().getGameState().getGrid().get(cellModel.getLocation()));
 	}
 
 	/**
@@ -146,16 +134,14 @@ public class CellView extends BaseUIManager<Parent> {
 	 *
 	 * @param cellModel an instance of a cell
 	 */
-	public void update(Cell cellModel) {
+	private void update(Cell cellModel) {
 		this.cellModel = cellModel;
 		group.getChildren().clear();
-		Image polygonImage = new Image(cellModel.getTerrain().getImgPath());
-		Paint polygonFill = new ImagePattern(polygonImage);
-		polygon.setFill(polygonFill);
+		polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
 		polygon.setStrokeWidth(10);
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
-			ImageView imageView = new ImageView(new Image(unit.getImgPath()));
+			ImageView imageView = new ImageView(View.getImg(unit.getImgPath()));
 			imageView.setFitWidth(75);
 			imageView.setFitHeight(75);
 			if (polygon.getPoints().size() >= 2) {
@@ -165,6 +151,15 @@ public class CellView extends BaseUIManager<Parent> {
 			group.getChildren().add(imageView);
 		});
 
+	}
+
+	/**
+	 * Returns the coordinateTuple at which the CellView is displayed
+	 *
+	 * @return DisplayCoordinates at which the CellView is displayed.
+	 */
+	CoordinateTuple getCoordinateTuple() {
+		return cellModel.getLocation();
 	}
 }
 

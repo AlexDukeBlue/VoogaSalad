@@ -1,18 +1,17 @@
 package frontend.worldview.grid;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
-import backend.grid.GameBoard;
 import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a ScrollPane. 
@@ -59,7 +58,7 @@ public class GridView extends BaseUIManager<Region> {
 		}
 		
 		Map<CoordinateTuple, Cell> backendCells = getController().getGrid().getCells();
-		backendCells.values().stream().forEach(cell -> {
+		backendCells.values().forEach(cell -> {
 			CellView cl = new CellView(cell,getController());
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cellViews.add(cl);
@@ -75,7 +74,7 @@ public class GridView extends BaseUIManager<Region> {
 	 * @param consumer
 	 */
 	public void setOnCellClick(Consumer<CellView> consumer){
-		cellViews.stream().forEach(cellView -> cellView.setOnCellClick(consumer));
+		cellViews.forEach(cellView -> cellView.setOnCellClick(consumer));
 	}
 
 	@Override

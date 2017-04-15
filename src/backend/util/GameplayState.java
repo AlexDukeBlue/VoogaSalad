@@ -26,7 +26,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private final Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements;
 	private int turnNumber;
 	private int currentPlayerNumber;
-	private GameBoard grid;
+	private volatile GameBoard grid;
 	private boolean isAuthoringMode;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {

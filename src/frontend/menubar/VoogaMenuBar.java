@@ -1,17 +1,7 @@
 package frontend.menubar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import backend.util.AuthoringGameState;
+import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import controller.CommunicationController;
 import controller.Controller;
@@ -23,15 +13,20 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
@@ -131,8 +126,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 			Window ownerWindow = null;
 			File file = chooser.showSaveDialog(ownerWindow);
-			Files.write(Paths.get(file.getPath()), ((String) new XMLSerializer<AuthoringGameState>()
-					.serialize(getController().getAuthoringGameState())).getBytes());
+			Files.write(Paths.get(file.getPath()), ((String) new XMLSerializer<>()
+					.serialize(getController().getGameState())).getBytes());
 
 		} catch (IOException i) {
 			i.printStackTrace();
@@ -207,18 +202,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void create() {
 		GameWizard wiz = new GameWizard();
-		wiz.addObserver(new Observer() {
-
-			@Override
-			public void update(Observable o, Object arg) {
-				createGame((AuthoringGameState) arg, true);
-				// stage.close();
-			}
-		});
+		wiz.addObserver((o, arg) -> createGame((AuthoringGameState) arg, true));
 
 	}
 
-	private void createGame(AuthoringGameState state, boolean editable) {
+	private void createGame(ReadonlyGameplayState state, boolean editable) {
 		Controller control = new CommunicationController(state, null);
 		View view = new View(control);
 		// myClient.setGameState(state);

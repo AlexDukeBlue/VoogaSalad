@@ -10,11 +10,11 @@ import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import controller.Controller;
+import frontend.View;
 import frontend.util.ChatLogView;
 import frontend.util.Updatable;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import util.net.Modifier;
@@ -137,7 +137,7 @@ public class VoogaClientMain extends Application {
 
 			}
 		});
-		Scene scene = new Scene(chatLogView.getObject(), 700, 700, new ImagePattern(new Image("resources/images/splash.png")));
+		Scene scene = new Scene(chatLogView.getObject(), 700, 700, new ImagePattern(View.getImg("resources/images/splash.png")));
 		scene.getStylesheets().add("resources/styles/notheme.css");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(true);

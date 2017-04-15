@@ -8,7 +8,11 @@ import util.net.requests.ModifierRequest;
 import util.net.requests.SerializableObjectRequest;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -43,7 +47,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	protected ObservableHost(Serializer<? super T> serializer, Unserializer<? extends T> unserializer, Duration timeout) {
 		this.serializer = serializer;
 		this.unserializer = unserializer;
-		this.stateUpdateListeners = new ArrayList<>();
+		this.stateUpdateListeners = new CopyOnWriteArrayList<>();
 		this.commitIndex = 0;
 		this.timeout = timeout;
 		this.requestHandlers = new HashMap<>();
@@ -249,7 +253,9 @@ public abstract class ObservableHost<T> implements Runnable {
 	}
 
 	private void fireStateUpdatedEvent() {
-		stateUpdateListeners.forEach(e -> e.accept(getState()));
+		if (Objects.nonNull(state)) {
+			stateUpdateListeners.forEach(e -> e.accept(getState()));
+		}
 	}
 
 	/**
