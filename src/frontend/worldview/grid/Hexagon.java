@@ -59,8 +59,8 @@ public class Hexagon extends Polygon {
 		double radius = width / (Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
 
 		for (int i = 1; i < 12; i += 2) {
-			getPoints().add(radius * Math.cos((FULL_CIRCLE / 12) * i));
-			getPoints().add(radius * Math.sin((FULL_CIRCLE / 12) * i));
+			getPoints().add(radius * Math.cos((FULL_CIRCLE / 12) * i+Math.PI));
+			getPoints().add(radius * Math.sin((FULL_CIRCLE / 12) * i+Math.PI));
 		}
 	}
 

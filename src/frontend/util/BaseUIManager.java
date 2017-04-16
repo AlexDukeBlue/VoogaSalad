@@ -10,13 +10,13 @@ import java.util.ResourceBundle;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 
-import backend.util.ReadonlyGameplayState;
 import controller.Controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 /**
@@ -42,7 +42,7 @@ import javafx.scene.Parent;
  * @author Dylan Peters
  *
  */
-public abstract class BaseUIManager<T extends Parent> extends Observable implements ObjectManager<T>, Updatable {
+public abstract class BaseUIManager<T extends Node> extends Observable implements ObjectManager<T>, Updatable {
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -69,8 +69,10 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 		styleSheet.addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				getObject().getStylesheets().clear();
-				getObject().getStylesheets().add(newValue);
+				if (getObject() instanceof Parent) {
+					((Parent) getObject()).getStylesheets().clear();
+					((Parent) getObject()).getStylesheets().add(newValue);
+				}
 			}
 		});
 		setController(controller);
@@ -78,6 +80,11 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 
 	public void setController(Controller controller) {
 		this.controller = controller;
+		if (this.controller != null) {
+			this.controller.removeFromUpdated(this); // prevent this from
+														// getting updated twice
+			this.controller.addToUpdated(this);
+		}
 	}
 
 	public Controller getController() {

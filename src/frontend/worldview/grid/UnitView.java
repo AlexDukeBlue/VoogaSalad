@@ -1,7 +1,11 @@
 package frontend.worldview.grid;
 
 import backend.unit.Unit;
-import javafx.scene.layout.Region;
+import frontend.View;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 /**
  * A Unit object is an movable or immovable character/object that can be placed
@@ -18,6 +22,8 @@ import javafx.scene.layout.Region;
  */
 public class UnitView extends Sprite {
 
+	private ImageView unitView;
+	
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 * 
@@ -25,7 +31,7 @@ public class UnitView extends Sprite {
 	 *            the Unit object that this UnitView will be visualizing
 	 */
 	public UnitView(Unit unitModel) {
-
+		unitView = new ImageView(View.getImg(unitModel.getImgPath()));
 	}
 
 	/**
@@ -34,8 +40,8 @@ public class UnitView extends Sprite {
 	 * @return Region object representing the visualization of the Unit
 	 */
 	@Override
-	public Region getObject() {
-		return null;
+	public ImageView getObject() {
+		return unitView;
 	}
 
 	/**

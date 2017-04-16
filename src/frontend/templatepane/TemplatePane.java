@@ -103,9 +103,8 @@ public class TemplatePane extends BaseUIManager<Region> {
 	private void updateTerrains(Collection<? extends Terrain> terrainsIn) {
 		terrains = terrainsIn;
 	}
-	
-	@Override
-	public void update(){
+
+	public void updateTemplatePane(){
 		updateTerrains(getController().getTerrainTemplates());
 		updateUnits(getController().getUnitTemplates());
 		updatePane();

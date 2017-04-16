@@ -1,17 +1,14 @@
 package frontend.worldview.grid;
 
-import backend.cell.Cell;
-import backend.grid.CoordinateTuple;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Consumer;
+
 import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a ScrollPane. 
@@ -40,31 +37,9 @@ public class GridView extends BaseUIManager<Region> {
 		myScrollPane = new ScrollPane();
 		cellViewObjects = new Group();
 		cellViews = new ArrayList<CellView>();
-	}
-	
-	/**
-	 * instructs CellViews to update themselves
-	 */
-	public void update(){
-		cellViewObjects.getChildren().clear();
-
-		getController();
-		getController().getGrid();
-		getController().getGrid().dimension();
-		if (getController().getGrid().dimension() == 2){
-			myLayoutManager = new SquareLayout();
-		} else {
-			myLayoutManager = new HexagonalManager();
-		}
+		myLayoutManager = new LayoutManagerFactory();
 		
-		Map<CoordinateTuple, Cell> backendCells = getController().getGrid().getCells();
-		backendCells.values().forEach(cell -> {
-			CellView cl = new CellView(cell,getController());
-			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
-			cellViews.add(cl);
-			cellViewObjects.getChildren().add(cl.getObject());
-			getController().addToUpdated(cl);
-		});
+		populateCellViews();
 		
 		myScrollPane.setContent(cellViewObjects);
 	}
@@ -80,5 +55,15 @@ public class GridView extends BaseUIManager<Region> {
 	@Override
 	public Region getObject() {
 		return myScrollPane;
+	}
+	
+	private void populateCellViews(){
+		getController().getGrid().getCells().values().forEach(cell -> {
+			CellView cl = new CellView(cell,getController());
+			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
+			cl.update();
+			cellViews.add(cl);
+			cellViewObjects.getChildren().add(cl.getObject());
+		});
 	}
 }
