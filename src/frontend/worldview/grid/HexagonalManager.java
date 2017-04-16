@@ -19,25 +19,34 @@ public class HexagonalManager implements LayoutManager {
 
 	@Override
 	public void layoutCell(CellView cell, double scaleFactor, double minWidth, double maxWidth) {
-		if(scaleFactor <= 0 || scaleFactor > 1 || minWidth <= 0){
+		if (scaleFactor <= 0 || scaleFactor > 1 || minWidth <= 0) {
 			throw new RuntimeException();
 		}
 		cell.setPolygon(new Hexagon(0, 0, 0));
-		resizeHexagon((Hexagon)cell.getPolygon(), scaleFactor, minWidth, maxWidth);
-		
+		resizeHexagon((Hexagon) cell.getPolygon(), scaleFactor, minWidth, maxWidth);
+
 		double width = minWidth + ((maxWidth - minWidth) * scaleFactor);
-		double radius = width/(Math.cos(FULL_CIRCLE/12) - Math.cos((FULL_CIRCLE/12) * 5));
-		
+		double radius = width / (Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
+
 		CoordinateTuple rectCoord = cell.getCoordinateTuple().convertToRectangular();
-		if((rectCoord.get(Y_INDEX) % 2) == 0){
-			cell.setX(rectCoord.get(X_INDEX) * width);
-		}else{
-			cell.setX((rectCoord.get(X_INDEX) * width) + (width/2));
+		if ((rectCoord.get(Y_INDEX) % 2) == 0) {
+			for (int i = 0; i < cell.getPolygon().getPoints().size(); i+=2){
+				cell.getPolygon().getPoints().set(i,cell.getPolygon().getPoints().get(i)+(rectCoord.get(X_INDEX) * width));
+			}
+//			cell.setX(rectCoord.get(X_INDEX) * width);
+		} else {
+			for (int i = 0; i < cell.getPolygon().getPoints().size(); i+=2){
+				cell.getPolygon().getPoints().set(i,cell.getPolygon().getPoints().get(i)+((rectCoord.get(X_INDEX) * width) + (width / 2)));
+			}
+//			cell.setX((rectCoord.get(X_INDEX) * width) + (width / 2));
 		}
-		cell.setY(rectCoord.get(Y_INDEX) * (1.5 * radius));	
+		for (int i = 1; i < cell.getPolygon().getPoints().size(); i+=2){
+			cell.getPolygon().getPoints().set(i,cell.getPolygon().getPoints().get(i)+(rectCoord.get(Y_INDEX) * (1.5 * radius)));
+		}
+//		cell.setY(rectCoord.get(Y_INDEX) * (1.5 * radius));
 	}
-	
-	private void resizeHexagon(Hexagon hexagon, double scale, double min, double max){
+
+	private void resizeHexagon(Hexagon hexagon, double scale, double min, double max) {
 		hexagon.setPoints(scale, min, max);
 	}
 }
