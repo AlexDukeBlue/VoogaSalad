@@ -1,23 +1,31 @@
 package frontend.templatepane;
 
+import java.util.Collection;
+
 import backend.cell.Terrain;
 import backend.unit.Unit;
-import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
+import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-
-import java.util.Collection;
 
 /**
  * @author Faith Rodriguez
  *         Created 3/29/2017
+ *         
+ *         This class is responsible for creating the sidebar that contains dropdown boxes of all of the created
+ *         units and terrains.  These units, when clicked, appear in a Display Pane on the bottom of the screen 
+ *         with their relevant information and included abilities.
+ *         When dragged, these sprites can be added to the game board in development board
+ *         
+ *         This class is dependent on the DetailPane.java class and the CellView.java classes to make the clicking
+ *         and dragging features work
  */
 
 public class TemplatePane extends BaseUIManager<Region> {
@@ -27,11 +35,13 @@ public class TemplatePane extends BaseUIManager<Region> {
 	Collection<? extends Terrain> terrains;
 	DetailPane detailPane;
 	WorldView worldView;
-
-	public TemplatePane(AuthoringGameState gameState, DetailPane detailPaneIn, WorldView worldViewIn) {
-
-		units = (Collection<? extends Unit>) gameState.getTemplateByCategory(AuthoringGameState.UNIT).getAll();
-		terrains = (Collection<? extends Terrain>) gameState.getTemplateByCategory(AuthoringGameState.TERRAIN).getAll();
+	
+	public TemplatePane(DetailPane detailPaneIn, WorldView worldViewIn, Controller controller) {
+		super(controller);
+		//units = (Collection<? extends Unit>) getController().getAuthoringGameState().getTemplateByCategory(AuthoringGameState.UNIT).getAll();
+		//terrains = (Collection<? extends Terrain>) getController().getAuthoringGameState().getTemplateByCategory(AuthoringGameState.TERRAIN).getAll();
+		units = getController().getUnitTemplates();
+		terrains = getController().getTerrainTemplates();
 		detailPane = detailPaneIn;
 		worldView = worldViewIn;
 
@@ -58,7 +68,7 @@ public class TemplatePane extends BaseUIManager<Region> {
 		for (VoogaEntity sprite : sprites) {
 			VBox spriteContent = new VBox();
 			// fix getName and getImage once communication sorted
-			Text spriteName = new Text(sprite.getName());
+			Label spriteName = new Label(sprite.getName());
 			spriteContent.getChildren().add(spriteName);
 			setOnDrag(spriteContent, sprite, spriteType);
 			setOnClick(spriteContent, sprite, spriteType);
@@ -84,14 +94,19 @@ public class TemplatePane extends BaseUIManager<Region> {
 		createCollabsible("Unit", units);
 	}
 
-	public void updateUnits(Collection<? extends Unit> unitsIn) {
+	private void updateUnits(Collection<? extends Unit> unitsIn) {
 		//sprites will (I am fairly certain) contain all available sprites, not just the new ones
 		units = unitsIn;
-		updatePane();
 	}
 
-	public void updateTerrains(Collection<? extends Terrain> terrainsIn) {
+
+	private void updateTerrains(Collection<? extends Terrain> terrainsIn) {
 		terrains = terrainsIn;
+	}
+
+	public void updateTemplatePane(){
+		updateTerrains(getController().getTerrainTemplates());
+		updateUnits(getController().getUnitTemplates());
 		updatePane();
 	}
 

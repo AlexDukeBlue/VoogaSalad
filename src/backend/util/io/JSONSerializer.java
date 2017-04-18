@@ -21,13 +21,14 @@ public class JSONSerializer<T> implements Serializer<T>, Unserializer<T> {
 			.excludeFieldsWithModifiers(Modifier.TRANSIENT)
 			.create();
 	private final Type objType;
-	public JSONSerializer(Type type){
+
+	public JSONSerializer(Type type) {
 		this.objType = type;
 	}
 
 	@Override
 	public String doSerialize(T obj) throws Exception {
-		return gson.toJson(obj,objType);
+		return gson.toJson(obj, objType);
 	}
 
 	@Override

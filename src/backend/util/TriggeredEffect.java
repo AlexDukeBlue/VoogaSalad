@@ -21,7 +21,7 @@ public interface TriggeredEffect extends VoogaEntity {
 	boolean isExpired();
 
 	@FunctionalInterface
-	interface Effect extends Serializable{
+	interface Effect extends Serializable {
 		void affect(Unit unit, Event event, GameplayState game);
 	}
 }

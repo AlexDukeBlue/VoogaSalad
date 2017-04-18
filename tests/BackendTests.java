@@ -37,6 +37,20 @@ public class BackendTests {
 	}
 
 	@Test
+	public void testCoordinateConversion() {
+		GridPattern lol = GridPattern.HEXAGONAL_ADJACENT;
+		GameBoard testBoard = new ModifiableGameBoard("test", ModifiableCell.BASIC_SQUARE_FLAT, 10, 10, BoundsHandler.TOROIDAL_BOUNDS, "", "");
+	}
+
+	@Test
+	public void testBoundsHandlers() {
+		GridPattern lol = GridPattern.HEXAGONAL_ADJACENT;
+		GameBoard testBoard = new ModifiableGameBoard("test", ModifiableCell.BASIC_SQUARE_FLAT, 10, 10, BoundsHandler.TOROIDAL_BOUNDS, "", "");
+		CoordinateTuple newTuple = BoundsHandler.TOROIDAL_BOUNDS.getMappedCoordinate(testBoard, new CoordinateTuple(14, -4));
+		assertEquals(new CoordinateTuple(4, 6), newTuple);
+	}
+
+	@Test
 	public void testAttack() {
 		AuthoringGameState authoringGameState = new AuthoringGameState("test");
 		Unit unit1 = ModifiableUnit.SKELETON_ARCHER.copy();
@@ -104,19 +118,19 @@ public class BackendTests {
 	}
 
 	@Test
-	public void testRectangularBounds(){
+	public void testRectangularBounds() {
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		ModifiableCell template = ModifiableCell.BASIC_SQUARE_FLAT;
 		GameBoard board = new ModifiableGameBoard("testBoard")
 				.setTemplateCell(ModifiableCell.BASIC_SQUARE_FLAT).setRows(5).setColumns(5).setBoundsHandler(BoundsHandler.TOROIDAL_BOUNDS).build();
-		assertEquals(4,board.getRectangularBounds().getMax(0));
-		assertEquals(4,board.getRectangularBounds().getMax(1));
-		assertEquals(4,board.getBounds().getMax(0));
-		assertEquals(4,board.getBounds().getMax(1));
-		assertEquals(0,board.getRectangularBounds().getMin(0));
-		assertEquals(0,board.getRectangularBounds().getMin(1));
-		assertEquals(0,board.getBounds().getMin(0));
-		assertEquals(0,board.getBounds().getMin(1));
+		assertEquals(4, board.getRectangularBounds().getMax(0));
+		assertEquals(4, board.getRectangularBounds().getMax(1));
+		assertEquals(4, board.getBounds().getMax(0));
+		assertEquals(4, board.getBounds().getMax(1));
+		assertEquals(0, board.getRectangularBounds().getMin(0));
+		assertEquals(0, board.getRectangularBounds().getMin(1));
+		assertEquals(0, board.getBounds().getMin(0));
+		assertEquals(0, board.getBounds().getMin(1));
 
 	}
 
@@ -126,7 +140,8 @@ public class BackendTests {
 		ModifiableGameBoard DEFAULT_GAME_BOARD = (ModifiableGameBoard) new ModifiableGameBoard("Plain Rectangular Flat Board - 5x5")
 				.setTemplateCell(ModifiableCell.BASIC_SQUARE_FLAT)
 				.setRows(10)
-				.setColumns(10).setBoundsHandler(BoundsHandler.FINITE_BOUNDS)
+				//NEED TO USE SQUARE FOR A SQUARE GRID
+				.setColumns(10).setBoundsHandler(BoundsHandler.SQUARE_FINITE_BOUNDS)
 				.setDescription("Default base game board for testing purposes")
 				.setImgPath("Duvall_lettuce.png")
 				.build();

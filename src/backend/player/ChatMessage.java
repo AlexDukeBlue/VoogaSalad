@@ -44,14 +44,13 @@ public final class ChatMessage {
 
 	@Override
 	public String toString() {
-		return String.format("--%s--\n[%s] %s: %s", getTimeStamp().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)), getAccessLevel(), getSender().getName(), getContent());
+		return String.format("  --%s--\n%s %s: %s", getTimeStamp().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)), "[" + getAccessLevel() + "]", getSender().getName(), getContent());
 	}
 
 	public enum AccessLevel {
 		WHISPER(args -> state -> state.messagePlayer((String) args[0], state.getPlayerByName((String) args[1]), state.getPlayerByName((String) args[2]))),
 		TEAM(args -> state -> state.messageTeam((String) args[0], state.getPlayerByName((String) args[1]))),
 		ALL(args -> state -> state.messageAll((String) args[0], state.getPlayerByName((String) args[1])));
-
 
 		private final GameplayModifierBuilder gameplayModifierBuilder;
 

@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * @author Created by th174 on 4/4/2017.
  */
-public class ModifiableObservableListQueue<T> extends ModifiableObservableListBase<T> implements Queue<T> {
+class ModifiableObservableListQueue<T> extends ModifiableObservableListBase<T> implements Queue<T> {
     private List<T> delegate;
 
     public ModifiableObservableListQueue() {

@@ -1,6 +1,7 @@
 package backend.unit.properties;
 
 import backend.util.ModifiableVoogaCollection;
+import backend.util.PassiveAbility;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -8,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * @author Created by th174 on 4/9/2017.
  */
-public class OffensiveModifierSet extends ModifiableVoogaCollection<InteractionModifier<Double>, OffensiveModifierSet> {
+public class OffensiveModifierSet extends ModifiableVoogaCollection<InteractionModifier<Double>, OffensiveModifierSet> implements PassiveAbility {
 	@SafeVarargs
 	public OffensiveModifierSet(InteractionModifier<Double>... modifiers) {
 		this(Arrays.asList(modifiers));

@@ -54,7 +54,7 @@ public class NetworkingTests {
 		Thread.sleep(1000);
 		client.addListener(state -> assertTrue(state.getPlayerByName(name1).getChatLog().stream().anyMatch(e -> e.getContent().contains(msg))));
 		client.addListener(state -> assertTrue(state.getPlayerByName(name2).getChatLog().stream().anyMatch(e -> e.getContent().contains(msg))));
-		client.addListener(state -> System.out.print(state.getAllPlayers().toString()));
+		client.addListener(state -> System.out.println(state.getAllPlayers().toString()));
 		for (int i = 0; i < 10; i++) {
 			client.addToOutbox(state -> state.messageAll(msg, state.getPlayerByName(name2)));
 		}

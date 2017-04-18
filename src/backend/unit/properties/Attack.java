@@ -3,6 +3,7 @@ package backend.unit.properties;
 import backend.unit.Unit;
 import backend.util.GameplayState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.stream.IntStream;
  *
  * @author Created by th174 on 3/27/2017.
  */
-public final class Attack implements ActiveAbility.AbilityEffect<Unit> {
+public final class Attack implements ActiveAbility.AbilityEffect<Unit>, Serializable {
 	private final double damage;
 	private final int numHits;
 	private final List<InteractionModifier<Double>> damageModifiers;

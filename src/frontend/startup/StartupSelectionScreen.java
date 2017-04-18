@@ -11,11 +11,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
-import frontend.wizards.NewGameWizard;
+import frontend.wizards.GameWizard;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -28,20 +27,99 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import util.net.ObservableClient;
 
+
+import java.util.concurrent.Callable;
+
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+/**
+ * The intro screen containing a "create new game" button.
+ * 
+ * @authors Sam, ncp14
+ *
+ */
 public class StartupSelectionScreen extends VBox {
 
 	private ResourceBundle SelectionProperties = ResourceBundle.getBundle("frontend/properties/SelectionProperties");
 	private StartupScreen ui;
 	//ObservableClient<ImmutableGameState> myClient;
 	private Stage stage;
+	
+	Color startColor;
+	Color endColor;
+	ObjectProperty<Color> color;
 
 	public StartupSelectionScreen(Stage stage, StartupScreen ui) { //should have some sort of parameter that is passing the UI
 		this.stage = stage;
 		this.setUpPane();
 		this.ui = ui;
 	}
+	
+	public void setButtonAnimationColors()
+	{
+		startColor = Color.web("#e08090");
+		endColor = Color.web("#80e090");
+		color = new SimpleObjectProperty<Color>(startColor);
+	}
+	
+	// This method returns a string that represents the color above as a JavaFX CSS function:
+	// -fx-body-color: rgb(r, g, b);
+	// with r, g, b integers between 0 and 255
+	public StringBinding generateStringBinding()
+	{
+		StringBinding cssColorSpec = Bindings.createStringBinding(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return String.format("-fx-body-color: rgb(%d, %d, %d);", 
+                        (int) (256*color.get().getRed()), 
+                        (int) (256*color.get().getGreen()), 
+                        (int) (256*color.get().getBlue()));
+            }
+        }, color);
+		return cssColorSpec;
+	}
+	
+	public Pane generateShape(Rectangle rotatingRect)
+	{
+        final Pane rectHolder = new Pane();
+        rectHolder.setMinSize(20, 16);
+        rectHolder.setPrefSize(20, 16);
+        rectHolder.setMaxSize(20, 16);
+        rectHolder.getChildren().add(rotatingRect);
+        return rectHolder;
+	}
+	
+	public RotateTransition generateRotation(Rectangle rotatingRect)
+	{
+        final RotateTransition rotate = new RotateTransition(Duration.seconds(1), rotatingRect);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        return rotate;
+	}
+	
 
 	public void setUpPane() {
 
@@ -51,8 +129,54 @@ public class StartupSelectionScreen extends VBox {
 //		}};
 
 		Button create = new Button(SelectionProperties.getString("Create")) {{
-			this.setOnAction(e -> create());
+			this.setOnAction(e -> create()); 
 		}};
+		
+		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but refactored by ncp14
+		setButtonAnimationColors();
+        create.styleProperty().bind(generateStringBinding());
+        
+        final Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(color, startColor)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(color, endColor)));
+
+        create.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                timeline.play();
+                create();
+            }
+        });
+
+        // Create a rotating rectangle and set it as the graphic for the button
+        final Rectangle rotatingRect = new Rectangle(5,5,10,6);
+        rotatingRect.setFill(Color.CORNFLOWERBLUE);
+        Pane rectHolder = generateShape(rotatingRect);
+        RotateTransition rotate = generateRotation(rotatingRect);
+  
+        create.setGraphic(rectHolder);
+
+        // make the rectangle rotate when the mouse hovers over the button
+		create.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                rotate.play();
+            }
+        });
+		
+        create.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                rotate.stop();
+                rotatingRect.setRotate(0);
+            }
+        });
+	
+		
+		
+		
+		
+		
 
 //		Button edit = new Button(SelectionProperties.getString("EditGame")){{
 //			this.setOnAction(e -> edit());
@@ -69,13 +193,14 @@ public class StartupSelectionScreen extends VBox {
 	private void play() {
 		read("play");
 	}
-	
+
 	private void edit() {
 		read("load");
 	}
 
 	private void create() {
-		NewGameWizard wiz = new NewGameWizard();
+		GameWizard wiz = new GameWizard();
+		wiz.show();
 		wiz.addObserver(new Observer() {
 
 			@Override
@@ -86,6 +211,7 @@ public class StartupSelectionScreen extends VBox {
 		});
 
 	}
+
 	private void createGame(AuthoringGameState state, boolean editable) {
 		Controller control = new CommunicationController(state, null);
 		View view = new View(control);
@@ -105,7 +231,6 @@ public class StartupSelectionScreen extends VBox {
 		fileChooser.setTitle("Open Resource File");
 		Window stage = null;
 		File file = fileChooser.showOpenDialog(stage);
-		System.out.println(saveOrLoad);
 
 		try {
 

@@ -131,8 +131,8 @@ public class ObservableClient<T> extends ObservableHost<T> {
 	 *
 	 * @param modifier Modifier to be sent to the server
 	 */
-	public void addToOutbox(Modifier<ReadonlyGameplayState> modifier) {
-		outbox.add(getRequest((T) modifier));
+	public void addToOutbox(Modifier<T> modifier) {
+		outbox.add(getRequest(modifier));
 	}
 
 	/**

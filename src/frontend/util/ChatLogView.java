@@ -13,7 +13,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.stream.Collectors;
 
 /**
@@ -21,18 +29,21 @@ import java.util.stream.Collectors;
  */
 public class ChatLogView extends BaseUIManager {
 	//TODO ResourceBundlify
+	private final String HEADER;
 	private final BorderPane pane;
 	private final TextArea textArea;
 	private final String playerName;
-	private final Controller controller;
+	private final MediaPlayer mediaPlayer;
 
 	public ChatLogView(String playerName, Controller controller) {
+		super(controller);
+		HEADER = String.format("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----Joined [No place like 127.0.0.1]'s chat room!----\n\n---%s----\n\n", Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
 		textArea = initTextArea();
 		pane.setCenter(textArea);
 		pane.setBottom(initTextInputBox());
 		this.playerName = playerName;
-		this.controller = controller;
+		mediaPlayer = new MediaPlayer(new Media(Paths.get("src/resources/steam_message_sound.mp3").toUri().toString()));
 	}
 
 	@Override
@@ -41,13 +52,19 @@ public class ChatLogView extends BaseUIManager {
 	}
 
 	private TextArea initTextArea() {
-		TextArea textArea = new TextArea("\n\n\n\n\n\n\n\n\n\n\n\n\n------------TEST GAME STATE CHAT LOG------------");
+		TextArea textArea = new TextArea(HEADER);
 		textArea.setEditable(false);
+		textArea.setWrapText(true);
+		textArea.positionCaret(textArea.getText().length());
 		return textArea;
 	}
 
-	public void update(Controller controller) {
-		textArea.setText(textArea.getText() + "\n" + controller.getGameplayState().getPlayerByName(playerName).getChatLog().stream().map(Object::toString).collect(Collectors.joining("\n")));
+	@Override
+	public void update() {
+		textArea.setText(HEADER + getController().getGameState().getPlayerByName(playerName).getChatLog().stream().map(Object::toString).collect(Collectors.joining("\n\n")));
+		textArea.positionCaret(textArea.getText().length());
+		mediaPlayer.seek(Duration.ZERO);
+		mediaPlayer.play();
 	}
 
 	private HBox initTextInputBox() {
@@ -62,7 +79,7 @@ public class ChatLogView extends BaseUIManager {
 		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setPrefWidth(600);
-		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField));
+		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField);
 		return bottomBox;
 	}
@@ -85,9 +102,14 @@ public class ChatLogView extends BaseUIManager {
 		}
 	}
 
-	private void submitMessage(KeyEvent evt, ComboBox<ChatMessage.AccessLevel> chatModeChooser, TextField textContentInputField) {
+	private void submitMessage(KeyEvent evt, ComboBox<ChatMessage.AccessLevel> chatModeChooser, TextField textContentInputField, TextField messageRecipientField) {
 		if (evt.getCode() == KeyCode.ENTER) {
-			controller.sendModifier(chatModeChooser.getValue().getSendMessageModifier(textContentInputField.getText(), playerName));
+			getController().sendModifier(chatModeChooser.getValue().getSendMessageModifier(textContentInputField.getText(), playerName, messageRecipientField.getText()));
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			textContentInputField.clear();
 		}
 	}

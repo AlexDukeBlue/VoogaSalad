@@ -4,13 +4,13 @@
 package frontend.templatepane;
 
 import frontend.util.ObjectManager;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 
 /**
  * @author Stone Mathers
  * Created 3/29/2017
  */
-public interface ListItem extends ObjectManager<Node> {
+public interface ListItem extends ObjectManager<Parent> {
 
 	/**
 	 * Sets what is to be done when the ListItem is clicked.

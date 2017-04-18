@@ -10,18 +10,18 @@ import java.util.List;
 import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
 
 /**
  * @author Stone Mathers
  * Created 3/29/2017
  */
-public abstract class Sprite extends BaseUIManager<Region> {
+public abstract class Sprite extends BaseUIManager<Node> {
 
 	/**
 	 * Determines what is done when a Sprite is clicked.
@@ -38,7 +38,6 @@ public abstract class Sprite extends BaseUIManager<Region> {
 	            @Override
 				public void handle(MouseEvent event) {
 	                /* drag was detected, run drag-and-drop gesture*/
-	                System.out.println("onDragDetected");
 	                
 	                /* create dragboard */
 	                Dragboard db = (Dragboard) Dragboard.getSystemClipboard();

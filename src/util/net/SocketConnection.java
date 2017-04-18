@@ -51,10 +51,13 @@ public class SocketConnection {
 		try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
 			while (isActive()) {
 				Request request = (Request) inputStream.readObject();
+//				System.out.println("Receive" + request);
 				executor.execute(() -> requestHandler.accept(request));
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ObservableHost.RemoteConnectionException(e);
 		} finally {
 			shutDown();
@@ -68,6 +71,7 @@ public class SocketConnection {
 	 * @return Returns true if the request was sent successfully
 	 */
 	public synchronized boolean send(Request request) {
+//		System.out.println("Send " + request);
 		try {
 			outputStream.writeObject(request);
 			return isActive();

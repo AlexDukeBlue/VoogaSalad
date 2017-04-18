@@ -1,17 +1,17 @@
 package controller;
 
-import java.util.Collection;
-
 import backend.cell.Terrain;
 import backend.grid.GameBoard;
 import backend.grid.ModifiableGameBoard;
 import backend.player.ImmutablePlayer;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
-import frontend.View;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
+import frontend.util.Updatable;
 import util.net.Modifier;
+
+import java.util.Collection;
 
 /**
  * @author Created by ncp14 on 4/3/2017.
@@ -19,37 +19,31 @@ import util.net.Modifier;
 public interface Controller {
 
 	GameBoard getGrid();
-	
-	ReadonlyGameplayState getGameState();
-	
+
+	ReadonlyGameplayState getReadOnlyGameState();
+
 	AuthoringGameState getAuthoringGameState();
 
-	GameplayState getGameplayState();
+	GameplayState getGameState();
 
 	ImmutablePlayer getPlayer(String name);
 
-	void setView(View view);
+	<U extends ReadonlyGameplayState> void setGameState(U newGameState);
 
-	void setGameState(ReadonlyGameplayState newGameState);
-	
 	ModifiableGameBoard getModifiableCells();
-	
-	void sendModifier(Modifier<? extends ReadonlyGameplayState> modifier);
+
+	<U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier);
 
 	Collection<? extends Unit> getUnits();
 
 	Collection<? extends Terrain> getTerrains();
-	
-	Collection<? extends Unit> getUnitTemplate();
 
-	Collection<? extends Terrain> getTerrainTemplate();
-	
+	Collection<? extends Unit> getUnitTemplates();
 
-	
-	
-	
-	
-	
-	
-	
+	Collection<? extends Terrain> getTerrainTemplates();
+
+	void addToUpdated(Updatable objectToUpdate);
+
+	void removeFromUpdated(Updatable objectToUpdate);
+
 }

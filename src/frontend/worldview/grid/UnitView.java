@@ -1,105 +1,54 @@
-/**
- * A Unit object is an movable or immovable character/object that can be placed on top of and move across Terrains.
- */
 package frontend.worldview.grid;
 
-import java.util.List;
-
 import backend.unit.Unit;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
+import frontend.View;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 /**
- * @author Stone Mathers Created 3/29/2017
+ * A Unit object is an movable or immovable character/object that can be placed
+ * on top of and move across Terrains.
+ * 
+ * The UnitView is the UI representation of the backend Unit class. It allows
+ * the user to interact with the unit by dragging and dropping, selecting
+ * abilities to use, and moving from cell to cell.
+ * 
+ * The UnitView extends Sprite, which extends BaseUIManager.
+ * 
+ * @author dylanpeters
+ *
  */
 public class UnitView extends Sprite {
+
+	private ImageView unitView;
 	
-	public UnitView(Unit unitModel){
-		
+	/**
+	 * Creates a new UnitView. Sets all values to default.
+	 * 
+	 * @param unitModel
+	 *            the Unit object that this UnitView will be visualizing
+	 */
+	public UnitView(Unit unitModel) {
+		unitView = new ImageView(View.getImg(unitModel.getImgPath()));
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns an object that allows the user to see the Unit object on a grid
 	 * 
-	 * @see frontend.sprites.Sprite#setOnClick()
+	 * @return Region object representing the visualization of the Unit
 	 */
 	@Override
-	public void setOnClick(EventHandler<ActionEvent> event) {
-		// TODO Auto-generated method stub
-
+	public ImageView getObject() {
+		return unitView;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see frontend.sprites.Sprite#getSpriteCells()
+	/**
+	 * @return String holding the type of list the Sprite belongs to.
 	 */
-	@Override
-	public List<CellView> getSpriteCells() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see frontend.sprites.Sprite#addSpriteCell(frontend.sprites.SpriteCell)
-	 */
-	@Override
-	public void addSpriteCell(CellView cell) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see frontend.sprites.Sprite#getSpriteCell(int)
-	 */
-	@Override
-	public CellView getSpriteCell(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see frontend.sprites.Sprite#getSize()
-	 */
-	@Override
-	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see frontend.sprites.Sprite#setImage(javafx.scene.image.Image)
-	 */
-	@Override
-	public void setImage(Image image) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setListType(String type) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public String getListType() {
-		return "Unit";
-	}
-
-	@Override
-	public Region getObject() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

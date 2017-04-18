@@ -18,15 +18,16 @@ import java.util.stream.Stream;
  */
 public class GameplayState extends ImmutableVoogaObject implements ReadonlyGameplayState {
 	private final Random random;
-	private int turnNumber;
-	private int currentPlayerNumber;
 	private final List<String> playerNames;
 	private final Map<String, ImmutablePlayer> playerList;
 	private final Map<String, Team> teams;
-	private GameBoard grid;
 	private final Collection<ResultQuadPredicate> objectives;
 	private final Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> turnActions;
 	private final Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements;
+	private int turnNumber;
+	private int currentPlayerNumber;
+	private volatile GameBoard grid;
+	private boolean isAuthoringMode;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
@@ -47,6 +48,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.turnRequirements = new HashSet<>(turnRequirements);
 		this.playerList = new HashMap<>();
 		this.playerNames = new ArrayList<>();
+		this.isAuthoringMode = false;
 	}
 
 	@Override
@@ -64,21 +66,14 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return Collections.unmodifiableList(playerNames.stream().map(playerList::get).collect(Collectors.toList()));
 	}
 
-	GameplayState addTeam(Team team) {
-		teams.put(team.getName(), team);
-		team.forEach(p -> addPlayer(p, team));
-		return this;
+	@Override
+	public boolean isAuthoringMode() {
+		return isAuthoringMode;
 	}
 
 	@Override
 	public Team getTeamByName(String teamName) {
 		return teams.get(teamName);
-	}
-
-	GameplayState removeTeamByName(String name) {
-		teams.get(name).stream().map(ImmutablePlayer::getName).forEach(this::removePlayer);
-		teams.remove(name);
-		return this;
 	}
 
 	@Override
@@ -142,69 +137,14 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return Collections.unmodifiableCollection(objectives);
 	}
 
-	GameplayState addObjectives(ResultQuadPredicate... objectives) {
-		return addObjectives(Arrays.asList(objectives));
-	}
-
-	GameplayState addObjectives(Collection<ResultQuadPredicate> objectives) {
-		this.objectives.addAll(objectives);
-		return this;
-	}
-
-	GameplayState removeObjectives(ResultQuadPredicate... objectives) {
-		return removeObjectives(Arrays.asList(objectives));
-	}
-
-	GameplayState removeObjectives(Collection<ResultQuadPredicate> objectives) {
-		this.objectives.removeAll(objectives);
-		return this;
-	}
-
 	@Override
 	public Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> getTurnActions() {
 		return Collections.unmodifiableMap(turnActions);
 	}
 
-	GameplayState addTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
-		turnActions.merge(event, new ArrayList<>(actions), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
-		return this;
-	}
-
-	GameplayState addTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
-		return addTurnActions(event, Arrays.asList(actions));
-	}
-
-	//TODO: Doesn't work because there's no way to getByName a collection of BiConsumers you want to remove, same goes for all of these
-	GameplayState removeTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
-		turnActions.get(event).removeIf(actions::contains);
-		return this;
-	}
-
-	GameplayState removeTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
-		return removeTurnActions(event, Arrays.asList(actions));
-	}
-
 	@Override
 	public Collection<BiPredicate<ImmutablePlayer, GameplayState>> getTurnRequirements() {
 		return Collections.unmodifiableCollection(turnRequirements);
-	}
-
-	GameplayState addTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
-		this.turnRequirements.addAll(turnRequirements);
-		return this;
-	}
-
-	GameplayState addTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
-		return addTurnRequirements(Arrays.asList(turnRequirements));
-	}
-
-	GameplayState removeTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
-		this.turnRequirements.removeAll(turnRequirements);
-		return this;
-	}
-
-	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
-		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
 
 	@Override
@@ -228,12 +168,78 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	public GameplayState messageTeam(String message, ImmutablePlayer sender) {
 		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.TEAM, sender, message);
 		sender.getTeam().forEach(player -> player.receiveMessage(chatMessage));
-		System.out.println(sender.getTeam().size());
 		return this;
 	}
 
 	@Override
 	public GameplayState copy() {
 		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toMap(Team::getName, e -> e)), objectives, turnActions.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ArrayList<>(e.getValue()))), turnRequirements, getDescription(), getImgPath(), random);
+	}
+
+	GameplayState addTeam(Team team) {
+		teams.put(team.getName(), team);
+		team.forEach(p -> addPlayer(p, team));
+		return this;
+	}
+
+	GameplayState removeTeamByName(String name) {
+		teams.get(name).stream().map(ImmutablePlayer::getName).forEach(this::removePlayer);
+		teams.remove(name);
+		return this;
+	}
+
+	GameplayState addObjectives(ResultQuadPredicate... objectives) {
+		return addObjectives(Arrays.asList(objectives));
+	}
+
+	GameplayState addObjectives(Collection<ResultQuadPredicate> objectives) {
+		this.objectives.addAll(objectives);
+		return this;
+	}
+
+	GameplayState removeObjectives(ResultQuadPredicate... objectives) {
+		return removeObjectives(Arrays.asList(objectives));
+	}
+
+	GameplayState removeObjectives(Collection<ResultQuadPredicate> objectives) {
+		this.objectives.removeAll(objectives);
+		return this;
+	}
+
+	GameplayState addTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
+		turnActions.merge(event, new ArrayList<>(actions), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
+		return this;
+	}
+
+	GameplayState addTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
+		return addTurnActions(event, Arrays.asList(actions));
+	}
+
+	//TODO: Doesn't work because there's no way to getByName a collection of BiConsumers you want to remove, same goes for all of these
+	GameplayState removeTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
+		turnActions.get(event).removeIf(actions::contains);
+		return this;
+	}
+
+	GameplayState removeTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
+		return removeTurnActions(event, Arrays.asList(actions));
+	}
+
+	GameplayState addTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
+		this.turnRequirements.addAll(turnRequirements);
+		return this;
+	}
+
+	GameplayState addTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
+		return addTurnRequirements(Arrays.asList(turnRequirements));
+	}
+
+	GameplayState removeTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
+		this.turnRequirements.removeAll(turnRequirements);
+		return this;
+	}
+
+	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
+		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
 }

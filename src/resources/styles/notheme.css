@@ -1,24 +1,26 @@
 .root {
     -fx-font-size: 13px;
+    -fx-font-family: Arial;
     -fx-background-color: transparent;
     -fx-text-fill: #ffffff;
 }
 
-.combo-box-base, .cell{
-    -fx-background-color: rgba(0, 0, 0, 0.5);
+.combo-box-base, .cell {
+    -fx-background-color: rgba(0, 0, 0, 0.55);
     -fx-text-fill: #ffffff;
     -fx-alignment: center;
 }
 
 .text-area {
-    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-font-size: 15px;
     -fx-text-fill: #ffffff;
-    -fx-padding: 10px;
+    -fx-padding: 30px;
     -fx-background-insets: 10px;
 }
 
 .text-field {
-    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-color: rgba(0, 0, 0, 0.55);
     -fx-text-fill: #ffffff;
 }
 
@@ -28,7 +30,7 @@
 
 .text-area .scroll-pane .viewport {
     -fx-background-color: transparent;
-    -fx-focus-color: rgba(0,0,0,0.7)
+    -fx-focus-color: rgba(0, 0, 0, 0.55)
 }
 
 .text-area .scroll-pane .content {
@@ -41,8 +43,22 @@
     -fx-spacing: 5px;
     -fx-padding: 10px;
 }
+
 .label {
     -fx-text-fill: #ffffff;
-    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-color: rgba(0, 0, 0, 0.55);
     -fx-padding: 5;
+}
+
+.text-area.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-bar:vertical:disabled {
+    -fx-opacity: 0;
+}
+
+.text-area > .scroll-pane {
+    -fx-vbar-policy: never;
+    -fx-hbar-policy: never;
 }

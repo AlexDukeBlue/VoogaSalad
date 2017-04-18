@@ -3,21 +3,18 @@
  */
 package frontend.util;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
+import controller.Controller;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.ResourceBundle;
-
-import backend.util.AuthoringGameState;
-import com.sun.javafx.collections.UnmodifiableObservableMap;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.scene.Parent;
-import util.net.Modifier;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -42,7 +39,7 @@ import util.net.Modifier;
  * @author Dylan Peters
  *
  */
-public abstract class BaseUIManager<T extends Parent> extends Observable implements ObjectManager<T> {
+public abstract class BaseUIManager<T extends Node> extends Observable implements ObjectManager<T>, Updatable {
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -52,32 +49,40 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 
 	private ObjectProperty<ResourceBundle> language;
 	private ObjectProperty<String> styleSheet;
-	private ObservableQueue<Modifier<AuthoringGameState>> requests;
+	private Controller controller;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
 	 * stylesheet to default. The default language is English.
 	 */
 	public BaseUIManager() {
-		language = new SimpleObjectProperty<ResourceBundle>();
+		this(null);
+	}
+
+	public BaseUIManager(Controller controller) {
+		language = new SimpleObjectProperty<>();
 		language.setValue(createDefaultResourceBundle());
-		styleSheet = new SimpleObjectProperty<String>();
-		styleSheet.addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				getObject().getStylesheets().clear();
-				getObject().getStylesheets().add(newValue);
+		styleSheet = new SimpleObjectProperty<>();
+		styleSheet.addListener((observable, oldValue, newValue) -> {
+			if (getObject() instanceof Parent) {
+				((Parent) getObject()).getStylesheets().clear();
+				((Parent) getObject()).getStylesheets().add(newValue);
 			}
 		});
-		requests = new ObservableQueue<>();
+		setController(controller);
 	}
 
-	public ObservableQueue<Modifier<AuthoringGameState>> getRequests() {
-		return requests;
+	public void setController(Controller controller) {
+		this.controller = controller;
+		if (this.controller != null) {
+			this.controller.removeFromUpdated(this); // prevent this from
+														// getting updated twice
+			this.controller.addToUpdated(this);
+		}
 	}
 
-	public void addRequest(Modifier<AuthoringGameState> request) {
-		requests.add(request);
+	public Controller getController() {
+		return controller;
 	}
 
 	/**
@@ -111,6 +116,15 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 	}
 
 	/**
+	 * Tells BaseUIManager to update when the state of the program has changed.
+	 * The default behavior is empty. Subclasses can add more behavior by
+	 * Overriding the update method.
+	 */
+	public void update() {
+
+	}
+
+	/**
 	 * Generates a map whose keys are Strings that are the filepaths of all
 	 * ResourceBundles that this class can use for its language, and whose
 	 * values are the ResourceBundles themselves.
@@ -120,7 +134,7 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 	 *         whose values are the ResourceBundles themselves.
 	 */
 	protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
-		Map<String, ResourceBundle> map = new HashMap<String, ResourceBundle>();
+		Map<String, ResourceBundle> map = new HashMap<>();
 		ResourceBundle bundle = ResourceBundle.getBundle(LANGUAGE_RESOURCE_LIST);
 		for (String key : bundle.keySet()) {
 			map.put(key, ResourceBundle.getBundle(bundle.getString(key)));
@@ -139,7 +153,7 @@ public abstract class BaseUIManager<T extends Parent> extends Observable impleme
 	 *         are the stylesheets themselves.
 	 */
 	protected final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
 			map.put(getLanguage().getValue().getString(key), fileBundle.getString(key));
