@@ -16,7 +16,7 @@ import javafx.scene.layout.Region;
  * @author Andreas
  *
  */
-public class TerrainMovePointPage extends WizardPage {
+public class TerrainMovePointPage extends BaseWizardPage {
 	private static final String DEFAULT_TITLE = "Set Movement Points";
 	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for each unit to cross the terrain type.";
 

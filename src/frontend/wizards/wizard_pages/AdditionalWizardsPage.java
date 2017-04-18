@@ -14,7 +14,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-public class AdditionalWizardsPage<T> extends WizardPage {
+public class AdditionalWizardsPage<T> extends BaseWizardPage {
 
 	private VBox vbox;
 	private NumericInputRow numWizardRow;

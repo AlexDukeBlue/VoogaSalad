@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
  * @author Andreas
  *
  */
-public class GridInstantiationPage extends WizardPage {
+public class GridInstantiationPage extends BaseWizardPage {
 	private static final String DEFAULT_TITLE = "Set Grid Attributes";
 	private static final String DEFAULT_DESCRIPTION = "Choose the default cell type for the grid.";
 	private static final int DEFAULT_NUM_ROWS = 10;

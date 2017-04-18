@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @author Andreas
  *
  */
-public class AbilitiesAdderPage extends WizardPage {
+public class AbilitiesAdderPage extends BaseWizardPage {
 
 	private VerticalTableInputView table;
 	private Map<SelectableInputRow, ActiveAbility<?>> rowToAbility;
