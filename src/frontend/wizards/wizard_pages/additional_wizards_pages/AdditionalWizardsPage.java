@@ -12,6 +12,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -84,7 +86,11 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 	}
 
 	private void notifyUser(Exception e) {
-		// TODO
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Could not instantiate proper wizards.");
+		alert.setContentText("Try entering a smaller number.");
+		alert.showAndWait();
 	}
 
 }
