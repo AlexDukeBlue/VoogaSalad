@@ -1,85 +1,146 @@
 package controller;
 
+import backend.cell.Terrain;
+import backend.grid.GameBoard;
+import backend.grid.ModifiableGameBoard;
+import backend.player.ImmutablePlayer;
+import backend.unit.ModifiableUnit;
+import backend.unit.Unit;
 import backend.util.AuthoringGameState;
-import frontend.View;
+import backend.util.GameplayState;
+import backend.util.ReadonlyGameplayState;
+import backend.util.io.XMLSerializer;
+import frontend.util.Updatable;
+import javafx.application.Platform;
+import util.net.Modifier;
+import util.net.ObservableClient;
 
+import java.time.Duration;
+import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
 
 /**
  * @author Created by ncp14
- * This class is the communication controller which communicates the information
- * in both directions.
- * 
- * myFrontBuffer passes from
+ *         This class is the communication controller which communicates between the frontend and backend.
+ *         The primary purpose of my controller is to hide implementation of backend structure, specifically how
+ *         our networking works and how the GameState is structured.
  */
-public class CommunicationController {
-	//front to back buffer for gamestate
-	private Buffer<AuthoringGameState> frontToBackBuffer;
+public class CommunicationController implements Controller {
+	private ReadonlyGameplayState mGameState;
+	private ObservableClient<ReadonlyGameplayState> mClient;
+	private Collection<Updatable> thingsToUpdate;
 
-	//GameRules buffer - should be groovy code
-	private Buffer<String> gameRulesCode;
-
-	//end front to back buffer
-	private Buffer<AuthoringGameState> backToFrontBuffer;
-
-	private ModelGenerator mModelGenerator; //Touchdown class in backend
-	private View mView; //Touchdown class in frontend
-
-	public CommunicationController() {
-		this.frontToBackBuffer = new MyBuffer<>();
-		this.backToFrontBuffer = new MyBuffer<>();
-		this.gameRulesCode = new MyBuffer<String>();
-	}
-	public CommunicationController(Buffer<AuthoringGameState> frontToBackBuffer, Buffer<AuthoringGameState> backToFrontBuffer, Buffer<String> gameRulesCode) {
-		this.frontToBackBuffer = frontToBackBuffer;
-		this.backToFrontBuffer = backToFrontBuffer;
-		this.gameRulesCode = gameRulesCode;
-	}
-
-	/*
-	 * This method updates the front end by the information read from the buffer
-	 *
-	 */
-	public void updateFrontend() {
-		while (!this.backToFrontBuffer.isBufferEmpty()) {
-			mView.setGameState(this.backToFrontBuffer.getBufferHead());
+	public CommunicationController(ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
+		this.mGameState = gameState;
+		this.thingsToUpdate = new CopyOnWriteArrayList<>();
+		if (thingsToUpdate != null) {
+			this.thingsToUpdate.addAll(thingsToUpdate);
+		}
+		try {
+			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
+			mClient.addListener(this::updateGameState);
+			setGameState(gameState);
+			Executors.newSingleThreadExecutor().submit(mClient);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	/**
-	 * This method reads from buffer the incoming update in the buffer and
-	 * informs the backend command by command
-	 */
-	public void updateBackend() {
-		while (!this.frontToBackBuffer.isBufferEmpty()) {
-			ModelGenerator mModelGenerator = new ModelGenerator(this, this.frontToBackBuffer.getBufferHead());
-			mModelGenerator.generateGameState();
+	@Override
+	public GameBoard getGrid() {
+		return mGameState.getGrid();
+	}
+
+	private <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
+		mGameState = newGameState;
+		updateAll();
+	}
+
+	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
+		this.mClient = client;
+	}
+
+	public ObservableClient<ReadonlyGameplayState> getClient() {
+		return mClient;
+	}
+
+	@Override
+	public <U extends ReadonlyGameplayState> void setGameState(U gameState) {
+//		this.mGameState = gameState;
+		getClient().addToOutbox(gameState);
+	}
+
+	@Override
+	public ReadonlyGameplayState getReadOnlyGameState() {
+		return mGameState;
+	}
+
+	@Override
+	public AuthoringGameState getAuthoringGameState() {
+		return (AuthoringGameState) mGameState;
+	}
+
+	@Override
+	public GameplayState getGameState() {
+		return (GameplayState) mGameState;
+	}
+
+	@Override
+	public ImmutablePlayer getPlayer(String name) {
+		return mGameState.getPlayerByName(name);
+	}
+
+	@Override
+	public ModifiableGameBoard getModifiableCells() {
+		return (ModifiableGameBoard) mGameState.getGrid();
+	}
+
+	@Override
+	public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
+		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
+		//lol this is so unsafe
+//		mGameState = modifier.modify((U) mGameState);
+	}
+
+	@Override
+	public Collection<? extends Unit> getUnits() {
+		return mGameState.getGrid().getUnits();
+	}
+
+	@Override
+	public Collection<? extends Terrain> getTerrains() {
+		//Todo
+		return null;
+	}
+
+	@Override
+	public Collection<? extends Unit> getUnitTemplates() {
+		return ModifiableUnit.getPredefinedUnits();
+	}
+
+	@Override
+	public Collection<? extends Terrain> getTerrainTemplates() {
+		return Terrain.getPredefinedTerrain();
+	}
+
+	@Override
+	public void addToUpdated(Updatable updatable) {
+		if (!thingsToUpdate.contains(updatable)) {
+			thingsToUpdate.add(updatable);
 		}
 	}
-	/**
-	 * This method adds the command to buffer queue without truly informing the
-	 * backend.
-	 * 
-	 * @param newGameState
-	 */
-	public void passToBackend(AuthoringGameState newGameState) {
-		this.frontToBackBuffer.addToBuffer(newGameState);
-		this.updateBackend();
+
+	@Override
+	public void removeFromUpdated(Updatable updatable) {
+		if (thingsToUpdate.contains(updatable)) {
+			thingsToUpdate.remove(updatable);
+		}
 	}
-	/**
-	 * This method reads from buffer the incoming update of GameState inside
-	 * the buffer and updates the GameState according.
-	 */
-	public void passToFrontend(AuthoringGameState newGameState) {
-		this.frontToBackBuffer.addToBuffer(newGameState);
-		this.updateFrontend();
-	}
-	/**
-	 * This method gives the backend the freedom to send alerts.
-	 * Not sure if this is necessary.
-	 * 
-	 * @param message
-	 */
-	public void alert(String message) {
-		this.mView.sendAlert(message);
+
+	private void updateAll() {
+		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
+		//This one doesn't suffer from multithreading hell
+//		Platform.runLater(() -> thingsToUpdate.forEach(Updatable::update));
 	}
 }

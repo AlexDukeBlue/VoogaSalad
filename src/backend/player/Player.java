@@ -3,13 +3,11 @@ package backend.player;
 import backend.cell.Cell;
 import backend.grid.ModifiableGameBoard;
 import backend.unit.Unit;
-import backend.unit.properties.Faction;
 import backend.util.ModifiableVoogaObject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class Player extends ModifiableVoogaObject<Player> implements ImmutablePlayer {
 	private Team team;
-	private List<ChatMessage> chatLog;
+	private ObservableList<ChatMessage> chatLog;
 
 	public Player(String name, String description, String imgPath) {
 		this(name, new Team(name + "'s Team", "", imgPath), description, imgPath);
@@ -28,7 +26,7 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 
 	public Player(String name, Team team, String description, String imgPath) {
 		super(name, description, imgPath);
-		chatLog = new ArrayList<>();
+		chatLog = FXCollections.observableArrayList();
 		this.team = team;
 	}
 
@@ -68,7 +66,7 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	}
 
 	@Override
-	public List<ChatMessage> getChatLog() {
-		return Collections.unmodifiableList(chatLog);
+	public ObservableList<ChatMessage> getChatLog() {
+		return chatLog;
 	}
 }

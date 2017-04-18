@@ -1,36 +1,32 @@
 package frontend.menubar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import backend.util.AuthoringGameState;
+import backend.util.ReadonlyGameplayState;
+import backend.util.io.XMLSerializer;
+import controller.CommunicationController;
+import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
-import frontend.wizards.NewGameWizard;
+import frontend.wizards.GameWizard;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
@@ -68,16 +64,22 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		menuBar.getMenus().add(theme);
 		menuBar.getMenus().add(help);
 
-		load = new MenuItem(getLanguage().getValue().getString("Load")){{
-			setOnAction(e -> read());
-		}};
-		save = new MenuItem(getLanguage().getValue().getString("Save")){{
-			setOnAction(e -> save());
-		}};
-		
-		MenuItem newGameItem =  new MenuItem(getLanguage().getValue().getString("Create")){{
-			setOnAction(e -> create());
-		}};
+		load = new MenuItem(getLanguage().getValue().getString("Load")) {
+			{
+				setOnAction(e -> read());
+			}
+		};
+		save = new MenuItem(getLanguage().getValue().getString("Save")) {
+			{
+				setOnAction(e -> save());
+			}
+		};
+
+		MenuItem newGameItem = new MenuItem(getLanguage().getValue().getString("Create")) {
+			{
+				setOnAction(e -> create());
+			}
+		};
 		quit = new MenuItem(getLanguage().getValue().getString("Quit"));
 		setLanguage = new Menu(getLanguage().getValue().getString("SetLanguage"));
 		setTheme = new Menu(getLanguage().getValue().getString("SetTheme"));
@@ -112,24 +114,17 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			});
 			setTheme.getItems().add(menuItem);
 		});
-		
 
 	}
+
 	private void save() {
-		System.out.println("you can load and save files, but it won't do anything");
 		try {
-			System.out.println("here");
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 			Window ownerWindow = null;
 			File file = chooser.showSaveDialog(ownerWindow);
-			FileOutputStream fileOut =
-					new FileOutputStream(file);
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(new Object());  //need to pass in an object
-			out.close();
-			fileOut.close();
-			System.out.printf("Serialized data is saved in " + file);
+			Files.write(Paths.get(file.getPath()), ((String) new XMLSerializer<>()
+					.serialize(getController().getGameState())).getBytes());
 
 		} catch (IOException i) {
 			i.printStackTrace();
@@ -137,7 +132,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("No file selected");
-			//			alert.setGraphic(graphic); //insert DuvallSalad
+			// alert.setGraphic(graphic); //insert DuvallSalad
 			alert.setHeaderText("Current game will not save");
 			alert.setContentText("Would you like to try again?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -149,7 +144,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			}
 		}
 	}
-	
+
 	private void read() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
@@ -161,11 +156,18 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			FileInputStream fileIn = new FileInputStream(file);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 
-			//need to do something with the file
+			// need to do something with the file
 
 			in.close();
 			fileIn.close();
 
+<<<<<<< HEAD
+=======
+			// this part probs doesn't work
+			// Region pane = ui.getPrimaryPane();
+			// ((BorderPane) pane).setCenter(new View(null, null).getObject());
+
+>>>>>>> f7177e03cbe50ae9f784a5e67fe05de1c1991aae
 		} catch (IOException i) {
 			i.printStackTrace();
 			return;
@@ -173,19 +175,18 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("No file selected");
-			
+
 			/*
 			 * failed attempt to set DuvallSalad as graphic
 			 */
-//			ImageView graphic = new ImageView(new Image("frontend/properties/DuvallSalad.png"));
-//			graphic.setScaleX(.25);
-//			graphic.setScaleY(.25);
-//			
-//			alert.setGraphic(graphic); //insert DuvallSalad
+			// ImageView graphic = new ImageView(new
+			// Image("frontend/properties/DuvallSalad.png"));
+			// graphic.setScaleX(.25);
+			// graphic.setScaleY(.25);
+			//
+			// alert.setGraphic(graphic); //insert DuvallSalad
 
-
-				alert.setHeaderText("Failed to load game");
-			
+			alert.setHeaderText("Failed to load game");
 
 			alert.setContentText("Would you like to try again?");
 
@@ -198,32 +199,29 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			}
 		}
 	}
-	
-	private void create() {
-		NewGameWizard wiz = new NewGameWizard();
-		wiz.addObserver(new Observer() {
 
-			@Override
-			public void update(Observable o, Object arg) {
-				createGame((AuthoringGameState) arg, true);
-//				stage.close();
-			}
-		});
+	private void create() {
+		GameWizard wiz = new GameWizard();
+		wiz.show();
+		wiz.addObserver((o, arg) -> createGame((AuthoringGameState) arg, true));
 
 	}
-	private void createGame(AuthoringGameState state, boolean editable) {
-		//Controller control = new CommunicationController();
-		View view = new View(state,null);
-		//myClient.setGameState(state);
-		//control.setClient(myClient);
-		//control.setGameState(state);
+
+	private void createGame(ReadonlyGameplayState state, boolean editable) {
+		Controller control = new CommunicationController(state, null);
+		View view = new View(control);
+		// myClient.setGameState(state);
+		// control.setClient(myClient);
 		view.setEditable(editable);
-		//view.setController(control);
-		//control.setView(view);
 		Stage stage = new Stage();
 		Scene scene = new Scene(view.getObject());
 		stage.setScene(scene);
 		stage.show();
+
+	}
+
+	@Override
+	public void update() {
 
 	}
 

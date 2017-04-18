@@ -8,7 +8,11 @@ import util.net.requests.ModifierRequest;
 import util.net.requests.SerializableObjectRequest;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -26,9 +30,9 @@ import java.util.function.Predicate;
 public abstract class ObservableHost<T> implements Runnable {
 	public static final Duration NEVER_TIMEOUT = Duration.ZERO;
 	public static final String LOCALHOST = "127.0.0.1";
-	private final Serializer<T> serializer;
-	private final Unserializer<T> unserializer;
-	private final Collection<Consumer<T>> stateUpdateListeners;
+	private final Serializer<? super T> serializer;
+	private final Unserializer<? extends T> unserializer;
+	private final Collection<Consumer<? super T>> stateUpdateListeners;
 	private final Duration timeout;
 	private final Map<Class<? extends Request>, Consumer<? super Request>> requestHandlers;
 	private final Map<Class<? extends Request>, Predicate<? super Request>> requestValidators;
@@ -40,10 +44,10 @@ public abstract class ObservableHost<T> implements Runnable {
 	 * @param unserializer Converts the Serializable form of the state back into its original form of type T
 	 * @param timeout      Socket timeout duration
 	 */
-	protected ObservableHost(Serializer<T> serializer, Unserializer<T> unserializer, Duration timeout) {
+	protected ObservableHost(Serializer<? super T> serializer, Unserializer<? extends T> unserializer, Duration timeout) {
 		this.serializer = serializer;
 		this.unserializer = unserializer;
-		this.stateUpdateListeners = new ArrayList<>();
+		this.stateUpdateListeners = new CopyOnWriteArrayList<>();
 		this.commitIndex = 0;
 		this.timeout = timeout;
 		this.requestHandlers = new HashMap<>();
@@ -193,7 +197,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	 * @param modifier Modifier and sent to the remote host
 	 * @return Returns a request that contains a modification of the state
 	 */
-	public final Request getRequest(Modifier<T> modifier) {
+	public final Request getRequest(Modifier<? super T> modifier) {
 		return new ModifierRequest<>(modifier);
 	}
 
@@ -235,7 +239,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	 *
 	 * @param stateUpdateListener The listener to register
 	 */
-	public final void addListener(Consumer<T> stateUpdateListener) {
+	public final void addListener(Consumer<? super T> stateUpdateListener) {
 		stateUpdateListeners.add(stateUpdateListener);
 	}
 
@@ -244,12 +248,14 @@ public abstract class ObservableHost<T> implements Runnable {
 	 *
 	 * @param stateUpdateListener The listener to remove
 	 */
-	public final void removeListener(Consumer<T> stateUpdateListener) {
+	public final void removeListener(Consumer<? super T> stateUpdateListener) {
 		stateUpdateListeners.remove(stateUpdateListener);
 	}
 
 	private void fireStateUpdatedEvent() {
-		stateUpdateListeners.forEach(e -> e.accept(getState()));
+		if (Objects.nonNull(state)) {
+			stateUpdateListeners.forEach(e -> e.accept(getState()));
+		}
 	}
 
 	/**
@@ -267,14 +273,14 @@ public abstract class ObservableHost<T> implements Runnable {
 	/**
 	 * @return Returns the serializer currently used by this host
 	 */
-	protected final Serializer<T> getSerializer() {
+	protected final Serializer<? super T> getSerializer() {
 		return serializer;
 	}
 
 	/**
 	 * @return Returns the serializer currently usd by this host
 	 */
-	protected final Unserializer<T> getUnserializer() {
+	protected final Unserializer<? extends T> getUnserializer() {
 		return unserializer;
 	}
 

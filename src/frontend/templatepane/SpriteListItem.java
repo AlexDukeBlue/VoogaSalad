@@ -4,7 +4,7 @@
  */
 package frontend.templatepane;
 
-import frontend.sprites.Sprite;
+import frontend.worldview.grid.Sprite;
 
 /**
  * @author Stone Mathers

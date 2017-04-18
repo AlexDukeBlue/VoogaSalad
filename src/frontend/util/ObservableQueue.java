@@ -10,18 +10,27 @@ import java.util.Queue;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 
-public class ObservableQueue<E> implements Queue<E>, Observable {
+/**
+ * Creates an queue of objects that notifies observers when an object is added
+ * to the queue or removed from it.
+ * 
+ * @author Dylan Peters
+ *
+ * @param <E>
+ *            Type of Object held in the ObservableQueue
+ */
+class ObservableQueue<E> implements Queue<E>, Observable {
 
 	Collection<InvalidationListener> listeners;
 	List<E> elements;
 
-	public ObservableQueue() {
+	ObservableQueue() {
 		this(new ArrayList<E>());
 	}
 
-	public ObservableQueue(Collection<? extends E> elements) {
-		this.elements = new ArrayList<E>(elements);
-		listeners = new ArrayList<InvalidationListener>();
+	ObservableQueue(Collection<? extends E> elements) {
+		this.elements = new ArrayList<>(elements);
+		listeners = new ArrayList<>();
 	}
 
 	@Override
@@ -174,7 +183,7 @@ public class ObservableQueue<E> implements Queue<E>, Observable {
 		return sb.toString();
 	}
 
-	public void passTo(ObservableQueue<E> other) {
+	void passTo(ObservableQueue<E> other) {
 		moveAllTo(other);
 		addListener(new InvalidationListener() {
 			@Override

@@ -4,8 +4,8 @@
  */
 package frontend.templatepane;
 
-import frontend.sprites.Sprite;
-import javafx.scene.Node;
+import frontend.worldview.grid.Sprite;
+import javafx.scene.Parent;
 
 /**
  * @author Stone Mathers
@@ -26,7 +26,7 @@ public class UnitListItem implements SpriteListItem {
 	}
 
 	@Override
-	public Node getObject() {
+	public Parent getObject() {
 		// TODO Auto-generated method stub
 		return null;
 	}

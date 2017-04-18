@@ -4,116 +4,105 @@ import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.Unit;
-import backend.util.*;
+import backend.util.Event;
+import backend.util.GameplayState;
+import backend.util.ModifiableTriggeredEffect;
+import backend.util.TriggeredEffect;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static backend.util.ImmutableVoogaObject.getPredefined;
 
 /**
  * @author Created by th174 on 3/31/2017.
  */
-public class ModifiableCell extends ModifiableVoogaObject implements Cell {
+public class ModifiableCell implements Cell {
 	//TODO ResourceBundlify
-	public static final ModifiableCell BASIC_HEXAGONAL_EMPTY = new ModifiableCell("Basic Hexagonal Empty Cell")
+	public transient static final ModifiableCell BASIC_HEXAGONAL_EMPTY = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.EMPTY);
-	public static final ModifiableCell BASIC_HEXAGONAL_FLAT = new ModifiableCell("Basic Hexagonal Flat Cell")
+	public transient static final ModifiableCell BASIC_HEXAGONAL_FLAT = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.FLAT);
-	public static final ModifiableCell BASIC_HEXAGONAL_FOREST = new ModifiableCell("Basic Hexagonal Forest Cell")
+	public transient static final ModifiableCell BASIC_HEXAGONAL_FOREST = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.FOREST);
-	public static final ModifiableCell BASIC_HEXAGONAL_WATER = new ModifiableCell("Basic Hexagonal Water Cell")
+	public transient static final ModifiableCell BASIC_HEXAGONAL_WATER = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.WATER);
-	public static final ModifiableCell BASIC_HEXAGONAL_MOUNTAIN = new ModifiableCell("Basic Hexagonal Mountain Cell")
+	public transient static final ModifiableCell BASIC_HEXAGONAL_MOUNTAIN = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.MOUNTAIN);
-	public static final ModifiableCell BASIC_HEXAGONAL_FORTIFIED = new ModifiableCell("Basic Hexagonal Fortified Cell")
+	public transient static final ModifiableCell BASIC_HEXAGONAL_FORTIFIED = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.FORTIFIED);
-	public static final ModifiableCell HEALING_HEXAGONAL_EMPTY = new ModifiableCell("Healing Hexagonal Empty Cell")
-			.setShape(Shape.HEXAGONAL).setTerrain(ModifiableTerrain.EMPTY)
+	public transient static final ModifiableCell HEALING_HEXAGONAL_EMPTY = new ModifiableCell()
+			.setShape(Shape.HEXAGONAL)
+			.setTerrain(ModifiableTerrain.EMPTY)
 			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public static final ModifiableCell HEALING_HEXAGONAL_FLAT = new ModifiableCell("Healing Hexagonal Flat Cell")
+	public transient static final ModifiableCell HEALING_HEXAGONAL_FLAT = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.FLAT)
 			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public static final ModifiableCell HEALING_HEXAGONAL_FOREST = new ModifiableCell("Healing Hexagonal Forest Cell")
+	public transient static final ModifiableCell HEALING_HEXAGONAL_FOREST = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.FOREST)
 			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public static final ModifiableCell HEALING_HEXAGONAL_WATER = new ModifiableCell("Healing Hexagonal Water Cell")
+	public transient static final ModifiableCell HEALING_HEXAGONAL_WATER = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.WATER)
 			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public static final ModifiableCell HEALING_HEXAGONAL_MOUNTAIN = new ModifiableCell("Healing Hexagonal Mountain Cell")
+	public transient static final ModifiableCell HEALING_HEXAGONAL_MOUNTAIN = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.MOUNTAIN)
 			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public static final ModifiableCell HEALING_HEXAGONAL_FORTIFIED = new ModifiableCell("Healing Hexagonal Fortified Cell")
+	public transient static final ModifiableCell HEALING_HEXAGONAL_FORTIFIED = new ModifiableCell()
 			.setShape(Shape.HEXAGONAL)
 			.setTerrain(ModifiableTerrain.FORTIFIED)
 			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public static final ModifiableCell BASIC_SQUARE_EMPTY = new ModifiableCell("Basic Square Empty Cell")
+	public transient static final ModifiableCell BASIC_SQUARE_EMPTY = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.EMPTY);
-	public static final ModifiableCell BASIC_SQUARE_FLAT = new ModifiableCell("Basic Square Flat Cell")
+	public transient static final ModifiableCell BASIC_SQUARE_FLAT = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.FLAT);
-	public static final ModifiableCell BASIC_SQUARE_FOREST = new ModifiableCell("Basic Square Forest Cell")
+	public transient static final ModifiableCell BASIC_SQUARE_FOREST = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.FOREST);
-	public static final ModifiableCell BASIC_SQUARE_WATER = new ModifiableCell("Basic Square Water Cell")
+	public transient static final ModifiableCell BASIC_SQUARE_WATER = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.WATER);
-	public static final ModifiableCell BASIC_SQUARE_MOUNTAIN = new ModifiableCell("Basic Square Mountain Cell")
+	public transient static final ModifiableCell BASIC_SQUARE_MOUNTAIN = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.MOUNTAIN);
-	public static final ModifiableCell BASIC_SQUARE_FORTIFIED = new ModifiableCell("Basic Square Fortified Cell")
+	public transient static final ModifiableCell BASIC_SQUARE_FORTIFIED = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.FORTIFIED);
 
-	private final List<ModifiableTriggeredEffect> abilities;
 	private final Map<String, Unit> occupants;
 	private Shape shape;
 	private Terrain terrain;
 	private CoordinateTuple coordinates;
 
-	public ModifiableCell(String name) {
-		this(name, null, null, null, "", "");
+	public ModifiableCell() {
+		this(null, null, null);
 	}
 
-	public ModifiableCell(String name, CoordinateTuple location, Shape shape, Terrain terrain, String description, String imgPath, ModifiableTriggeredEffect... abilities) {
-		this(name, location, shape, terrain, description, imgPath, Arrays.asList(abilities));
-	}
-
-	public ModifiableCell(String name, CoordinateTuple location, Shape shape, Terrain terrain, String description, String imgPath, Collection<ModifiableTriggeredEffect> abilities) {
-		super(name, description, imgPath);
+	public ModifiableCell(CoordinateTuple location, Shape shape, Terrain terrain) {
 		this.shape = shape;
 		this.terrain = terrain;
-		this.abilities = abilities.stream().map(ModifiableTriggeredEffect::copy).collect(Collectors.toList());
 		this.coordinates = location;
 		occupants = new HashMap<>();
 	}
 
 	public ModifiableCell addTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
-		abilities.add(modifiableTriggeredEffect);
+		getTerrain().addTriggeredAbilities(modifiableTriggeredEffect);
 		return this;
 	}
 
 	public ModifiableCell removeTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
-		abilities.remove(modifiableTriggeredEffect);
+		getTerrain().removeTriggeredAbilities(modifiableTriggeredEffect);
 		return this;
-	}
-
-	public Collection<ModifiableCell> getPredefinedCellTemplates() {
-		return getPredefined(ModifiableCell.class);
-	}
-
-	private void processTriggers(Event event, GameplayState gameState) {
-		occupants.values().forEach(unit -> abilities.forEach(ability -> ability.affect(unit, event, gameState)));
-		abilities.removeIf(TriggeredEffect::isExpired);
 	}
 
 	public ModifiableCell addOccupants(Unit... units) {
@@ -177,19 +166,19 @@ public class ModifiableCell extends ModifiableVoogaObject implements Cell {
 	}
 
 	@Override
-	public Collection<ModifiableTriggeredEffect> getTriggeredAbilities() {
-		return Collections.unmodifiableCollection(abilities);
+	public Collection<? extends TriggeredEffect> getTriggeredAbilities() {
+		return getTerrain().getTriggeredAbilities();
 	}
 
 	@Override
-	public ModifiableCell addTriggeredAbilities(ModifiableTriggeredEffect... cellAbilities) {
-		Arrays.stream(cellAbilities).forEach(e -> abilities.add(e.copy()));
+	public ModifiableCell addTriggeredAbilities(ModifiableTriggeredEffect... triggeredAbilities) {
+		getTerrain().addTriggeredAbilities(triggeredAbilities);
 		return this;
 	}
 
 	@Override
-	public ModifiableCell removeTriggeredAbilities(ModifiableTriggeredEffect... cellAbilities) {
-		abilities.removeAll(Arrays.asList(cellAbilities));
+	public ModifiableCell removeTriggeredAbilities(ModifiableTriggeredEffect... triggeredAbilities) {
+		getTerrain().removeTriggeredAbilities(triggeredAbilities);
 		return this;
 	}
 
@@ -200,33 +189,33 @@ public class ModifiableCell extends ModifiableVoogaObject implements Cell {
 
 	@Override
 	public void leave(Unit unit, GameplayState gamestate) {
-		abilities.forEach(ability -> ability.affect(unit, Event.UNIT_PRE_MOVEMENT, gamestate));
+		getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, Event.UNIT_PRE_MOVEMENT, gamestate));
 		this.removeOccupants(unit);
 	}
 
 	@Override
 	public void arrive(Unit unit, GameplayState gamestate) {
 		this.addOccupants(unit);
-		abilities.forEach(ability -> ability.affect(unit, Event.UNIT_POST_MOVEMENT, gamestate));
-	}
-
-	@Override
-	public String getImgPath() {
-		return (Objects.isNull(super.getImgPath()) || super.getImgPath().length() < 2) ? getTerrain().getImgPath() : super.getImgPath();
+		getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, Event.UNIT_POST_MOVEMENT, gamestate));
 	}
 
 	@Override
 	public ModifiableCell copy() {
-		return new ModifiableCell(getName(), getLocation(), getShape(), getTerrain(), getDescription(), getImgPath(), getTriggeredAbilities().stream().map(ModifiableTriggeredEffect::copy).collect(Collectors.toList()));
+		return new ModifiableCell(getLocation(), getShape(), getTerrain());
+	}
+
+	@Override
+	public String toString() {
+		return "\n" + terrain.toString() + " @ " + getLocation() + "\tOccupants: " + getOccupants().size();
+	}
+
+	private void processTriggers(Event event, GameplayState gameState) {
+		occupants.values().forEach(unit -> getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, event, gameState)));
+		getTerrain().removeTriggeredAbilitiesIf(TriggeredEffect::isExpired);
 	}
 
 	@Deprecated
 	public static Collection<ModifiableCell> getPredefinedCells() {
 		return getPredefined(ModifiableCell.class);
-	}
-
-	@Override
-	public String toString() {
-		return "\n" + super.toString() + " @ " + getLocation();
 	}
 }

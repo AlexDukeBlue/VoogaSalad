@@ -53,7 +53,7 @@ public abstract class ImmutableVoogaObject<T extends ImmutableVoogaObject<T>> im
 		return (T) this;
 	}
 
-	public static <T extends VoogaEntity> Collection<T> getPredefined(Class<T> clazz) {
+	public static <T> Collection<T> getPredefined(Class<T> clazz) {
 		return Arrays.stream(clazz.getFields()).map(e -> {
 			try {
 				return e.get(null);

@@ -31,7 +31,7 @@ public class ModelGenerator implements Model {
 	{
 		this.gameState = mGameState;
 	}
-
+	
 	@Override
 	public AuthoringGameState getGameState() {
 		// TODO Auto-generated method stub

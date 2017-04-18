@@ -9,6 +9,9 @@ import java.util.Collection;
  * @author Created by th174 on 4/5/17.
  */
 public interface TriggeredEffect extends VoogaEntity {
+	@Override
+	TriggeredEffect copy();
+
 	int getRemainingTurns();
 
 	void affect(Unit unit, Event event, GameplayState game);
@@ -18,7 +21,7 @@ public interface TriggeredEffect extends VoogaEntity {
 	boolean isExpired();
 
 	@FunctionalInterface
-	interface Effect extends Serializable{
+	interface Effect extends Serializable {
 		void affect(Unit unit, Event event, GameplayState game);
 	}
 }

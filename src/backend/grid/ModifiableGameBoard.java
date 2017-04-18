@@ -1,7 +1,6 @@
 package backend.grid;
 
 import backend.cell.Cell;
-import backend.cell.ModifiableCell;
 import backend.util.ModifiableVoogaObject;
 
 import java.util.Collection;
@@ -15,7 +14,7 @@ import java.util.stream.IntStream;
  * @author Created by th174 on 3/28/2017.
  */
 public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoard> implements GameBoard, GameBoardBuilder {
-	private Map<CoordinateTuple, Cell> gameBoard;
+	private volatile Map<CoordinateTuple, Cell> gameBoard;
 	private Cell templateCell;
 	private BoundsHandler boundsHandler;
 	private int rows;
@@ -115,9 +114,7 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 		return IntStream.range(0, rows).boxed()
 				.flatMap(i -> IntStream.range(0, columns).mapToObj(j -> new CoordinateTuple(i, j)))
 				.parallel()
-				.map(e -> e
-						.convertToDimension(templateCell
-								.dimension()))
+				.map(e -> e.convertToDimension(templateCell.dimension()))
 				.collect(Collectors.toMap(e -> e, e -> templateCell.copy().setLocation(e)));
 	}
 
@@ -145,5 +142,17 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	@Deprecated
 	public static Collection<? extends GameBoard> getPredefinedGameBoards() {
 		return getPredefined(ModifiableGameBoard.class);
+	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				s += String.format("%-10s", get(new CoordinateTuple(i, j).convertToRectangular()).getTerrain().toString());
+			}
+			s += "\n";
+		}
+		return s;
 	}
 }

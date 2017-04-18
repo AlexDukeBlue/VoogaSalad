@@ -53,6 +53,10 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 
 	Cell get(CoordinateTuple coordinateTuple);
 
+	default Cell get(int... coordinates) {
+		return get(new CoordinateTuple(coordinates));
+	}
+
 	default Map<CoordinateTuple, Cell> getRelative(CoordinateTuple center, GridPattern gridPattern) {
 		return gridPattern.parallelStream().collect(Collectors.toMap(e -> e, e -> get(e.sum(center))));
 	}
@@ -69,7 +73,6 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 	default Iterator<Entry<CoordinateTuple, Cell>> iterator() {
 		return getCells().entrySet().iterator();
 	}
-
 
 	class GridBounds {
 		private final List<Pair<Integer, Integer>> bounds;

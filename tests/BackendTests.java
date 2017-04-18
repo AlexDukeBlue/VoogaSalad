@@ -1,7 +1,8 @@
-import backend.cell.Cell;
 import backend.cell.ModifiableCell;
 import backend.cell.ModifiableTerrain;
+import backend.cell.Terrain;
 import backend.grid.*;
+import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.player.Team;
 import backend.unit.ModifiableUnit;
@@ -36,6 +37,20 @@ public class BackendTests {
 	}
 
 	@Test
+	public void testCoordinateConversion() {
+		GridPattern lol = GridPattern.HEXAGONAL_ADJACENT;
+		GameBoard testBoard = new ModifiableGameBoard("test", ModifiableCell.BASIC_SQUARE_FLAT, 10, 10, BoundsHandler.TOROIDAL_BOUNDS, "", "");
+	}
+
+	@Test
+	public void testBoundsHandlers() {
+		GridPattern lol = GridPattern.HEXAGONAL_ADJACENT;
+		GameBoard testBoard = new ModifiableGameBoard("test", ModifiableCell.BASIC_SQUARE_FLAT, 10, 10, BoundsHandler.TOROIDAL_BOUNDS, "", "");
+		CoordinateTuple newTuple = BoundsHandler.TOROIDAL_BOUNDS.getMappedCoordinate(testBoard, new CoordinateTuple(14, -4));
+		assertEquals(new CoordinateTuple(4, 6), newTuple);
+	}
+
+	@Test
 	public void testAttack() {
 		AuthoringGameState authoringGameState = new AuthoringGameState("test");
 		Unit unit1 = ModifiableUnit.SKELETON_ARCHER.copy();
@@ -49,9 +64,9 @@ public class BackendTests {
 	@Test
 	public void testScriptingAbiity() {
 		String script = "" +
-				"user:takeDamage(-5)\n" +
-				"target:takeDamage(5)";
-		VoogaScriptEngine engine = VoogaScriptEngineManager.read("Lua", script);
+				"user.takeDamage(-5)\n" +
+				"target.takeDamage(5)";
+		VoogaScriptEngine engine = VoogaScriptEngineManager.read("Javascript", script);
 		AuthoringGameState authoringGameState = new AuthoringGameState("test");
 		Unit unit1 = ModifiableUnit.SKELETON_ARCHER.copy();
 		Unit unit2 = ModifiableUnit.SKELETON_WARRIOR.copy();
@@ -92,7 +107,7 @@ public class BackendTests {
 		AuthoringGameState authoringGameState = new AuthoringGameState("test").setGrid(board);
 		new CoordinateTuple(0, 0).getNeighbors().forEach(e -> board.get(e).arrive(ModifiableUnit.SKELETON_ARCHER.copy(), authoringGameState));
 		XMLSerializer<AuthoringGameState> serializer = new XMLSerializer<>();
-		authoringGameState.addTurnRequirements((BiPredicate<Player, GameplayState> & Serializable) (player, immutableAuthoringGameState) -> 3 < 5);
+		authoringGameState.addTurnRequirements((BiPredicate<ImmutablePlayer, GameplayState> & Serializable) (player, immutableAuthoringGameState) -> 3 < 5);
 		Files.write(Paths.get("data/saved_game_data/basic_grid_5x5.xml"), ((String) serializer.serialize(authoringGameState)).getBytes());
 		assertEquals(25, board.getCells().values().stream().filter(e -> e.getTerrain().equals(ModifiableTerrain.FLAT)).count());
 		assertEquals(4, board.getUnits().size());
@@ -103,19 +118,19 @@ public class BackendTests {
 	}
 
 	@Test
-	public void testRectangularBounds(){
+	public void testRectangularBounds() {
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		ModifiableCell template = ModifiableCell.BASIC_SQUARE_FLAT;
 		GameBoard board = new ModifiableGameBoard("testBoard")
 				.setTemplateCell(ModifiableCell.BASIC_SQUARE_FLAT).setRows(5).setColumns(5).setBoundsHandler(BoundsHandler.TOROIDAL_BOUNDS).build();
-		assertEquals(4,board.getRectangularBounds().getMax(0));
-		assertEquals(4,board.getRectangularBounds().getMax(1));
-		assertEquals(4,board.getBounds().getMax(0));
-		assertEquals(4,board.getBounds().getMax(1));
-		assertEquals(0,board.getRectangularBounds().getMin(0));
-		assertEquals(0,board.getRectangularBounds().getMin(1));
-		assertEquals(0,board.getBounds().getMin(0));
-		assertEquals(0,board.getBounds().getMin(1));
+		assertEquals(4, board.getRectangularBounds().getMax(0));
+		assertEquals(4, board.getRectangularBounds().getMax(1));
+		assertEquals(4, board.getBounds().getMax(0));
+		assertEquals(4, board.getBounds().getMax(1));
+		assertEquals(0, board.getRectangularBounds().getMin(0));
+		assertEquals(0, board.getRectangularBounds().getMin(1));
+		assertEquals(0, board.getBounds().getMin(0));
+		assertEquals(0, board.getBounds().getMin(1));
 
 	}
 
@@ -125,7 +140,8 @@ public class BackendTests {
 		ModifiableGameBoard DEFAULT_GAME_BOARD = (ModifiableGameBoard) new ModifiableGameBoard("Plain Rectangular Flat Board - 5x5")
 				.setTemplateCell(ModifiableCell.BASIC_SQUARE_FLAT)
 				.setRows(10)
-				.setColumns(10).setBoundsHandler(BoundsHandler.FINITE_BOUNDS)
+				//NEED TO USE SQUARE FOR A SQUARE GRID
+				.setColumns(10).setBoundsHandler(BoundsHandler.SQUARE_FINITE_BOUNDS)
 				.setDescription("Default base game board for testing purposes")
 				.setImgPath("Duvall_lettuce.png")
 				.build();
@@ -136,7 +152,7 @@ public class BackendTests {
 		try {
 			Files.write(Paths.get("data/saved_game_data/test_base_gamestate.xml"), ((String) serializer.serialize(authoringGameState)).getBytes());
 			AuthoringGameState loadedGameState = serializer.unserialize(new String(Files.readAllBytes(Paths.get("data/saved_game_data/test_base_gamestate.xml"))));
-			assertTrue(loadedGameState.getGrid().getTemplateCell().getTerrain().equals(ModifiableTerrain.FLAT));
+			assertTrue(loadedGameState.getGrid().getTemplateCell().getTerrain().equals(Terrain.FLAT));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

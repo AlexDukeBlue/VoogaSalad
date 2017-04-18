@@ -11,9 +11,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
+import controller.CommunicationController;
+import controller.Controller;
 import frontend.View;
-import frontend.wizards.NewGameWizard;
+import frontend.wizards.GameWizard;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -26,7 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import util.net.ObservableClient;
 
 public class StartupSelectionScreen extends VBox {
 
@@ -39,7 +39,6 @@ public class StartupSelectionScreen extends VBox {
 		this.stage = stage;
 		this.setUpPane();
 		this.ui = ui;
-		System.out.println(this.getChildren());
 	}
 
 	public void setUpPane() {
@@ -68,13 +67,14 @@ public class StartupSelectionScreen extends VBox {
 	private void play() {
 		read("play");
 	}
-	
+
 	private void edit() {
 		read("load");
 	}
 
 	private void create() {
-		NewGameWizard wiz = new NewGameWizard();
+		GameWizard wiz = new GameWizard();
+		wiz.show();
 		wiz.addObserver(new Observer() {
 
 			@Override
@@ -85,15 +85,13 @@ public class StartupSelectionScreen extends VBox {
 		});
 
 	}
+
 	private void createGame(AuthoringGameState state, boolean editable) {
-		//Controller control = new CommunicationController();
-		View view = new View(state,null);
+		Controller control = new CommunicationController(state, null);
+		View view = new View(control);
 		//myClient.setGameState(state);
 		//control.setClient(myClient);
-		//control.setGameState(state);
 		view.setEditable(editable);
-		//view.setController(control);
-		//control.setView(view);
 		Stage stage = new Stage();
 		Scene scene = new Scene(view.getObject());
 		stage.setScene(scene);
@@ -107,7 +105,6 @@ public class StartupSelectionScreen extends VBox {
 		fileChooser.setTitle("Open Resource File");
 		Window stage = null;
 		File file = fileChooser.showOpenDialog(stage);
-		System.out.println(saveOrLoad);
 
 		try {
 
@@ -123,7 +120,7 @@ public class StartupSelectionScreen extends VBox {
 
 			//this part probs doesn't work
 			Region pane = ui.getPrimaryPane();
-			((BorderPane) pane).setCenter(new View(null,null).getObject());
+			((BorderPane) pane).setCenter(new View(null).getObject());
 
 		} catch (IOException i) {
 

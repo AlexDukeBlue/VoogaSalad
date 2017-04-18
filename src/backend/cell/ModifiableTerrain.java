@@ -1,64 +1,99 @@
 package backend.cell;
 
+import backend.unit.properties.DefensiveModifierSet;
 import backend.unit.properties.InteractionModifier;
+import backend.unit.properties.OffensiveModifierSet;
+import backend.unit.properties.TriggeredAbilitySet;
 import backend.util.ModifiableVoogaObject;
+import backend.util.TriggeredEffect;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
- * @author Created by th174 on 3/31/2017.
+ * @author Created by th174 on 4/11/2017.
  */
 public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> implements Terrain {
-	public static final int IMPASSABLE = Integer.MAX_VALUE;
-	//TODO: ResourceBundlify this
-	public static final Terrain EMPTY = new ModifiableTerrain("Empty")
-			.setDefaultMoveCost(IMPASSABLE)
-			.setDefaultDefenseModifier(InteractionModifier.NO_EFFECT)
-			.setDescription("Literally nothing")
-			.setImgPath("black_void_of_the_abyss.png");
-	public static final Terrain FLAT = new ModifiableTerrain("Flat")
-			.setDefaultMoveCost(1)
-			.setDefaultDefenseModifier(new InteractionModifier<>("Default Flat Terrain Defense", (originalValue, agent, target, game) -> game.random() < .7 ? originalValue : 0, "Units have 30% evasion on Flat terrain by default."))
-			.setDescription("Open, flat, land that offers little defensive cover, but allows for easy movement.")
-			.setImgPath("grassy_plain.png");
-	public static final Terrain FOREST = new ModifiableTerrain("Forest")
-			.setDefaultMoveCost(2)
-			.setDefaultDefenseModifier(new InteractionModifier<>("Default Forest Terrain Defense", (originalValue, agent, target, game) -> game.random() < .4 ? originalValue : 0, "Units have 60% evasion on Forest terrain by default."))
-			.setDescription("Thick forest that offers plenty of cover, but makes navigating difficult.")
-			.setImgPath("forest.png");
-	public static final Terrain WATER = new ModifiableTerrain("Water")
-			.setDefaultMoveCost(3)
-			.setDefaultDefenseModifier(new InteractionModifier<>("Default Water Terrain Defense", (originalValue, agent, target, game) -> game.random() < .8 ? originalValue : 0, "Units have 20% evasion on Water terrain by default."))
-			.setDescription("Water that impedes movement for non-aquatic units")
-			.setImgPath("splish_splash.png");
-	public static final Terrain MOUNTAIN = new ModifiableTerrain("Mountain")
-			.setDefaultMoveCost(2)
-			.setDefaultDefenseModifier(new InteractionModifier<>("Default Mountain Terrain Defense", (originalValue, agent, target, game) -> game.random() < .5 ? originalValue : 0, "Units have 50% evasion on Mountain terrain by default."))
-			.setDescription("Rugged mountains that are difficult to navigate through")
-			.setImgPath("snowy_mountains.png");
-	public static final Terrain FORTIFIED = new ModifiableTerrain("Fortified")
-			.setDefaultMoveCost(1)
-			.setDefaultDefenseModifier(new InteractionModifier<>("Default Fortified Terrain Defense", (originalValue, agent, target, game) -> game.random() < .3 ? originalValue : 0, "Units have 70% evasion on Fortified terrain by default."))
-			.setDescription("A fortified defensive position")
-			.setImgPath("castle.png");
-
-	private static final int DEFAULT_DEFAULT_MOVE_COST = 1;
-	private int defaultMoveCost; //overridden by unit specific costs
-	private InteractionModifier<Double> defaultDefenseModifier; //overridden by unit specific modifiers
+	public static final int DEFAULT_DEFAULT_MOVE_COST = 1;
+	private final TriggeredAbilitySet triggeredAbilities;
+	private final OffensiveModifierSet offensiveModifiers;
+	private final DefensiveModifierSet defensiveModifiers;
+	private int defaultMoveCost;
 
 	public ModifiableTerrain(String name) {
-		this(name, DEFAULT_DEFAULT_MOVE_COST, (InteractionModifier<Double>) InteractionModifier.DUMMY, "", "");
+		this(name, DEFAULT_DEFAULT_MOVE_COST, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), "", "");
 	}
 
-	public ModifiableTerrain(String name, int defaultMoveCost, InteractionModifier<Double> defaultDefenseModifier, String description, String defaultImgPath) {
-		super(name, description, defaultImgPath);
+	public ModifiableTerrain(String name, int defaultMoveCost, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String description, String imgPath) {
+		super(name, description, imgPath);
 		this.defaultMoveCost = defaultMoveCost;
-		this.defaultDefenseModifier = defaultDefenseModifier;
+		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
+		this.offensiveModifiers = new OffensiveModifierSet(offensiveModifiers);
+		this.defensiveModifiers = new DefensiveModifierSet(defensiveModifiers);
 	}
 
 	@Override
-	public ModifiableTerrain copy() {
-		return new ModifiableTerrain(getName(), getDefaultMoveCost(), getDefaultDefenseModifier(), getDescription(), getImgPath());
+	public Collection<? extends TriggeredEffect> getTriggeredAbilities() {
+		return triggeredAbilities.getAll();
+	}
+
+	@Override
+	public ModifiableTerrain addTriggeredAbilities(TriggeredEffect... triggeredAbilities) {
+		this.triggeredAbilities.addAll(triggeredAbilities);
+		return this;
+	}
+
+	@Override
+	public ModifiableTerrain removeTriggeredAbilities(TriggeredEffect... triggeredAbilities) {
+		this.triggeredAbilities.removeAll(triggeredAbilities);
+		return this;
+	}
+
+	@Override
+	public ModifiableTerrain removeTriggeredAbilitiesIf(Predicate<TriggeredEffect> predicate) {
+		triggeredAbilities.removeIf(predicate);
+		return this;
+	}
+
+	@Override
+	public List<? extends InteractionModifier<Double>> getOffensiveModifiers() {
+		return offensiveModifiers.getAll();
+	}
+
+	@Override
+	@SafeVarargs
+	public final ModifiableTerrain addOffensiveModifiers(InteractionModifier<Double>... offensiveModifiers) {
+		this.offensiveModifiers.addAll(offensiveModifiers);
+		return this;
+	}
+
+	@Override
+	@SafeVarargs
+	public final ModifiableTerrain removeOffensiveModifiers(InteractionModifier<Double>... offensiveModifiers) {
+		this.offensiveModifiers.removeAll(offensiveModifiers);
+		return this;
+	}
+
+	@Override
+	public List<? extends InteractionModifier<Double>> getDefensiveModifiers() {
+		return defensiveModifiers.getAll();
+	}
+
+	@Override
+	@SafeVarargs
+	public final ModifiableTerrain addDefensiveModifiers(InteractionModifier<Double>... defensiveModifiers) {
+		this.defensiveModifiers.addAll(defensiveModifiers);
+		return this;
+	}
+
+	@Override
+	@SafeVarargs
+	public final ModifiableTerrain removeDefensiveModifiers(InteractionModifier<Double>... defensiveModifiers) {
+		this.defensiveModifiers.removeAll(defensiveModifiers);
+		return this;
 	}
 
 	@Override
@@ -66,33 +101,22 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 		return defaultMoveCost;
 	}
 
-	public ModifiableTerrain setDefaultMoveCost(int defaultMoveCost) {
-		this.defaultMoveCost = defaultMoveCost;
+	public ModifiableTerrain setDefaultMoveCost(int cost) {
+		defaultMoveCost = cost;
 		return this;
 	}
 
 	@Override
-	public InteractionModifier<Double> getDefaultDefenseModifier() {
-		return defaultDefenseModifier;
+	public ModifiableTerrain copy() {
+		return new ModifiableTerrain(
+				getName(),
+				getDefaultMoveCost(),
+				getTriggeredAbilities().stream().map(TriggeredEffect::copy).collect(Collectors.toList()),
+				getOffensiveModifiers().stream().map(InteractionModifier::copy).collect(Collectors.toList()),
+				getDefensiveModifiers().stream().map(InteractionModifier::copy).collect(Collectors.toList()),
+				getDescription(),
+				getImgPath()
+		);
 	}
 
-	public ModifiableTerrain setDefaultDefenseModifier(InteractionModifier<Double> defaultDefenseModifier) {
-		this.defaultDefenseModifier = defaultDefenseModifier;
-		return this;
-	}
-
-	@Override
-	public int hashCode() {
-		return getName().hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof ModifiableTerrain) && ((Terrain) obj).getName().equals(this.getName());
-	}
-
-	@Deprecated
-	public static Collection<ModifiableTerrain> getPredefinedTerrain() {
-		return getPredefined(ModifiableTerrain.class);
-	}
 }

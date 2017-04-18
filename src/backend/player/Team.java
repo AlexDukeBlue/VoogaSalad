@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * @author Created by th174 on 3/30/2017.
  */
-public class Team extends ModifiableVoogaCollection<Player, Team> {
+public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> {
 	public Team(String name, String description, String imgPath, Player... players) {
 		super(name, description, imgPath, players);
 	}
@@ -18,19 +18,19 @@ public class Team extends ModifiableVoogaCollection<Player, Team> {
 	}
 
 	@Override
-	public Team addAll(Collection<? extends Player> players) {
+	public Team addAll(Collection<? extends ImmutablePlayer> players) {
 		players.forEach(e -> e.setTeam(this));
 		return super.addAll(players);
 	}
 
 	@Override
-	public Team removeAll(Collection<? extends Player> players) {
+	public Team removeAll(Collection<? extends ImmutablePlayer> players) {
 		players.forEach(e -> e.setTeam(null));
 		return super.removeAll(players);
 	}
 
 	@Override
 	public Team copy() {
-		return new Team(getName(), getDescription(), getImgPath(), getAll().stream().map(Player::copy).map(Player.class::cast).collect(Collectors.toList()));
+		return new Team(getName(), getDescription(), getImgPath(), getAll().stream().map(ImmutablePlayer::copy).map(Player.class::cast).collect(Collectors.toList()));
 	}
 }

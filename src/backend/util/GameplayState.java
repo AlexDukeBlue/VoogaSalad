@@ -18,15 +18,16 @@ import java.util.stream.Stream;
  */
 public class GameplayState extends ImmutableVoogaObject implements ReadonlyGameplayState {
 	private final Random random;
+	private final List<String> playerNames;
+	private final Map<String, ImmutablePlayer> playerList;
+	private final Map<String, Team> teams;
+	private final Collection<ResultQuadPredicate> objectives;
+	private final Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> turnActions;
+	private final Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements;
 	private int turnNumber;
 	private int currentPlayerNumber;
-	private final List<String> playerNames;
-	private final Map<String, Player> playerList;
-	private final Map<String, Team> teams;
-	private GameBoard grid;
-	private final Collection<ResultQuadPredicate> objectives;
-	private final Map<Event, Collection<BiConsumer<Player, GameplayState>>> turnActions;
-	private final Collection<BiPredicate<Player, GameplayState>> turnRequirements;
+	private volatile GameBoard grid;
+	private boolean isAuthoringMode;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
@@ -34,8 +35,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	private GameplayState(String name, GameBoard grid, int turnNumber, Map<String, Team> teams,
 	                      Collection<ResultQuadPredicate> objectives,
-	                      Map<Event, Collection<BiConsumer<Player, GameplayState>>> turnActions,
-	                      Collection<BiPredicate<Player, GameplayState>> turnRequirements,
+	                      Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> turnActions,
+	                      Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements,
 	                      String description, String imgPath, Random random) {
 		super(name, description, imgPath);
 		this.grid = grid;
@@ -47,31 +48,32 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.turnRequirements = new HashSet<>(turnRequirements);
 		this.playerList = new HashMap<>();
 		this.playerNames = new ArrayList<>();
+		this.isAuthoringMode = false;
 	}
 
 	@Override
-	public Player getCurrentPlayer() {
+	public ImmutablePlayer getCurrentPlayer() {
 		return playerList.get(playerNames.get(currentPlayerNumber));
 	}
 
 	@Override
-	public Player getPlayerByName(String name) {
+	public ImmutablePlayer getPlayerByName(String name) {
 		return playerList.get(name);
 	}
 
-	GameplayState addTeam(Team team) {
-		teams.put(team.getName(), team);
-		return this;
+	@Override
+	public List<? extends ImmutablePlayer> getAllPlayers() {
+		return Collections.unmodifiableList(playerNames.stream().map(playerList::get).collect(Collectors.toList()));
+	}
+
+	@Override
+	public boolean isAuthoringMode() {
+		return isAuthoringMode;
 	}
 
 	@Override
 	public Team getTeamByName(String teamName) {
 		return teams.get(teamName);
-	}
-
-	GameplayState removeTeamByName(String name) {
-		teams.remove(name);
-		return this;
 	}
 
 	@Override
@@ -90,15 +92,29 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return turnNumber;
 	}
 
-	public GameplayState addPlayer(Player newPlayer) {
-		return addPlayer(newPlayer, new Team(newPlayer.getName() + "'s Team", "", ""));
+	public GameplayState addPlayer(ImmutablePlayer newPlayer) {
+		return addPlayer(newPlayer, newPlayer.getTeam());
 	}
 
-	public GameplayState addPlayer(Player newPlayer, Team team) {
+	public GameplayState addPlayer(ImmutablePlayer newPlayer, Team team) {
+		if (playerNames.contains(newPlayer.getName())) {
+			((Player) newPlayer).setName(newPlayer.getName() + " (2)");
+		}
 		playerNames.add(newPlayer.getName());
-		playerList.putIfAbsent(newPlayer.getName(), newPlayer);
+		playerList.put(newPlayer.getName(), newPlayer);
 		team.addAll(newPlayer);
+		teams.put(team.getName(), team);
 		return this;
+	}
+
+	public GameplayState removePlayer(String playerName) {
+		playerList.remove(playerName);
+		playerNames.remove(playerName);
+		return this;
+	}
+
+	public GameplayState removePlayer(ImmutablePlayer player) {
+		return removePlayer(player.getName());
 	}
 
 	@Override
@@ -121,6 +137,57 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return Collections.unmodifiableCollection(objectives);
 	}
 
+	@Override
+	public Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> getTurnActions() {
+		return Collections.unmodifiableMap(turnActions);
+	}
+
+	@Override
+	public Collection<BiPredicate<ImmutablePlayer, GameplayState>> getTurnRequirements() {
+		return Collections.unmodifiableCollection(turnRequirements);
+	}
+
+	@Override
+	public boolean turnRequirementsSatisfied() {
+		return turnRequirements.stream().allMatch(e -> e.test(getCurrentPlayer(), this));
+	}
+
+	public GameplayState messageAll(String message, ImmutablePlayer sender) {
+		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.ALL, sender, message);
+		getAllPlayers().forEach(player -> player.receiveMessage(chatMessage));
+		return this;
+	}
+
+	public GameplayState messagePlayer(String message, ImmutablePlayer sender, ImmutablePlayer recipient) {
+		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.WHISPER, sender, message);
+		sender.receiveMessage(chatMessage);
+		recipient.receiveMessage(chatMessage);
+		return this;
+	}
+
+	public GameplayState messageTeam(String message, ImmutablePlayer sender) {
+		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.TEAM, sender, message);
+		sender.getTeam().forEach(player -> player.receiveMessage(chatMessage));
+		return this;
+	}
+
+	@Override
+	public GameplayState copy() {
+		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toMap(Team::getName, e -> e)), objectives, turnActions.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ArrayList<>(e.getValue()))), turnRequirements, getDescription(), getImgPath(), random);
+	}
+
+	GameplayState addTeam(Team team) {
+		teams.put(team.getName(), team);
+		team.forEach(p -> addPlayer(p, team));
+		return this;
+	}
+
+	GameplayState removeTeamByName(String name) {
+		teams.get(name).stream().map(ImmutablePlayer::getName).forEach(this::removePlayer);
+		teams.remove(name);
+		return this;
+	}
+
 	GameplayState addObjectives(ResultQuadPredicate... objectives) {
 		return addObjectives(Arrays.asList(objectives));
 	}
@@ -139,81 +206,40 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return this;
 	}
 
-	@Override
-	public Map<Event, Collection<BiConsumer<Player, GameplayState>>> getTurnActions() {
-		return Collections.unmodifiableMap(turnActions);
-	}
-
-	GameplayState addTurnActions(Event event, Collection<BiConsumer<Player, GameplayState>> actions) {
+	GameplayState addTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
 		turnActions.merge(event, new ArrayList<>(actions), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, BiConsumer<Player, GameplayState>... actions) {
+	GameplayState addTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
 		return addTurnActions(event, Arrays.asList(actions));
 	}
 
-	//TODO: Doesn't workbecause there's no way to getByName a collection of BiConsumers you want to remove
-	GameplayState removeTurnActions(Event event, Collection<BiConsumer<Player, GameplayState>> actions) {
+	//TODO: Doesn't work because there's no way to getByName a collection of BiConsumers you want to remove, same goes for all of these
+	GameplayState removeTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
 		turnActions.get(event).removeIf(actions::contains);
 		return this;
 	}
 
-	//TODO: Doesn't work
-	GameplayState removeTurnActions(Event event, BiConsumer<Player, GameplayState>... actions) {
+	GameplayState removeTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
 		return removeTurnActions(event, Arrays.asList(actions));
 	}
 
-	@Override
-	public Collection<BiPredicate<Player, GameplayState>> getTurnRequirements() {
-		return Collections.unmodifiableCollection(turnRequirements);
-	}
-
-	GameplayState addTurnRequirements(Collection<BiPredicate<Player, GameplayState>> turnRequirements) {
+	GameplayState addTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
 		this.turnRequirements.addAll(turnRequirements);
 		return this;
 	}
 
-	GameplayState addTurnRequirements(BiPredicate<Player, GameplayState>... turnRequirements) {
+	GameplayState addTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return addTurnRequirements(Arrays.asList(turnRequirements));
 	}
 
-	GameplayState removeTurnRequirements(Collection<BiPredicate<Player, GameplayState>> turnRequirements) {
+	GameplayState removeTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
 		this.turnRequirements.removeAll(turnRequirements);
 		return this;
 	}
 
-	GameplayState removeTurnRequirements(BiPredicate<Player, GameplayState>... turnRequirements) {
+	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
-	}
-
-	@Override
-	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.test(getCurrentPlayer(), this));
-	}
-
-	public GameplayState messageAll(String message, ImmutablePlayer sender) {
-		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.ALL, sender, message);
-		getTeams().forEach(team -> team.forEach(player -> player.receiveMessage(chatMessage)));
-		return this;
-	}
-
-	public GameplayState messagePlayer(String message, ImmutablePlayer sender, ImmutablePlayer recipient) {
-		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.WHISPER, sender, message);
-		sender.receiveMessage(chatMessage);
-		recipient.receiveMessage(chatMessage);
-		return this;
-	}
-
-	public GameplayState messageTeam(String message, ImmutablePlayer sender) {
-		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.TEAM, sender, message);
-		sender.getTeam().forEach(player -> player.receiveMessage(chatMessage));
-		System.out.println(sender.getTeam().size());
-		return this;
-	}
-
-	@Override
-	public GameplayState copy() {
-		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toMap(Team::getName, e -> e)), objectives, turnActions.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ArrayList<>(e.getValue()))), turnRequirements, getDescription(), getImgPath(), random);
 	}
 }

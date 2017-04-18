@@ -42,6 +42,8 @@ The game engine will be responsible for running the game itself. It will contain
 
 A game authoring environment will allow users to build levels by designing the terrain layout in each cell, as well as create unique units with special properties that interact with terrain, time of day, the grid, and other units. The game authoring environment will be an easy-to-use graphical interface that constructs both the Model and the View for the game. For example, when creating a Tic Tac Toe game, the game editor would be responsible for creating a model with the correct gameplay rules (you cannot move Xs or Os; three in a row wins; etc.), and the game editor would also need to write the rules for the View that determine what image files are used to represent the background, the X sprites, the O sprites, etc.
 
+Our game authoring environment will be very similar to the game play environment; we will implement it such that the two screens are simply different versions of the same views. The user will be able to toggle between each screen (unless it is in a strictly playing mode, in which case the view will not allow the user to toggle).
+
 **User Interface**
 
 *This section describes how the user will interact with your program (keep it simple to start). Describe the overall appearance of program's user interface components and how users interact with these components (especially those specific to your program, i.e., means of input other than menus or toolbars). Include one or more pictures of the user interface (these pictures can be hand drawn and scanned in, created with a standard drawing program, or screen shots from a dummy program that serves as a exemplar). Describe how a game is represented to the designer and what support is provided to make it easy to create a game. Finally, describe any erroneous situations that are reported to the user (i.e., bad input data, empty data, etc.).*
@@ -191,171 +193,6 @@ Game Screen
 	**Part II: API**
 
 	Our API has been written as Java interfaces found in the git repository. It can be found [here](https://coursework.cs.duke.edu/CompSci308_2017Spring/voogasalad_noplacelikehome/tree/master/src/backend).
-	
-## Back-End External API:  
-We are going to use a Model-View-Controller work-flow, so there will be a controller interface between the   
-front-end and back-end. Here are some of the other classes and some public methods that were discussed.
-
-`GroovyParser(controller)`
-	
-	parse(user-input); parse will take user input and use an engine and other appropriate parsing tools to be  
-	able to aid in the development of games through writing code on the user-interface. The majority of this 
-	
-`GameEngine[Interface]`
-
-	public void addObjective(ResultQuadPredicate winCondition);
-	
-	public void addTrigger(BiConsumer<Player, GameState> turnAction, TurnTrigger when);
-	
-	public void start();
-	
-	public executeRound()
-	
-	public void restart();
-	
-	public void quit();
-	
-	public void save();
-	
-	public void load();
-	
-	public void newUnit(UnitInstance newUnit);
-	
-	public void newTerrain(Terrain terrain);
-	
-	public enum TurnTrigger;
-	
-## Back-End Internal API:
-The order of this internal API will be from the most to least abstract components.
-
-`GameObject[Interface]`
-	
-	String getName();
-
-    String getDescription();
-   
-    String getImgPath();
-   
-    boolean isVisible();
-    
-    void setVisible(boolean visible);
-    
-`GameObjectsSet[Interface]`
-	
-	public GameObjectSet(String name, String description, String imgPath);
-    
-    public GameObjectSet(String name, Collection<T> gameObjects, String description, String imgPath);
-    
-    public T get(String name);
-    
-    public Collection<T> getAll();
-    
-    public void add(T u);
-    
-    public void remove(T u);
-    
-    public void remove(String s);
-    
-    public int size();
-    
-    public Iterator<T> iterator();
-
-`Grid[Interface]`
-	
-	setGridSize(x, y);
-	
-	getCell(x, y);
-	
-	filterCells(Player, BiPredicate<Player, Cell>)
-
-`Cell[Interface]`
-	
-	CoordinateTuple getCoordinates();
-    
-    Map<CoordinateTuple, Cell> getNeighbors();
-    
-    default int dimension();
-    
-    Terrain getTerrain();
-    
-    default void addOccupant(UnitInstance unit);
-    
-    default void removeOccupant(UnitInstance unit);
-    
-    default void addAllOccupants(Collection<UnitInstance> units);
-    
-    default void removeAllOccupants(Collection<UnitInstance> units);
-
-    void applyAbilities();
-
-`Units[Interface]`
-	
-	UnitTemplate getUnitType();
-    
-    default String getUnitTypeName();
-    
-    HitPoints getHitPoints();
-    
-    MovePoints getMovePoints();
-    
-    Faction getFaction();
-    
-    GridPattern getMovePattern();
-    
-    Map<Terrain, Integer> getMoveCosts();
-    
-    default int getMoveCostByTerrain(Terrain terrain);
-    
-    List<InteractionModifier<Double>> getOffensiveModifiers();
-    
-    default void addOffensiveModifier(InteractionModifier<Double> OffensiveModifier);
-    
-    default void removeOffensiveModifier(InteractionModifier<Double> OffensiveModifier);
-    
-    List<InteractionModifier<Double>> getDefensiveModifiers();
-
-    default void addDefensiveModifier(InteractionModifier<Double> defensiveModifier);
-    
-    default void removeDefensiveModifier(InteractionModifier<Double> defensiveModifier);
-    
-    Map<String, ActiveAbility<GameObject>> getActiveAbilities();
-    
-    default Collection<ActiveAbility<GameObject>> getAllActiveAbilities();
-    
-    default ActiveAbility<GameObject> getActiveAbilityByName(String name);
-    
-    default void addActiveAbility(ActiveAbility<GameObject> ability);
-    
-    default void removeActiveAbility(ActiveAbility<GameObject> ability);
-    
-    default void removeActiveAbility(String abilityName);
-    
-    Map<String, PassiveAbility> getPassiveAbilities();
-    
-    default Collection<PassiveAbility> getAllPassiveAbilities();
-    
-    default PassiveAbility getPassiveAbilityByName(String name);
-    
-    default void addPassiveAbility(PassiveAbility ability);
-    
-    default void removePassiveAbility(PassiveAbility ability);
-    
-    default void removePassiveAbility(String abilityName);
-    
-`GameState[Interface]`
-	
-	List<Player> getPlayers();
-    
-    Grid getGrid();
-    
-    Player getCurrentPlayer();
-    
-    int getTurnNumber();
-    
-Most if not all of the other parts of the Back-end internal API are ability/modifier related and are therefore  
-they are extremely specialized- to a point in which implementation details will be further understood during   
-the next sprint.
-
 
 **Example games**
 
@@ -372,4 +209,6 @@ the next sprint.
 *This section describes any issues which need to be addressed or resolved before attempting to devise a complete design solution. Include any design decisions that each sub-team discussed at length (include pros and cons from all sides of the discussion) as well as any ambiguities, assumptions, or dependencies regarding the program that impact the overall design.*
 
 One of the most difficult design design problems we are facing is how to allow the user to define the win conditions. For example, the winning conditions for Tic Tac Toe are significantly different than the winning conditions for Civilization. Furthermore, even the winning conditions for different variations of a simple game such as Tic Tac Toe can be very complicated (getting four in a row, creating an ‘L’ shape, four next to each other, etc.), and can be hard to create a graphical way of allowing the user to define such a win condition. Our present solution for this problem is to allow the user to code the winning conditions using a limited-functionality IDE. The winning conditions that the user codes will take the form of Predicates that are checked during each turn to see if a player has won. This strategy of allowing the coding of small parts of the game is used in many current production game development environments. The difficult part of creating this functionality will be ensuring that the user can access information about the state of the game, without letting the user’s code break the game, game engine, or game development environment. Finally, making it flexible enough to support any type of win condition will be difficult.
+
+![image alt text](image_1.jpg)![image alt text](image_2.jpg)![image alt text](image_3.jpg)![image alt text](image_4.jpg)![image alt text](image_5.jpg)![image alt text](image_6.jpg)![image alt text](image_7.jpg)
 

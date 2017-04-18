@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.Queue;
+
+import backend.util.ReadonlyGameplayState;
 /**
  * Interface for Buffer which saves the update for frontend and backend
  * 
@@ -18,4 +20,5 @@ interface Buffer<T> {
 	boolean isBufferEmpty();
 	// This method allows the user to clear all the elements in buffer.
 	void clear();
+	void addToBuffer(ReadonlyGameplayState gameState);
 }

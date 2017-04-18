@@ -2,52 +2,58 @@ package frontend.templatepane;
 
 import java.util.Collection;
 
-import frontend.detailpane.DetailPane;
-import frontend.sprites.Sprite;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import backend.cell.Cell;
-import backend.cell.ModifiableCell;
-import backend.unit.ModifiableUnit;
-import backend.unit.Unit;
-import backend.util.ModifiableVoogaObject;
-import backend.util.VoogaEntity;
-import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
+import backend.unit.Unit;
+import backend.util.VoogaEntity;
+import controller.Controller;
+import frontend.detailpane.DetailPane;
 import frontend.util.BaseUIManager;
+import frontend.worldview.WorldView;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 /**
  * @author Faith Rodriguez
- * Created 3/29/2017
+ *         Created 3/29/2017
+ *         
+ *         This class is responsible for creating the sidebar that contains dropdown boxes of all of the created
+ *         units and terrains.  These units, when clicked, appear in a Display Pane on the bottom of the screen 
+ *         with their relevant information and included abilities.
+ *         When dragged, these sprites can be added to the game board in development board
+ *         
+ *         This class is dependent on the DetailPane.java class and the CellView.java classes to make the clicking
+ *         and dragging features work
  */
 
-public class TemplatePane extends BaseUIManager<Region>{
+public class TemplatePane extends BaseUIManager<Region> {
 
-	Pane pane;
-	Collection<? extends ModifiableUnit> units;
-	Collection<? extends ModifiableTerrain> terrains;
+	VBox pane = new VBox();
+	Collection<? extends Unit> units;
+	Collection<? extends Terrain> terrains;
 	DetailPane detailPane;
+	WorldView worldView;
 	
+	public TemplatePane(DetailPane detailPaneIn, WorldView worldViewIn, Controller controller) {
+		super(controller);
+		//units = (Collection<? extends Unit>) getController().getAuthoringGameState().getTemplateByCategory(AuthoringGameState.UNIT).getAll();
+		//terrains = (Collection<? extends Terrain>) getController().getAuthoringGameState().getTemplateByCategory(AuthoringGameState.TERRAIN).getAll();
+		units = getController().getUnitTemplates();
+		terrains = getController().getTerrainTemplates();
+		detailPane = detailPaneIn;
+		worldView = worldViewIn;
 
-	public TemplatePane(Collection<ModifiableUnit> availableUnits, 
-			Collection<ModifiableTerrain> availableTerrains, DetailPane detailPaneIn) {
-			units = availableUnits;
-			terrains = availableTerrains;
-			pane = new Pane();
-			detailPane = detailPaneIn;
-	
+		createCollabsible("unit", units);
+		createCollabsible("terrain", terrains);
+
 	}
-	
+
+	public TemplatePane(Collection<? extends Unit> unitTemplate) {
+		// TODO Auto-generated constructor stub
+	}
+
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
@@ -56,69 +62,54 @@ public class TemplatePane extends BaseUIManager<Region>{
 		spritePane.setCollapsible(true);
 		pane.getChildren().add(spritePane);
 	}
-	
+
 	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
 		VBox contentPane = new VBox();
-		for (VoogaEntity sprite: sprites) {
+		for (VoogaEntity sprite : sprites) {
 			VBox spriteContent = new VBox();
 			// fix getName and getImage once communication sorted
-			Text spriteName = new Text(sprite.getName());
+			Label spriteName = new Label(sprite.getName());
 			spriteContent.getChildren().add(spriteName);
-			Image tempImage = new Image(sprite.getImgPath());
-			ImageView spriteImage = new ImageView(tempImage); 
-			spriteContent.getChildren().add(spriteImage);
-			setOnDrag(spriteContent);
+			setOnDrag(spriteContent, sprite, spriteType);
 			setOnClick(spriteContent, sprite, spriteType);
 			contentPane.getChildren().add(spriteContent);
 		}
 		return contentPane;
 	}
-	
-	private void setOnDrag(Node o) {
-		//ImageView spriteImage = new ImageView(getImage(o));   
-		 o.setOnDragDetected(new EventHandler <MouseEvent>() {
-	            public void handle(MouseEvent event) {
-	                /* drag was detected, run drag-and-drop gesture*/
-	                System.out.println("onDragDetected");
-	                
-	                /* create dragboard */
-	                Dragboard db = (Dragboard) Dragboard.getSystemClipboard();
-	                
-	                /* put an image on dragboard */
-	                ClipboardContent content = new ClipboardContent();
-	                content.putString(o.toString());
-	                db.setContent(content);
-	                event.consume();
-	            }
-	        });
-	}
-	
-	private void setOnClick(Node o, VoogaEntity sprite, String spriteType) {
-		o.setOnMouseClicked(new EventHandler <MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				detailPane.setContent(sprite, spriteType);	
-			}		
+
+	private void setOnDrag(Node o, VoogaEntity sprite, String spriteType) {
+		//ImageView spriteImage = new ImageView(getImage(o));
+		o.setOnDragDetected(event -> {
+			//	               worldView.addSprite(sprite, spriteType);
 		});
 	}
-	
+
+	private void setOnClick(Node o, VoogaEntity sprite, String spriteType) {
+		o.setOnMouseClicked(event -> detailPane.setContent(sprite, spriteType));
+	}
+
 	private void updatePane() {
 		pane.getChildren().clear();
 		createCollabsible("Terrain", terrains);
 		createCollabsible("Unit", units);
 	}
-	
-	public void updateUnits(Collection<ModifiableUnit> unitsIn){
+
+	private void updateUnits(Collection<? extends Unit> unitsIn) {
 		//sprites will (I am fairly certain) contain all available sprites, not just the new ones
 		units = unitsIn;
-		updatePane();
-	} 
-	
-	public void updateTerrains(Collection<ModifiableTerrain> terrainsIn) {
+	}
+
+
+	private void updateTerrains(Collection<? extends Terrain> terrainsIn) {
 		terrains = terrainsIn;
+	}
+
+	public void updateTemplatePane(){
+		updateTerrains(getController().getTerrainTemplates());
+		updateUnits(getController().getUnitTemplates());
 		updatePane();
 	}
-	
+
 	@Override
 	public Region getObject() {
 		return pane;

@@ -3,10 +3,10 @@ package backend.util;
 import backend.game_engine.ResultQuadPredicate;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
-import backend.player.Player;
 import backend.player.Team;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -18,6 +18,8 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 	ImmutablePlayer getCurrentPlayer();
 
 	ImmutablePlayer getPlayerByName(String name);
+
+	List<? extends ImmutablePlayer> getAllPlayers();
 
 	Team getTeamByName(String teamName);
 
@@ -31,12 +33,14 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 
 	Collection<ResultQuadPredicate> getObjectives();
 
-	Map<Event, Collection<BiConsumer<Player, GameplayState>>> getTurnActions();
+	Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> getTurnActions();
 
-	Collection<BiPredicate<Player, GameplayState>> getTurnRequirements();
+	Collection<BiPredicate<ImmutablePlayer, GameplayState>> getTurnRequirements();
 
 	boolean turnRequirementsSatisfied();
 
 	@Override
 	ReadonlyGameplayState copy();
+
+	boolean isAuthoringMode();
 }

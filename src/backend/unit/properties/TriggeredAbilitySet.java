@@ -1,8 +1,10 @@
 package backend.unit.properties;
 
-import backend.util.TriggeredEffect;
 import backend.util.ModifiableVoogaCollection;
+import backend.util.PassiveAbility;
+import backend.util.TriggeredEffect;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -10,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * @author Created by th174 on 4/9/2017.
  */
-public class TriggeredAbilitySet extends ModifiableVoogaCollection<TriggeredEffect, TriggeredAbilitySet> {
+public class TriggeredAbilitySet extends ModifiableVoogaCollection<TriggeredEffect, TriggeredAbilitySet> implements PassiveAbility, Serializable {
 	public TriggeredAbilitySet(TriggeredEffect... triggeredAbilities) {
 		this(Arrays.asList(triggeredAbilities));
 	}

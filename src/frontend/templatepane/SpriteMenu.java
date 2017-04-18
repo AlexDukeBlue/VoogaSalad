@@ -6,8 +6,8 @@ package frontend.templatepane;
 import java.util.HashMap;
 import java.util.Map;
 
-import frontend.sprites.Sprite;
 import frontend.util.ObjectManager;
+import frontend.worldview.grid.Sprite;
 import javafx.scene.Group;
 import javafx.scene.Node;
 

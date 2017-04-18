@@ -7,16 +7,15 @@ import backend.unit.Unit;
 import backend.util.GameplayState;
 import backend.util.ModifiableTriggeredEffect;
 import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public interface Cell extends VoogaEntity {
-	@Override
+public interface Cell extends Serializable {
 	ModifiableCell copy();
 
 	void startTurn(GameplayState gameState);

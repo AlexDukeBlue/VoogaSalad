@@ -1,34 +1,67 @@
 package frontend.worldview;
 
-import backend.grid.GameBoard;
+import controller.Controller;
 import frontend.util.BaseUIManager;
-import frontend.worldview.grid.GridDisplay;
-import frontend.worldview.grid.SquareGridDisplay;
+import frontend.worldview.grid.CellView;
+import frontend.worldview.grid.GridView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 
-public class WorldView extends BaseUIManager<Region>{
+import java.util.function.Consumer;
 
-	private GridDisplay myGrid;
-	
-	public WorldView(GameBoard grid){
-		myGrid = initGrid(grid);
-	}
-	
-	
-	public void updateGrid(GameBoard grid){
-		myGrid.updateCells(grid);
+/**
+ * WorldView sets up and displays a Region object that contains a grid of
+ * CellViews that represents the state of the grid received from the Controller
+ * that is passed to the WorldView when instantiated.
+ * 
+ * The WorldView extends the BaseUIManager class so that it can change
+ * languages, css stylesheets, and can be updated by the controller through the
+ * updatable interface.
+ * 
+ * @author Dylan Peters
+ *
+ */
+public class WorldView extends BaseUIManager<Region> {
+
+	private GridView myGrid;
+	private BorderPane borderPane;
+
+	/**
+	 * Instantiates a new instance of WorldView. Sets all values to default.
+	 * 
+	 * @param controller
+	 *            the controller whose state will be displayed within the
+	 *            WorldView
+	 */
+	public WorldView(Controller controller) {
+		setController(controller);
+		initialize();
 	}
 
+	/**
+	 * Returns
+	 * 
+	 * @return Region object that shows the user a visual representation of the
+	 *         grid, which can be interacted with to manipulate the back end
+	 */
 	@Override
 	public Region getObject() {
-		return myGrid.getObject();
+		return borderPane;
 	}
-	
-	private GridDisplay initGrid(GameBoard grid){
-		return new SquareGridDisplay(grid);
-		// TODO create a GridDisplay using the backend ImmutableGrid structure and return it.
-				//Don't forget to account for the cell shape.
-				//"grid.getTemplateCell().getShape()" will return the cell shape being used by this particular grid.
+
+	/**
+	 * Sets the action that is performed when a cell is clicked.
+	 * 
+	 * @param consumer
+	 *            consumer to execute when the cell is clicked
+	 */
+	public void setOnCellClick(Consumer<CellView> consumer) {
+		myGrid.setOnCellClick(consumer);
 	}
-	
+
+	private void initialize() {
+		borderPane = new BorderPane();
+		myGrid = new GridView(getController());
+		borderPane.setCenter(myGrid.getObject());
+	}
 }

@@ -102,7 +102,8 @@ public interface Unit extends VoogaEntity {
 	Unit removeOffensiveModifiers(Collection<InteractionModifier<Double>> modifiers);
 
 	default double applyAllOffensiveModifiers(Double originalValue, Unit target, GameplayState gameState) {
-		return InteractionModifier.modifyAll(getOffensiveModifiers(), originalValue, this, target, gameState);
+		Double temp = InteractionModifier.modifyAll(getOffensiveModifiers(), originalValue, this, target, gameState);
+		return InteractionModifier.modifyAll(getCurrentCell().getTerrain().getOffensiveModifiers(), temp, this, target, gameState);
 	}
 
 	List<InteractionModifier<Double>> getOffensiveModifiers();
@@ -120,7 +121,8 @@ public interface Unit extends VoogaEntity {
 	Unit removeDefensiveModifiers(Collection<InteractionModifier<Double>> modifiers);
 
 	default double applyAllDefensiveModifiers(Double originalValue, Unit agent, GameplayState gameState) {
-		return InteractionModifier.modifyAll(getDefensiveModifiers(), originalValue, agent, this, gameState);
+		Double temp = InteractionModifier.modifyAll(getDefensiveModifiers(), originalValue, agent, this, gameState);
+		return InteractionModifier.modifyAll(getCurrentCell().getTerrain().getDefensiveModifiers(), temp, agent, this, gameState);
 	}
 
 	List<InteractionModifier<Double>> getDefensiveModifiers();

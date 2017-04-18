@@ -2,6 +2,8 @@ package controller;
 
 import java.util.LinkedList;
 import java.util.Queue;
+
+import backend.util.ReadonlyGameplayState;
 /**
  * This is a Buffer designed to hold information/updates from frontend/backend.
  * We designed this way so that it's possible to save the update in the
@@ -19,8 +21,8 @@ public class MyBuffer<T> implements Buffer<T> {
 		this.myBuffer = new LinkedList<T>();
 	}
 	@Override
-	public void addToBuffer(T t) {
-		this.myBuffer.add((T) t);
+	public void addToBuffer(ReadonlyGameplayState gameState) {
+		this.myBuffer.add((T) gameState);
 	}
 	@Override
 	public T getBufferHead() throws ParsingErrorException {
@@ -33,5 +35,10 @@ public class MyBuffer<T> implements Buffer<T> {
 	@Override
 	public void clear() {
 		this.myBuffer.clear();
+	}
+	@Override
+	public void addToBuffer(T t) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -11,6 +11,8 @@ import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import backend.util.ReadonlyGameplayState;
+
 /**
  * This class provides a simple implementation of a client that connects to a server with a given server name and port.
  * <p>
@@ -32,7 +34,7 @@ public class ObservableClient<T> extends ObservableHost<T> {
 	 * @throws IOException {@inheritDoc}
 	 */
 	public ObservableClient(int port) throws IOException {
-		this(LOCALHOST, port, Serializer.NONE, Unserializer.NONE);
+		this(LOCALHOST, port, Serializer.NONE, (Unserializer<? extends T>) Unserializer.NONE);
 	}
 
 	/**
@@ -43,7 +45,7 @@ public class ObservableClient<T> extends ObservableHost<T> {
 	 * @throws IOException {@inheritDoc}
 	 */
 	public ObservableClient(String host, int port) throws IOException {
-		this(host, port, Serializer.NONE, Unserializer.NONE);
+		this(host, port, Serializer.NONE, (Unserializer<? extends T>) Unserializer.NONE);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class ObservableClient<T> extends ObservableHost<T> {
 	 * @param unserializer {@inheritDoc}
 	 * @throws IOException {@inheritDoc}
 	 */
-	public ObservableClient(String host, int port, Serializer<T> serializer, Unserializer<T> unserializer) throws IOException {
+	public ObservableClient(String host, int port, Serializer<? super T> serializer, Unserializer<? extends T> unserializer) throws IOException {
 		this(host, port, serializer, unserializer, NEVER_TIMEOUT);
 	}
 
@@ -68,7 +70,7 @@ public class ObservableClient<T> extends ObservableHost<T> {
 	 * @param unserializer {@inheritDoc}
 	 * @throws IOException {@inheritDoc}
 	 */
-	public ObservableClient(String host, int port, Serializer<T> serializer, Unserializer<T> unserializer, Duration timeout) throws IOException {
+	public ObservableClient(String host, int port, Serializer<? super T> serializer, Unserializer<? extends T> unserializer, Duration timeout) throws IOException {
 		super(serializer, unserializer, timeout);
 		setCommitIndex(Integer.MIN_VALUE);
 		this.connection = new SocketConnection(new Socket(host, port), getTimeout());

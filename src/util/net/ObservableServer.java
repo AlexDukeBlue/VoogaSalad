@@ -38,7 +38,7 @@ public class ObservableServer<T> extends ObservableHost<T> {
 	 * @throws Exception Thrown if ServerSocket could not be created, or if exception is thrown in serialization
 	 */
 	public ObservableServer(T initialState, int port) throws Exception {
-		this(initialState, port, Serializer.NONE, Unserializer.NONE);
+		this(initialState, port, Serializer.NONE, (Unserializer<? extends T>) Unserializer.NONE);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class ObservableServer<T> extends ObservableHost<T> {
 	 * @param unserializer Converts the Serializable form of the state back into its original form of type T
 	 * @throws Exception Thrown if ServerSocket could not be created, or if exception is thrown in serialization
 	 */
-	public ObservableServer(T initialState, int port, Serializer<T> serializer, Unserializer<T> unserializer) throws Exception {
+	public ObservableServer(T initialState, int port, Serializer<? super T> serializer, Unserializer<? extends T> unserializer) throws Exception {
 		this(initialState, port, serializer, unserializer, NEVER_TIMEOUT);
 	}
 
@@ -64,7 +64,7 @@ public class ObservableServer<T> extends ObservableHost<T> {
 	 * @param timeout      Timeout duration for all connections to the client
 	 * @throws Exception Thrown if ServerSocket could not be created, or if exception is thrown in serialization
 	 */
-	public ObservableServer(T initialState, int port, Serializer<T> serializer, Unserializer<T> unserializer, Duration timeout) throws Exception {
+	public ObservableServer(T initialState, int port, Serializer<? super T> serializer, Unserializer<? extends T> unserializer, Duration timeout) throws Exception {
 		super(serializer, unserializer, timeout);
 		setState(initialState);
 		this.connections = new HashSet<>();
@@ -147,7 +147,6 @@ public class ObservableServer<T> extends ObservableHost<T> {
 	public boolean isActive() {
 		return serverSocket.isBound() && !serverSocket.isClosed() && !connections.isEmpty();
 	}
-
 
 	/**
 	 * This class is delegated to be the server to listen to a client on a single socket and relays information between the main server and the client.

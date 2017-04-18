@@ -1,6 +1,7 @@
 package util.scripting;
 
 import backend.game_engine.ResultQuadPredicate;
+import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
@@ -16,7 +17,7 @@ import java.util.function.BiPredicate;
 /**
  * @author Created by th174 on 4/7/2017.
  */
-public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, BiPredicate<Player, GameplayState> {
+public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, BiPredicate<ImmutablePlayer, GameplayState> {
 	ResourceBundle RESOURCES = ResourceBundle.getBundle("resources/Scripting", Locale.US);
 
 	VoogaScriptEngine setScript(String script) throws VoogaScriptException;
@@ -32,7 +33,7 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	Object eval(Map<String, Object> bindings) throws VoogaScriptException;
 
 	@Override
-	default ResultQuadPredicate.Result determine(Player player, GameplayState gameState) {
+	default ResultQuadPredicate.Result determine(ImmutablePlayer player, GameplayState gameState) {
 		try {
 			return ResultQuadPredicate.Result.valueOf((String) eval(createBindings("player", player, "gameState", gameState)));
 		} catch (ClassCastException e) {
@@ -74,7 +75,7 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	}
 
 	@Override
-	default boolean test(Player player, GameplayState gameState) {
+	default boolean test(ImmutablePlayer player, GameplayState gameState) {
 		Object nonBooleanValue = eval(createBindings("player", player, "gameState", gameState));
 		if (nonBooleanValue instanceof String) {
 			return !nonBooleanValue.equals("");

@@ -1,5 +1,9 @@
 package backend.player;
 
+import backend.util.GameplayState;
+import controller.GameplayModifierBuilder;
+import util.net.Modifier;
+
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -40,10 +44,26 @@ public final class ChatMessage {
 
 	@Override
 	public String toString() {
-		return String.format("--%s--\n[%s] %s: %s", getTimeStamp().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)), getAccessLevel(), getSender().getName(), getContent());
+		return String.format("  --%s--\n%s %s: %s", getTimeStamp().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)), "[" + getAccessLevel() + "]", getSender().getName(), getContent());
 	}
 
 	public enum AccessLevel {
-		WHISPER, TEAM, ALL
+		WHISPER(args -> state -> state.messagePlayer((String) args[0], state.getPlayerByName((String) args[1]), state.getPlayerByName((String) args[2]))),
+		TEAM(args -> state -> state.messageTeam((String) args[0], state.getPlayerByName((String) args[1]))),
+		ALL(args -> state -> state.messageAll((String) args[0], state.getPlayerByName((String) args[1])));
+
+		private final GameplayModifierBuilder gameplayModifierBuilder;
+
+		AccessLevel(GameplayModifierBuilder gameplayModifierBuilder) {
+			this.gameplayModifierBuilder = gameplayModifierBuilder;
+		}
+
+		public Modifier<GameplayState> getSendMessageModifier(String message, String senderName) {
+			return getSendMessageModifier(message, senderName, null);
+		}
+
+		public Modifier<GameplayState> getSendMessageModifier(String message, String senderName, String recipientName) {
+			return gameplayModifierBuilder.buildFrom(message, senderName, recipientName);
+		}
 	}
 }
