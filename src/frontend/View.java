@@ -18,7 +18,13 @@
  */
 package frontend;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+
 import backend.util.AuthoringGameState;
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.menubar.VoogaMenuBar;
@@ -33,10 +39,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class View extends BaseUIManager<Region> {
+public class View extends BaseUIManager<Region> implements Observer{
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 
 	private boolean editable;
@@ -126,6 +129,7 @@ public class View extends BaseUIManager<Region> {
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
+		tempPane.addObserver(this);
 	}
 
 	/**
@@ -149,4 +153,14 @@ public class View extends BaseUIManager<Region> {
 		}
 		return IMAGE_CACHE.get(imgPath);
 	}
+
+	@Override
+	public void update(Observable observable, Object object) {
+		if (observable == tempPane){
+			detailPane.setContent((VoogaEntity)object, "");
+			worldView.templateClicked((VoogaEntity)object);
+		}
+	}
+
+	
 }

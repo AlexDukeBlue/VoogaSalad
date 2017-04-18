@@ -58,31 +58,31 @@ public class CellView extends BaseUIManager<Parent> {
 		update(cellModel);
 	}
 
-	/**
-	 * Sets the action that is performed when a cell is clicked.
-	 *
-	 * @param consumer
-	 *            consumer to execute when the cell is clicked
-	 */
-	public void setOnCellClick(Consumer<CellView> consumer) {
-		polygon.setOnMouseClicked(event -> consumer.accept(this));
-	}
-
-	/**
-	 * Adds a copy of the Sprite to the cell and sends the request to the
-	 * controller.
-	 *
-	 * @param sprite
-	 *            sprite to copy and add to the cell
-	 */
-	public void add(VoogaEntity sprite) {
-		CoordinateTuple location = cellModel.getLocation();
-		Modifier<? extends GameplayState> toSend = game -> {
-			game.getGrid().get(location).arrive(sprite.copy(), game);
-			return game;
-		};
-		getController().sendModifier(toSend);
-	}
+//	/**
+//	 * Sets the action that is performed when a cell is clicked.
+//	 *
+//	 * @param consumer
+//	 *            consumer to execute when the cell is clicked
+//	 */
+//	public void setOnCellClick(Consumer<CellView> consumer) {
+//		polygon.setOnMouseClicked(event -> consumer.accept(this));
+//	}
+//
+//	/**
+//	 * Adds a copy of the Sprite to the cell and sends the request to the
+//	 * controller.
+//	 *
+//	 * @param sprite
+//	 *            sprite to copy and add to the cell
+//	 */
+//	public void add(VoogaEntity sprite) {
+//		CoordinateTuple location = cellModel.getLocation();
+//		Modifier<? extends GameplayState> toSend = game -> {
+//			game.getGrid().get(location).arrive(sprite.copy(), game);
+//			return game;
+//		};
+//		getController().sendModifier(toSend);
+//	}
 
 	/**
 	 * Returns an object that can be displayed to the user to show the Cell
@@ -139,8 +139,8 @@ public class CellView extends BaseUIManager<Parent> {
 				unitView.getObject().translateXProperty().set(polygon.getPoints().get(0));
 				unitView.getObject().translateYProperty().set(polygon.getPoints().get(1));
 				polygon.boundsInLocalProperty().addListener(change -> {
-					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth());
-					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight());
+					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*UNIT_SCALE);
+					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*UNIT_SCALE);
 				});
 				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*UNIT_SCALE);
 				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*UNIT_SCALE);

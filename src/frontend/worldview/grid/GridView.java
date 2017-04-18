@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import backend.unit.Unit;
+import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
+import backend.util.ReadonlyGameplayState;
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
+import util.net.Modifier;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a ScrollPane. 
@@ -26,6 +32,7 @@ public class GridView extends BaseUIManager<Region> {
 	private Group cellViewObjects;
 	private LayoutManager myLayoutManager;
 	private Collection<CellView> cellViews;
+	private Unit unitToArrive;
 	
 	public GridView(Controller controller){
 		setController(controller);
@@ -44,13 +51,13 @@ public class GridView extends BaseUIManager<Region> {
 		myScrollPane.setContent(cellViewObjects);
 	}
 	
-	/**
-	 * set on clicked method for each cell
-	 * @param consumer
-	 */
-	public void setOnCellClick(Consumer<CellView> consumer){
-		cellViews.forEach(cellView -> cellView.setOnCellClick(consumer));
-	}
+//	/**
+//	 * set on clicked method for each cell
+//	 * @param consumer
+//	 */
+//	public void setOnCellClick(Consumer<CellView> consumer){
+//		cellViews.forEach(cellView -> cellView.setOnCellClick(consumer));
+//	}
 
 	@Override
 	public Region getObject() {
@@ -64,6 +71,29 @@ public class GridView extends BaseUIManager<Region> {
 			cl.update();
 			cellViews.add(cl);
 			cellViewObjects.getChildren().add(cl.getObject());
+			
+			cl.getPolygon().setOnMouseClicked(event -> cellClicked(cl));
 		});
+	}
+	
+	public void setTemplateEntityToAdd(VoogaEntity template){
+		if (template instanceof Unit){
+			unitToArrive = (Unit)template.copy();
+		}
+	}
+	
+	public void setUnitToMove(Unit unit){
+		unitToArrive = unit;
+	}
+	
+	
+	private void cellClicked(CellView cell){
+		if (unitToArrive != null){
+			Modifier<GameplayState> modifier = gameState -> {
+				gameState.getGrid().get(cell.getCoordinateTuple()).arrive(unitToArrive, gameState);
+				return gameState;
+			};
+			getController().sendModifier(modifier);
+		}
 	}
 }
