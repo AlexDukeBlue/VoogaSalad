@@ -43,6 +43,7 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region>{
 			wizard.show();
 			wizard.addObserver((observable,object) -> {
 				objectProperty.setValue((T)object);
+				checkbox.setSelected(true);
 			});
 		});
 		hbox.getChildren().addAll(checkbox,label,button);

@@ -1,5 +1,6 @@
 package frontend.wizards.strategies;
 
+import backend.player.Player;
 import backend.player.Team;
 import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
 
@@ -14,7 +15,7 @@ public class TeamStrategy extends BaseStrategy<Team> {
 	@Override
 	public Team finish() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Team("asdf", "asdf", "asdf", new Player[0]);
 	}
 
 	private void initialize() {

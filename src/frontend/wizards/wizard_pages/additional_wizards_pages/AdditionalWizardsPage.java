@@ -35,27 +35,22 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 	public BooleanProperty canNext() {
 		return canNext;
 	}
-	
-	public Collection<T> getObjects(){
+
+	public Collection<T> getObjects() {
 		return wizardRows.stream().map(row -> row.getObjectProperty().getValue()).collect(Collectors.toList());
 	}
 
 	private void initialize(Class<? extends Wizard<T>> clazz) {
 		vbox = new VBox();
 		wizardRows = FXCollections.observableArrayList();
-		wizardRows.addListener((ListChangeListener<AdditionalWizardRow<T>>)listChange -> {
+		wizardRows.addListener((ListChangeListener<AdditionalWizardRow<T>>) listChange -> {
 			listChange.next();
 			listChange.getAddedSubList().stream().forEach(row -> {
 				vbox.getChildren().add(row.getObject());
+				row.getObjectProperty().addListener(change -> checkCanNext());
 			});
 			listChange.getRemoved().stream().forEach(row -> {
 				vbox.getChildren().remove(row.getObject());
-			});
-			canNext.setValue(true);
-			listChange.getList().stream().forEach(row -> {
-				if (row.getObjectProperty().getValue() == null){
-					canNext.setValue(false);
-				}
 			});
 		});
 		numWizardRow = new NumericInputRow(null, "Number of Wizards", "Wizards");
@@ -75,8 +70,17 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 			}
 		});
 		canNext = new SimpleBooleanProperty(false);
-		
 		vbox.getChildren().addAll(numWizardRow.getObject());
+		checkCanNext();
+	}
+
+	private void checkCanNext() {
+		canNext.setValue(true);
+		wizardRows.stream().forEach(row -> {
+			if (row.getObjectProperty().getValue() == null) {
+				canNext.setValue(false);
+			}
+		});
 	}
 
 	private void notifyUser(Exception e) {
