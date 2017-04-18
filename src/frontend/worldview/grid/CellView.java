@@ -1,6 +1,5 @@
 package frontend.worldview.grid;
 
-import java.awt.Event;
 import java.util.function.Consumer;
 
 import backend.cell.Cell;
@@ -15,10 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
-import javafx.stage.Stage;
 import util.net.Modifier;
 
 /**
@@ -35,6 +32,8 @@ import util.net.Modifier;
  * @author Dylan Peters
  */
 public class CellView extends BaseUIManager<Parent> {
+	private static final double UNIT_SCALE = 0.75;
+	
 	private Cell cellModel;
 	private Polygon polygon;
 	private Group group;
@@ -156,8 +155,8 @@ public class CellView extends BaseUIManager<Parent> {
 					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth());
 					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight());
 				});
-				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*0.75);
-				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*0.75);
+				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*UNIT_SCALE);
+				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*UNIT_SCALE);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}
