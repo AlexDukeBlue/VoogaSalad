@@ -97,13 +97,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		help.getItems().add(helpItem);
 
 		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
-			MenuItem menuItem = new MenuItem(name);
-			menuItem.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					getLanguage().setValue(bundle);
-				}
-			});
+			MenuItem menuItem = new MenuItem(name){{
+				setOnAction(e -> getLanguage().setValue(bundle));
+			}};
+			
 			setLanguage.getItems().add(menuItem);
 		});
 
@@ -167,7 +164,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			// this part probs doesn't work
 			// Region pane = ui.getPrimaryPane();
 			// ((BorderPane) pane).setCenter(new View(null, null).getObject());
-
 		} catch (IOException i) {
 			i.printStackTrace();
 			return;

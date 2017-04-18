@@ -59,6 +59,7 @@ public class ChatLogView extends BaseUIManager {
 		return textArea;
 	}
 
+	@Override
 	public void update() {
 		textArea.setText(HEADER + getController().getGameState().getPlayerByName(playerName).getChatLog().stream().map(Object::toString).collect(Collectors.joining("\n\n")));
 		textArea.positionCaret(textArea.getText().length());

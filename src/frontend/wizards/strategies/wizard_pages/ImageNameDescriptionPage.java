@@ -1,10 +1,6 @@
 package frontend.wizards.strategies.wizard_pages;
 
 import frontend.View;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -73,6 +69,7 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	}
 
 	private void initialize() {
+		imagePath = "";
 		hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
 		hbox.setPadding(new Insets(DEFAULT_INSETS));
@@ -83,41 +80,17 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		nameField.setPromptText("Name");
 		descriptionField = new TextArea();
 		descriptionField.setPromptText("Description (optional)");
-
 		VBox imageBox = new VBox();
 		imageBox.getChildren().addAll(imageView, uploadButton);
 		VBox nameAndDescription = new VBox();
 		nameAndDescription.getChildren().addAll(nameField, descriptionField);
 		hbox.getChildren().addAll(imageBox, nameAndDescription);
-
-		uploadButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				setImage();
-			}
-		});
-
+		uploadButton.setOnAction(event -> setImage());
 		imageView.fitWidthProperty().bind(imageBox.widthProperty());
 		imageView.fitHeightProperty().bind(imageView.fitWidthProperty());
-
-		imageView.imageProperty().addListener(new ChangeListener<Image>() {
-			@Override
-			public void changed(ObservableValue<? extends Image> observable, Image oldValue, Image newValue) {
-				checkIfCanNext();
-			}
-		});
-		nameField.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				checkIfCanNext();
-			}
-		});
-		descriptionField.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				checkIfCanNext();
-			}
-		});
+		imageView.imageProperty().addListener((observable, oldValue, newValue) -> checkIfCanNext());
+		nameField.textProperty().addListener((observable, oldValue, newValue) -> checkIfCanNext());
+		descriptionField.textProperty().addListener((observable, oldValue, newValue) -> checkIfCanNext());
 		checkIfCanNext();
 	}
 
@@ -133,7 +106,6 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	}
 
 	private void checkIfCanNext() {
-		canNextWritable().setValue(imageView.getImage() != null && !nameField.getText().isEmpty());
+		canNextWritable().setValue(/*imageView.getImage() != null && !nameField.getText().isEmpty()))*/ true);
 	}
-
 }

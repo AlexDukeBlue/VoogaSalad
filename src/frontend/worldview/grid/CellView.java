@@ -1,11 +1,8 @@
 package frontend.worldview.grid;
 
-import java.util.function.Consumer;
 
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
-import backend.util.GameplayState;
-import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
@@ -18,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import util.net.Modifier;
 
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
@@ -35,9 +31,9 @@ import util.net.Modifier;
  */
 public class CellView extends BaseUIManager<Parent> {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
-	private static final double CELL_STROKE = 5;
+	private static final double CELL_STROKE = 2;
 	private static final double UNIT_SCALE = 0.75;
-	
+
 	private Cell cellModel;
 	private Polygon polygon;
 	private Group group;
@@ -46,11 +42,9 @@ public class CellView extends BaseUIManager<Parent> {
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellModel
-	 *            The Cell object that this CellView will visually represent.
-	 * @param controller
-	 *            the controller object that this CellView will send information
-	 *            to when the user interacts with the CellView
+	 * @param cellModel  The Cell object that this CellView will visually represent.
+	 * @param controller the controller object that this CellView will send information
+	 *                   to when the user interacts with the CellView
 	 */
 	public CellView(Cell cellModel, Controller controller) {
 		setController(controller);
@@ -104,8 +98,7 @@ public class CellView extends BaseUIManager<Parent> {
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon
-	 *            Shape of cellview an instance of a cell
+	 * @param polygon Shape of cellview an instance of a cell
 	 */
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
@@ -129,21 +122,25 @@ public class CellView extends BaseUIManager<Parent> {
 	private void update(Cell cellModel) {
 		this.cellModel = cellModel;
 		group.getChildren().clear();
-		polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
+		if (getController().getGrid().getImgPath().length() < 1) {
+			polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
+		} else {
+			polygon.setFill(Color.TRANSPARENT);
+		}
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
-			if (unit != null){
+			if (unit != null) {
 				UnitView unitView = new UnitView(unit);
 				unitView.getObject().translateXProperty().set(polygon.getPoints().get(0));
 				unitView.getObject().translateYProperty().set(polygon.getPoints().get(1));
 				polygon.boundsInLocalProperty().addListener(change -> {
-					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*UNIT_SCALE);
-					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*UNIT_SCALE);
+					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				});
-				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*UNIT_SCALE);
-				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*UNIT_SCALE);
+				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}
@@ -164,7 +161,7 @@ public class CellView extends BaseUIManager<Parent> {
 		polygon = new Polygon();
 		group = new Group();
 		contextMenu = new ContextMenu(new MenuItem("asdf"));
-		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon,event.getScreenX(),event.getScreenY()));
+		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 //		polygon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> contextMenu.hide());
 	}
 }

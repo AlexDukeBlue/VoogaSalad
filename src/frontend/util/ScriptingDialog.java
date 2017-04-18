@@ -1,5 +1,6 @@
 package frontend.util;
 
+import controller.Controller;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -23,7 +24,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private final ComboBox<String> languagesMenu;
 	private VoogaScriptEngine scriptEngine;
 
-	public ScriptingDialog() {
+	public ScriptingDialog(Controller controller) {
+		super(controller);
 		languagesMenu = new ComboBox<>(FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
 		pane = new BorderPane();
 		scriptArea = new TextArea();
@@ -68,6 +70,11 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		expContent.add(textArea, 0, 1);
 		alert.getDialogPane().setExpandableContent(expContent);
 		alert.showAndWait();
+	}
+
+	@Override
+	public void update() {
+		super.update();
 	}
 
 	@Override
