@@ -5,4 +5,4 @@
  * @author Dylan Peters
  *
  */
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.properties;
