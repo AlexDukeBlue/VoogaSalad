@@ -17,12 +17,15 @@ import javafx.scene.layout.VBox;
 
 /**
  * The WizardPage for creating and specifying a grid for a game
+ * 
  * @author Andreas
  *
  */
 public class GridInstantiationPage extends WizardPage {
 	private static final String DEFAULT_TITLE = "Set Grid Attributes";
 	private static final String DEFAULT_DESCRIPTION = "Choose the default cell type for the grid.";
+	private static final int DEFAULT_NUM_ROWS = 10;
+	private static final int DEFAULT_NUM_COLS = 10;
 
 	private VBox vbox;
 	private NumericInputRow rows, cols;
@@ -58,43 +61,49 @@ public class GridInstantiationPage extends WizardPage {
 	}
 
 	public Cell getTemplateCell() {
-		return new ModifiableCell(null,shapeMap.get(cellShapeChooser.getValue()),terrainMap.get(terrainChooser.getValue()));
+		return new ModifiableCell(null, shapeMap.get(cellShapeChooser.getValue()),
+				terrainMap.get(terrainChooser.getValue()));
 	}
 
 	private void initialize() {
 		vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		rows = new NumericInputRow(null, "Number of Grid Rows: ", "");
+		rows.setValue(DEFAULT_NUM_ROWS);
 		cols = new NumericInputRow(null, "Number of Grid Columns: ", "");
+		cols.setValue(DEFAULT_NUM_COLS);
 
 		Shape[] shapes = Shape.values();
-		shapeMap = new HashMap<String,Shape>();
+		shapeMap = new HashMap<String, Shape>();
 		ObservableList<String> shapeNames = FXCollections.observableArrayList();
-		for (int i = 0; i < shapes.length; i++){
+		for (int i = 0; i < shapes.length; i++) {
 			shapeNames.add(shapes[i].getName());
-			shapeMap.put(shapes[i].getName(),shapes[i]);
+			shapeMap.put(shapes[i].getName(), shapes[i]);
 		}
 		cellShapeChooser = new ComboBox<String>(shapeNames);
+		cellShapeChooser.setValue(shapeNames.get(0));
 		ObservableList<String> terrainNames = FXCollections.observableArrayList();
-		terrainMap = new HashMap<String,Terrain>();
+		terrainMap = new HashMap<String, Terrain>();
 		Terrain.getPredefinedTerrain().stream().forEach(terrain -> {
 			terrainNames.add(terrain.getName());
 			terrainMap.put(terrain.getName(), terrain);
 		});
 		terrainChooser = new ComboBox<String>(terrainNames);
+		terrainChooser.setValue(terrainNames.get(0));
 
 		rows.setOnAction(event -> checkCanNext());
 		cols.setOnAction(event -> checkCanNext());
 		cellShapeChooser.setOnAction(event -> checkCanNext());
 		terrainChooser.setOnAction(event -> checkCanNext());
-		
+
 		vbox.getChildren().addAll(rows.getObject(), cols.getObject(), cellShapeChooser, terrainChooser);
+		checkCanNext();
 	}
 
 	private void checkCanNext() {
-		//TODO: Small logical error when you select terrain img first
-		canNextWritable().setValue(!cellShapeChooser.getValue().isEmpty() && !cellShapeChooser.getValue().isEmpty()
-				&& rows.getValue() != 0 && cols.getValue() != 0);
+		canNextWritable().setValue(cellShapeChooser.getValue() != null && !cellShapeChooser.getValue().isEmpty()
+				&& terrainChooser.getValue() != null && !terrainChooser.getValue().isEmpty() && rows.getValue() != 0
+				&& cols.getValue() != 0);
 	}
 
 }

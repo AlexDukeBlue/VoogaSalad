@@ -65,7 +65,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		return myNameField.getText();
 	}
 
-	void setValue(Integer value) {
+	public void setValue(Integer value) {
 		myNumericalInputField.setText(value.toString());
 	}
 

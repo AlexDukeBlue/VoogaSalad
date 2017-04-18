@@ -5,9 +5,9 @@ import backend.grid.ModifiableGameBoard;
 import backend.player.Team;
 import backend.util.AuthoringGameState;
 import frontend.wizards.TeamWizard;
+import frontend.wizards.wizard_pages.AdditionalWizardsPage;
 import frontend.wizards.wizard_pages.GridInstantiationPage;
 import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
-import frontend.wizards.wizard_pages.additional_wizards_pages.AdditionalWizardsPage;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the
@@ -48,7 +48,8 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
 		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
-		additionalTeamWizardsPage = new AdditionalWizardsPage<>(TeamWizard.class);
-		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage,additionalTeamWizardsPage);
+		additionalTeamWizardsPage = new AdditionalWizardsPage<>("Create Teams",
+				"Use the wizards below to create new teams", TeamWizard.class);
+		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalTeamWizardsPage);
 	}
 }

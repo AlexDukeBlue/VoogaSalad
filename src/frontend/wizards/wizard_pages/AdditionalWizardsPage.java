@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages.additional_wizards_pages;
+package frontend.wizards.wizard_pages;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import frontend.wizards.Wizard;
 import frontend.wizards.util.AdditionalWizardRow;
 import frontend.wizards.util.NumericInputRow;
-import frontend.wizards.wizard_pages.WizardPage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -24,7 +23,8 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 	private ObservableList<AdditionalWizardRow<T>> wizardRows;
 	private BooleanProperty canNext;
 
-	public AdditionalWizardsPage(Class<? extends Wizard<T>> clazz) {
+	public AdditionalWizardsPage(String title, String description, Class<? extends Wizard<T>> clazz) {
+		super(title, description);
 		initialize(clazz);
 	}
 
@@ -54,8 +54,9 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 			listChange.getRemoved().stream().forEach(row -> {
 				vbox.getChildren().remove(row.getObject());
 			});
+			checkCanNext();
 		});
-		numWizardRow = new NumericInputRow(null, "Number of Wizards", "Wizards");
+		numWizardRow = new NumericInputRow(null, "Number of Items", "Items");
 		numWizardRow.addObserver((observable, object) -> {
 			int numRows = (Integer) object;
 			try {
