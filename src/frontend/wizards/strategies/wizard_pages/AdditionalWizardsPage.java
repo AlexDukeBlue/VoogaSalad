@@ -1,11 +1,11 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 import frontend.wizards.Wizard;
-import frontend.wizards.util.AdditionalWizardRow;
-import frontend.wizards.util.NumericInputRow;
+import frontend.wizards.strategies.wizard_pages.util.AdditionalWizardRow;
+import frontend.wizards.strategies.wizard_pages.util.NumericInputRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

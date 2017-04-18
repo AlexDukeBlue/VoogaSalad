@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 
 import frontend.util.BaseUIManager;
-import frontend.wizards.wizard_pages.WizardPage;
+import frontend.wizards.strategies.wizard_pages.WizardPage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,7 +30,7 @@ import javafx.scene.layout.VBox;
  * @param <T>
  *            type of Object instantiated by BaseStrategy
  */
-public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
+abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
 	private BooleanProperty canPrevious, canNext, canFinish;
 	private BorderPane borderPane;

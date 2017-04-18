@@ -2,7 +2,7 @@ package frontend.wizards.strategies;
 
 import backend.player.Player;
 import backend.player.Team;
-import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
+import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 
 public class TeamStrategy extends BaseStrategy<Team> {
 

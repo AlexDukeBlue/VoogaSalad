@@ -1,10 +1,10 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
 import frontend.View;
-import frontend.wizards.util.SelectableInputRow;
-import frontend.wizards.util.VerticalTableInputView;
+import frontend.wizards.strategies.wizard_pages.util.SelectableInputRow;
+import frontend.wizards.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 

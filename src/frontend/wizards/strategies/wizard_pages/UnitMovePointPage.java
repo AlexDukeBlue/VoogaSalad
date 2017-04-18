@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

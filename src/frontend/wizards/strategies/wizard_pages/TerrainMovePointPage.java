@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import backend.cell.Terrain;
 import backend.util.AuthoringGameState;
-import frontend.wizards.util.NumericInputRow;
-import frontend.wizards.util.VerticalTableInputView;
+import frontend.wizards.strategies.wizard_pages.util.NumericInputRow;
+import frontend.wizards.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 

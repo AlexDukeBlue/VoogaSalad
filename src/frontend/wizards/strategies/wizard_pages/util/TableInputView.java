@@ -1,4 +1,4 @@
-package frontend.wizards.util;
+package frontend.wizards.strategies.wizard_pages.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

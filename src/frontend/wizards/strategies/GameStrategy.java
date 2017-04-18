@@ -5,9 +5,9 @@ import backend.grid.ModifiableGameBoard;
 import backend.player.Team;
 import backend.util.AuthoringGameState;
 import frontend.wizards.TeamWizard;
-import frontend.wizards.wizard_pages.AdditionalWizardsPage;
-import frontend.wizards.wizard_pages.GridInstantiationPage;
-import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
+import frontend.wizards.strategies.wizard_pages.AdditionalWizardsPage;
+import frontend.wizards.strategies.wizard_pages.GridInstantiationPage;
+import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the

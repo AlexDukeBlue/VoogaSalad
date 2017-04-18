@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import frontend.View;
 import javafx.beans.value.ChangeListener;

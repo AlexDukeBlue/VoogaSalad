@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import backend.cell.Cell;
 import backend.cell.ModifiableCell;
 import backend.cell.Terrain;
 import backend.grid.Shape;
-import frontend.wizards.util.NumericInputRow;
+import frontend.wizards.strategies.wizard_pages.util.NumericInputRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;

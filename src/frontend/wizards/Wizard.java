@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import frontend.util.BaseUIManager;
 import frontend.wizards.strategies.WizardStrategy;
-import frontend.wizards.util.ButtonBar;
+import frontend.wizards.strategies.wizard_pages.util.ButtonBar;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;

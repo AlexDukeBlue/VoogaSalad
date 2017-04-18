@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import frontend.util.BaseUIManager;
 import javafx.beans.property.BooleanProperty;
@@ -14,7 +14,7 @@ import javafx.scene.layout.Region;
  * @author Andreas
  *
  */
-public abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPage {
+abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPage {
 
 	private BooleanProperty canNext;
 	private String title, description;
