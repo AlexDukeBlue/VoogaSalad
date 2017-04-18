@@ -25,8 +25,6 @@ import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -38,6 +36,10 @@ import java.util.Map;
 
 public class View extends BaseUIManager<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
+
+	static {
+		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
+	}
 
 	private boolean editable;
 	private BorderPane myBorder;
@@ -116,12 +118,9 @@ public class View extends BaseUIManager<Region> {
 	 */
 	private void initPanesAndListeners() {
 		menuBar = new VoogaMenuBar();
-		menuBar.getStyleSheet().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				getObject().getStylesheets().clear();
-				getObject().getStylesheets().add(newValue);
-			}
+		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
+			getObject().getStylesheets().clear();
+			getObject().getStylesheets().add(newValue);
 		});
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);

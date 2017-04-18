@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  */
 public class CellView extends BaseUIManager<Parent> {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
-	private static final double CELL_STROKE = 1;
+	private static final double CELL_STROKE = 2;
 	private static final double UNIT_SCALE = 0.75;
 
 	private Cell cellModel;
@@ -125,7 +125,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private void update(Cell cellModel) {
 		this.cellModel = cellModel;
 		group.getChildren().clear();
-		if (getController().getGrid().getImgPath().length() < 2) {
+		if (getController().getGrid().getImgPath().length() < 1) {
 			polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
