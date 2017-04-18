@@ -21,6 +21,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 	private ImageNameDescriptionPage boardNamePage;
 	private GridInstantiationPage gridInstantiationPage;
 	private AdditionalWizardsPage<Team> additionalTeamWizardsPage;
+	private AdditionalWizardsPage<Team> additionalItemWizardsPage;
 
 	public GameStrategy() {
 		initialize();
@@ -48,6 +49,8 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
 		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
+		additionalItemWizardsPage = new AdditionalWizardsPage<>("Create Items",
+				"Use the wizards below to create new items", TeamWizard.class);
 		additionalTeamWizardsPage = new AdditionalWizardsPage<>("Create Teams",
 				"Use the wizards below to create new teams", TeamWizard.class);
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalTeamWizardsPage);
