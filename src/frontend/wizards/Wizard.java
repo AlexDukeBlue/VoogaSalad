@@ -120,7 +120,6 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		borderPane.setBottom(buttonBar.getObject());
 
 		stage.setScene(new Scene(borderPane));
-		stage.show();
 	}
 
 }

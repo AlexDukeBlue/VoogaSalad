@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 import frontend.wizards.Wizard;
 import frontend.wizards.util.AdditionalWizardRow;
 import frontend.wizards.util.NumericInputRow;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -21,7 +19,6 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 	private VBox vbox;
 	private NumericInputRow numWizardRow;
 	private ObservableList<AdditionalWizardRow<T>> wizardRows;
-	private BooleanProperty canNext;
 
 	public AdditionalWizardsPage(String title, String description, Class<? extends Wizard<T>> clazz) {
 		super(title, description);
@@ -31,11 +28,6 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 	@Override
 	public Region getObject() {
 		return vbox;
-	}
-
-	@Override
-	public BooleanProperty canNext() {
-		return canNext;
 	}
 
 	public Collection<T> getObjects() {
@@ -72,16 +64,15 @@ public class AdditionalWizardsPage<T> extends WizardPage {
 				wizardRows.remove(wizardRows.get(wizardRows.size() - 1));
 			}
 		});
-		canNext = new SimpleBooleanProperty(false);
 		vbox.getChildren().addAll(numWizardRow.getObject());
 		checkCanNext();
 	}
 
 	private void checkCanNext() {
-		canNext.setValue(true);
+		canNextWritable().setValue(true);
 		wizardRows.stream().forEach(row -> {
 			if (row.getObjectProperty().getValue() == null) {
-				canNext.setValue(false);
+				canNextWritable().setValue(false);
 			}
 		});
 	}
