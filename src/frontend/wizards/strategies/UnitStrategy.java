@@ -1,13 +1,11 @@
-package frontend.wizards.selection_strategies;
-
-import java.util.Arrays;
+package frontend.wizards.strategies;
 
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
-import frontend.wizards.wizard_pages.AbilitiesAdderPage;
-import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
-import frontend.wizards.wizard_pages.TerrainMovePointPage;
+import frontend.wizards.strategies.wizard_pages.AbilitiesAdderPage;
+import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
+import frontend.wizards.strategies.wizard_pages.TerrainMovePointPage;
 
 /**
  * UnitStrategy implements the SelectionStrategy interface in order to allow the
@@ -41,7 +39,7 @@ public class UnitStrategy extends BaseStrategy<Unit> {
 		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Unit");
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
 		terrainMovePointPage = new TerrainMovePointPage(gameState);
-		getPages().addAll(Arrays.asList(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage));
+		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage);
 	}
 
 }

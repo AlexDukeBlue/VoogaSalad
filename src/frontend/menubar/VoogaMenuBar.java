@@ -202,6 +202,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void create() {
 		GameWizard wiz = new GameWizard();
+		wiz.show();
 		wiz.addObserver((o, arg) -> createGame((AuthoringGameState) arg, true));
 
 	}

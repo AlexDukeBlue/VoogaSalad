@@ -1,5 +1,6 @@
 package frontend.worldview.grid;
 
+
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.util.GameplayState;
@@ -14,6 +15,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import util.net.Modifier;
 
@@ -33,6 +35,10 @@ import java.util.function.Consumer;
  * @author Dylan Peters
  */
 public class CellView extends BaseUIManager<Parent> {
+	private static final Paint CELL_OUTLINE = Color.BLACK;
+	private static final double CELL_STROKE = 1;
+	private static final double UNIT_SCALE = 0.75;
+
 	private Cell cellModel;
 	private Polygon polygon;
 	private Group group;
@@ -83,24 +89,6 @@ public class CellView extends BaseUIManager<Parent> {
 		return group;
 	}
 
-//	/**
-//	 * sets the x position of a polygon
-//	 *
-//	 * @param x
-//	 */
-//	public void setX(double x) {
-//		polygon.setLayoutX(x);
-//	}
-//
-//	/**
-//	 * sets the y position of a polygon
-//	 *
-//	 * @param y
-//	 */
-//	public void setY(double y) {
-//		polygon.setLayoutY(y);
-//	}
-
 	/**
 	 * returns the polygon that serves as the shape of the cell
 	 *
@@ -142,8 +130,8 @@ public class CellView extends BaseUIManager<Parent> {
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
-		polygon.setStrokeWidth(1);
-		polygon.setStroke(Color.BLACK);
+		polygon.setStrokeWidth(CELL_STROKE);
+		polygon.setStroke(CELL_OUTLINE);
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
 			if (unit != null) {
@@ -154,8 +142,8 @@ public class CellView extends BaseUIManager<Parent> {
 					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth());
 					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight());
 				});
-				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * 0.75);
-				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * 0.75);
+				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}

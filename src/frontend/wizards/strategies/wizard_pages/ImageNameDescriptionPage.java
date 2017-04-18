@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import frontend.View;
 import javafx.beans.value.ChangeListener;
@@ -25,7 +25,7 @@ import java.io.File;
  *
  * @author Andreas
  */
-public class ImageNameDescriptionPage extends WizardPage {
+public class ImageNameDescriptionPage extends BaseWizardPage {
 	private static final String DEFAULT_TITLE = "Set Image, Name, and Description";
 	private static final String DEFAULT_DESCRIPTION = "You must choose a file for the image and set the name. The description is optional.";
 	private static final double DEFAULT_INSETS = 10;
@@ -133,7 +133,6 @@ public class ImageNameDescriptionPage extends WizardPage {
 	}
 
 	private void checkIfCanNext() {
-		canNextWritable().setValue(true);//imageView.getImage() != null && !nameField.getText().isEmpty());
+		canNextWritable().setValue(/*imageView.getImage() != null && !nameField.getText().isEmpty()))*/ true);
 	}
-
 }

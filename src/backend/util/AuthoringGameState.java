@@ -106,6 +106,11 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity {
 	public AuthoringGameState addTeam(Team team) {
 		return (AuthoringGameState) super.addTeam(team);
 	}
+	
+	public void setTeams(Collection<Team> teams){
+		getTeams().stream().forEach(team -> removeTeamByName(team.getName()));
+		teams.forEach(team -> addTeam(team));
+	}
 
 	@Override
 	public AuthoringGameState addTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {

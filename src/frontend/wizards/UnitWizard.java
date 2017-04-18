@@ -2,7 +2,7 @@ package frontend.wizards;
 
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
-import frontend.wizards.selection_strategies.UnitStrategy;
+import frontend.wizards.strategies.UnitStrategy;
 import javafx.stage.Stage;
 
 /**

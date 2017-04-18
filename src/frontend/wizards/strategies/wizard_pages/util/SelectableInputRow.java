@@ -1,4 +1,4 @@
-package frontend.wizards.util;
+package frontend.wizards.strategies.wizard_pages.util;
 
 import frontend.util.BaseUIManager;
 import javafx.beans.property.BooleanProperty;

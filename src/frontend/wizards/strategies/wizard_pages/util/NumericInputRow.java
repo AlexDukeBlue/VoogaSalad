@@ -1,4 +1,4 @@
-package frontend.wizards.util;
+package frontend.wizards.strategies.wizard_pages.util;
 
 import frontend.util.BaseUIManager;
 import javafx.beans.value.ChangeListener;
@@ -39,12 +39,16 @@ public class NumericInputRow extends BaseUIManager<Region> {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				try {
-					if (!newValue.isEmpty()) {
-						Integer.parseInt(newValue);
+					if (newValue.isEmpty()) {
+						myNumericalInputField.setText("0");
 					}
+					Integer.parseInt(newValue);
 				} catch (Exception e) {
 					myNumericalInputField.setText("0");
 				}
+				setChanged();
+				notifyObservers(Integer.parseInt(myNumericalInputField.getText()));
+				clearChanged();
 			}
 		});
 
@@ -61,7 +65,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		return myNameField.getText();
 	}
 
-	void setValue(Integer value) {
+	public void setValue(Integer value) {
 		myNumericalInputField.setText(value.toString());
 	}
 

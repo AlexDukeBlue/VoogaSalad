@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,7 +10,7 @@ import javafx.scene.layout.Region;
  * @author Andreas
  *
  */
-public class UnitMovePointPage extends WizardPage {
+public class UnitMovePointPage extends BaseWizardPage {
 	private static final String DEFAULT_TITLE = "Set Movement Points";
 	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for the unit to cross each terrain type.";
 
