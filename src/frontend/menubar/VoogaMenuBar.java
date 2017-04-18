@@ -161,13 +161,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			in.close();
 			fileIn.close();
 
-<<<<<<< HEAD
-=======
 			// this part probs doesn't work
 			// Region pane = ui.getPrimaryPane();
 			// ((BorderPane) pane).setCenter(new View(null, null).getObject());
-
->>>>>>> f7177e03cbe50ae9f784a5e67fe05de1c1991aae
 		} catch (IOException i) {
 			i.printStackTrace();
 			return;

@@ -139,8 +139,8 @@ public class CellView extends BaseUIManager<Parent> {
 				unitView.getObject().translateXProperty().set(polygon.getPoints().get(0));
 				unitView.getObject().translateYProperty().set(polygon.getPoints().get(1));
 				polygon.boundsInLocalProperty().addListener(change -> {
-					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth());
-					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight());
+					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				});
 				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
 				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);

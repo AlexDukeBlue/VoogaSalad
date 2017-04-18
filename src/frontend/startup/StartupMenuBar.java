@@ -136,7 +136,7 @@ public class StartupMenuBar extends VBox {
 
 			//this part probs doesn't work
 			Region pane = ui.getPrimaryPane();
-			((BorderPane) pane).setCenter(new View(null, null).getObject());
+			((BorderPane) pane).setCenter(new View(null).getObject());
 
 		} catch (IOException i) {
 			i.printStackTrace();
