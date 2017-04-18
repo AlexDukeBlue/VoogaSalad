@@ -1,4 +1,4 @@
-package frontend.wizards.wizard_pages;
+package frontend.wizards.strategies.wizard_pages;
 
 import frontend.util.BaseUIManager;
 import javafx.beans.property.BooleanProperty;
@@ -7,47 +7,53 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Region;
 
 /**
- * WizardPage is an abstract class who's sub-classes implement the full UI's of a single
- * page dialogue in a specific wizard. It is composed with wizards.util package classes and also knows if it 
- * can Next.
+ * BaseWizardPage is an abstract class whose sub-classes implement the full UIs
+ * of a single page dialogue in a specific wizard. It is composed with
+ * wizards.util package classes and also knows if it can Next.
+ * 
  * @author Andreas
  *
  */
-public abstract class WizardPage extends BaseUIManager<Region> {
+abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPage {
 
 	private BooleanProperty canNext;
 	private String title, description;
 
-	public WizardPage() {
+	public BaseWizardPage() {
 		this("");
 	}
 
-	public WizardPage(String title) {
+	public BaseWizardPage(String title) {
 		this(title, "");
 	}
 
-	public WizardPage(String title, String description) {
+	public BaseWizardPage(String title, String description) {
 		this.title = title;
 		this.description = description;
 		canNext = new SimpleBooleanProperty(false);
 	}
 
+	@Override
 	public ReadOnlyBooleanProperty canNext() {
 		return BooleanProperty.readOnlyBooleanProperty(canNext);
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}

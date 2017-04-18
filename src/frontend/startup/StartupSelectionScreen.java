@@ -74,6 +74,7 @@ public class StartupSelectionScreen extends VBox {
 
 	private void create() {
 		GameWizard wiz = new GameWizard();
+		wiz.show();
 		wiz.addObserver(new Observer() {
 
 			@Override

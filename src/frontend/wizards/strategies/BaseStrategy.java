@@ -1,11 +1,11 @@
-package frontend.wizards.selection_strategies;
+package frontend.wizards.strategies;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
 import frontend.util.BaseUIManager;
-import frontend.wizards.wizard_pages.WizardPage;
+import frontend.wizards.strategies.wizard_pages.WizardPage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,6 +14,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -29,15 +30,16 @@ import javafx.scene.layout.VBox;
  * @param <T>
  *            type of Object instantiated by BaseStrategy
  */
-public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
+abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
 	private BooleanProperty canPrevious, canNext, canFinish;
 	private BorderPane borderPane;
+	private ScrollPane scrollPane;
 	private VBox titleDescriptionBox;
 	private Label title;
 	private Label description;
 	private ResourceBundle bundle = ResourceBundle
-			.getBundle("frontend.wizards.selection_strategies.properties/BaseSelection");
+			.getBundle("frontend.wizards.strategies.properties/BaseSelection");
 	// , new Locale("es", "MX")
 	private ObservableList<WizardPage> pages;
 
@@ -71,7 +73,7 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	}
 
 	@Override
-	public Region getObject() {
+	final public Region getObject() {
 		return borderPane;
 	}
 
@@ -92,7 +94,7 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	protected int getCurrentPageNum() {
 		int i = 0;
 		for (WizardPage page : pages) {
-			if (borderPane.getCenter() == page.getObject()) {
+			if (scrollPane.getContent() == page.getObject()) {
 				return i;
 			}
 			i++;
@@ -107,7 +109,7 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	private void tryToGoToPageNum(int newPageNum) {
 		if (canGoToPage(newPageNum)) {
 			WizardPage page = pages.get(newPageNum);
-			borderPane.setCenter(page.getObject());
+			scrollPane.setContent(page.getObject());
 			title.setText(page.getTitle());
 			description.setText(page.getDescription());
 
@@ -140,12 +142,14 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 		canNext = new SimpleBooleanProperty(false);
 		canFinish = new SimpleBooleanProperty(false);
 		borderPane = new BorderPane();
+		scrollPane = new ScrollPane();
 		title = new Label();
 		description = new Label();
 		titleDescriptionBox = new VBox();
 		titleDescriptionBox.getChildren().addAll(title, description);
 		titleDescriptionBox.setAlignment(Pos.CENTER);
 		borderPane.setTop(titleDescriptionBox);
+		borderPane.setCenter(scrollPane);
 		this.pages = FXCollections.observableArrayList();
 		this.pages.addListener(new ListChangeListener<WizardPage>() {
 			@Override

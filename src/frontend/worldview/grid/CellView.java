@@ -14,7 +14,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import util.net.Modifier;
 
@@ -32,6 +34,8 @@ import util.net.Modifier;
  * @author Dylan Peters
  */
 public class CellView extends BaseUIManager<Parent> {
+	private static final Paint CELL_OUTLINE = Color.BLACK;
+	private static final double CELL_STROKE = 5;
 	private static final double UNIT_SCALE = 0.75;
 	
 	private Cell cellModel;
@@ -88,24 +92,6 @@ public class CellView extends BaseUIManager<Parent> {
 		return group;
 	}
 
-//	/**
-//	 * sets the x position of a polygon
-//	 *
-//	 * @param x
-//	 */
-//	public void setX(double x) {
-//		polygon.setLayoutX(x);
-//	}
-//
-//	/**
-//	 * sets the y position of a polygon
-//	 *
-//	 * @param y
-//	 */
-//	public void setY(double y) {
-//		polygon.setLayoutY(y);
-//	}
-
 	/**
 	 * returns the polygon that serves as the shape of the cell
 	 *
@@ -144,7 +130,8 @@ public class CellView extends BaseUIManager<Parent> {
 		this.cellModel = cellModel;
 		group.getChildren().clear();
 		polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
-		polygon.setStrokeWidth(10);
+		polygon.setStrokeWidth(CELL_STROKE);
+		polygon.setStroke(CELL_OUTLINE);
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
 			if (unit != null){

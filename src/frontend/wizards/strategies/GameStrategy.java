@@ -1,10 +1,10 @@
-package frontend.wizards.selection_strategies;
+package frontend.wizards.strategies;
 
 import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
 import backend.util.AuthoringGameState;
-import frontend.wizards.wizard_pages.GridInstantiationPage;
-import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
+import frontend.wizards.strategies.wizard_pages.GridInstantiationPage;
+import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the
@@ -16,8 +16,9 @@ import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
 public class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStrategy<AuthoringGameState> {
 
 	private ImageNameDescriptionPage gameNamePage;
-	private ImageNameDescriptionPage boardNamePage;
+//	private ImageNameDescriptionPage boardNamePage;
 	private GridInstantiationPage gridInstantiationPage;
+//	private AdditionalWizardsPage<Team> additionalTeamWizardsPage;
 
 	public GameStrategy() {
 		initialize();
@@ -25,9 +26,10 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 
 	@Override
 	public AuthoringGameState finish() {
-		ModifiableGameBoard boardBuilder = new ModifiableGameBoard(boardNamePage.getName());
-		boardBuilder.setDescription(boardNamePage.getDescription());
-		boardBuilder.setImgPath(boardNamePage.getImagePath());
+		ModifiableGameBoard boardBuilder = new ModifiableGameBoard("");
+//		boardBuilder.setName(boardNamePage.getName());
+//		boardBuilder.setDescription(boardNamePage.getDescription());
+//		boardBuilder.setImgPath(boardNamePage.getImagePath());
 		boardBuilder.setRows(gridInstantiationPage.getRows());
 		boardBuilder.setColumns(gridInstantiationPage.getCols());
 		boardBuilder.setTemplateCell(gridInstantiationPage.getTemplateCell());
@@ -36,13 +38,16 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		gameState.setDescription(gameNamePage.getDescription());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
+//		gameState.setTeams(additionalTeamWizardsPage.getObjects());
 		return gameState;
 	}
 
 	private void initialize() {
 		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
-		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
+//		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
-		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
+//		additionalTeamWizardsPage = new AdditionalWizardsPage<>("Create Teams",
+//				"Use the wizards below to create new teams", TeamWizard.class);
+		getPages().addAll(gameNamePage/*, boardNamePage*/, gridInstantiationPage/*, additionalTeamWizardsPage*/);
 	}
 }

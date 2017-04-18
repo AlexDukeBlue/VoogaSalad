@@ -1,4 +1,4 @@
-package frontend.wizards.selection_strategies;
+package frontend.wizards.strategies;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.scene.Node;
