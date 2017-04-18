@@ -6,15 +6,15 @@ import javafx.stage.Stage;
 public class Main extends Application {
     
     public static void main(String[] args) {
-//        new Thread() {
-//            public void run() {
-//                try {
-//                    VoogaServerMain.main(args);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
+        new Thread() {
+            public void run() {
+                try {
+                    VoogaServerMain.main(args);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
         launch(args);
     }
     

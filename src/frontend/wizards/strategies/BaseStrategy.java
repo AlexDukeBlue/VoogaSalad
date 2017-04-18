@@ -1,4 +1,4 @@
-package frontend.wizards.selection_strategies;
+package frontend.wizards.strategies;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	private Label title;
 	private Label description;
 	private ResourceBundle bundle = ResourceBundle
-			.getBundle("frontend.wizards.selection_strategies.properties/BaseSelection");
+			.getBundle("frontend.wizards.strategies.properties/BaseSelection");
 	// , new Locale("es", "MX")
 	private ObservableList<WizardPage> pages;
 

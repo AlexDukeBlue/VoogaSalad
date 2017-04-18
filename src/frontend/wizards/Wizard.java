@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import frontend.util.BaseUIManager;
-import frontend.wizards.selection_strategies.WizardStrategy;
+import frontend.wizards.strategies.WizardStrategy;
 import frontend.wizards.util.ButtonBar;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -72,6 +72,14 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	public Region getObject() {
 		return borderPane;
 	}
+	
+	public void show(){
+		stage.show();
+	}
+	
+	public void hide(){
+		stage.hide();
+	}
 
 	protected void previous() {
 		selectionStrategy.previous();
@@ -88,7 +96,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	protected void finish() {
 		setChanged();
 		notifyObservers(selectionStrategy.finish());
-		// clearChanged();
+		clearChanged();
 		stage.close();
 	}
 

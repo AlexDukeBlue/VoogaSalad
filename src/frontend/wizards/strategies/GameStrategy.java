@@ -1,10 +1,13 @@
-package frontend.wizards.selection_strategies;
+package frontend.wizards.strategies;
 
 import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
+import backend.player.Team;
 import backend.util.AuthoringGameState;
+import frontend.wizards.TeamWizard;
 import frontend.wizards.wizard_pages.GridInstantiationPage;
 import frontend.wizards.wizard_pages.ImageNameDescriptionPage;
+import frontend.wizards.wizard_pages.additional_wizards_pages.AdditionalWizardsPage;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the
@@ -18,6 +21,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 	private ImageNameDescriptionPage gameNamePage;
 	private ImageNameDescriptionPage boardNamePage;
 	private GridInstantiationPage gridInstantiationPage;
+	private AdditionalWizardsPage<Team> additionalTeamWizardsPage;
 
 	public GameStrategy() {
 		initialize();
@@ -36,6 +40,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		gameState.setDescription(gameNamePage.getDescription());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
+		gameState.setTeams(additionalTeamWizardsPage.getObjects());
 		return gameState;
 	}
 
@@ -43,6 +48,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
 		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
-		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
+		additionalTeamWizardsPage = new AdditionalWizardsPage<>(TeamWizard.class);
+		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage,additionalTeamWizardsPage);
 	}
 }

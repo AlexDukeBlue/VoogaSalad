@@ -1,7 +1,7 @@
 package frontend.wizards;
 
 import backend.util.AuthoringGameState;
-import frontend.wizards.selection_strategies.GameStrategy;
+import frontend.wizards.strategies.GameStrategy;
 import javafx.stage.Stage;
 
 /**

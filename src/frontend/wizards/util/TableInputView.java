@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import frontend.util.BaseUIManager;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -30,18 +29,6 @@ public abstract class TableInputView extends BaseUIManager<Region> {
 
 	public TableInputView(Collection<BaseUIManager<? extends Parent>> childrenToAdd) {
 		children = FXCollections.observableArrayList();
-		children.addListener(new ListChangeListener<BaseUIManager<? extends Parent>>() {
-			@Override
-			public void onChanged(
-					javafx.collections.ListChangeListener.Change<? extends BaseUIManager<? extends Parent>> change) {
-				if (change.next()) {
-					if (change.wasAdded()) {
-//						change.getAddedSubList().stream()
-//								.forEachOrdered(child -> child.getRequests().passTo(getRequests()));
-					}
-				}
-			}
-		});
 		children.addAll(childrenToAdd);
 		scrollPane = new ScrollPane();
 	}
