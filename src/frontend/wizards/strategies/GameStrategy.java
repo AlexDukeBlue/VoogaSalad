@@ -3,8 +3,10 @@ package frontend.wizards.strategies;
 import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
 import backend.player.Team;
+import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import frontend.wizards.TeamWizard;
+import frontend.wizards.UnitWizard;
 import frontend.wizards.strategies.wizard_pages.AdditionalWizardsPage;
 import frontend.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
@@ -13,7 +15,7 @@ import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
  * GameStrategy implements the SelectionStrategy interface in order to allow the
  * user to instantiate new AuthoringGameStates.
  *
- * @author Dylan Peters
+ * @author Dylan Peters, heavily edited by ncp14 4/18/17
  */
 public class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStrategy<AuthoringGameState> {
 
@@ -21,7 +23,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 	private ImageNameDescriptionPage boardNamePage;
 	private GridInstantiationPage gridInstantiationPage;
 	private AdditionalWizardsPage<Team> additionalTeamWizardsPage;
-	private AdditionalWizardsPage<Team> additionalItemWizardsPage;
+	private AdditionalWizardsPage<Unit> additionalUnitWizardsPage;
 
 	public GameStrategy() {
 		initialize();
@@ -37,7 +39,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		boardBuilder.setColumns(gridInstantiationPage.getCols());
 		boardBuilder.setTemplateCell(gridInstantiationPage.getTemplateCell());
 		boardBuilder.setBoundsHandler(BoundsHandler.INFINITE_BOUNDS);
-		AuthoringGameState gameState = new AuthoringGameState(gameNamePage.getName());
+		AuthoringGameState gameState = new AuthoringGameState(gameNamePage.getName()); //Why is the authoring gamestate initialized here, dylan? Isn't it already initialized on the homepage? -noah
 		gameState.setDescription(gameNamePage.getDescription());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
@@ -49,10 +51,10 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
 		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage();
-		additionalItemWizardsPage = new AdditionalWizardsPage<>("Create Items",
-				"Use the wizards below to create new items", TeamWizard.class);
+		additionalUnitWizardsPage = new AdditionalWizardsPage<>("Create Units",
+				"Use the wizards below to create new units", UnitWizard.class);
 		additionalTeamWizardsPage = new AdditionalWizardsPage<>("Create Teams",
 				"Use the wizards below to create new teams", TeamWizard.class);
-		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalTeamWizardsPage);
+		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalUnitWizardsPage, additionalTeamWizardsPage);
 	}
 }
