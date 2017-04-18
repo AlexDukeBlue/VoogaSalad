@@ -36,6 +36,7 @@ public class UnitStrategy extends BaseStrategy<Unit> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
+		System.out.println("instantiating new unit...");
 		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Unit");
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
 		terrainMovePointPage = new TerrainMovePointPage(gameState);
