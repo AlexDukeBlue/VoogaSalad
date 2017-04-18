@@ -12,6 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -95,8 +97,11 @@ public class GridInstantiationPage extends BaseWizardPage {
 		cols.setOnAction(event -> checkCanNext());
 		cellShapeChooser.setOnAction(event -> checkCanNext());
 		terrainChooser.setOnAction(event -> checkCanNext());
+		
+		HBox cellShapeBox = new HBox(new Label("Set Default Cell Shape: "),cellShapeChooser);
+		HBox terrainBox = new HBox(new Label("Set Default Terrain: "),terrainChooser);
 
-		vbox.getChildren().addAll(rows.getObject(), cols.getObject(), cellShapeChooser, terrainChooser);
+		vbox.getChildren().addAll(rows.getObject(), cols.getObject(), cellShapeBox, terrainBox);
 		checkCanNext();
 	}
 

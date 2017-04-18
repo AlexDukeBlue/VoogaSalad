@@ -14,8 +14,7 @@ public class TeamStrategy extends BaseStrategy<Team> {
 
 	@Override
 	public Team finish() {
-		// TODO Auto-generated method stub
-		return new Team("asdf", "asdf", "asdf", new Player[0]);
+		return new Team(namePage.getName(), namePage.getDescription(), namePage.getImagePath(), new Player[0]);
 	}
 
 	private void initialize() {

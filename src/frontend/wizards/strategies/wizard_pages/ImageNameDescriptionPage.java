@@ -133,7 +133,7 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	}
 
 	private void checkIfCanNext() {
-		canNextWritable().setValue(true);//imageView.getImage() != null && !nameField.getText().isEmpty());
+		canNextWritable().setValue(imageView.getImage() != null && !nameField.getText().isEmpty());
 	}
 
 }
