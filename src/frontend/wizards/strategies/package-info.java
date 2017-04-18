@@ -5,4 +5,4 @@
  * @author Dylan Peters
  *
  */
-package frontend.wizards.util;
+package frontend.wizards.strategies;
