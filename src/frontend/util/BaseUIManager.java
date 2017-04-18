@@ -3,21 +3,18 @@
  */
 package frontend.util;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
+import controller.Controller;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.ResourceBundle;
-
-import com.sun.javafx.collections.UnmodifiableObservableMap;
-
-import controller.Controller;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -63,16 +60,13 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	}
 
 	public BaseUIManager(Controller controller) {
-		language = new SimpleObjectProperty<ResourceBundle>();
+		language = new SimpleObjectProperty<>();
 		language.setValue(createDefaultResourceBundle());
-		styleSheet = new SimpleObjectProperty<String>();
-		styleSheet.addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (getObject() instanceof Parent) {
-					((Parent) getObject()).getStylesheets().clear();
-					((Parent) getObject()).getStylesheets().add(newValue);
-				}
+		styleSheet = new SimpleObjectProperty<>();
+		styleSheet.addListener((observable, oldValue, newValue) -> {
+			if (getObject() instanceof Parent) {
+				((Parent) getObject()).getStylesheets().clear();
+				((Parent) getObject()).getStylesheets().add(newValue);
 			}
 		});
 		setController(controller);
@@ -140,7 +134,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 *         whose values are the ResourceBundles themselves.
 	 */
 	protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
-		Map<String, ResourceBundle> map = new HashMap<String, ResourceBundle>();
+		Map<String, ResourceBundle> map = new HashMap<>();
 		ResourceBundle bundle = ResourceBundle.getBundle(LANGUAGE_RESOURCE_LIST);
 		for (String key : bundle.keySet()) {
 			map.put(key, ResourceBundle.getBundle(bundle.getString(key)));
@@ -159,7 +153,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 *         are the stylesheets themselves.
 	 */
 	protected final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
 			map.put(getLanguage().getValue().getString(key), fileBundle.getString(key));

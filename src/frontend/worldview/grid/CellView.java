@@ -1,8 +1,5 @@
 package frontend.worldview.grid;
 
-import java.awt.Event;
-import java.util.function.Consumer;
-
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.util.GameplayState;
@@ -15,11 +12,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
-import javafx.stage.Stage;
 import util.net.Modifier;
+
+import java.util.function.Consumer;
 
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
@@ -43,11 +41,9 @@ public class CellView extends BaseUIManager<Parent> {
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellModel
-	 *            The Cell object that this CellView will visually represent.
-	 * @param controller
-	 *            the controller object that this CellView will send information
-	 *            to when the user interacts with the CellView
+	 * @param cellModel  The Cell object that this CellView will visually represent.
+	 * @param controller the controller object that this CellView will send information
+	 *                   to when the user interacts with the CellView
 	 */
 	public CellView(Cell cellModel, Controller controller) {
 		setController(controller);
@@ -58,8 +54,7 @@ public class CellView extends BaseUIManager<Parent> {
 	/**
 	 * Sets the action that is performed when a cell is clicked.
 	 *
-	 * @param consumer
-	 *            consumer to execute when the cell is clicked
+	 * @param consumer consumer to execute when the cell is clicked
 	 */
 	public void setOnCellClick(Consumer<CellView> consumer) {
 		polygon.setOnMouseClicked(event -> consumer.accept(this));
@@ -69,8 +64,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 * Adds a copy of the Sprite to the cell and sends the request to the
 	 * controller.
 	 *
-	 * @param sprite
-	 *            sprite to copy and add to the cell
+	 * @param sprite sprite to copy and add to the cell
 	 */
 	public void add(VoogaEntity sprite) {
 		CoordinateTuple location = cellModel.getLocation();
@@ -119,8 +113,7 @@ public class CellView extends BaseUIManager<Parent> {
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon
-	 *            Shape of cellview an instance of a cell
+	 * @param polygon Shape of cellview an instance of a cell
 	 */
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
@@ -144,11 +137,16 @@ public class CellView extends BaseUIManager<Parent> {
 	private void update(Cell cellModel) {
 		this.cellModel = cellModel;
 		group.getChildren().clear();
-		polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
-		polygon.setStrokeWidth(10);
+		if (getController().getGrid().getImgPath().length() < 2) {
+			polygon.setFill(new ImagePattern(View.getImg(cellModel.getTerrain().getImgPath())));
+		} else {
+			polygon.setFill(Color.TRANSPARENT);
+		}
+		polygon.setStrokeWidth(1);
+		polygon.setStroke(Color.BLACK);
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
-			if (unit != null){
+			if (unit != null) {
 				UnitView unitView = new UnitView(unit);
 				unitView.getObject().translateXProperty().set(polygon.getPoints().get(0));
 				unitView.getObject().translateYProperty().set(polygon.getPoints().get(1));
@@ -156,8 +154,8 @@ public class CellView extends BaseUIManager<Parent> {
 					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth());
 					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight());
 				});
-				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth()*0.75);
-				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight()*0.75);
+				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * 0.75);
+				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * 0.75);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}
@@ -178,7 +176,7 @@ public class CellView extends BaseUIManager<Parent> {
 		polygon = new Polygon();
 		group = new Group();
 		contextMenu = new ContextMenu(new MenuItem("asdf"));
-		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon,event.getScreenX(),event.getScreenY()));
+		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 //		polygon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> contextMenu.hide());
 	}
 }
