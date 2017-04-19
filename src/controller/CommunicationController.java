@@ -47,7 +47,6 @@ public class CommunicationController implements Controller {
 			mClient.addListener(this::updateGameState);
 			setGameState(gameState);
 			Executors.newSingleThreadExecutor().submit(mClient);
-			waitForReady.await();
 			//login with username
 			sendModifier((AuthoringGameState state) -> {
 				state.addPlayer(new Player(username, "Test player", ""));
@@ -95,12 +94,12 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public AuthoringGameState getAuthoringGameState() {
-		return (AuthoringGameState) mGameState;
+		return mGameState;
 	}
 
 	@Override
 	public GameplayState getGameState() {
-		return (GameplayState) mGameState;
+		return mGameState;
 	}
 
 	@Override
@@ -115,6 +114,11 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
+		try {
+			waitForReady.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 		//lol this is so unsafe
 //		mGameState = modifier.modify((U) mGameState);
