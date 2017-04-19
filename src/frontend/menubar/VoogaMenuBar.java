@@ -8,8 +8,6 @@ import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
 import frontend.wizards.GameWizard;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -26,7 +24,6 @@ import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
@@ -38,22 +35,17 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	public VoogaMenuBar(View view) {
 		myView = view;
 		menuBar = new MenuBar();
+		menuBar.setUseSystemMenuBar(true); //Because it looks badass as fuck -Timmy
 		populateMenuBar();
-		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
-			@Override
-			public void changed(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldLanguage,
-					ResourceBundle newLanguage) {
-				populateMenuBar();
-			}
-		});
+		getLanguage().addListener((observable, oldLanguage, newLanguage) -> populateMenuBar());
 	}
 
 	@Override
 	public MenuBar getObject() {
 		return menuBar;
 	}
-	
-	public void setEditable(boolean editable){
+
+	public void setEditable(boolean editable) {
 		save.setDisable(!editable);
 		load.setDisable(!editable);
 		newGameItem.setDisable(!editable);
@@ -113,17 +105,17 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		language.getItems().add(setLanguage);
 
 		theme.getItems().add(setTheme);
-		
+
 		view.getItems().add(editModeItem);
 		view.getItems().add(playModeItem);
 
 		help.getItems().add(helpItem);
 
 		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
-			MenuItem menuItem = new MenuItem(name){{
+			MenuItem menuItem = new MenuItem(name) {{
 				setOnAction(e -> getLanguage().setValue(bundle));
 			}};
-			
+
 			setLanguage.getItems().add(menuItem);
 		});
 
@@ -240,9 +232,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		stage.show();
 
 	}
-	
-	private void enterEditMode(){
-		
+
+	private void enterEditMode() {
+
 	}
 
 	@Override
