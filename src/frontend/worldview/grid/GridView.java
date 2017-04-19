@@ -1,11 +1,6 @@
 package frontend.worldview.grid;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
@@ -18,13 +13,15 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 import util.net.Modifier;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a
@@ -55,21 +52,15 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 
 	private void initialize() {
 		myScrollPane = new ScrollPane();
-		myScrollPane.setOnZoom(new EventHandler<ZoomEvent>() {
-
-			@Override
-			public void handle(ZoomEvent event) {
-				Node e = myScrollPane.getContent();
-				if (e.getScaleX() < 1.5) {
-					e.setScaleX(e.getScaleX() * event.getZoomFactor());
-					e.setScaleY(e.getScaleY() * event.getZoomFactor());
-				} else {
-					e.setScaleX(1.1);
-					e.setScaleY(1.1);
-				}
-				;
+		myScrollPane.setOnZoom(event -> {
+			Node e = myScrollPane.getContent();
+			if (e.getScaleX() < 1.5) {
+				e.setScaleX(e.getScaleX() * event.getZoomFactor());
+				e.setScaleY(e.getScaleY() * event.getZoomFactor());
+			} else {
+				e.setScaleX(1.1);
+				e.setScaleY(1.1);
 			}
-
 		});
 		cellViewObjects = new Pane();
 		zoomGroup = new Group(cellViewObjects);
@@ -102,7 +93,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 
 				@Override
 				public void handle(MouseEvent event) {
-					if(event.getButton().equals(MouseButton.PRIMARY)) cellClicked(cl);
+					if (event.getButton().equals(MouseButton.PRIMARY)) cellClicked(cl);
 				}
 			});
 		});
@@ -117,36 +108,61 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 
 	private void cellClicked(CellView cell) {
 		if (unitToArrive != null) {
-			CoordinateTuple tuple = cell.getCoordinateTuple();
-			Unit unitToArrive;
+//			Unit unitToArrive;
+//			if (shouldCopy) {
+//				unitToArrive = this.unitToArrive.copy();
+//			} else {
+//				unitToArrive = this.unitToArrive;
+//			}
+//			Modifier<? extends AuthoringGameState> modifier = gameState -> {
+//				if (shouldCopy) {
+//					gameState.getGrid().get(tuple).addOccupants(unitToArrive);
+//					((ModifiableUnit) unitToArrive).setCurrentCell(gameState.getGrid().get(tuple));
+//				} else {
+//					Cell previous = unitToArrive.getCurrentCell();
+//					unitToArrive.moveTo(gameState.getGrid().get(tuple), gameState);
+//					Cell current = unitToArrive.getCurrentCell();
+//					System.out.println("Previous: " + previous + "\n" + previous.getOccupants().size());
+//					System.out.println("Current: " + current + "\n" + current.getOccupants().size());
+//				}
+//				return gameState;
+//			};
+			CoordinateTuple cellClickedLocation = cell.getCoordinateTuple();
+			CoordinateTuple unitClickedLocation = unitToArrive.getLocation();
+			String unitClickedName = unitToArrive.getName();
+			//YOU HAVE TO GET THE SERVER'S UNIT, NOT THE LOCAL UNIT
+			//unitToArrive is the client's version
+			//unitToMove is the server's version. You have to get it from the gameState
+			//If you add unitToArrive to the server's grid, suddenly the server has 2 units
+			//unitToMove != unitToArrive
+			//you can't move unitToArrive on the server, since that unit doesn't exist on the server
+			//however, a unit with the exact same name and location do exist on the server
+			//so you can get the server's version using the name and location
+			//note that you can't have 2 units with the same name on the same spot (this is hard enforced in the backend with a map)
+			//Dylan I figured it out man
+			//You can die in peace now
+			Unit newUnit = unitToArrive.copy();
+			Modifier<? extends AuthoringGameState> modifier;
 			if (shouldCopy) {
-				unitToArrive = this.unitToArrive.copy();
+				modifier = gameState -> {
+					gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
+					return gameState;
+				};
 			} else {
-				unitToArrive = this.unitToArrive;
+				modifier = gameState -> {
+					Unit unitToMove = gameState.getGrid().get(unitClickedLocation).getOccupantByName(unitClickedName);
+					unitToMove.moveTo(gameState.getGrid().get(cellClickedLocation), gameState);
+					return gameState;
+				};
 			}
-			boolean shouldCopy = this.shouldCopy;
-			Modifier<? extends AuthoringGameState> modifier = gameState -> {
-				if (shouldCopy) {
-					gameState.getGrid().get(tuple).addOccupants(unitToArrive);
-					((ModifiableUnit) unitToArrive).setCurrentCell(gameState.getGrid().get(tuple));
-				} else {
-					Cell previous = unitToArrive.getCurrentCell();
-					unitToArrive.moveTo(gameState.getGrid().get(tuple), gameState);
-					Cell current = unitToArrive.getCurrentCell();
-					System.out.println("Previous: " + previous + "\n" + previous.getOccupants().size());
-					System.out.println("Current: " + current + "\n" + current.getOccupants().size());
-				}
-				return gameState;
-			};
+			this.shouldCopy = false;
 			getController().sendModifier(modifier);
-			System.out.println(getController().getGrid());
+			unitToArrive = null;
 		}
 	}
 
 	@Override
 	public void unitClicked(UnitView unitView) {
-		unitToArrive = unitView.getUnit();
-		shouldCopy = false;
+		unitToArrive = unitView.getUnit(getController());
 	}
-
 }

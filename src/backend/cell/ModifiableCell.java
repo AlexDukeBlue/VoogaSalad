@@ -195,6 +195,11 @@ public class ModifiableCell implements Cell {
 	}
 
 	@Override
+	public Unit getOccupantByName(String name) {
+		return occupants.get(name);
+	}
+
+	@Override
 	public void leave(Unit unit, GameplayState gamestate) {
 		getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, Event.UNIT_PRE_MOVEMENT, gamestate));
 		this.removeOccupants(unit);
