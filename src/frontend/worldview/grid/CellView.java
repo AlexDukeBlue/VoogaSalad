@@ -16,6 +16,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
+import com.sun.glass.events.MouseEvent;
+
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
  * placed.

@@ -28,6 +28,7 @@ public class UnitView extends Sprite {
 	 * @param unitModel
 	 *            the Unit object that this UnitView will be visualizing
 	 */
+	
 	public UnitView(Unit unitModel, UnitViewDelegate delegate) {
 		this.unitModel = unitModel;
 		unitView = new ImageView(View.getImg(unitModel.getImgPath()));
