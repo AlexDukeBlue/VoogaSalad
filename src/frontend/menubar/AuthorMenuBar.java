@@ -45,14 +45,7 @@ public class AuthorMenuBar extends VoogaMenuBar {
 		super(view, controller);
 		factory = new ComponentFactory();
 		populateMenuBar();
-		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
-			@Override
-			public void changed(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldLanguage,
-					ResourceBundle newLanguage) {
-				getObject().getMenus().clear();
-				populateMenuBar();
-			}
-		});
+		getLanguage().addListener((observable, oldLanguage, newLanguage) -> {getObject().getMenus().clear(); populateMenuBar();});
 	}
 	
 	public void setEditable(boolean editable){

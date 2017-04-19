@@ -1,4 +1,6 @@
+import backend.cell.Cell;
 import backend.cell.Terrain;
+import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.GridPattern;
 import backend.grid.ModifiableGameBoard;
@@ -69,6 +71,11 @@ public class VoogaClientMain extends Application {
 		chatLogView = new ChatLogView(name, new Controller() {
 			@Override
 			public GameBoard getGrid() {
+				return null;
+			}
+
+			@Override
+			public Cell getCell(CoordinateTuple tuple) {
 				return null;
 			}
 

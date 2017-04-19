@@ -9,6 +9,7 @@ import frontend.View;
 import frontend.util.BaseUIManager;
 import javafx.scene.control.MenuBar;
 
+
 /**
  * @author Stone Mathers
  * Created 4/18/2017
@@ -22,7 +23,7 @@ public abstract class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		super(controller);
 		myView = view;
 		menuBar = new MenuBar();
-		
+		menuBar.setUseSystemMenuBar(true); //Because it looks badass as fuck -Timmy
 	}
 	
 	@Override
@@ -32,6 +33,7 @@ public abstract class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	
 	public View getView(){
 		return myView;
+
 	}
 
 }

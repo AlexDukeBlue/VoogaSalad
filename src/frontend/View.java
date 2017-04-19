@@ -18,11 +18,6 @@
  */
 package frontend;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-
 import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -39,6 +34,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 public class View extends BaseUIManager<Region> implements Observer{
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();

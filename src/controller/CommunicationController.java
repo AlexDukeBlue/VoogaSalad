@@ -1,6 +1,8 @@
 package controller;
 
+import backend.cell.Cell;
 import backend.cell.Terrain;
+import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.ModifiableGameBoard;
 import backend.player.ImmutablePlayer;
@@ -50,6 +52,11 @@ public class CommunicationController implements Controller {
 	@Override
 	public GameBoard getGrid() {
 		return mGameState.getGrid();
+	}
+
+	@Override
+	public Cell getCell(CoordinateTuple tuple) {
+		return getGrid().get(tuple);
 	}
 
 	private <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
