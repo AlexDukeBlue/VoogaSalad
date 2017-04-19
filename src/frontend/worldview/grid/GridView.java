@@ -3,25 +3,20 @@ package frontend.worldview.grid;
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
-import util.net.Modifier;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a
@@ -37,11 +32,10 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 
 	private ScrollPane myScrollPane;
-	private Group zoomGroup;
 	private Pane cellViewObjects;
 	private LayoutManager myLayoutManager;
-	private Collection<CellView> cellViews;
-	private Unit unitToArrive;
+	private String unitClickedName;
+	private CoordinateTuple unitClickedLocation;
 	private boolean shouldCopy = true;
 
 	public GridView(Controller controller) {
@@ -63,12 +57,11 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			}
 		});
 		cellViewObjects = new Pane();
-		zoomGroup = new Group(cellViewObjects);
+		Group zoomGroup = new Group(cellViewObjects);
 		myScrollPane.setOnZoom(event -> {
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
 		});
-		cellViews = new ArrayList<>();
 		myLayoutManager = new LayoutManagerFactory();
 		populateCellViews();
 		myScrollPane.setContent(zoomGroup);
@@ -80,56 +73,31 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	}
 
 	private void populateCellViews() {
-		cellViewObjects.setBackground(new Background(
-				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().values().forEach(cell -> {
 			CellView cl = new CellView(cell, getController(), this);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();
-			cellViews.add(cl);
 			cellViewObjects.getChildren().add(cl.getObject());
-
-			cl.getPolygon().setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					if (event.getButton().equals(MouseButton.PRIMARY)) cellClicked(cl);
-				}
+			cl.getPolygon().setOnMouseClicked(event -> {
+				if (event.getButton().equals(MouseButton.PRIMARY)) cellClicked(cl);
 			});
 		});
 	}
 
 	public void setTemplateEntityToAdd(VoogaEntity template) {
 		if (template instanceof Unit) {
-			unitToArrive = (Unit) template;
+			unitClickedName = template.getName();
+			unitClickedLocation = null;
 			shouldCopy = true;
 		}
 	}
 
 	private void cellClicked(CellView cell) {
-		if (unitToArrive != null) {
-//			Unit unitToArrive;
-//			if (shouldCopy) {
-//				unitToArrive = this.unitToArrive.copy();
-//			} else {
-//				unitToArrive = this.unitToArrive;
-//			}
-//			Modifier<? extends AuthoringGameState> modifier = gameState -> {
-//				if (shouldCopy) {
-//					gameState.getGrid().get(tuple).addOccupants(unitToArrive);
-//					((ModifiableUnit) unitToArrive).setCurrentCell(gameState.getGrid().get(tuple));
-//				} else {
-//					Cell previous = unitToArrive.getCurrentCell();
-//					unitToArrive.moveTo(gameState.getGrid().get(tuple), gameState);
-//					Cell current = unitToArrive.getCurrentCell();
-//					System.out.println("Previous: " + previous + "\n" + previous.getOccupants().size());
-//					System.out.println("Current: " + current + "\n" + current.getOccupants().size());
-//				}
-//				return gameState;
-//			};
+		if (unitClickedName != null) {
 			CoordinateTuple cellClickedLocation = cell.getCoordinateTuple();
-			CoordinateTuple unitClickedLocation = unitToArrive.getLocation();
-			String unitClickedName = unitToArrive.getName();
+			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
+			String unitClickedName = this.unitClickedName;
 			//YOU HAVE TO GET THE SERVER'S UNIT, NOT THE LOCAL UNIT
 			//unitToArrive is the client's version
 			//unitToMove is the server's version. You have to get it from the gameState
@@ -141,28 +109,28 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			//note that you can't have 2 units with the same name on the same spot (this is hard enforced in the backend with a map)
 			//Dylan I figured it out man
 			//You can die in peace now
-			Unit newUnit = unitToArrive.copy();
-			Modifier<? extends AuthoringGameState> modifier;
 			if (shouldCopy) {
-				modifier = gameState -> {
+				getController().sendModifier((AuthoringGameState gameState) -> {
+					Unit newUnit = gameState.getTemplateByCategory("unit").getByName(unitClickedName).copy();
 					gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
 					return gameState;
-				};
+				});
 			} else {
-				modifier = gameState -> {
+				getController().sendModifier((GameplayState gameState) -> {
 					Unit unitToMove = gameState.getGrid().get(unitClickedLocation).getOccupantByName(unitClickedName);
 					unitToMove.moveTo(gameState.getGrid().get(cellClickedLocation), gameState);
 					return gameState;
-				};
+				});
 			}
 			this.shouldCopy = false;
-			getController().sendModifier(modifier);
-			unitToArrive = null;
+			this.unitClickedName = null;
+			this.unitClickedLocation = null;
 		}
 	}
 
 	@Override
 	public void unitClicked(UnitView unitView) {
-		unitToArrive = unitView.getUnit(getController());
+		unitClickedName = unitView.getUnitName();
+		unitClickedLocation = unitView.getUnitLocation();
 	}
 }

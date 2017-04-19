@@ -1,8 +1,6 @@
 package frontend.worldview.grid;
 
 import backend.grid.CoordinateTuple;
-import backend.unit.Unit;
-import controller.Controller;
 import frontend.View;
 import javafx.scene.image.ImageView;
 
@@ -18,35 +16,28 @@ import javafx.scene.image.ImageView;
  *
  * @author dylanpeters
  */
-public final class UnitView extends Sprite {
+public class UnitView extends Sprite {
 
 	private final ImageView unitView;
-	private final Unit unitModel;
 	private final String unitName;
-	private final CoordinateTuple location;
+	private final CoordinateTuple unitLocation;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
-	 *
-	 * @param unitModel the Unit object that this UnitView will be visualizing
 	 */
-
-	public UnitView(Unit unitModel, UnitViewDelegate delegate) {
-		this.unitModel = unitModel;
-		this.location = unitModel.getLocation();
-		this.unitName = unitModel.getName();
-		unitView = new ImageView(View.getImg(unitModel.getImgPath()));
-		unitView.setOnMouseClicked(event -> {
-			delegate.unitClicked(this);
-		});
+	public UnitView(String unitName, CoordinateTuple unitLocation, String unitImgPath, UnitViewDelegate delegate) {
+		this.unitName = unitName;
+		this.unitLocation = unitLocation;
+		unitView = new ImageView(View.getImg(unitImgPath));
+		unitView.setOnMouseClicked(event -> delegate.unitClicked(this));
 	}
 
-	public Unit getUnit(Controller controller) {
-		return controller.getGameState()
-				.getGrid()
-				.get(location)
-				.getOccupantByName(unitName);
-		//return unitModel;
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public CoordinateTuple getUnitLocation() {
+		return unitLocation;
 	}
 
 	/**
