@@ -121,6 +121,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			Unit unitToArrive;
 			if (shouldCopy) {
 				unitToArrive = this.unitToArrive.copy();
+				shouldCopy = false;
 			} else {
 				unitToArrive = this.unitToArrive;
 			}
