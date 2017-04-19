@@ -170,4 +170,8 @@ public interface Unit extends VoogaEntity {
 	}
 
 	Player getOwner();
+
+	Unit setOwner(Player owner);
+
+	Unit setCurrentCell(Cell currentCell);
 }
