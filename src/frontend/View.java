@@ -52,25 +52,13 @@ public class View extends BaseUIManager<Region> implements Observer{
 	private TemplatePane tempPane;
 
 	public View(Controller controller) {
+		this(controller, true);
+	}
+	
+	public View(Controller controller, boolean editable){
 		super(controller);
 		initBorderPane();
-	}
-
-	/**
-	 * Performs all necessary actions to convert the View into development mode.
-	 * If the View is already in development mode, then nothing visually
-	 * changes.
-	 */
-	public void enterDevMode() {
-		addSidePanes();
-	}
-
-	/**
-	 * Performs all necessary actions to convert the View into play mode. If the
-	 * View is already in play mode, then nothing visually changes.
-	 */
-	public void enterPlayMode() {
-		removeSidePanes();
+		setEditable(editable);
 	}
 
 	/**
@@ -79,6 +67,12 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
+		
+		if(editable){
+			enterDevMode();
+		} else {
+			enterPlayMode();
+		}
 	}
 
 	@Override
@@ -110,7 +104,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 	}
 
 	private void initBorderPane() {
-		initPanesAndListeners();
+		initPanes();
 		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
 				detailPane.getObject(), null);
 	}
@@ -119,8 +113,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 * Initializes all panes in the GUI and makes View a listener to all
 	 * necessary panes.
 	 */
-	private void initPanesAndListeners() {
-		menuBar = new VoogaMenuBar();
+	private void initPanes() {
+		menuBar = new VoogaMenuBar(this);
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
@@ -130,12 +124,32 @@ public class View extends BaseUIManager<Region> implements Observer{
 		tempPane = new TemplatePane(detailPane, worldView, getController());
 		tempPane.addObserver(this);
 	}
+	
+	/**
+	 * Performs all necessary actions to convert the View into development mode.
+	 * If the View is already in development mode, then nothing visually
+	 * changes.
+	 */
+	private void enterDevMode() {
+		addSidePanes();
+		menuBar.setEditable(true);
+	}
+
+	/**
+	 * Performs all necessary actions to convert the View into play mode. If the
+	 * View is already in play mode, then nothing visually changes.
+	 */
+	private void enterPlayMode() {
+		removeSidePanes();
+		menuBar.setEditable(false);
+	}
 
 	/**
 	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
 	 */
 	private void addSidePanes() {
 		myBorder.setRight(tempPane.getObject());
+		//myBorder.setLeft();
 	}
 
 	/**
