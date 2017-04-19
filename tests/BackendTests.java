@@ -157,4 +157,23 @@ public class BackendTests {
 			e.printStackTrace();
 		}
 	}
+
+	@Test
+	public void testUnitMove() throws IOException {
+		GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
+		GameBoard board = new ModifiableGameBoard("testBoard")
+				.setTemplateCell(ModifiableCell.BASIC_SQUARE_FLAT).setRows(5).setColumns(5).setBoundsHandler(BoundsHandler.TOROIDAL_BOUNDS).build();
+		AuthoringGameState authoringGameState = new AuthoringGameState("test").setGrid(board);
+		((ModifiableCell) board.get(0, 0)).addOccupants(ModifiableUnit.SKELETON_ARCHER.copy());
+		System.out.println(board);
+		board.get(0, 0).getOccupants().stream().findAny().get().moveTo(board.get(1, 1), authoringGameState);
+		System.out.println("-----");
+		System.out.println(board);
+		assertEquals(25, board.getCells().values().stream().filter(e -> e.getTerrain().equals(ModifiableTerrain.FLAT)).count());
+		assertEquals(4, board.getUnits().size());
+		assertTrue(!board.get(new CoordinateTuple(0, 4)).getOccupants().isEmpty());
+		assertTrue(!board.get(new CoordinateTuple(4, 0)).getOccupants().isEmpty());
+		assertTrue(!board.get(new CoordinateTuple(1, 0)).getOccupants().isEmpty());
+		assertTrue(!board.get(new CoordinateTuple(0, 1)).getOccupants().isEmpty());
+	}
 }
