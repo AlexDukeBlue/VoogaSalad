@@ -77,6 +77,22 @@ public class CellView extends BaseUIManager<Parent> {
 //		};
 //		getController().sendModifier(toSend);
 //	}
+	
+	public double getX(){
+		return polygon.getLayoutX();
+	}
+	
+	public void setX(double x){
+		polygon.setLayoutX(x);
+	}
+	
+	public double getY(){
+		return polygon.getLayoutY();
+	}
+	
+	public void setY(double y){
+		polygon.setLayoutY(y);
+	}
 
 	/**
 	 * Returns an object that can be displayed to the user to show the Cell
@@ -133,10 +149,10 @@ public class CellView extends BaseUIManager<Parent> {
 		cellModel.getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit);
-				unitView.getObject().translateXProperty().set(polygon.getPoints().get(0));
-				unitView.getObject().translateYProperty().set(polygon.getPoints().get(1));
+				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth()/2));
+				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight()/2));
 				polygon.boundsInLocalProperty().addListener(change -> {
-					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				});
 				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);

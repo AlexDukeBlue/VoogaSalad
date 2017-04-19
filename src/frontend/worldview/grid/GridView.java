@@ -3,7 +3,9 @@ package frontend.worldview.grid;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
+import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -17,7 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 import util.net.Modifier;
 
-public class GridView extends BaseUIManager<Region> {
+public class GridView extends BaseUIManager<Region> implements UnitViewDelegate {
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 
 	private ScrollPane myScrollPane;
@@ -80,11 +82,18 @@ public class GridView extends BaseUIManager<Region> {
 	
 	private void cellClicked(CellView cell){
 		if (unitToArrive != null){
-			Modifier<GameplayState> modifier = gameState -> {
-				gameState.getGrid().get(cell.getCoordinateTuple()).arrive(unitToArrive, gameState);
+			CoordinateTuple tuple = cell.getCoordinateTuple();
+			Unit unitToArrive = this.unitToArrive;
+			Modifier<? extends AuthoringGameState> modifier = gameState -> {
+				gameState.getGrid().get(tuple).arrive(unitToArrive, gameState);
 				return gameState;
 			};
 			getController().sendModifier(modifier);
 		}
+	}
+
+	@Override
+	public void dragBegan(UnitView unitView) {
+		// TODO Auto-generated method stub
 	}
 }
