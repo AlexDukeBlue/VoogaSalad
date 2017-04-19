@@ -149,7 +149,7 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 		String s = "";
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				s += String.format("%-10s", get(new CoordinateTuple(i, j).convertToRectangular()).getTerrain().toString());
+				s += String.format("%-20s", get(new CoordinateTuple(i, j).convertToRectangular()).toString());
 			}
 			s += "\n";
 		}
