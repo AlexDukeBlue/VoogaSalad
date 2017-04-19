@@ -75,7 +75,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		processTriggers(Event.UNIT_PRE_MOVEMENT, gameState);
 		currentCell.leave(this, gameState);
 		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().getOrDefault(destinationCell.getTerrain(),destinationCell.getTerrain().getDefaultMoveCost()));
-		currentCell.arrive(this, gameState);
+		destinationCell.arrive(this, gameState);
 		processTriggers(Event.UNIT_POST_MOVEMENT, gameState);
 	}
 
@@ -313,4 +313,13 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public static Collection<ModifiableUnit> getPredefinedUnits() {
 		return getPredefined(ModifiableUnit.class);
 	}
+	
+	/**
+	@Deprecated
+	public static void addToPredefinedUnits(ModifiableUnit newUnit) {
+		Collection<ModifiableUnit> current = getPredefined(ModifiableUnit.class);
+		current.add(newUnit);
+		
+	}
+	***/
 }

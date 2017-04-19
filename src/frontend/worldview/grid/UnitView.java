@@ -1,49 +1,48 @@
 package frontend.worldview.grid;
 
-import backend.unit.Unit;
+import backend.grid.CoordinateTuple;
 import frontend.View;
 import javafx.scene.image.ImageView;
 
 /**
  * A Unit object is an movable or immovable character/object that can be placed
  * on top of and move across Terrains.
- * 
+ * <p>
  * The UnitView is the UI representation of the backend Unit class. It allows
  * the user to interact with the unit by dragging and dropping, selecting
  * abilities to use, and moving from cell to cell.
- * 
+ * <p>
  * The UnitView extends Sprite, which extends BaseUIManager.
- * 
- * @author dylanpeters
  *
+ * @author dylanpeters
  */
 public class UnitView extends Sprite {
 
-	private ImageView unitView;
-	private Unit unitModel;
-	
+	private final ImageView unitView;
+	private final String unitName;
+	private final CoordinateTuple unitLocation;
+
 	/**
 	 * Creates a new UnitView. Sets all values to default.
-	 * 
-	 * @param unitModel
-	 *            the Unit object that this UnitView will be visualizing
 	 */
-	
-	public UnitView(Unit unitModel, UnitViewDelegate delegate) {
-		this.unitModel = unitModel;
-		unitView = new ImageView(View.getImg(unitModel.getImgPath()));
-		unitView.setOnMouseClicked(event -> {
-			delegate.unitClicked(this);
-		});
+	public UnitView(String unitName, CoordinateTuple unitLocation, String unitImgPath, UnitViewDelegate delegate) {
+		this.unitName = unitName;
+		this.unitLocation = unitLocation;
+		unitView = new ImageView(View.getImg(unitImgPath));
+		unitView.setOnMouseClicked(event -> delegate.unitClicked(this));
 	}
-	
-	public Unit getUnit(){
-		return unitModel;
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public CoordinateTuple getUnitLocation() {
+		return unitLocation;
 	}
 
 	/**
 	 * Returns an object that allows the user to see the Unit object on a grid
-	 * 
+	 *
 	 * @return Region object representing the visualization of the Unit
 	 */
 	@Override

@@ -14,12 +14,23 @@ import frontend.detailpane.DetailPane;
 import frontend.util.BaseUIManager;
 import frontend.wizards.UnitWizard;
 import frontend.worldview.WorldView;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * @author Faith Rodriguez
@@ -84,18 +95,32 @@ public class TemplatePane extends BaseUIManager<Region> {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
 		VBox content = createContent(sprites, label);
-		spritePane.setContent(content);
+		ScrollPane scroller = new ScrollPane();
+		scroller.setContent(content);
+		spritePane.setContent(scroller);
 		spritePane.setCollapsible(true);
+		spritePane.setExpanded(false);
 		pane.getChildren().add(spritePane);
+		
 	}
 
 	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
 		VBox contentPane = new VBox();
 		for (VoogaEntity sprite : sprites) {
 			VBox spriteContent = new VBox();
+			spriteContent.setBorder(new Border(new BorderStroke(Color.BLACK, 
+		            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+			spriteContent.setPadding(new Insets(5, 5, 5, 5));
 			// fix getName and getImage once communication sorted
 			Label spriteName = new Label(sprite.getName());
 			spriteContent.getChildren().add(spriteName);
+			if (sprite.getImgPath() != null) {
+				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));
+				ImageView imageNode = new ImageView(spriteImage);
+				imageNode.setFitHeight(40);
+				imageNode.setFitWidth(40);
+				spriteContent.getChildren().add(imageNode);
+			}
 			setOnDrag(spriteContent, sprite, spriteType);
 			setOnClick(spriteContent, sprite, spriteType);
 			contentPane.getChildren().add(spriteContent);

@@ -66,6 +66,9 @@ public interface Unit extends VoogaEntity {
 	GridPattern getMovePattern();
 
 	default CoordinateTuple getLocation() {
+		if (Objects.isNull(getCurrentCell())) {
+			return null;
+		}
 		return getCurrentCell().getLocation();
 	}
 
