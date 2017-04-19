@@ -12,6 +12,7 @@ import java.util.Map;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
+import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
@@ -53,9 +54,9 @@ public class DetailPane extends BaseUIManager<Region>{
 	}
 	
 	private void setAddButton(VoogaEntity sprite) {
-		addButton.setOnAction(event -> worldView.setOnCellClick(cellView -> {
-			cellView.add(sprite);
-		}));
+//		addButton.setOnAction(event -> worldView.setOnCellClick(cellView -> {
+//			cellView.add(sprite);
+//		}));
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class DetailPane extends BaseUIManager<Region>{
 		addString("Name", sprite.getName());
 		addString("Description", sprite.getDescription());
 		Label newSpriteInfo;
-		if (spriteType.equals("unit")) {
+		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((ModifiableUnit) sprite));			
 		}
 		else {
@@ -79,7 +80,7 @@ public class DetailPane extends BaseUIManager<Region>{
 		spriteInfo = newSpriteInfo;
 		setLabel();
 		setAddButton(sprite);
-		pane.getChildren().add(addButton);
+//		pane.getChildren().add(addButton);
 	}
 
 	private void setLabel() {

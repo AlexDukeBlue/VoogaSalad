@@ -11,10 +11,12 @@ public class SquareLayout implements LayoutManager {
 		cell = cellIn;
 		double size = (max - min) * scaleFactor + min;
 		convertToRect(size);
-		addVertex(xOffset, yOffset);
-		addVertex(xOffset + size, yOffset);
-		addVertex(xOffset + size, yOffset + size);
-		addVertex(xOffset, yOffset + size);
+		addVertex(-size/2, -size/2);
+		addVertex(size/2, -size/2);
+		addVertex(size/2, size/2);
+		addVertex(-size/2, size/2);
+		cellIn.setX(xOffset);
+		cellIn.setY(yOffset);
 	}
 	
 	private void convertToRect(double size) {
