@@ -16,8 +16,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
-import com.sun.glass.events.MouseEvent;
-
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
  * placed.
@@ -81,20 +79,20 @@ public class CellView extends BaseUIManager<Parent> {
 //		};
 //		getController().sendModifier(toSend);
 //	}
-	
-	public double getX(){
+
+	public double getX() {
 		return polygon.getLayoutX();
 	}
-	
-	public void setX(double x){
+
+	public void setX(double x) {
 		polygon.setLayoutX(x);
 	}
-	
-	public double getY(){
+
+	public double getY() {
 		return polygon.getLayoutY();
 	}
-	
-	public void setY(double y){
+
+	public void setY(double y) {
 		polygon.setLayoutY(y);
 	}
 
@@ -133,7 +131,7 @@ public class CellView extends BaseUIManager<Parent> {
 	public void update() {
 		update(getController().getGameState().getGrid().get(cellModel.getLocation()));
 		contextMenu.getItems().clear();
-		cellModel.getOccupants().stream().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+		cellModel.getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
 	/**
@@ -154,9 +152,9 @@ public class CellView extends BaseUIManager<Parent> {
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
 			if (unit != null) {
-				UnitView unitView = new UnitView(unit,delegate);
-				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth()/2));
-				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight()/2));
+				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
+				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth() / 2));
+				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight() / 2));
 				polygon.boundsInLocalProperty().addListener(change -> {
 					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);

@@ -32,5 +32,4 @@ public interface LayoutManager {
 	 *            Maximum size of a CellView
 	 */
 	void layoutCell(CellView cell, double scaleFactor, double min, double max);
-
 }
