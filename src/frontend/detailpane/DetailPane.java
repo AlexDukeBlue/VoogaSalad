@@ -12,6 +12,7 @@ import java.util.Map;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
+import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
@@ -58,13 +59,9 @@ public class DetailPane extends BaseUIManager<Region> {
 	}
 
 	private void setAddButton(VoogaEntity sprite) {
-		addButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			
-			@Override
-			public void handle(MouseEvent event) {
-				if(event.getButton().equals(MouseButton.PRIMARY)) worldView.setOnCellClick(cellView -> cellView.add(sprite));
-			}
-		});
+//		addButton.setOnAction(event -> worldView.setOnCellClick(cellView -> {
+//			cellView.add(sprite);
+//		}));
 	}
 
 	/**
@@ -81,15 +78,16 @@ public class DetailPane extends BaseUIManager<Region> {
 		addString("Name", sprite.getName());
 		addString("Description", sprite.getDescription());
 		Label newSpriteInfo;
-		if (spriteType.equals("unit")) {
-			newSpriteInfo = new Label(setUnitContent((ModifiableUnit) sprite));
-		} else {
+		if (sprite instanceof Unit) {
+			newSpriteInfo = new Label(setUnitContent((ModifiableUnit) sprite));			
+		}
+		else {
 			newSpriteInfo = new Label(setTerrainContent((ModifiableTerrain) sprite));
 		}
 		spriteInfo = newSpriteInfo;
 		setLabel();
 		setAddButton(sprite);
-		pane.getChildren().add(addButton);
+//		pane.getChildren().add(addButton);
 	}
 
 	private void setLabel() {

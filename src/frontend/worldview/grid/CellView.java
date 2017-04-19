@@ -3,8 +3,6 @@ package frontend.worldview.grid;
 
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
-import backend.util.GameplayState;
-import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
@@ -17,9 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import util.net.Modifier;
-
-import java.util.function.Consumer;
 
 import com.sun.glass.events.MouseEvent;
 
@@ -45,6 +40,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private Polygon polygon;
 	private Group group;
 	private ContextMenu contextMenu;
+	private UnitViewDelegate delegate;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -53,34 +49,53 @@ public class CellView extends BaseUIManager<Parent> {
 	 * @param controller the controller object that this CellView will send information
 	 *                   to when the user interacts with the CellView
 	 */
-	public CellView(Cell cellModel, Controller controller) {
+	public CellView(Cell cellModel, Controller controller, UnitViewDelegate delegate) {
+		this.delegate = delegate;
 		setController(controller);
 		initialize(cellModel);
 		update(cellModel);
 	}
 
-	/**
-	 * Sets the action that is performed when a cell is clicked.
-	 *
-	 * @param consumer consumer to execute when the cell is clicked
-	 */
-	public void setOnCellClick(Consumer<CellView> consumer) {
-		polygon.setOnMouseClicked(event -> {consumer.accept(this);});
+//	/**
+//	 * Sets the action that is performed when a cell is clicked.
+//	 *
+//	 * @param consumer
+//	 *            consumer to execute when the cell is clicked
+//	 */
+//	public void setOnCellClick(Consumer<CellView> consumer) {
+//		polygon.setOnMouseClicked(event -> consumer.accept(this));
+//	}
+//
+//	/**
+//	 * Adds a copy of the Sprite to the cell and sends the request to the
+//	 * controller.
+//	 *
+//	 * @param sprite
+//	 *            sprite to copy and add to the cell
+//	 */
+//	public void add(VoogaEntity sprite) {
+//		CoordinateTuple location = cellModel.getLocation();
+//		Modifier<? extends GameplayState> toSend = game -> {
+//			game.getGrid().get(location).arrive(sprite.copy(), game);
+//			return game;
+//		};
+//		getController().sendModifier(toSend);
+//	}
+	
+	public double getX(){
+		return polygon.getLayoutX();
 	}
-
-	/**
-	 * Adds a copy of the Sprite to the cell and sends the request to the
-	 * controller.
-	 *
-	 * @param sprite sprite to copy and add to the cell
-	 */
-	public void add(VoogaEntity sprite) {
-		CoordinateTuple location = cellModel.getLocation();
-		Modifier<? extends GameplayState> toSend = game -> {
-			game.getGrid().get(location).arrive(sprite.copy(), game);
-			return game;
-		};
-		getController().sendModifier(toSend);
+	
+	public void setX(double x){
+		polygon.setLayoutX(x);
+	}
+	
+	public double getY(){
+		return polygon.getLayoutY();
+	}
+	
+	public void setY(double y){
+		polygon.setLayoutY(y);
 	}
 
 	/**
@@ -138,11 +153,11 @@ public class CellView extends BaseUIManager<Parent> {
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
 			if (unit != null) {
-				UnitView unitView = new UnitView(unit);
-				unitView.getObject().translateXProperty().set(polygon.getPoints().get(0));
-				unitView.getObject().translateYProperty().set(polygon.getPoints().get(1));
+				UnitView unitView = new UnitView(unit,delegate);
+				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth()/2));
+				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight()/2));
 				polygon.boundsInLocalProperty().addListener(change -> {
-					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				});
 				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
