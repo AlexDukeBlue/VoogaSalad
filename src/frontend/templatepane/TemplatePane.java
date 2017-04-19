@@ -1,15 +1,21 @@
 package frontend.templatepane;
 
 import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
 
 import backend.cell.Terrain;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
+import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.util.BaseUIManager;
+import frontend.wizards.UnitWizard;
 import frontend.worldview.WorldView;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
@@ -36,6 +42,8 @@ public class TemplatePane extends BaseUIManager<Region> {
 	DetailPane detailPane;
 	WorldView worldView;
 	
+	private Button addUnitButton;
+	
 	public TemplatePane(DetailPane detailPaneIn, WorldView worldViewIn, Controller controller) {
 		super(controller);
 		//units = (Collection<? extends Unit>) getController().getAuthoringGameState().getTemplateByCategory(AuthoringGameState.UNIT).getAll();
@@ -46,12 +54,30 @@ public class TemplatePane extends BaseUIManager<Region> {
 		worldView = worldViewIn;
 
 		createCollabsible("unit", units);
+		addUnitButton();
 		createCollabsible("terrain", terrains);
 
 	}
 
 	public TemplatePane(Collection<? extends Unit> unitTemplate) {
 		// TODO Auto-generated constructor stub
+	}
+	
+	private void addUnitButton(){
+		addUnitButton = new Button("add unit");
+		addUnitButton.setOnAction(e -> {
+			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
+			wiz.show();
+			wiz.addObserver(new Observer() {
+
+				@Override
+				public void update(Observable o, Object arg) {
+					updateUnits(getController().addUnitTemplate((ModifiableUnit)arg));
+				}
+			});
+			updatePane();
+		});
+		pane.getChildren().add(addUnitButton);
 	}
 
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
@@ -96,8 +122,9 @@ public class TemplatePane extends BaseUIManager<Region> {
 
 	private void updatePane() {
 		pane.getChildren().clear();
-		createCollabsible("Terrain", terrains);
 		createCollabsible("Unit", units);
+		addUnitButton();
+		createCollabsible("Terrain", terrains);
 	}
 
 	private void updateUnits(Collection<? extends Unit> unitsIn) {
