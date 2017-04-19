@@ -18,7 +18,13 @@
  */
 package frontend;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+
 import backend.util.AuthoringGameState;
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.menubar.VoogaMenuBar;
@@ -31,10 +37,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class View extends BaseUIManager<Region> {
+public class View extends BaseUIManager<Region> implements Observer{
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 
 	static {
@@ -49,25 +52,13 @@ public class View extends BaseUIManager<Region> {
 	private TemplatePane tempPane;
 
 	public View(Controller controller) {
+		this(controller, true);
+	}
+	
+	public View(Controller controller, boolean editable){
 		super(controller);
 		initBorderPane();
-	}
-
-	/**
-	 * Performs all necessary actions to convert the View into development mode.
-	 * If the View is already in development mode, then nothing visually
-	 * changes.
-	 */
-	public void enterDevMode() {
-		addSidePanes();
-	}
-
-	/**
-	 * Performs all necessary actions to convert the View into play mode. If the
-	 * View is already in play mode, then nothing visually changes.
-	 */
-	public void enterPlayMode() {
-		removeSidePanes();
+		setEditable(editable);
 	}
 
 	/**
@@ -76,6 +67,12 @@ public class View extends BaseUIManager<Region> {
 	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
+		
+		if(editable){
+			enterDevMode();
+		} else {
+			enterPlayMode();
+		}
 	}
 
 	@Override
@@ -107,7 +104,7 @@ public class View extends BaseUIManager<Region> {
 	}
 
 	private void initBorderPane() {
-		initPanesAndListeners();
+		initPanes();
 		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
 				detailPane.getObject(), null);
 	}
@@ -116,8 +113,8 @@ public class View extends BaseUIManager<Region> {
 	 * Initializes all panes in the GUI and makes View a listener to all
 	 * necessary panes.
 	 */
-	private void initPanesAndListeners() {
-		menuBar = new VoogaMenuBar();
+	private void initPanes() {
+		menuBar = new VoogaMenuBar(this);
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
@@ -125,6 +122,26 @@ public class View extends BaseUIManager<Region> {
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
+		tempPane.addObserver(this);
+	}
+	
+	/**
+	 * Performs all necessary actions to convert the View into development mode.
+	 * If the View is already in development mode, then nothing visually
+	 * changes.
+	 */
+	private void enterDevMode() {
+		addSidePanes();
+		menuBar.setEditable(true);
+	}
+
+	/**
+	 * Performs all necessary actions to convert the View into play mode. If the
+	 * View is already in play mode, then nothing visually changes.
+	 */
+	private void enterPlayMode() {
+		removeSidePanes();
+		menuBar.setEditable(false);
 	}
 
 	/**
@@ -132,6 +149,7 @@ public class View extends BaseUIManager<Region> {
 	 */
 	private void addSidePanes() {
 		myBorder.setRight(tempPane.getObject());
+		//myBorder.setLeft();
 	}
 
 	/**
@@ -148,4 +166,14 @@ public class View extends BaseUIManager<Region> {
 		}
 		return IMAGE_CACHE.get(imgPath);
 	}
+
+	@Override
+	public void update(Observable observable, Object object) {
+		if (observable == tempPane){
+			detailPane.setContent((VoogaEntity)object, "");
+			worldView.templateClicked((VoogaEntity)object);
+		}
+	}
+
+	
 }

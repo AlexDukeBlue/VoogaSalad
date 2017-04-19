@@ -1,5 +1,6 @@
 package frontend.menubar;
 
+import frontend.View;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -10,7 +11,8 @@ class VoogaMenuBarTest extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane bp = new BorderPane();
-		VoogaMenuBar voogaMenuBar = new VoogaMenuBar();
+		View view = new View(null);
+		VoogaMenuBar voogaMenuBar = new VoogaMenuBar(view);
 		bp.setTop(voogaMenuBar.getObject());
 		primaryStage.setScene(new Scene(bp));
 		primaryStage.show();

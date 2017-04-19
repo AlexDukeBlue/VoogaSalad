@@ -85,7 +85,13 @@ public class TemplatePane extends BaseUIManager<Region> {
 	}
 
 	private void setOnClick(Node o, VoogaEntity sprite, String spriteType) {
-		o.setOnMouseClicked(event -> detailPane.setContent(sprite, spriteType));
+		o.setOnMouseClicked(event -> {
+			setChanged();
+			notifyObservers(sprite);
+			clearChanged();
+		}
+//		detailPane.setContent(sprite, spriteType)
+		);
 	}
 
 	private void updatePane() {
