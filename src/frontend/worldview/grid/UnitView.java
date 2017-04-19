@@ -2,10 +2,7 @@ package frontend.worldview.grid;
 
 import backend.unit.Unit;
 import frontend.View;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 /**
  * A Unit object is an movable or immovable character/object that can be placed
@@ -23,6 +20,7 @@ import javafx.stage.Stage;
 public class UnitView extends Sprite {
 
 	private ImageView unitView;
+	private Unit unitModel;
 	
 	/**
 	 * Creates a new UnitView. Sets all values to default.
@@ -31,7 +29,14 @@ public class UnitView extends Sprite {
 	 *            the Unit object that this UnitView will be visualizing
 	 */
 	public UnitView(Unit unitModel) {
+		this.unitModel = unitModel;
 		unitView = new ImageView(View.getImg(unitModel.getImgPath()));
+		unitView.setOnMouseClicked(event -> {
+		});
+	}
+	
+	public Unit getUnit(){
+		return unitModel;
 	}
 
 	/**

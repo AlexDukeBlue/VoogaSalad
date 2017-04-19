@@ -21,6 +21,8 @@ import util.net.Modifier;
 
 import java.util.function.Consumer;
 
+import com.sun.glass.events.MouseEvent;
+
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
  * placed.
@@ -63,7 +65,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 * @param consumer consumer to execute when the cell is clicked
 	 */
 	public void setOnCellClick(Consumer<CellView> consumer) {
-		polygon.setOnMouseClicked(event -> consumer.accept(this));
+		polygon.setOnMouseClicked(event -> {consumer.accept(this);});
 	}
 
 	/**
@@ -115,6 +117,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 */
 	public void update() {
 		update(getController().getGameState().getGrid().get(cellModel.getLocation()));
+		cellModel.getOccupants().stream().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
 	/**
@@ -163,7 +166,7 @@ public class CellView extends BaseUIManager<Parent> {
 		this.cellModel = cellModel;
 		polygon = new Polygon();
 		group = new Group();
-		contextMenu = new ContextMenu(new MenuItem("asdf"));
+		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 //		polygon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> contextMenu.hide());
 	}
