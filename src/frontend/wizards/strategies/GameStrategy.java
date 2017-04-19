@@ -1,11 +1,13 @@
 package frontend.wizards.strategies;
 
+import backend.cell.Terrain;
 import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
 import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import frontend.wizards.TeamWizard;
+import frontend.wizards.TerrainWizard;
 import frontend.wizards.UnitWizard;
 import frontend.wizards.strategies.wizard_pages.AdditionalWizardsPage;
 import frontend.wizards.strategies.wizard_pages.GridInstantiationPage;
@@ -24,6 +26,7 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 	private GridInstantiationPage gridInstantiationPage;
 	private AdditionalWizardsPage<Team> additionalTeamWizardsPage;
 	private AdditionalWizardsPage<Unit> additionalUnitWizardsPage;
+	private AdditionalWizardsPage<Terrain> additionalTerrainWizardsPage;
 
 	public GameStrategy() {
 		initialize();
@@ -55,6 +58,9 @@ public class GameStrategy extends BaseStrategy<AuthoringGameState> implements Wi
 				"Use the wizards below to create new units", UnitWizard.class);
 		additionalTeamWizardsPage = new AdditionalWizardsPage<>("Create Teams",
 				"Use the wizards below to create new teams", TeamWizard.class);
-		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalUnitWizardsPage, additionalTeamWizardsPage);
+		additionalTerrainWizardsPage = new AdditionalWizardsPage<>("Create Terrains", 
+				"Use the wizards below to create new terrains", TerrainWizard.class);
+		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, 
+				additionalUnitWizardsPage, additionalTerrainWizardsPage, additionalTeamWizardsPage);
 	}
 }
