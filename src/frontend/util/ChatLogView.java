@@ -70,7 +70,10 @@ public class ChatLogView extends BaseUIManager {
 
 	@Override
 	public void update() {
-		List<ChatMessage> chatlog = getController().getPlayer(getController().getPlayerName()).getChatLog();
+		List<ChatMessage> chatlog = getController()
+				.getPlayer(getController()
+						.getPlayerName())
+				.getChatLog();
 		if (chatlog.size() > logLength) {
 			logLength = chatlog.size();
 			textArea.setText(HEADER + chatlog.stream().map(Object::toString).collect(Collectors.joining("\n\n")));

@@ -1,30 +1,17 @@
-import backend.cell.Cell;
-import backend.cell.Terrain;
-import backend.grid.CoordinateTuple;
-import backend.grid.GameBoard;
 import backend.grid.GridPattern;
-import backend.grid.ModifiableGameBoard;
-import backend.player.ImmutablePlayer;
 import backend.player.Player;
-import backend.unit.Unit;
-import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
-import controller.Controller;
 import frontend.View;
 import frontend.util.ChatLogView;
-import frontend.util.Updatable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
-import util.net.Modifier;
 import util.net.ObservableClient;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -67,87 +54,6 @@ public class VoogaClientMain extends Application {
 		client.addToOutbox(state -> {
 			state.addPlayer(new Player(name, "It's me!", ""));
 			return state;
-		});
-		chatLogView = new ChatLogView(new Controller() {
-			@Override
-			public GameBoard getGrid() {
-				return null;
-			}
-
-			@Override
-			public Cell getCell(CoordinateTuple tuple) {
-				return null;
-			}
-
-			@Override
-			public ReadonlyGameplayState getReadOnlyGameState() {
-				return null;
-			}
-
-			@Override
-			public AuthoringGameState getAuthoringGameState() {
-				return null;
-			}
-
-			@Override
-			public GameplayState getGameState() {
-				return gameplayState;
-			}
-
-			@Override
-			public ImmutablePlayer getPlayer(String name) {
-				return null;
-			}
-
-			@Override
-			public void setGameState(ReadonlyGameplayState newGameState) {
-
-			}
-
-			@Override
-			public ModifiableGameBoard getModifiableCells() {
-				return null;
-			}
-
-			@Override
-			public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
-				client.addToOutbox((Modifier<GameplayState>) modifier);
-			}
-
-			@Override
-			public Collection<? extends Unit> getUnits() {
-				return null;
-			}
-
-			@Override
-			public Collection<? extends Terrain> getTerrains() {
-				return null;
-			}
-
-			@Override
-			public Collection<? extends Unit> getUnitTemplates() {
-				return null;
-			}
-
-			@Override
-			public Collection<? extends Terrain> getTerrainTemplates() {
-				return null;
-			}
-
-			@Override
-			public void addToUpdated(Updatable objectToUpdate) {
-
-			}
-
-			@Override
-			public void removeFromUpdated(Updatable objectToUpdate) {
-
-			}
-
-			@Override
-			public String getPlayerName() {
-				return null;
-			}
 		});
 		Scene scene = new Scene(chatLogView.getObject(), 700, 700, new ImagePattern(View.getImg("resources/images/splash.png")));
 		scene.getStylesheets().add("resources/styles/notheme.css");

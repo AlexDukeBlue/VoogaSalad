@@ -172,6 +172,6 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	//Name can be Terrain, OffensiveModifier, DefensiveModifier, Cell, CellTriggeredEffect, UnitTriggeredEffect, ActiveAbility, Unit, UnitStat, GridPattern, GameBoard
 	//Case and space character insensitive
 	public ModifiableVoogaCollection<VoogaEntity, ?> getTemplateByCategory(String categoryName) {
-		return templates.get(categoryName.replaceAll(" ", "")/*.replaceAll("s$", "")*/.toLowerCase());
+		return templates.get(categoryName.replaceAll(" ", "").toLowerCase());
 	}
 }
