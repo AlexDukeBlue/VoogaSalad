@@ -4,6 +4,8 @@ import controller.Controller;
 import frontend.util.BaseUIManager;
 import frontend.worldview.grid.CellView;
 import frontend.worldview.grid.GridView;
+import javafx.event.EventHandler;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 
