@@ -3,6 +3,7 @@ package backend.cell;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.Event;
 import backend.util.GameplayState;
@@ -106,12 +107,18 @@ public class ModifiableCell implements Cell {
 	}
 
 	public ModifiableCell addOccupants(Unit... units) {
-		Arrays.stream(units).forEach(unit -> occupants.put(unit.getName(), unit));
+		Arrays.stream(units).forEach(unit -> {
+			occupants.put(unit.getName(), unit);
+			((ModifiableUnit) unit).setCurrentCell(this);
+		});
 		return this;
 	}
 
 	public ModifiableCell removeOccupants(Unit... units) {
-		Arrays.stream(units).forEach(unit -> occupants.remove(unit.getName()));
+		Arrays.stream(units).forEach(unit -> {
+			occupants.remove(unit.getName());
+			((ModifiableUnit) unit).setCurrentCell(null);
+		});
 		return this;
 	}
 

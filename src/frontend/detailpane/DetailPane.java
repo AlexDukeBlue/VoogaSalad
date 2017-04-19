@@ -12,34 +12,40 @@ import java.util.Map;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
+import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 
 /**
  * 
  * @author Faith Rodriguez
  * 
- * This class displays details about the units, as well as lets the user change aspects of a sprite 
- * and activate a unit or terrain's abilities.
+ *         This class displays details about the units, as well as lets the user
+ *         change aspects of a sprite and activate a unit or terrain's
+ *         abilities.
  * 
- * This class is dependent on TemplatePane and CellView classes for its ActionEvents to work effectively
+ *         This class is dependent on TemplatePane and CellView classes for its
+ *         ActionEvents to work effectively
  *
  */
-public class DetailPane extends BaseUIManager<Region>{
+public class DetailPane extends BaseUIManager<Region> {
 
 	VBox pane = new VBox();
 	Label spriteInfo;
 	String content = "";
 	Button addButton;
 	WorldView worldView;
-	
+
 	public DetailPane(WorldView worldView) {
 		this.worldView = worldView;
 		pane.setFillWidth(true);
@@ -49,28 +55,30 @@ public class DetailPane extends BaseUIManager<Region>{
 		addButton = new Button("Add");
 		setLabel();
 		clearContent();
-		
+
 	}
-	
+
 	private void setAddButton(VoogaEntity sprite) {
-		addButton.setOnAction(event -> worldView.setOnCellClick(cellView -> {
-			cellView.add(sprite);
-		}));
+//		addButton.setOnAction(event -> worldView.setOnCellClick(cellView -> {
+//			cellView.add(sprite);
+//		}));
 	}
 
 	/**
-	 * Updates the content of the detail pane to information relating to the VoogaEntity sprite
-	 * @param sprite 
-	 * A sprite that has just been clicked on in the TemplatePane
+	 * Updates the content of the detail pane to information relating to the
+	 * VoogaEntity sprite
+	 * 
+	 * @param sprite
+	 *            A sprite that has just been clicked on in the TemplatePane
 	 * @param spriteType
-	 * A string revealing whether the sprite is a unit or terrain
+	 *            A string revealing whether the sprite is a unit or terrain
 	 */
 	public void setContent(VoogaEntity sprite, String spriteType) {
 		clearContent();
 		addString("Name", sprite.getName());
 		addString("Description", sprite.getDescription());
 		Label newSpriteInfo;
-		if (spriteType.equals("unit")) {
+		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((ModifiableUnit) sprite));			
 		}
 		else {
@@ -79,14 +87,14 @@ public class DetailPane extends BaseUIManager<Region>{
 		spriteInfo = newSpriteInfo;
 		setLabel();
 		setAddButton(sprite);
-		pane.getChildren().add(addButton);
+//		pane.getChildren().add(addButton);
 	}
 
 	private void setLabel() {
-		pane.getChildren().add(spriteInfo);		
+		pane.getChildren().add(spriteInfo);
 		spriteInfo.setWrapText(true);
 	}
-	
+
 	private String setUnitContent(ModifiableUnit unit) {
 		addMoveCosts(unit);
 		addCollection("Active Abilities", unit.getActiveAbilities());
@@ -96,39 +104,38 @@ public class DetailPane extends BaseUIManager<Region>{
 		addString("Legal Moves", unit.getMovePattern().toString());
 		return content;
 	}
-	
+
 	private String setTerrainContent(ModifiableTerrain terrain) {
 		addString("Default Move Cost", ((Integer) terrain.getDefaultMoveCost()).toString());
 		addString("Default Defense Modifier", ((Integer) terrain.getDefaultMoveCost()).toString());
 		return content;
 	}
-	
-	
+
 	private void addCollection(String label, Collection<? extends VoogaEntity> collection) {
 		content += label + ": \n";
-		for (VoogaEntity AA: collection) {
+		for (VoogaEntity AA : collection) {
 			content += AA.getName() + "\n";
 		}
 	}
-	
+
 	private void addString(String label, String value) {
 		content += label + ": " + value + "\n";
 	}
-	
+
 	private void addMoveCosts(ModifiableUnit unit) {
-		content+= "Terrain Move Costs: \n";
+		content += "Terrain Move Costs: \n";
 		Map<Terrain, Integer> MC = unit.getTerrainMoveCosts();
-		for (VoogaEntity t: MC.keySet()) {
+		for (VoogaEntity t : MC.keySet()) {
 			content = content + t.getName() + ": " + MC.get(t).toString() + "\n";
 		}
 	}
-	
+
 	private void clearContent() {
 		content = "";
 		pane.getChildren().remove(spriteInfo);
 		pane.getChildren().remove(addButton);
 	}
-	
+
 	@Override
 	public Region getObject() {
 		return pane;

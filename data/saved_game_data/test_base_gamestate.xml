@@ -11,8 +11,6 @@
       </default>
     </java.util.Random>
   </random>
-  <turnNumber>0</turnNumber>
-  <currentPlayerNumber>0</currentPlayerNumber>
   <playerNames>
     <string>Player 1</string>
   </playerNames>
@@ -34,7 +32,13 @@
             </entry>
           </gameObjects>
         </team>
-        <chatLog/>
+        <chatLog class="com.sun.javafx.collections.ObservableListWrapper">
+          <changeBuilder>
+            <list class="com.sun.javafx.collections.ObservableListWrapper" reference="../.."/>
+            <changeLock>0</changeLock>
+          </changeBuilder>
+          <backingList/>
+        </chatLog>
       </backend.player.Player>
     </entry>
   </playerList>
@@ -48,7 +52,16 @@
         <gameObjects class="linked-hash-map"/>
       </backend.player.Team>
     </entry>
+    <entry>
+      <string>Player 1&apos;s Team</string>
+      <backend.player.Team reference="../../../playerList/entry/backend.player.Player/team"/>
+    </entry>
   </teams>
+  <objectives class="set"/>
+  <turnActions/>
+  <turnRequirements class="set"/>
+  <turnNumber>0</turnNumber>
+  <currentPlayerNumber>0</currentPlayerNumber>
   <grid class="backend.grid.ModifiableGameBoard">
     <name>Plain Rectangular Flat Board - 5x5</name>
     <description>Default base game board for testing purposes</description>
@@ -65,34 +78,78 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Flat</name>
             <description>Open, flat, land that offers little defensive cover, but allows for easy movement.</description>
-            <imgPath>grassy_plain.png</imgPath>
-            <defaultMoveCost>1</defaultMoveCost>
-            <defaultDefenseModifier>
-              <name>Default Flat Terrain Defense</name>
-              <description>Units have 30% evasion on Flat terrain by default.</description>
+            <imgPath>resources/images/kansas.jpg</imgPath>
+            <triggeredAbilities>
+              <name>Triggered abilities</name>
+              <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
               <imgPath></imgPath>
-              <modifier resolves-to="serialized-lambda">
-                <capturingClass>backend.cell.ModifiableTerrain</capturingClass>
-                <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                <implClass>backend/cell/ModifiableTerrain</implClass>
-                <implMethodName>lambda$static$63a3e906$1</implMethodName>
-                <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                <implMethodKind>6</implMethodKind>
-                <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                <capturedArgs/>
-              </modifier>
-            </defaultDefenseModifier>
+              <gameObjects class="linked-hash-map">
+                <entry>
+                  <string>Full Heal</string>
+                  <backend.util.ModifiableTriggeredEffect>
+                    <name>Full Heal</name>
+                    <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+                    <imgPath>Red_Cross.png</imgPath>
+                    <activationTriggers class="set">
+                      <backend.util.Event>TURN_START</backend.util.Event>
+                    </activationTriggers>
+                    <effect resolves-to="serialized-lambda">
+                      <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+                      <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+                      <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+                      <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+                      <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+                      <implMethodName>lambda$4</implMethodName>
+                      <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+                      <implMethodKind>6</implMethodKind>
+                      <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+                      <capturedArgs/>
+                    </effect>
+                    <duration>2147483647</duration>
+                    <turnsRemaining>2147483647</turnsRemaining>
+                  </backend.util.ModifiableTriggeredEffect>
+                </entry>
+              </gameObjects>
+            </triggeredAbilities>
+            <offensiveModifiers>
+              <name>Offensive Modifiers</name>
+              <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+              <imgPath></imgPath>
+              <gameObjects class="linked-hash-map"/>
+            </offensiveModifiers>
+            <defensiveModifiers>
+              <name>Defensive modifiers</name>
+              <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+              <imgPath></imgPath>
+              <gameObjects class="linked-hash-map">
+                <entry>
+                  <string>Default Flat Terrain Defense</string>
+                  <backend.unit.properties.InteractionModifier>
+                    <name>Default Flat Terrain Defense</name>
+                    <description>Units have 30% evasion on Flat terrain by default.</description>
+                    <imgPath></imgPath>
+                    <modifier resolves-to="serialized-lambda">
+                      <capturingClass>backend.cell.Terrain</capturingClass>
+                      <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                      <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                      <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                      <implClass>backend/cell/Terrain</implClass>
+                      <implMethodName>lambda$0</implMethodName>
+                      <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                      <implMethodKind>6</implMethodKind>
+                      <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                      <capturedArgs/>
+                    </modifier>
+                  </backend.unit.properties.InteractionModifier>
+                </entry>
+              </gameObjects>
+            </defensiveModifiers>
+            <defaultMoveCost>1</defaultMoveCost>
           </terrain>
           <coordinates reference="../../backend.grid.CoordinateTuple"/>
         </backend.cell.ModifiableCell>
@@ -108,10 +165,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -129,10 +182,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -150,10 +199,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -171,10 +216,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -192,10 +233,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -213,10 +250,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -234,10 +267,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -255,10 +284,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -276,10 +301,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -297,10 +318,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -318,10 +335,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -339,10 +352,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -360,10 +369,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -381,10 +386,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -402,10 +403,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -423,10 +420,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -444,10 +437,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -465,10 +454,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -486,10 +471,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -507,10 +488,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -528,10 +505,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -549,10 +522,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -570,10 +539,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -591,10 +556,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -612,10 +573,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -633,10 +590,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -654,10 +607,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -675,10 +624,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -696,10 +641,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -717,10 +658,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -738,10 +675,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -759,10 +692,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -780,10 +709,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -801,10 +726,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -822,10 +743,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -843,10 +760,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -864,10 +777,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -885,10 +794,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -906,10 +811,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -927,10 +828,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -948,10 +845,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -969,10 +862,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -990,10 +879,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1011,10 +896,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1032,10 +913,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1053,10 +930,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1074,10 +947,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1095,10 +964,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1116,10 +981,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1137,10 +998,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1158,10 +1015,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1179,10 +1032,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1200,10 +1049,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1221,10 +1066,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1242,10 +1083,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1263,10 +1100,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1284,10 +1117,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1305,10 +1134,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1326,10 +1151,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1347,10 +1168,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1368,10 +1185,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1389,10 +1202,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1410,10 +1219,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1431,10 +1236,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1452,10 +1253,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1473,10 +1270,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1494,10 +1287,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1515,10 +1304,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1536,10 +1321,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1557,10 +1338,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1578,10 +1355,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1599,10 +1372,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1620,10 +1389,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1641,10 +1406,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1662,10 +1423,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1683,10 +1440,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1704,10 +1457,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1725,10 +1474,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1746,10 +1491,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1767,10 +1508,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1788,10 +1525,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1809,10 +1542,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1830,10 +1559,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1851,10 +1576,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1872,10 +1593,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1893,10 +1610,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1914,10 +1627,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1935,10 +1644,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1956,10 +1661,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1977,10 +1678,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -1998,10 +1695,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2019,10 +1712,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2040,10 +1729,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2061,10 +1746,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2082,10 +1763,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2103,10 +1780,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2124,10 +1797,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2145,10 +1814,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2166,10 +1831,6 @@
           </coordinates>
         </backend.grid.CoordinateTuple>
         <backend.cell.ModifiableCell>
-          <name>Basic Square Flat Cell</name>
-          <description></description>
-          <imgPath>grassy_plain.png</imgPath>
-          <abilities/>
           <occupants/>
           <shape>SQUARE</shape>
           <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
@@ -2178,26 +1839,31 @@
       </entry>
     </gameBoard>
     <templateCell class="backend.cell.ModifiableCell">
-      <name>Basic Square Flat Cell</name>
-      <description></description>
-      <imgPath></imgPath>
-      <abilities/>
       <occupants/>
       <shape>SQUARE</shape>
       <terrain class="backend.cell.ModifiableTerrain" reference="../../gameBoard/entry/backend.cell.ModifiableCell/terrain"/>
     </templateCell>
     <boundsHandler>
-      <name>Finite Bounds</name>
-      <description>Converts out of bounds coordinates to the closest inbounds coordinate on the grid.</description>
+      <name>Square Finite Bounds</name>
+      <description>Converts out of bounds coordinates to the closest inbounds coordinate on a square grid.</description>
       <imgPath></imgPath>
-      <boundsGetter class="null"/>
+      <boundsGetter resolves-to="serialized-lambda">
+        <capturingClass>backend.grid.BoundsHandler</capturingClass>
+        <functionalInterfaceClass>backend/grid/BoundsHandler$CoordinateMapper</functionalInterfaceClass>
+        <functionalInterfaceMethodName>mapCoordinate</functionalInterfaceMethodName>
+        <functionalInterfaceMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</functionalInterfaceMethodSignature>
+        <implClass>backend/grid/BoundsHandler</implClass>
+        <implMethodName>lambda$2</implMethodName>
+        <implMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</implMethodSignature>
+        <implMethodKind>6</implMethodKind>
+        <instantiatedMethodType>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</instantiatedMethodType>
+        <capturedArgs/>
+      </boundsGetter>
     </boundsHandler>
     <rows>10</rows>
     <columns>10</columns>
   </grid>
-  <objectives class="set"/>
-  <turnActions/>
-  <turnRequirements class="set"/>
+  <isAuthoringMode>false</isAuthoringMode>
   <templates>
     <entry>
       <string>gameboard</string>
@@ -2216,11 +1882,177 @@
         <imgPath></imgPath>
         <gameObjects class="linked-hash-map">
           <entry>
-            <string>Skeleton Archer</string>
+            <string>X</string>
             <backend.unit.ModifiableUnit>
-              <name>Skeleton Archer</name>
-              <description>The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he enacts his revenge on the living.</description>
-              <imgPath>spooky2.png</imgPath>
+              <name>X</name>
+              <description>Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.</description>
+              <imgPath>resources/images/x.png</imgPath>
+              <activeAbilities>
+                <name>Active Abilities</name>
+                <description>Each unit has a set of active abilities which the user can use on the users&apos; own turn.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Sword</string>
+                    <backend.unit.properties.ActiveAbility>
+                      <name>Sword</name>
+                      <description>The attacker hits 3 times for 5 damage on any neighboring unit</description>
+                      <imgPath>Sword.png</imgPath>
+                      <effect class="backend.unit.properties.Attack">
+                        <damage>5.0</damage>
+                        <numHits>3</numHits>
+                        <damageModifiers/>
+                      </effect>
+                      <range>
+                        <name>Hexagonal Adjacent</name>
+                        <description>This pattern of hexagonal coordinates is composed of all hexagonal coordinates adjacent to the origin.</description>
+                        <imgPath>7Hexagons.png</imgPath>
+                        <relativeCoordinates class="set">
+                          <backend.grid.CoordinateTuple>
+                            <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                              <c class="list">
+                                <int>0</int>
+                                <int>-1</int>
+                                <int>1</int>
+                              </c>
+                              <list reference="../c"/>
+                            </coordinates>
+                          </backend.grid.CoordinateTuple>
+                          <backend.grid.CoordinateTuple>
+                            <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                              <c class="list">
+                                <int>1</int>
+                                <int>-1</int>
+                                <int>0</int>
+                              </c>
+                              <list reference="../c"/>
+                            </coordinates>
+                          </backend.grid.CoordinateTuple>
+                          <backend.grid.CoordinateTuple>
+                            <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                              <c class="list">
+                                <int>0</int>
+                                <int>1</int>
+                                <int>-1</int>
+                              </c>
+                              <list reference="../c"/>
+                            </coordinates>
+                          </backend.grid.CoordinateTuple>
+                          <backend.grid.CoordinateTuple>
+                            <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                              <c class="list">
+                                <int>-1</int>
+                                <int>1</int>
+                                <int>0</int>
+                              </c>
+                              <list reference="../c"/>
+                            </coordinates>
+                          </backend.grid.CoordinateTuple>
+                          <backend.grid.CoordinateTuple>
+                            <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                              <c class="list">
+                                <int>1</int>
+                                <int>0</int>
+                                <int>-1</int>
+                              </c>
+                              <list reference="../c"/>
+                            </coordinates>
+                          </backend.grid.CoordinateTuple>
+                          <backend.grid.CoordinateTuple>
+                            <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                              <c class="list">
+                                <int>-1</int>
+                                <int>0</int>
+                                <int>1</int>
+                              </c>
+                              <list reference="../c"/>
+                            </coordinates>
+                          </backend.grid.CoordinateTuple>
+                        </relativeCoordinates>
+                      </range>
+                    </backend.unit.properties.ActiveAbility>
+                  </entry>
+                </gameObjects>
+              </activeAbilities>
+              <triggeredAbilities>
+                <name>Triggered abilities</name>
+                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </triggeredAbilities>
+              <offensiveModifiers>
+                <name>Offensive Modifiers</name>
+                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Chaotic</string>
+                    <backend.unit.properties.InteractionModifier>
+                      <name>Chaotic</name>
+                      <description>Attacks do more damage in nighttime, but less damage in daytime.</description>
+                      <imgPath>Chaotic.png</imgPath>
+                      <modifier resolves-to="serialized-lambda">
+                        <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
+                        <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                        <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                        <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                        <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
+                        <implMethodName>lambda$7</implMethodName>
+                        <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                        <implMethodKind>6</implMethodKind>
+                        <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                        <capturedArgs/>
+                      </modifier>
+                    </backend.unit.properties.InteractionModifier>
+                  </entry>
+                </gameObjects>
+              </offensiveModifiers>
+              <defensiveModifiers>
+                <name>Defensive modifiers</name>
+                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </defensiveModifiers>
+              <terrainMoveCosts/>
+              <stats>
+                <name>Unit stats</name>
+                <description>Each unit has its own set of numerical stats, such as hitpoints or movement points.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Movepoints</string>
+                    <backend.unit.properties.ModifiableUnitStat>
+                      <name>Movepoints</name>
+                      <description>Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.</description>
+                      <imgPath>Boot.png</imgPath>
+                      <maxValue class="int">5</maxValue>
+                      <minValue class="int">0</minValue>
+                      <currentValue class="int">5</currentValue>
+                    </backend.unit.properties.ModifiableUnitStat>
+                  </entry>
+                  <entry>
+                    <string>Hitpoints</string>
+                    <backend.unit.properties.ModifiableUnitStat>
+                      <name>Hitpoints</name>
+                      <description>Units lose HP when taking damage. When a unit&apos;s hitpoints reach 0, the unit dies.</description>
+                      <imgPath>&lt;3.png</imgPath>
+                      <maxValue class="double">39.0</maxValue>
+                      <minValue class="double">0.0</minValue>
+                      <currentValue class="double">39.0</currentValue>
+                    </backend.unit.properties.ModifiableUnitStat>
+                  </entry>
+                </gameObjects>
+              </stats>
+              <movePattern reference="../activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
+              <isVisible>false</isVisible>
+            </backend.unit.ModifiableUnit>
+          </entry>
+          <entry>
+            <string>O</string>
+            <backend.unit.ModifiableUnit>
+              <name>O</name>
+              <description>The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.</description>
+              <imgPath>resources/images/o.png</imgPath>
               <activeAbilities>
                 <name>Active Abilities</name>
                 <description>Each unit has a set of active abilities which the user can use on the users&apos; own turn.</description>
@@ -8215,18 +8047,7 @@
                       <name>Chaotic</name>
                       <description>Attacks do more damage in nighttime, but less damage in daytime.</description>
                       <imgPath>Chaotic.png</imgPath>
-                      <modifier resolves-to="serialized-lambda">
-                        <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
-                        <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                        <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                        <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                        <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                        <implMethodName>lambda$static$33f2d700$1</implMethodName>
-                        <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                        <implMethodKind>6</implMethodKind>
-                        <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                        <capturedArgs/>
-                      </modifier>
+                      <modifier reference="../../../../../../../entry/backend.unit.ModifiableUnit/offensiveModifiers/gameObjects/entry/backend.unit.properties.InteractionModifier/modifier"/>
                     </backend.unit.properties.InteractionModifier>
                   </entry>
                 </gameObjects>
@@ -8267,162 +8088,7 @@
                   </entry>
                 </gameObjects>
               </stats>
-              <movePattern>
-                <name>Hexagonal Adjacent</name>
-                <description>This pattern of hexagonal coordinates is composed of all hexagonal coordinates adjacent to the origin.</description>
-                <imgPath>7Hexagons.png</imgPath>
-                <relativeCoordinates class="set">
-                  <backend.grid.CoordinateTuple>
-                    <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-                      <c class="list">
-                        <int>0</int>
-                        <int>-1</int>
-                        <int>1</int>
-                      </c>
-                      <list reference="../c"/>
-                    </coordinates>
-                  </backend.grid.CoordinateTuple>
-                  <backend.grid.CoordinateTuple>
-                    <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-                      <c class="list">
-                        <int>1</int>
-                        <int>-1</int>
-                        <int>0</int>
-                      </c>
-                      <list reference="../c"/>
-                    </coordinates>
-                  </backend.grid.CoordinateTuple>
-                  <backend.grid.CoordinateTuple>
-                    <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-                      <c class="list">
-                        <int>0</int>
-                        <int>1</int>
-                        <int>-1</int>
-                      </c>
-                      <list reference="../c"/>
-                    </coordinates>
-                  </backend.grid.CoordinateTuple>
-                  <backend.grid.CoordinateTuple>
-                    <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-                      <c class="list">
-                        <int>-1</int>
-                        <int>1</int>
-                        <int>0</int>
-                      </c>
-                      <list reference="../c"/>
-                    </coordinates>
-                  </backend.grid.CoordinateTuple>
-                  <backend.grid.CoordinateTuple>
-                    <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-                      <c class="list">
-                        <int>1</int>
-                        <int>0</int>
-                        <int>-1</int>
-                      </c>
-                      <list reference="../c"/>
-                    </coordinates>
-                  </backend.grid.CoordinateTuple>
-                  <backend.grid.CoordinateTuple>
-                    <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-                      <c class="list">
-                        <int>-1</int>
-                        <int>0</int>
-                        <int>1</int>
-                      </c>
-                      <list reference="../c"/>
-                    </coordinates>
-                  </backend.grid.CoordinateTuple>
-                </relativeCoordinates>
-              </movePattern>
-              <isVisible>false</isVisible>
-            </backend.unit.ModifiableUnit>
-          </entry>
-          <entry>
-            <string>Skeleton Warrior</string>
-            <backend.unit.ModifiableUnit>
-              <name>Skeleton Warrior</name>
-              <description>Once a noble knight in service of his kingdom, the skeleton warrior once again takes up the blade for the lich king.</description>
-              <imgPath>spooky1.png</imgPath>
-              <activeAbilities>
-                <name>Active Abilities</name>
-                <description>Each unit has a set of active abilities which the user can use on the users&apos; own turn.</description>
-                <imgPath></imgPath>
-                <gameObjects class="linked-hash-map">
-                  <entry>
-                    <string>Sword</string>
-                    <backend.unit.properties.ActiveAbility>
-                      <name>Sword</name>
-                      <description>The attacker hits 3 times for 5 damage on any neighboring unit</description>
-                      <imgPath>Sword.png</imgPath>
-                      <effect class="backend.unit.properties.Attack">
-                        <damage>5.0</damage>
-                        <numHits>3</numHits>
-                        <damageModifiers/>
-                      </effect>
-                      <range reference="../../../../../../../entry/backend.unit.ModifiableUnit/movePattern"/>
-                    </backend.unit.properties.ActiveAbility>
-                  </entry>
-                </gameObjects>
-              </activeAbilities>
-              <triggeredAbilities>
-                <name>Triggered abilities</name>
-                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
-                <imgPath></imgPath>
-                <gameObjects class="linked-hash-map"/>
-              </triggeredAbilities>
-              <offensiveModifiers>
-                <name>Offensive Modifiers</name>
-                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
-                <imgPath></imgPath>
-                <gameObjects class="linked-hash-map">
-                  <entry>
-                    <string>Chaotic</string>
-                    <backend.unit.properties.InteractionModifier>
-                      <name>Chaotic</name>
-                      <description>Attacks do more damage in nighttime, but less damage in daytime.</description>
-                      <imgPath>Chaotic.png</imgPath>
-                      <modifier reference="../../../../../../../entry/backend.unit.ModifiableUnit/offensiveModifiers/gameObjects/entry/backend.unit.properties.InteractionModifier/modifier"/>
-                    </backend.unit.properties.InteractionModifier>
-                  </entry>
-                </gameObjects>
-              </offensiveModifiers>
-              <defensiveModifiers>
-                <name>Defensive modifiers</name>
-                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
-                <imgPath></imgPath>
-                <gameObjects class="linked-hash-map"/>
-              </defensiveModifiers>
-              <terrainMoveCosts/>
-              <stats>
-                <name>Unit stats</name>
-                <description>Each unit has its own set of numerical stats, such as hitpoints or movement points.</description>
-                <imgPath></imgPath>
-                <gameObjects class="linked-hash-map">
-                  <entry>
-                    <string>Movepoints</string>
-                    <backend.unit.properties.ModifiableUnitStat>
-                      <name>Movepoints</name>
-                      <description>Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.</description>
-                      <imgPath>Boot.png</imgPath>
-                      <maxValue class="int">5</maxValue>
-                      <minValue class="int">0</minValue>
-                      <currentValue class="int">5</currentValue>
-                    </backend.unit.properties.ModifiableUnitStat>
-                  </entry>
-                  <entry>
-                    <string>Hitpoints</string>
-                    <backend.unit.properties.ModifiableUnitStat>
-                      <name>Hitpoints</name>
-                      <description>Units lose HP when taking damage. When a unit&apos;s hitpoints reach 0, the unit dies.</description>
-                      <imgPath>&lt;3.png</imgPath>
-                      <maxValue class="double">39.0</maxValue>
-                      <minValue class="double">0.0</minValue>
-                      <currentValue class="double">39.0</currentValue>
-                    </backend.unit.properties.ModifiableUnitStat>
-                  </entry>
-                </gameObjects>
-              </stats>
-              <movePattern reference="../../../entry/backend.unit.ModifiableUnit/movePattern"/>
+              <movePattern reference="../../../entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
               <isVisible>false</isVisible>
             </backend.unit.ModifiableUnit>
           </entry>
@@ -8438,11 +8104,11 @@
         <gameObjects class="linked-hash-map">
           <entry>
             <string>Hexagonal Adjacent</string>
-            <backend.grid.GridPattern reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/movePattern"/>
+            <backend.grid.GridPattern reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
           </entry>
           <entry>
             <string>Hexagonal Rays</string>
-            <backend.grid.GridPattern reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
+            <backend.grid.GridPattern reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
           </entry>
           <entry>
             <string>Square Single Cell</string>
@@ -14520,13 +14186,13 @@
                 <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/ActiveAbility</implClass>
-                <implMethodName>lambda$static$dfcf7a1d$1</implMethodName>
+                <implMethodName>lambda$2</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</instantiatedMethodType>
                 <capturedArgs/>
               </effect>
-              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/movePattern"/>
+              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
             </backend.unit.properties.ActiveAbility>
           </entry>
           <entry>
@@ -14541,13 +14207,13 @@
                 <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/ActiveAbility</implClass>
-                <implMethodName>lambda$static$75bf1111$1</implMethodName>
+                <implMethodName>lambda$3</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</instantiatedMethodType>
                 <capturedArgs/>
               </effect>
-              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/movePattern"/>
+              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
             </backend.unit.properties.ActiveAbility>
           </entry>
           <entry>
@@ -14562,18 +14228,18 @@
                 <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/ActiveAbility</implClass>
-                <implMethodName>lambda$static$ca69c29$1</implMethodName>
+                <implMethodName>lambda$0</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</instantiatedMethodType>
                 <capturedArgs/>
               </effect>
-              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/movePattern"/>
+              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
             </backend.unit.properties.ActiveAbility>
           </entry>
           <entry>
             <string>Sword</string>
-            <backend.unit.properties.ActiveAbility reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility"/>
+            <backend.unit.properties.ActiveAbility reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility"/>
           </entry>
           <entry>
             <string>Full Heal</string>
@@ -14587,18 +14253,18 @@
                 <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/ActiveAbility</implClass>
-                <implMethodName>lambda$static$1d4e159a$1</implMethodName>
+                <implMethodName>lambda$1</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</instantiatedMethodType>
                 <capturedArgs/>
               </effect>
-              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/movePattern"/>
+              <range reference="../../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility/range"/>
             </backend.unit.properties.ActiveAbility>
           </entry>
           <entry>
             <string>Bow</string>
-            <backend.unit.properties.ActiveAbility reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility"/>
+            <backend.unit.properties.ActiveAbility reference="../../../../../entry[2]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.unit.ModifiableUnit/activeAbilities/gameObjects/entry/backend.unit.properties.ActiveAbility"/>
           </entry>
           <entry>
             <string>Set Fire to Cell</string>
@@ -14612,10 +14278,10 @@
                 <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/ActiveAbility</implClass>
-                <implMethodName>lambda$static$e02eb1da$1</implMethodName>
-                <implMethodSignature>(Lbackend/unit/Unit;Lbackend/cell/Cell;Lbackend/util/GameplayState;)V</implMethodSignature>
+                <implMethodName>lambda$4</implMethodName>
+                <implMethodSignature>(Lbackend/unit/Unit;Lbackend/cell/Terrain;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
-                <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/cell/Cell;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+                <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/cell/Terrain;Lbackend/util/GameplayState;)V</instantiatedMethodType>
                 <capturedArgs/>
               </effect>
               <range reference="../../../../../../entry[3]/backend.util.ModifiableVoogaCollection/gameObjects/entry[7]/backend.grid.GridPattern"/>
@@ -14687,7 +14353,18 @@
               <name>Infinite Bounds</name>
               <description>Allows grid to expand to accommodate out of bounds coordinates.</description>
               <imgPath></imgPath>
-              <boundsGetter class="null"/>
+              <boundsGetter resolves-to="serialized-lambda">
+                <capturingClass>backend.grid.BoundsHandler</capturingClass>
+                <functionalInterfaceClass>backend/grid/BoundsHandler$CoordinateMapper</functionalInterfaceClass>
+                <functionalInterfaceMethodName>mapCoordinate</functionalInterfaceMethodName>
+                <functionalInterfaceMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</functionalInterfaceMethodSignature>
+                <implClass>backend/grid/BoundsHandler</implClass>
+                <implMethodName>lambda$0</implMethodName>
+                <implMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</implMethodSignature>
+                <implMethodKind>6</implMethodKind>
+                <instantiatedMethodType>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</instantiatedMethodType>
+                <capturedArgs/>
+              </boundsGetter>
             </backend.grid.BoundsHandler>
           </entry>
           <entry>
@@ -14696,17 +14373,23 @@
               <name>Toroidal Bounds</name>
               <description>Wraps out of bounds coordinates to the opposite side of the grid</description>
               <imgPath>Torus.png</imgPath>
-              <boundsGetter class="null"/>
+              <boundsGetter resolves-to="serialized-lambda">
+                <capturingClass>backend.grid.BoundsHandler</capturingClass>
+                <functionalInterfaceClass>backend/grid/BoundsHandler$CoordinateMapper</functionalInterfaceClass>
+                <functionalInterfaceMethodName>mapCoordinate</functionalInterfaceMethodName>
+                <functionalInterfaceMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</functionalInterfaceMethodSignature>
+                <implClass>backend/grid/BoundsHandler</implClass>
+                <implMethodName>lambda$3</implMethodName>
+                <implMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</implMethodSignature>
+                <implMethodKind>6</implMethodKind>
+                <instantiatedMethodType>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</instantiatedMethodType>
+                <capturedArgs/>
+              </boundsGetter>
             </backend.grid.BoundsHandler>
           </entry>
           <entry>
             <string>Square Finite Bounds</string>
-            <backend.grid.BoundsHandler>
-              <name>Square Finite Bounds</name>
-              <description>Converts out of bounds coordinates to the closest inbounds coordinate on a square grid.</description>
-              <imgPath></imgPath>
-              <boundsGetter class="null"/>
-            </backend.grid.BoundsHandler>
+            <backend.grid.BoundsHandler reference="../../../../../../grid/boundsHandler"/>
           </entry>
           <entry>
             <string>Square Toroidal Bounds</string>
@@ -14714,12 +14397,39 @@
               <name>Square Toroidal Bounds</name>
               <description>Wraps out of bounds coordinates to the opposite side of a square grid.</description>
               <imgPath>Torus.png</imgPath>
-              <boundsGetter class="null"/>
+              <boundsGetter resolves-to="serialized-lambda">
+                <capturingClass>backend.grid.BoundsHandler</capturingClass>
+                <functionalInterfaceClass>backend/grid/BoundsHandler$CoordinateMapper</functionalInterfaceClass>
+                <functionalInterfaceMethodName>mapCoordinate</functionalInterfaceMethodName>
+                <functionalInterfaceMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</functionalInterfaceMethodSignature>
+                <implClass>backend/grid/BoundsHandler</implClass>
+                <implMethodName>lambda$4</implMethodName>
+                <implMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</implMethodSignature>
+                <implMethodKind>6</implMethodKind>
+                <instantiatedMethodType>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</instantiatedMethodType>
+                <capturedArgs/>
+              </boundsGetter>
             </backend.grid.BoundsHandler>
           </entry>
           <entry>
             <string>Finite Bounds</string>
-            <backend.grid.BoundsHandler reference="../../../../../../grid/boundsHandler"/>
+            <backend.grid.BoundsHandler>
+              <name>Finite Bounds</name>
+              <description>Converts out of bounds coordinates to the closest inbounds coordinate on the grid.</description>
+              <imgPath></imgPath>
+              <boundsGetter resolves-to="serialized-lambda">
+                <capturingClass>backend.grid.BoundsHandler</capturingClass>
+                <functionalInterfaceClass>backend/grid/BoundsHandler$CoordinateMapper</functionalInterfaceClass>
+                <functionalInterfaceMethodName>mapCoordinate</functionalInterfaceMethodName>
+                <functionalInterfaceMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</functionalInterfaceMethodSignature>
+                <implClass>backend/grid/BoundsHandler</implClass>
+                <implMethodName>lambda$1</implMethodName>
+                <implMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</implMethodSignature>
+                <implMethodKind>6</implMethodKind>
+                <instantiatedMethodType>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</instantiatedMethodType>
+                <capturedArgs/>
+              </boundsGetter>
+            </backend.grid.BoundsHandler>
           </entry>
         </gameObjects>
       </backend.util.ModifiableVoogaCollection>
@@ -14743,7 +14453,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$81a7f2d0$1</implMethodName>
+                <implMethodName>lambda$10</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14763,7 +14473,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$dd6bf214$1</implMethodName>
+                <implMethodName>lambda$12</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14783,7 +14493,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$ad3befc7$1</implMethodName>
+                <implMethodName>lambda$9</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14803,7 +14513,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$361ddfa4$1</implMethodName>
+                <implMethodName>lambda$8</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14823,7 +14533,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$38cef77a$1</implMethodName>
+                <implMethodName>lambda$13</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14843,7 +14553,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$b57353d6$1</implMethodName>
+                <implMethodName>lambda$11</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14863,7 +14573,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$11de87c9$1</implMethodName>
+                <implMethodName>lambda$14</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -14897,8 +14607,8 @@
               <description>This unit is poisoned, and will lose 4 damage at the run and end of each turn, to a minimum of 1 HP. Lasts for 6 turns</description>
               <imgPath>Drink_bleach.png</imgPath>
               <activationTriggers class="set">
-                <backend.util.Event>TURN_END</backend.util.Event>
                 <backend.util.Event>TURN_START</backend.util.Event>
+                <backend.util.Event>TURN_END</backend.util.Event>
               </activationTriggers>
               <effect resolves-to="serialized-lambda">
                 <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
@@ -14906,7 +14616,7 @@
                 <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$1cc33d90$1</implMethodName>
+                <implMethodName>lambda$3</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
@@ -14931,7 +14641,7 @@
                 <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$e1dbeb2c$1</implMethodName>
+                <implMethodName>lambda$0</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
@@ -14948,12 +14658,12 @@
               <description>This unit hides in the shadows, rendering it invisible in nighttime</description>
               <imgPath>Ninja.png</imgPath>
               <activationTriggers class="set">
-                <backend.util.Event>UNIT_PRE_MOVEMENT</backend.util.Event>
-                <backend.util.Event>TURN_END</backend.util.Event>
-                <backend.util.Event>TURN_START</backend.util.Event>
                 <backend.util.Event>UNIT_POST_ABILITY_USE</backend.util.Event>
-                <backend.util.Event>UNIT_PRE_ABILITY_USE</backend.util.Event>
+                <backend.util.Event>TURN_START</backend.util.Event>
+                <backend.util.Event>TURN_END</backend.util.Event>
+                <backend.util.Event>UNIT_PRE_MOVEMENT</backend.util.Event>
                 <backend.util.Event>UNIT_POST_MOVEMENT</backend.util.Event>
+                <backend.util.Event>UNIT_PRE_ABILITY_USE</backend.util.Event>
               </activationTriggers>
               <effect resolves-to="serialized-lambda">
                 <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
@@ -14961,7 +14671,7 @@
                 <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$d9c6d897$1</implMethodName>
+                <implMethodName>lambda$2</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
@@ -14986,7 +14696,7 @@
                 <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$10b52ee2$1</implMethodName>
+                <implMethodName>lambda$1</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
@@ -15021,7 +14731,7 @@
                 <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$ec0fa50d$1</implMethodName>
+                <implMethodName>lambda$6</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
@@ -15040,18 +14750,7 @@
               <activationTriggers class="set">
                 <backend.util.Event>TURN_START</backend.util.Event>
               </activationTriggers>
-              <effect resolves-to="serialized-lambda">
-                <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
-                <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
-                <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
-                <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
-                <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$4ab17ecb$1</implMethodName>
-                <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
-                <implMethodKind>6</implMethodKind>
-                <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
-                <capturedArgs/>
-              </effect>
+              <effect reference="../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain/triggeredAbilities/gameObjects/entry/backend.util.ModifiableTriggeredEffect/effect"/>
               <duration>2147483647</duration>
               <turnsRemaining>2147483647</turnsRemaining>
             </backend.util.ModifiableTriggeredEffect>
@@ -15071,7 +14770,7 @@
                 <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
                 <implClass>backend/util/ModifiableTriggeredEffect</implClass>
-                <implMethodName>lambda$static$c96b8ecf$1</implMethodName>
+                <implMethodName>lambda$5</implMethodName>
                 <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
@@ -15085,346 +14784,6 @@
       </backend.util.ModifiableVoogaCollection>
     </entry>
     <entry>
-      <string>cell</string>
-      <backend.util.ModifiableVoogaCollection>
-        <name>Cells</name>
-        <description></description>
-        <imgPath></imgPath>
-        <gameObjects class="linked-hash-map">
-          <entry>
-            <string>Basic Square Fortified Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Square Fortified Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>SQUARE</shape>
-              <terrain class="backend.cell.ModifiableTerrain">
-                <name>Fortified</name>
-                <description>A fortified defensive position</description>
-                <imgPath>castle.png</imgPath>
-                <defaultMoveCost>1</defaultMoveCost>
-                <defaultDefenseModifier>
-                  <name>Default Fortified Terrain Defense</name>
-                  <description>Units have 70% evasion on Fortified terrain by default.</description>
-                  <imgPath></imgPath>
-                  <modifier resolves-to="serialized-lambda">
-                    <capturingClass>backend.cell.ModifiableTerrain</capturingClass>
-                    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                    <implClass>backend/cell/ModifiableTerrain</implClass>
-                    <implMethodName>lambda$static$c8dae1db$1</implMethodName>
-                    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                    <implMethodKind>6</implMethodKind>
-                    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                    <capturedArgs/>
-                  </modifier>
-                </defaultDefenseModifier>
-              </terrain>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Hexagonal Mountain Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Hexagonal Mountain Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain">
-                <name>Mountain</name>
-                <description>Rugged mountains that are difficult to navigate through</description>
-                <imgPath>snowy_mountains.png</imgPath>
-                <defaultMoveCost>2</defaultMoveCost>
-                <defaultDefenseModifier>
-                  <name>Default Mountain Terrain Defense</name>
-                  <description>Units have 50% evasion on Mountain terrain by default.</description>
-                  <imgPath></imgPath>
-                  <modifier resolves-to="serialized-lambda">
-                    <capturingClass>backend.cell.ModifiableTerrain</capturingClass>
-                    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                    <implClass>backend/cell/ModifiableTerrain</implClass>
-                    <implMethodName>lambda$static$c80d772$1</implMethodName>
-                    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                    <implMethodKind>6</implMethodKind>
-                    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                    <capturedArgs/>
-                  </modifier>
-                </defaultDefenseModifier>
-              </terrain>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Square Forest Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Square Forest Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>SQUARE</shape>
-              <terrain class="backend.cell.ModifiableTerrain">
-                <name>Forest</name>
-                <description>Thick forest that offers plenty of cover, but makes navigating difficult.</description>
-                <imgPath>forest.png</imgPath>
-                <defaultMoveCost>2</defaultMoveCost>
-                <defaultDefenseModifier>
-                  <name>Default Forest Terrain Defense</name>
-                  <description>Units have 60% evasion on Forest terrain by default.</description>
-                  <imgPath></imgPath>
-                  <modifier resolves-to="serialized-lambda">
-                    <capturingClass>backend.cell.ModifiableTerrain</capturingClass>
-                    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                    <implClass>backend/cell/ModifiableTerrain</implClass>
-                    <implMethodName>lambda$static$10556462$1</implMethodName>
-                    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                    <implMethodKind>6</implMethodKind>
-                    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                    <capturedArgs/>
-                  </modifier>
-                </defaultDefenseModifier>
-              </terrain>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Square Flat Cell</string>
-            <backend.cell.ModifiableCell reference="../../../../../../grid/templateCell"/>
-          </entry>
-          <entry>
-            <string>Basic Hexagonal Flat Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Hexagonal Flat Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Hexagonal Forest Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Hexagonal Forest Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[3]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Square Mountain Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Square Mountain Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>SQUARE</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[2]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Hexagonal Fortified Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Hexagonal Fortified Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Healing Hexagonal Water Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Healing Hexagonal Water Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities>
-                <backend.util.ModifiableTriggeredEffect reference="../../../../../../../entry[9]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.util.ModifiableTriggeredEffect"/>
-              </abilities>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain">
-                <name>Water</name>
-                <description>Water that impedes movement for non-aquatic units</description>
-                <imgPath>splish_splash.png</imgPath>
-                <defaultMoveCost>3</defaultMoveCost>
-                <defaultDefenseModifier>
-                  <name>Default Water Terrain Defense</name>
-                  <description>Units have 20% evasion on Water terrain by default.</description>
-                  <imgPath></imgPath>
-                  <modifier resolves-to="serialized-lambda">
-                    <capturingClass>backend.cell.ModifiableTerrain</capturingClass>
-                    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                    <implClass>backend/cell/ModifiableTerrain</implClass>
-                    <implMethodName>lambda$static$2d490544$1</implMethodName>
-                    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                    <implMethodKind>6</implMethodKind>
-                    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                    <capturedArgs/>
-                  </modifier>
-                </defaultDefenseModifier>
-              </terrain>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Healing Hexagonal Fortified Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Healing Hexagonal Fortified Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities>
-                <backend.util.ModifiableTriggeredEffect reference="../../../../../../../entry[9]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.util.ModifiableTriggeredEffect"/>
-              </abilities>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Healing Hexagonal Mountain Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Healing Hexagonal Mountain Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities>
-                <backend.util.ModifiableTriggeredEffect reference="../../../../../../../entry[9]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.util.ModifiableTriggeredEffect"/>
-              </abilities>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[2]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Square Water Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Square Water Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>SQUARE</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[9]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Hexagonal Water Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Hexagonal Water Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[9]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Healing Hexagonal Empty Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Healing Hexagonal Empty Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities>
-                <backend.util.ModifiableTriggeredEffect reference="../../../../../../../entry[9]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.util.ModifiableTriggeredEffect"/>
-              </abilities>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain">
-                <name>Empty</name>
-                <description>Literally nothing</description>
-                <imgPath>black_void_of_the_abyss.png</imgPath>
-                <defaultMoveCost>2147483647</defaultMoveCost>
-                <defaultDefenseModifier>
-                  <name>No effect</name>
-                  <description>Literally nothing</description>
-                  <imgPath>The_abyss_stares_back.png</imgPath>
-                  <modifier resolves-to="serialized-lambda">
-                    <capturingClass>backend.unit.properties.InteractionModifier</capturingClass>
-                    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
-                    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
-                    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
-                    <implClass>backend/unit/properties/InteractionModifier</implClass>
-                    <implMethodName>lambda$static$92f7d86c$1</implMethodName>
-                    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
-                    <implMethodKind>6</implMethodKind>
-                    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
-                    <capturedArgs/>
-                  </modifier>
-                </defaultDefenseModifier>
-              </terrain>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Square Empty Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Square Empty Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>SQUARE</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[14]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Healing Hexagonal Forest Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Healing Hexagonal Forest Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities>
-                <backend.util.ModifiableTriggeredEffect reference="../../../../../../../entry[9]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.util.ModifiableTriggeredEffect"/>
-              </abilities>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[3]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Basic Hexagonal Empty Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Basic Hexagonal Empty Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities/>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../entry[14]/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-          <entry>
-            <string>Healing Hexagonal Flat Cell</string>
-            <backend.cell.ModifiableCell>
-              <name>Healing Hexagonal Flat Cell</name>
-              <description></description>
-              <imgPath></imgPath>
-              <abilities>
-                <backend.util.ModifiableTriggeredEffect reference="../../../../../../../entry[9]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.util.ModifiableTriggeredEffect"/>
-              </abilities>
-              <occupants/>
-              <shape>HEXAGONAL</shape>
-              <terrain class="backend.cell.ModifiableTerrain" reference="../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain"/>
-            </backend.cell.ModifiableCell>
-          </entry>
-        </gameObjects>
-      </backend.util.ModifiableVoogaCollection>
-    </entry>
-    <entry>
       <string>terrain</string>
       <backend.util.ModifiableVoogaCollection>
         <name>Terrain</name>
@@ -15433,19 +14792,234 @@
         <gameObjects class="linked-hash-map">
           <entry>
             <string>Water</string>
-            <backend.cell.ModifiableTerrain reference="../../../../../entry[10]/backend.util.ModifiableVoogaCollection/gameObjects/entry[9]/backend.cell.ModifiableCell/terrain"/>
+            <backend.cell.ModifiableTerrain>
+              <name>Water</name>
+              <description>Water that impedes movement for non-aquatic units</description>
+              <imgPath>resources/images/water.jpg</imgPath>
+              <triggeredAbilities>
+                <name>Triggered abilities</name>
+                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Full Heal</string>
+                    <backend.util.ModifiableTriggeredEffect>
+                      <name>Full Heal</name>
+                      <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+                      <imgPath>Red_Cross.png</imgPath>
+                      <activationTriggers class="set">
+                        <backend.util.Event>TURN_START</backend.util.Event>
+                      </activationTriggers>
+                      <effect reference="../../../../../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain/triggeredAbilities/gameObjects/entry/backend.util.ModifiableTriggeredEffect/effect"/>
+                      <duration>2147483647</duration>
+                      <turnsRemaining>2147483647</turnsRemaining>
+                    </backend.util.ModifiableTriggeredEffect>
+                  </entry>
+                </gameObjects>
+              </triggeredAbilities>
+              <offensiveModifiers>
+                <name>Offensive Modifiers</name>
+                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </offensiveModifiers>
+              <defensiveModifiers>
+                <name>Defensive modifiers</name>
+                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Default Water Terrain Defense</string>
+                    <backend.unit.properties.InteractionModifier>
+                      <name>Default Water Terrain Defense</name>
+                      <description>Units have 20% evasion on Water terrain by default.</description>
+                      <imgPath></imgPath>
+                      <modifier resolves-to="serialized-lambda">
+                        <capturingClass>backend.cell.Terrain</capturingClass>
+                        <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                        <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                        <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                        <implClass>backend/cell/Terrain</implClass>
+                        <implMethodName>lambda$2</implMethodName>
+                        <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                        <implMethodKind>6</implMethodKind>
+                        <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                        <capturedArgs/>
+                      </modifier>
+                    </backend.unit.properties.InteractionModifier>
+                  </entry>
+                </gameObjects>
+              </defensiveModifiers>
+              <defaultMoveCost>3</defaultMoveCost>
+            </backend.cell.ModifiableTerrain>
           </entry>
           <entry>
             <string>Empty</string>
-            <backend.cell.ModifiableTerrain reference="../../../../../entry[10]/backend.util.ModifiableVoogaCollection/gameObjects/entry[14]/backend.cell.ModifiableCell/terrain"/>
+            <backend.cell.ModifiableTerrain>
+              <name>Empty</name>
+              <description>Literally nothing</description>
+              <imgPath>resources/images/blackScreen.png</imgPath>
+              <triggeredAbilities>
+                <name>Triggered abilities</name>
+                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Full Heal</string>
+                    <backend.util.ModifiableTriggeredEffect>
+                      <name>Full Heal</name>
+                      <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+                      <imgPath>Red_Cross.png</imgPath>
+                      <activationTriggers class="set">
+                        <backend.util.Event>TURN_START</backend.util.Event>
+                      </activationTriggers>
+                      <effect reference="../../../../../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain/triggeredAbilities/gameObjects/entry/backend.util.ModifiableTriggeredEffect/effect"/>
+                      <duration>2147483647</duration>
+                      <turnsRemaining>2147483647</turnsRemaining>
+                    </backend.util.ModifiableTriggeredEffect>
+                  </entry>
+                </gameObjects>
+              </triggeredAbilities>
+              <offensiveModifiers>
+                <name>Offensive Modifiers</name>
+                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </offensiveModifiers>
+              <defensiveModifiers>
+                <name>Defensive modifiers</name>
+                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </defensiveModifiers>
+              <defaultMoveCost>2147483647</defaultMoveCost>
+            </backend.cell.ModifiableTerrain>
           </entry>
           <entry>
             <string>Mountain</string>
-            <backend.cell.ModifiableTerrain reference="../../../../../entry[10]/backend.util.ModifiableVoogaCollection/gameObjects/entry[2]/backend.cell.ModifiableCell/terrain"/>
+            <backend.cell.ModifiableTerrain>
+              <name>Mountain</name>
+              <description>Rugged mountains that are difficult to navigate through</description>
+              <imgPath>resources/images/mountain.jpg</imgPath>
+              <triggeredAbilities>
+                <name>Triggered abilities</name>
+                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Full Heal</string>
+                    <backend.util.ModifiableTriggeredEffect>
+                      <name>Full Heal</name>
+                      <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+                      <imgPath>Red_Cross.png</imgPath>
+                      <activationTriggers class="set">
+                        <backend.util.Event>TURN_START</backend.util.Event>
+                      </activationTriggers>
+                      <effect reference="../../../../../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain/triggeredAbilities/gameObjects/entry/backend.util.ModifiableTriggeredEffect/effect"/>
+                      <duration>2147483647</duration>
+                      <turnsRemaining>2147483647</turnsRemaining>
+                    </backend.util.ModifiableTriggeredEffect>
+                  </entry>
+                </gameObjects>
+              </triggeredAbilities>
+              <offensiveModifiers>
+                <name>Offensive Modifiers</name>
+                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </offensiveModifiers>
+              <defensiveModifiers>
+                <name>Defensive modifiers</name>
+                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Default Mountain Terrain Defense</string>
+                    <backend.unit.properties.InteractionModifier>
+                      <name>Default Mountain Terrain Defense</name>
+                      <description>Units have 50% evasion on Mountain terrain by default.</description>
+                      <imgPath></imgPath>
+                      <modifier resolves-to="serialized-lambda">
+                        <capturingClass>backend.cell.Terrain</capturingClass>
+                        <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                        <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                        <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                        <implClass>backend/cell/Terrain</implClass>
+                        <implMethodName>lambda$3</implMethodName>
+                        <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                        <implMethodKind>6</implMethodKind>
+                        <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                        <capturedArgs/>
+                      </modifier>
+                    </backend.unit.properties.InteractionModifier>
+                  </entry>
+                </gameObjects>
+              </defensiveModifiers>
+              <defaultMoveCost>2</defaultMoveCost>
+            </backend.cell.ModifiableTerrain>
           </entry>
           <entry>
             <string>Fortified</string>
-            <backend.cell.ModifiableTerrain reference="../../../../../entry[10]/backend.util.ModifiableVoogaCollection/gameObjects/entry/backend.cell.ModifiableCell/terrain"/>
+            <backend.cell.ModifiableTerrain>
+              <name>Fortified</name>
+              <description>A fortified defensive position</description>
+              <imgPath>resources/images/castle.jpg</imgPath>
+              <triggeredAbilities>
+                <name>Triggered abilities</name>
+                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Full Heal</string>
+                    <backend.util.ModifiableTriggeredEffect>
+                      <name>Full Heal</name>
+                      <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+                      <imgPath>Red_Cross.png</imgPath>
+                      <activationTriggers class="set">
+                        <backend.util.Event>TURN_START</backend.util.Event>
+                      </activationTriggers>
+                      <effect reference="../../../../../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain/triggeredAbilities/gameObjects/entry/backend.util.ModifiableTriggeredEffect/effect"/>
+                      <duration>2147483647</duration>
+                      <turnsRemaining>2147483647</turnsRemaining>
+                    </backend.util.ModifiableTriggeredEffect>
+                  </entry>
+                </gameObjects>
+              </triggeredAbilities>
+              <offensiveModifiers>
+                <name>Offensive Modifiers</name>
+                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </offensiveModifiers>
+              <defensiveModifiers>
+                <name>Defensive modifiers</name>
+                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Default Fortified Terrain Defense</string>
+                    <backend.unit.properties.InteractionModifier>
+                      <name>Default Fortified Terrain Defense</name>
+                      <description>Units have 70% evasion on Fortified terrain by default.</description>
+                      <imgPath></imgPath>
+                      <modifier resolves-to="serialized-lambda">
+                        <capturingClass>backend.cell.Terrain</capturingClass>
+                        <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                        <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                        <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                        <implClass>backend/cell/Terrain</implClass>
+                        <implMethodName>lambda$4</implMethodName>
+                        <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                        <implMethodKind>6</implMethodKind>
+                        <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                        <capturedArgs/>
+                      </modifier>
+                    </backend.unit.properties.InteractionModifier>
+                  </entry>
+                </gameObjects>
+              </defensiveModifiers>
+              <defaultMoveCost>1</defaultMoveCost>
+            </backend.cell.ModifiableTerrain>
           </entry>
           <entry>
             <string>Flat</string>
@@ -15453,7 +15027,66 @@
           </entry>
           <entry>
             <string>Forest</string>
-            <backend.cell.ModifiableTerrain reference="../../../../../entry[10]/backend.util.ModifiableVoogaCollection/gameObjects/entry[3]/backend.cell.ModifiableCell/terrain"/>
+            <backend.cell.ModifiableTerrain>
+              <name>Forest</name>
+              <description>Thick forest that offers plenty of cover, but makes navigating difficult.</description>
+              <imgPath>resources/images/forest.jpg</imgPath>
+              <triggeredAbilities>
+                <name>Triggered abilities</name>
+                <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Full Heal</string>
+                    <backend.util.ModifiableTriggeredEffect>
+                      <name>Full Heal</name>
+                      <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+                      <imgPath>Red_Cross.png</imgPath>
+                      <activationTriggers class="set">
+                        <backend.util.Event>TURN_START</backend.util.Event>
+                      </activationTriggers>
+                      <effect reference="../../../../../../../../../../../grid/gameBoard/entry/backend.cell.ModifiableCell/terrain/triggeredAbilities/gameObjects/entry/backend.util.ModifiableTriggeredEffect/effect"/>
+                      <duration>2147483647</duration>
+                      <turnsRemaining>2147483647</turnsRemaining>
+                    </backend.util.ModifiableTriggeredEffect>
+                  </entry>
+                </gameObjects>
+              </triggeredAbilities>
+              <offensiveModifiers>
+                <name>Offensive Modifiers</name>
+                <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map"/>
+              </offensiveModifiers>
+              <defensiveModifiers>
+                <name>Defensive modifiers</name>
+                <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+                <imgPath></imgPath>
+                <gameObjects class="linked-hash-map">
+                  <entry>
+                    <string>Default Forest Terrain Defense</string>
+                    <backend.unit.properties.InteractionModifier>
+                      <name>Default Forest Terrain Defense</name>
+                      <description>Units have 60% evasion on Forest terrain by default.</description>
+                      <imgPath></imgPath>
+                      <modifier resolves-to="serialized-lambda">
+                        <capturingClass>backend.cell.Terrain</capturingClass>
+                        <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                        <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                        <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                        <implClass>backend/cell/Terrain</implClass>
+                        <implMethodName>lambda$1</implMethodName>
+                        <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                        <implMethodKind>6</implMethodKind>
+                        <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                        <capturedArgs/>
+                      </modifier>
+                    </backend.unit.properties.InteractionModifier>
+                  </entry>
+                </gameObjects>
+              </defensiveModifiers>
+              <defaultMoveCost>2</defaultMoveCost>
+            </backend.cell.ModifiableTerrain>
           </entry>
         </gameObjects>
       </backend.util.ModifiableVoogaCollection>
@@ -15477,7 +15110,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$5f846964$1</implMethodName>
+                <implMethodName>lambda$0</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -15497,7 +15130,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$e87ffd46$1</implMethodName>
+                <implMethodName>lambda$2</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -15517,7 +15150,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$cd07c34e$1</implMethodName>
+                <implMethodName>lambda$5</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -15537,7 +15170,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$e8d64503$1</implMethodName>
+                <implMethodName>lambda$6</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -15557,7 +15190,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$68456887$1</implMethodName>
+                <implMethodName>lambda$3</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -15577,7 +15210,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$8eed21e1$1</implMethodName>
+                <implMethodName>lambda$4</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
@@ -15597,7 +15230,7 @@
                 <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
                 <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
                 <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
-                <implMethodName>lambda$static$49adedea$1</implMethodName>
+                <implMethodName>lambda$1</implMethodName>
                 <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
                 <implMethodKind>6</implMethodKind>
                 <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>

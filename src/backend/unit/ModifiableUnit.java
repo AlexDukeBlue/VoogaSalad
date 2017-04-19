@@ -74,8 +74,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public void moveTo(Cell destinationCell, GameplayState gameState) {
 		processTriggers(Event.UNIT_PRE_MOVEMENT, gameState);
 		currentCell.leave(this, gameState);
-		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().get(destinationCell.getTerrain()));
-		currentCell = destinationCell;
+		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().getOrDefault(destinationCell.getTerrain(),destinationCell.getTerrain().getDefaultMoveCost()));
 		currentCell.arrive(this, gameState);
 		processTriggers(Event.UNIT_POST_MOVEMENT, gameState);
 	}
@@ -278,12 +277,16 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		return ownerPlayer;
 	}
 
-	public void setOwner(Player p) {
+	@Override
+	public ModifiableUnit setOwner(Player p) {
 		ownerPlayer = p;
+		return this;
 	}
 
-	public final void setCurrentCell(Cell currentCell) {
+	@Override
+	public final ModifiableUnit setCurrentCell(Cell currentCell) {
 		this.currentCell = currentCell;
+		return this;
 	}
 
 	@Override

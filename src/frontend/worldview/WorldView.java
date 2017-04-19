@@ -1,13 +1,13 @@
 package frontend.worldview;
 
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.util.BaseUIManager;
-import frontend.worldview.grid.CellView;
 import frontend.worldview.grid.GridView;
+import javafx.event.EventHandler;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-
-import java.util.function.Consumer;
 
 /**
  * WorldView sets up and displays a Region object that contains a grid of
@@ -49,14 +49,18 @@ public class WorldView extends BaseUIManager<Region> {
 		return borderPane;
 	}
 
-	/**
-	 * Sets the action that is performed when a cell is clicked.
-	 * 
-	 * @param consumer
-	 *            consumer to execute when the cell is clicked
-	 */
-	public void setOnCellClick(Consumer<CellView> consumer) {
-		myGrid.setOnCellClick(consumer);
+//	/**
+//	 * Sets the action that is performed when a cell is clicked.
+//	 * 
+//	 * @param consumer
+//	 *            consumer to execute when the cell is clicked
+//	 */
+//	public void setOnCellClick(Consumer<CellView> consumer) {
+//		myGrid.setOnCellClick(consumer);
+//	}
+	
+	public void templateClicked(VoogaEntity voogaEntity){
+		myGrid.setTemplateEntityToAdd(voogaEntity);
 	}
 
 	private void initialize() {
