@@ -130,6 +130,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 */
 	public void update() {
 		update(getController().getGameState().getGrid().get(cellModel.getLocation()));
+		cellModel.getOccupants().stream().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
 	/**
@@ -178,7 +179,7 @@ public class CellView extends BaseUIManager<Parent> {
 		this.cellModel = cellModel;
 		polygon = new Polygon();
 		group = new Group();
-		contextMenu = new ContextMenu(new MenuItem("asdf"));
+		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 //		polygon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> contextMenu.hide());
 	}
