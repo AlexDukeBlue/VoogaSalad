@@ -11,7 +11,11 @@ import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -50,17 +54,17 @@ public class TemplatePane extends BaseUIManager<Region> {
 
 	}
 
-	public TemplatePane(Collection<? extends Unit> unitTemplate) {
-		// TODO Auto-generated constructor stub
-	}
-
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
 		VBox content = createContent(sprites, label);
-		spritePane.setContent(content);
+		ScrollPane scroller = new ScrollPane();
+		scroller.setContent(content);
+		spritePane.setContent(scroller);
 		spritePane.setCollapsible(true);
+		spritePane.setExpanded(false);
 		pane.getChildren().add(spritePane);
+		
 	}
 
 	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
@@ -70,6 +74,13 @@ public class TemplatePane extends BaseUIManager<Region> {
 			// fix getName and getImage once communication sorted
 			Label spriteName = new Label(sprite.getName());
 			spriteContent.getChildren().add(spriteName);
+			if (sprite.getImgPath() != null) {
+				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));
+				ImageView imageNode = new ImageView(spriteImage);
+				imageNode.setFitHeight(50);
+				imageNode.setFitWidth(50);
+				spriteContent.getChildren().add(imageNode);
+			}
 			setOnDrag(spriteContent, sprite, spriteType);
 			setOnClick(spriteContent, sprite, spriteType);
 			contentPane.getChildren().add(spriteContent);
