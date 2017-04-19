@@ -13,9 +13,9 @@
 
 .text-area {
     -fx-background-color: rgba(0, 0, 0, 0.55);
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
     -fx-text-fill: #ffffff;
-    -fx-padding: 30px;
+    -fx-padding: 15px 30px 15px 30px;
     -fx-background-insets: 10px;
 }
 
@@ -41,7 +41,7 @@
 .hbox {
     -fx-background-color: transparent;
     -fx-spacing: 5px;
-    -fx-padding: 10px;
+    -fx-padding: 0px 10px 0px 10px;
 }
 
 .label {

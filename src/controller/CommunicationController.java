@@ -4,9 +4,8 @@ import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
-import backend.grid.ModifiableGameBoard;
 import backend.player.ImmutablePlayer;
-import backend.unit.ModifiableUnit;
+import backend.player.Player;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
@@ -20,6 +19,7 @@ import util.net.ObservableClient;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 /**
@@ -29,21 +29,29 @@ import java.util.concurrent.Executors;
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
-	private ReadonlyGameplayState mGameState;
+	private AuthoringGameState mGameState;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private Collection<Updatable> thingsToUpdate;
+	private final String playerName;
+	private final CountDownLatch waitForReady;
 
-	public CommunicationController(ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
-		this.mGameState = gameState;
+	public CommunicationController(String username, ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
 		this.thingsToUpdate = new CopyOnWriteArrayList<>();
+		this.waitForReady = new CountDownLatch(1);
 		if (thingsToUpdate != null) {
 			this.thingsToUpdate.addAll(thingsToUpdate);
 		}
+		this.playerName = username;
 		try {
 			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
 			mClient.addListener(this::updateGameState);
 			setGameState(gameState);
 			Executors.newSingleThreadExecutor().submit(mClient);
+			//login with username
+			sendModifier((AuthoringGameState state) -> {
+				state.addPlayer(new Player(username, "Test player", ""));
+				return state;
+			});
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -59,9 +67,10 @@ public class CommunicationController implements Controller {
 		return getGrid().get(tuple);
 	}
 
-	private <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
-		mGameState = newGameState;
+	private synchronized <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
+		mGameState = (AuthoringGameState) newGameState;
 		updateAll();
+		waitForReady.countDown();
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
@@ -85,12 +94,12 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public AuthoringGameState getAuthoringGameState() {
-		return (AuthoringGameState) mGameState;
+		return mGameState;
 	}
 
 	@Override
 	public GameplayState getGameState() {
-		return (GameplayState) mGameState;
+		return mGameState;
 	}
 
 	@Override
@@ -99,12 +108,17 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public ModifiableGameBoard getModifiableCells() {
-		return (ModifiableGameBoard) mGameState.getGrid();
+	public GameBoard getModifiableCells() {
+		return mGameState.getGrid();
 	}
 
 	@Override
 	public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
+		try {
+			waitForReady.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 		//lol this is so unsafe
 //		mGameState = modifier.modify((U) mGameState);
@@ -116,19 +130,43 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public Collection<? extends Terrain> getTerrains() {
-		//Todo
-		return null;
+	public Collection<? extends Unit> getUnitTemplates() {
+		return (Collection<? extends Unit>) mGameState.getTemplateByCategory("unit").getAll();
+	}
+
+	public void addUnitTemplates(Unit... unitTemplates) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getTemplateByCategory("unit").addAll(unitTemplates);
+			return state;
+		});
 	}
 
 	@Override
-	public Collection<? extends Unit> getUnitTemplates() {
-		return ModifiableUnit.getPredefinedUnits();
+	public void removeUnitTemplates(Unit... unitTemplates) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getTemplateByCategory("unit").removeAll(unitTemplates);
+			return state;
+		});
 	}
 
 	@Override
 	public Collection<? extends Terrain> getTerrainTemplates() {
-		return Terrain.getPredefinedTerrain();
+		return (Collection<? extends Terrain>) mGameState.getTemplateByCategory("terrain").getAll();
+	}
+
+	public void addTerrainTemplates(Terrain... terrainTemplates) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getTemplateByCategory("terrain").addAll(terrainTemplates);
+			return state;
+		});
+	}
+
+	@Override
+	public void removeTerrainTemplates(Terrain... terrainTemplates) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getTemplateByCategory("terrain").removeAll(terrainTemplates);
+			return state;
+		});
 	}
 
 	@Override
@@ -145,9 +183,12 @@ public class CommunicationController implements Controller {
 		}
 	}
 
+	@Override
+	public String getPlayerName() {
+		return playerName;
+	}
+
 	private void updateAll() {
 		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
-		//This one doesn't suffer from multithreading hell
-//		Platform.runLater(() -> thingsToUpdate.forEach(Updatable::update));
 	}
 }

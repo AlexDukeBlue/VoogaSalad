@@ -3,7 +3,9 @@ package frontend.worldview;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.util.BaseUIManager;
+import frontend.util.ChatLogView;
 import frontend.worldview.grid.GridView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -74,7 +76,15 @@ public class WorldView extends BaseUIManager<Region> {
 		test.setStrokeWidth(1);
 		AnchorPane.setTopAnchor(test, 0.0);
 		AnchorPane.setRightAnchor(test, 0.0);
-		centerAnchorPane.getChildren().add(test);
+		ChatLogView chatLogView = new ChatLogView(getController());
+		borderPane.setOnKeyPressed(event -> {
+			if (event.getCode().equals(KeyCode.ENTER)) {
+				chatLogView.setExpandedState(!chatLogView.isExpanded());
+			}
+		});
+		AnchorPane.setBottomAnchor(chatLogView.getObject(), 10.0);
+		AnchorPane.setLeftAnchor(chatLogView.getObject(), 0.0);
+		centerAnchorPane.getChildren().addAll(test, chatLogView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
 		centerStackPane = new StackPane();
 		centerStackPane.getChildren().add(myGrid.getObject());

@@ -1,4 +1,5 @@
 package frontend.worldview.grid;
+
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
@@ -16,9 +17,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
-import util.net.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
+
 /**
  * Holds a grid to be displayed in the development and player GUI inside a
  * ScrollPane. It can have Sprites added to a particular cell or have all cells
@@ -36,11 +35,18 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	private String unitClickedName;
 	private CoordinateTuple unitClickedLocation;
 	private boolean shouldCopy = true;
+
 	public GridView(Controller controller) {
 		setController(controller);
 		initialize();
 		update();
 	}
+
+	@Override
+	public void update() {
+
+	}
+
 	private void initialize() {
 		myScrollPane = new ScrollPane();
 		myScrollPane.setOnZoom(event -> {
@@ -61,12 +67,17 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 		});
 		myLayoutManager = new LayoutManagerFactory();
 		populateCellViews();
+		myScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		myScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		myScrollPane.setPannable(true);
 		myScrollPane.setContent(zoomGroup);
 	}
+
 	@Override
 	public Region getObject() {
 		return myScrollPane;
 	}
+
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
@@ -79,6 +90,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			});
 		});
 	}
+
 	public void setTemplateEntityToAdd(VoogaEntity template) {
 		if (template instanceof Unit) {
 			unitClickedName = template.getName();
@@ -86,6 +98,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			shouldCopy = true;
 		}
 	}
+
 	private void cellClicked(CellView cell) {
 		if (unitClickedName != null) {
 			CoordinateTuple cellClickedLocation = cell.getCoordinateTuple();
@@ -120,6 +133,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			this.unitClickedLocation = null;
 		}
 	}
+
 	@Override
 	public void unitClicked(UnitView unitView) {
 		unitClickedName = unitView.getUnitName();
