@@ -125,6 +125,12 @@ public class CommunicationController implements Controller {
 	public Collection<? extends Unit> getUnitTemplates() {
 		return ModifiableUnit.getPredefinedUnits();
 	}
+	
+	public void addUnitTemplates(ModifiableUnit newUnit) {
+		Collection<ModifiableUnit> currentUnits =  ModifiableUnit.getPredefinedUnits();
+		currentUnits.add(newUnit);
+		
+	}
 
 	@Override
 	public Collection<? extends Terrain> getTerrainTemplates() {

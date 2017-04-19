@@ -4,6 +4,7 @@ import backend.game_engine.ResultQuadPredicate;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
+import backend.unit.ModifiableUnit;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +39,13 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 	Collection<BiPredicate<ImmutablePlayer, GameplayState>> getTurnRequirements();
 
 	boolean turnRequirementsSatisfied();
+	
+	
+	//Next two methods depricated...
+	void addUnit(ModifiableUnit mUnit);
+	void getUnits (Collection<ModifiableUnit> allUnits);
+	
+	
 
 	@Override
 	ReadonlyGameplayState copy();
