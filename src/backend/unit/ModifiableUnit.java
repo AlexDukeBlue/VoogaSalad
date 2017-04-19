@@ -74,7 +74,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public void moveTo(Cell destinationCell, GameplayState gameState) {
 		processTriggers(Event.UNIT_PRE_MOVEMENT, gameState);
 		currentCell.leave(this, gameState);
-		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().get(destinationCell.getTerrain()));
+		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().getOrDefault(destinationCell.getTerrain(),destinationCell.getTerrain().getDefaultMoveCost()));
 		currentCell = destinationCell;
 		currentCell.arrive(this, gameState);
 		processTriggers(Event.UNIT_POST_MOVEMENT, gameState);

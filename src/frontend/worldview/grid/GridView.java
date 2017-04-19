@@ -3,6 +3,7 @@ package frontend.worldview.grid;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
@@ -122,11 +123,16 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 					gameState.getGrid().get(tuple).addOccupants(unitToArrive);
 					((ModifiableUnit) unitToArrive).setCurrentCell(gameState.getGrid().get(tuple));
 				} else {
+					Cell previous = unitToArrive.getCurrentCell();
 					unitToArrive.moveTo(gameState.getGrid().get(tuple), gameState);
+					Cell current = unitToArrive.getCurrentCell();
+					System.out.println("Previous: " + previous + "\n" + previous.getOccupants().size());
+					System.out.println("Current: " + current + "\n" + current.getOccupants().size());
 				}
 				return gameState;
 			};
 			getController().sendModifier(modifier);
+			System.out.println(getController().getGrid());
 		}
 	}
 
