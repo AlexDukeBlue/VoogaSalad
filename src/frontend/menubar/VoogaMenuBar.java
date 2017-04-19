@@ -31,10 +31,12 @@ import java.util.ResourceBundle;
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private MenuBar menuBar;
-	private Menu file, language, theme, help, setLanguage, setTheme;
-	private MenuItem load, save, quit, helpItem;
+	private Menu file, language, theme, help, setLanguage, setTheme, view;
+	private MenuItem load, save, quit, helpItem, newGameItem, editModeItem, playModeItem;
+	private View myView;
 
-	public VoogaMenuBar() {
+	public VoogaMenuBar(View view) {
+		myView = view;
 		menuBar = new MenuBar();
 		populateMenuBar();
 		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
@@ -50,6 +52,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	public MenuBar getObject() {
 		return menuBar;
 	}
+	
+	public void setEditable(boolean editable){
+		save.setDisable(!editable);
+		load.setDisable(!editable);
+		newGameItem.setDisable(!editable);
+	}
 
 	private void populateMenuBar() {
 		menuBar.getMenus().clear();
@@ -57,11 +65,13 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		file = new Menu(getLanguage().getValue().getString("File"));
 		language = new Menu(getLanguage().getValue().getString("Language"));
 		theme = new Menu(getLanguage().getValue().getString("Theme"));
+		view = new Menu("View"); //TODO get from resource files
 		help = new Menu(getLanguage().getValue().getString("Help"));
 
 		menuBar.getMenus().add(file);
 		menuBar.getMenus().add(language);
 		menuBar.getMenus().add(theme);
+		menuBar.getMenus().add(view);
 		menuBar.getMenus().add(help);
 
 		load = new MenuItem(getLanguage().getValue().getString("Load")) {
@@ -75,24 +85,37 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			}
 		};
 
-		MenuItem newGameItem = new MenuItem(getLanguage().getValue().getString("Create")) {
+		newGameItem = new MenuItem(getLanguage().getValue().getString("Create")) {
 			{
 				setOnAction(e -> create());
 			}
 		};
-		quit = new MenuItem(getLanguage().getValue().getString("Quit"));
+		quit = new MenuItem(getLanguage().getValue().getString("Quit")); //TODO implement
 		setLanguage = new Menu(getLanguage().getValue().getString("SetLanguage"));
 		setTheme = new Menu(getLanguage().getValue().getString("SetTheme"));
-		helpItem = new MenuItem(getLanguage().getValue().getString("Help"));
+		helpItem = new MenuItem(getLanguage().getValue().getString("Help"));  //TODO implement
+		editModeItem = new MenuItem("Enter Edit Mode") { //TODO get from resource files
+			{
+				setOnAction(e -> myView.setEditable(true));
+			}
+		};
+		playModeItem = new MenuItem("Enter Play Mode") { //TODO get from resource files
+			{
+				setOnAction(e -> myView.setEditable(false));
+			}
+		};
 
+		file.getItems().add(newGameItem);
 		file.getItems().add(load);
 		file.getItems().add(save);
 		file.getItems().add(quit);
-		file.getItems().add(newGameItem);
 
 		language.getItems().add(setLanguage);
 
 		theme.getItems().add(setTheme);
+		
+		view.getItems().add(editModeItem);
+		view.getItems().add(playModeItem);
 
 		help.getItems().add(helpItem);
 
@@ -216,6 +239,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		stage.setScene(scene);
 		stage.show();
 
+	}
+	
+	private void enterEditMode(){
+		
 	}
 
 	@Override
