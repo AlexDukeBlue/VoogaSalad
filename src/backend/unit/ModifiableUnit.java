@@ -278,12 +278,16 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		return ownerPlayer;
 	}
 
-	public void setOwner(Player p) {
+	@Override
+	public ModifiableUnit setOwner(Player p) {
 		ownerPlayer = p;
+		return this;
 	}
 
-	public final void setCurrentCell(Cell currentCell) {
+	@Override
+	public final ModifiableUnit setCurrentCell(Cell currentCell) {
 		this.currentCell = currentCell;
+		return this;
 	}
 
 	@Override
