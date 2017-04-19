@@ -21,6 +21,9 @@ package frontend;
 import backend.util.AuthoringGameState;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
+import frontend.menubar.AuthorMenuBar;
+import frontend.menubar.PlayModeMenuBar;
+import frontend.menubar.PlayOnlyMenuBar;
 import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
@@ -63,12 +66,14 @@ public class View extends BaseUIManager<Region> {
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;
+		if(this.editable != editable){
+			this.editable = editable;
 		
-		if(editable){
-			enterDevMode();
-		} else {
-			enterPlayMode();
+			if(editable){
+				enterAuthorMode();
+			} else {
+				enterPlayMode();
+			}
 		}
 	}
 
@@ -111,7 +116,11 @@ public class View extends BaseUIManager<Region> {
 	 * necessary panes.
 	 */
 	private void initPanes() {
-		menuBar = new VoogaMenuBar(this);
+		if(editable){
+			menuBar = new AuthorMenuBar(this, getController());
+		} else {
+			menuBar = new PlayOnlyMenuBar(this, getController());
+		}
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
@@ -126,9 +135,9 @@ public class View extends BaseUIManager<Region> {
 	 * If the View is already in development mode, then nothing visually
 	 * changes.
 	 */
-	private void enterDevMode() {
+	private void enterAuthorMode() {
 		addSidePanes();
-		menuBar.setEditable(true);
+		menuBar = new AuthorMenuBar(this, getController());
 	}
 
 	/**
@@ -137,7 +146,7 @@ public class View extends BaseUIManager<Region> {
 	 */
 	private void enterPlayMode() {
 		removeSidePanes();
-		menuBar.setEditable(false);
+		menuBar = new PlayModeMenuBar(this, getController());
 	}
 
 	/**

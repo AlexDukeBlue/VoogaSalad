@@ -12,7 +12,7 @@ class VoogaMenuBarTest extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane bp = new BorderPane();
 		View view = new View(null);
-		VoogaMenuBar voogaMenuBar = new VoogaMenuBar(view);
+		AuthorMenuBar voogaMenuBar = new AuthorMenuBar(view, view.getController());
 		bp.setTop(voogaMenuBar.getObject());
 		primaryStage.setScene(new Scene(bp));
 		primaryStage.show();
