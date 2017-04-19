@@ -1,64 +1,46 @@
 package frontend.startup;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import backend.util.AuthoringGameState;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
 import frontend.wizards.GameWizard;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-
-
-import java.util.concurrent.Callable;
-
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.RotateTransition;
-import javafx.animation.Timeline;
-import javafx.application.Application;
+import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.*;
+import java.util.concurrent.Callable;
 
 /**
  * The intro screen containing a "create new game" button.
- * 
- * @authors Sam, ncp14
  *
+ * @authors Sam, ncp14
  */
 public class StartupSelectionScreen extends VBox {
 
@@ -66,7 +48,7 @@ public class StartupSelectionScreen extends VBox {
 	private StartupScreen ui;
 	//ObservableClient<ImmutableGameState> myClient;
 	private Stage stage;
-	
+
 	Color startColor;
 	Color endColor;
 	ObjectProperty<Color> color;
@@ -76,50 +58,46 @@ public class StartupSelectionScreen extends VBox {
 		this.setUpPane();
 		this.ui = ui;
 	}
-	
-	public void setButtonAnimationColors()
-	{
+
+	public void setButtonAnimationColors() {
 		startColor = Color.web("#e08090");
 		endColor = Color.web("#80e090");
 		color = new SimpleObjectProperty<Color>(startColor);
 	}
-	
+
 	// This method returns a string that represents the color above as a JavaFX CSS function:
 	// -fx-body-color: rgb(r, g, b);
 	// with r, g, b integers between 0 and 255
-	public StringBinding generateStringBinding()
-	{
+	public StringBinding generateStringBinding() {
 		StringBinding cssColorSpec = Bindings.createStringBinding(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return String.format("-fx-body-color: rgb(%d, %d, %d);", 
-                        (int) (256*color.get().getRed()), 
-                        (int) (256*color.get().getGreen()), 
-                        (int) (256*color.get().getBlue()));
-            }
-        }, color);
+			@Override
+			public String call() throws Exception {
+				return String.format("-fx-body-color: rgb(%d, %d, %d);",
+						(int) (256 * color.get().getRed()),
+						(int) (256 * color.get().getGreen()),
+						(int) (256 * color.get().getBlue()));
+			}
+		}, color);
 		return cssColorSpec;
 	}
-	
-	public Pane generateShape(Rectangle rotatingRect)
-	{
-        final Pane rectHolder = new Pane();
-        rectHolder.setMinSize(20, 16);
-        rectHolder.setPrefSize(20, 16);
-        rectHolder.setMaxSize(20, 16);
-        rectHolder.getChildren().add(rotatingRect);
-        return rectHolder;
+
+	public Pane generateShape(Rectangle rotatingRect) {
+		final Pane rectHolder = new Pane();
+		rectHolder.setMinSize(20, 16);
+		rectHolder.setPrefSize(20, 16);
+		rectHolder.setMaxSize(20, 16);
+		rectHolder.getChildren().add(rotatingRect);
+		return rectHolder;
 	}
-	
-	public RotateTransition generateRotation(Rectangle rotatingRect)
-	{
-        final RotateTransition rotate = new RotateTransition(Duration.seconds(1), rotatingRect);
-        rotate.setByAngle(360);
-        rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setInterpolator(Interpolator.LINEAR);
-        return rotate;
+
+	public RotateTransition generateRotation(Rectangle rotatingRect) {
+		final RotateTransition rotate = new RotateTransition(Duration.seconds(1), rotatingRect);
+		rotate.setByAngle(360);
+		rotate.setCycleCount(Animation.INDEFINITE);
+		rotate.setInterpolator(Interpolator.LINEAR);
+		return rotate;
 	}
-	
+
 
 	public void setUpPane() {
 
@@ -129,54 +107,49 @@ public class StartupSelectionScreen extends VBox {
 //		}};
 
 		Button create = new Button(SelectionProperties.getString("Create")) {{
-			this.setOnAction(e -> create()); 
+			this.setOnAction(e -> create());
 		}};
-		
+
 		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but refactored by ncp14
 		setButtonAnimationColors();
-        create.styleProperty().bind(generateStringBinding());
-        
-        final Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(color, startColor)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(color, endColor)));
+		create.styleProperty().bind(generateStringBinding());
 
-        create.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                timeline.play();
-                create();
-            }
-        });
+		final Timeline timeline = new Timeline(
+				new KeyFrame(Duration.ZERO, new KeyValue(color, startColor)),
+				new KeyFrame(Duration.seconds(1), new KeyValue(color, endColor)));
 
-        // Create a rotating rectangle and set it as the graphic for the button
-        final Rectangle rotatingRect = new Rectangle(5,5,10,6);
-        rotatingRect.setFill(Color.CORNFLOWERBLUE);
-        Pane rectHolder = generateShape(rotatingRect);
-        RotateTransition rotate = generateRotation(rotatingRect);
-  
-        create.setGraphic(rectHolder);
+		create.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				timeline.play();
+				create();
+			}
+		});
 
-        // make the rectangle rotate when the mouse hovers over the button
+		// Create a rotating rectangle and set it as the graphic for the button
+		final Rectangle rotatingRect = new Rectangle(5, 5, 10, 6);
+		rotatingRect.setFill(Color.CORNFLOWERBLUE);
+		Pane rectHolder = generateShape(rotatingRect);
+		RotateTransition rotate = generateRotation(rotatingRect);
+
+		create.setGraphic(rectHolder);
+
+		// make the rectangle rotate when the mouse hovers over the button
 		create.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                rotate.play();
-            }
-        });
-		
-        create.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                rotate.stop();
-                rotatingRect.setRotate(0);
-            }
-        });
-	
-		
-		
-		
-		
-		
+			@Override
+			public void handle(MouseEvent event) {
+				rotate.play();
+			}
+		});
+
+		create.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rotate.stop();
+				rotatingRect.setRotate(0);
+			}
+		});
+
 
 //		Button edit = new Button(SelectionProperties.getString("EditGame")){{
 //			this.setOnAction(e -> edit());
@@ -213,7 +186,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	private void createGame(AuthoringGameState state, boolean editable) {
-		Controller control = new CommunicationController(state, null);
+		Controller control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100, state, null);
 		View view = new View(control);
 		//myClient.setGameState(state);
 		//control.setClient(myClient);

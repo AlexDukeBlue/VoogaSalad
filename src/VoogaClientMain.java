@@ -68,7 +68,7 @@ public class VoogaClientMain extends Application {
 			state.addPlayer(new Player(name, "It's me!", ""));
 			return state;
 		});
-		chatLogView = new ChatLogView(name, new Controller() {
+		chatLogView = new ChatLogView(new Controller() {
 			@Override
 			public GameBoard getGrid() {
 				return null;
@@ -142,6 +142,11 @@ public class VoogaClientMain extends Application {
 			@Override
 			public void removeFromUpdated(Updatable objectToUpdate) {
 
+			}
+
+			@Override
+			public String getPlayerName() {
+				return null;
 			}
 		});
 		Scene scene = new Scene(chatLogView.getObject(), 700, 700, new ImagePattern(View.getImg("resources/images/splash.png")));

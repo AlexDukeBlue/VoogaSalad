@@ -6,6 +6,7 @@ import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.ModifiableGameBoard;
 import backend.player.ImmutablePlayer;
+import backend.player.Player;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
@@ -32,17 +33,23 @@ public class CommunicationController implements Controller {
 	private ReadonlyGameplayState mGameState;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private Collection<Updatable> thingsToUpdate;
+	private String playerName;
 
-	public CommunicationController(ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
+	public CommunicationController(String name, ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
 		this.mGameState = gameState;
 		this.thingsToUpdate = new CopyOnWriteArrayList<>();
 		if (thingsToUpdate != null) {
 			this.thingsToUpdate.addAll(thingsToUpdate);
 		}
+		this.playerName = name;
 		try {
 			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
 			mClient.addListener(this::updateGameState);
 			setGameState(gameState);
+			sendModifier((AuthoringGameState state) -> {
+				state.addPlayer(new Player(name, "Test player", ""));
+				return state;
+			});
 			Executors.newSingleThreadExecutor().submit(mClient);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -145,9 +152,12 @@ public class CommunicationController implements Controller {
 		}
 	}
 
+	@Override
+	public String getPlayerName() {
+		return playerName;
+	}
+
 	private void updateAll() {
 		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
-		//This one doesn't suffer from multithreading hell
-//		Platform.runLater(() -> thingsToUpdate.forEach(Updatable::update));
 	}
 }

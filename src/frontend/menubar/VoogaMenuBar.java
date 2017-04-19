@@ -8,8 +8,6 @@ import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
 import frontend.wizards.GameWizard;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -107,12 +105,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
-			menuItem.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					getStyleSheet().setValue(fileName);
-				}
-			});
+			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
 			setTheme.getItems().add(menuItem);
 		});
 
@@ -204,7 +197,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void createGame(ReadonlyGameplayState state, boolean editable) {
-		Controller control = new CommunicationController(state, null);
+		Controller control = new CommunicationController(System.getProperty("user.name"), state, null);
 		View view = new View(control);
 		// myClient.setGameState(state);
 		// control.setClient(myClient);
