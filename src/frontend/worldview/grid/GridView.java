@@ -3,6 +3,7 @@ package frontend.worldview.grid;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
@@ -11,8 +12,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
+import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +38,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 
 	private ScrollPane myScrollPane;
+	private Group zoomGroup;
 	private Pane cellViewObjects;
 	private LayoutManager myLayoutManager;
 	private Collection<CellView> cellViews;
@@ -69,10 +70,15 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 
 		});
 		cellViewObjects = new Pane();
+		zoomGroup = new Group(cellViewObjects);
+		myScrollPane.setOnZoom(event -> {
+			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
+			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
+		});
 		cellViews = new ArrayList<>();
 		myLayoutManager = new LayoutManagerFactory();
 		populateCellViews();
-		myScrollPane.setContent(cellViewObjects);
+		myScrollPane.setContent(zoomGroup);
 	}
 
 	@Override
@@ -122,11 +128,16 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 					gameState.getGrid().get(tuple).addOccupants(unitToArrive);
 					((ModifiableUnit) unitToArrive).setCurrentCell(gameState.getGrid().get(tuple));
 				} else {
+					Cell previous = unitToArrive.getCurrentCell();
 					unitToArrive.moveTo(gameState.getGrid().get(tuple), gameState);
+					Cell current = unitToArrive.getCurrentCell();
+					System.out.println("Previous: " + previous + "\n" + previous.getOccupants().size());
+					System.out.println("Current: " + current + "\n" + current.getOccupants().size());
 				}
 				return gameState;
 			};
 			getController().sendModifier(modifier);
+			System.out.println(getController().getGrid());
 		}
 	}
 
