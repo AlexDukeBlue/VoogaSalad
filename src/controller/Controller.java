@@ -50,4 +50,5 @@ public interface Controller {
 
 	void removeFromUpdated(Updatable objectToUpdate);
 
+	String getPlayerName();
 }
