@@ -1,8 +1,7 @@
 package frontend.wizards.strategies.wizard_pages;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
+import backend.util.AuthoringGameState;
+import frontend.wizards.strategies.wizard_pages.util.NumericInputRow;
 import javafx.scene.layout.Region;
 
 /**
@@ -11,33 +10,36 @@ import javafx.scene.layout.Region;
  *
  */
 public class UnitMovePointPage extends BaseWizardPage {
-	private static final String DEFAULT_TITLE = "Set Movement Points";
-	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for the unit to cross each terrain type.";
+	private static final String DEFAULT_TITLE = "Default Move Cost:";
+	private static final String DEFAULT_DESCRIPTION = "Enter the default amount of movement points it takes to cross the terrain type.";
 
-	Button button;
+	private NumericInputRow numericInputRow;
 
-	public UnitMovePointPage() {
-		this(DEFAULT_TITLE);
+	public UnitMovePointPage(AuthoringGameState gameState) {
+		this(DEFAULT_TITLE, gameState);
 	}
 
-	public UnitMovePointPage(String title) {
-		this(title, DEFAULT_DESCRIPTION);
+	public UnitMovePointPage(String title, AuthoringGameState gameState) {
+		this(title, DEFAULT_DESCRIPTION, gameState);
 	}
 
-	public UnitMovePointPage(String title, String description) {
+	public UnitMovePointPage(String title, String description, AuthoringGameState gameState) {
 		super(title, description);
-		button = new Button("UnitMovePointPage");
-		button.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				canNextWritable().setValue(true);
-			}
-		});
+		initialize(gameState);
+	}
+
+	private void initialize(AuthoringGameState gameState) {
+		numericInputRow = new NumericInputRow(null, DEFAULT_TITLE, "");
+		canNextWritable().setValue(true);
 	}
 
 	@Override
 	public Region getObject() {
-		return button;
+		return numericInputRow.getObject();
+	}
+
+	public Integer getValue() {
+		return numericInputRow.getValue();
 	}
 
 }
