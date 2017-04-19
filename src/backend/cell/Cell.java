@@ -42,11 +42,13 @@ public interface Cell extends Serializable {
 
 	Collection<? extends Unit> getOccupants();
 
+	Unit getOccupantByName(String name);
+
 	void leave(Unit unit, GameplayState gamestate);
 
 	void arrive(Unit unit, GameplayState gamestate);
-	
+
 	public ModifiableCell addOccupants(Unit... units);
-	
+
 	public ModifiableCell removeOccupants(Unit... units);
 }
