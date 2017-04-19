@@ -6,6 +6,7 @@ import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.player.Team;
+import backend.unit.ModifiableUnit;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -241,5 +242,17 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
+	}
+
+	@Override
+	public void addUnit(ModifiableUnit mUnit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getUnits(Collection<ModifiableUnit> allUnits) {
+		// TODO Auto-generated method stub
+		
 	}
 }
