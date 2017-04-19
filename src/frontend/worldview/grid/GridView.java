@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import backend.grid.CoordinateTuple;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
@@ -27,8 +27,9 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	private LayoutManager myLayoutManager;
 	private Collection<CellView> cellViews;
 	private Unit unitToArrive;
-	
-	public GridView(Controller controller){
+	private boolean shouldCopy = true;
+
+	public GridView(Controller controller) {
 		setController(controller);
 		initialize();
 		update();
@@ -42,14 +43,6 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 		populateCellViews();
 		myScrollPane.setContent(cellViewObjects);
 	}
-	
-//	/**
-//	 * set on clicked method for each cell
-//	 * @param consumer
-//	 */
-//	public void setOnCellClick(Consumer<CellView> consumer){
-//		cellViews.forEach(cellView -> cellView.setOnCellClick(consumer));
-//	}
 
 	@Override
 	public Region getObject() {
@@ -57,35 +50,43 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	}
 
 	private void populateCellViews() {
-		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		cellViewObjects.setBackground(new Background(
+				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().values().forEach(cell -> {
-			CellView cl = new CellView(cell, getController());
+			CellView cl = new CellView(cell, getController(), this);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();
 			cellViews.add(cl);
 			cellViewObjects.getChildren().add(cl.getObject());
-			
+
 			cl.getPolygon().setOnMouseClicked(event -> cellClicked(cl));
 		});
 	}
-	
-	public void setTemplateEntityToAdd(VoogaEntity template){
-		if (template instanceof Unit){
-			unitToArrive = (Unit)template.copy();
+
+	public void setTemplateEntityToAdd(VoogaEntity template) {
+		if (template instanceof Unit) {
+			unitToArrive = (Unit)template;
+			shouldCopy = true;
 		}
 	}
-	
-	public void setUnitToMove(Unit unit){
-		unitToArrive = unit;
-	}
-	
-	
-	private void cellClicked(CellView cell){
-		if (unitToArrive != null){
+
+	private void cellClicked(CellView cell) {
+		if (unitToArrive != null) {
 			CoordinateTuple tuple = cell.getCoordinateTuple();
-			Unit unitToArrive = this.unitToArrive;
+			Unit unitToArrive;
+			if (shouldCopy){
+				unitToArrive = this.unitToArrive.copy();
+			} else {
+				unitToArrive = this.unitToArrive;
+			}
+			boolean shouldCopy = this.shouldCopy;
 			Modifier<? extends AuthoringGameState> modifier = gameState -> {
-				gameState.getGrid().get(tuple).arrive(unitToArrive, gameState);
+				if (shouldCopy){
+					gameState.getGrid().get(tuple).addOccupants(unitToArrive);
+					((ModifiableUnit)unitToArrive).setCurrentCell(gameState.getGrid().get(tuple));
+				} else {
+					unitToArrive.moveTo(gameState.getGrid().get(tuple), gameState);
+				}
 				return gameState;
 			};
 			getController().sendModifier(modifier);
@@ -93,7 +94,9 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	}
 
 	@Override
-	public void dragBegan(UnitView unitView) {
-		// TODO Auto-generated method stub
+	public void unitClicked(UnitView unitView) {
+		unitToArrive = unitView.getUnit();
+		shouldCopy = false;
 	}
+	
 }

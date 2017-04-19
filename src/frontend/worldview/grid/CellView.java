@@ -38,6 +38,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private Polygon polygon;
 	private Group group;
 	private ContextMenu contextMenu;
+	private UnitViewDelegate delegate;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -46,7 +47,8 @@ public class CellView extends BaseUIManager<Parent> {
 	 * @param controller the controller object that this CellView will send information
 	 *                   to when the user interacts with the CellView
 	 */
-	public CellView(Cell cellModel, Controller controller) {
+	public CellView(Cell cellModel, Controller controller, UnitViewDelegate delegate) {
+		this.delegate = delegate;
 		setController(controller);
 		initialize(cellModel);
 		update(cellModel);
@@ -148,7 +150,7 @@ public class CellView extends BaseUIManager<Parent> {
 		group.getChildren().add(polygon);
 		cellModel.getOccupants().forEach(unit -> {
 			if (unit != null) {
-				UnitView unitView = new UnitView(unit);
+				UnitView unitView = new UnitView(unit,delegate);
 				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth()/2));
 				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight()/2));
 				polygon.boundsInLocalProperty().addListener(change -> {
