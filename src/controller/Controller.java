@@ -1,6 +1,8 @@
 package controller;
 
+import backend.cell.Cell;
 import backend.cell.Terrain;
+import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.ModifiableGameBoard;
 import backend.player.ImmutablePlayer;
@@ -19,6 +21,8 @@ import java.util.Collection;
 public interface Controller {
 
 	GameBoard getGrid();
+
+	Cell getCell(CoordinateTuple tuple);
 
 	ReadonlyGameplayState getReadOnlyGameState();
 

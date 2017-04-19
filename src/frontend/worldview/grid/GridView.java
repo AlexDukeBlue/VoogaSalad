@@ -74,8 +74,8 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
-		getController().getGrid().getCells().values().forEach(cell -> {
-			CellView cl = new CellView(cell, getController(), this);
+		getController().getGrid().getCells().keySet().forEach(coordinate -> {
+			CellView cl = new CellView(coordinate, getController(), this);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();
 			cellViewObjects.getChildren().add(cl.getObject());
