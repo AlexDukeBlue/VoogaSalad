@@ -132,6 +132,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 */
 	public void update() {
 		update(getController().getGameState().getGrid().get(cellModel.getLocation()));
+		contextMenu.getItems().clear();
 		cellModel.getOccupants().stream().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
