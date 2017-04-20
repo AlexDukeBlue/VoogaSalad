@@ -1,0 +1,5 @@
+During user testing we noticed some common responses from the various users that tested our authoring environment.  The most common observation was a want for all of the "features" that we show in our authoring environment to be functional.  Additionally, the way that we move units and terrain both into the grid and around it is evidently not intuitive.  We should focus on implementing a dragging feature for this task.  We also need to focus in on making our units and terrain editable. 
+
+Further, there are some bugs that need to be worked out.  The one that occurs most frequently is a server malfunction that prevents the user from creating a new game.  Additionally, for some reason, the hexagon grids are also a little bit buggy.
+
+A couple of features that were well received are the minimap and the chat server.  Additionally, the overall appearance of our UI were complimented.

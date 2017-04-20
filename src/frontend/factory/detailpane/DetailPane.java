@@ -1,6 +1,4 @@
 /**
- * 
- * 
  * @author Faith Rodriguez
  * Created 4/9/2017
  */
@@ -29,13 +27,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
- * 
+ *
  * @author Faith Rodriguez
- * 
+ *
  *         This class displays details about the units, as well as lets the user
  *         change aspects of a sprite and activate a unit or terrain's
  *         abilities.
- * 
+ *
  *         This class is dependent on TemplatePane and CellView classes for its
  *         ActionEvents to work effectively
  *
@@ -66,6 +64,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 		fullPane.getChildren().add(imagePane);
 		fullPane.getChildren().add(infoPane);
 		fullPane.getChildren().add(AAPane);
+		fullPane.setMinHeight(0);
 		imagePane.setPrefWidth(fullPane.getPrefWidth() / 4);
 		infoPane.setPrefWidth(fullPane.getPrefWidth() / 2);
 		AAPane.setPrefWidth(fullPane.getPrefWidth() / 4);
@@ -80,7 +79,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	/**
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
-	 * 
+	 *
 	 * @param sprite
 	 *            A sprite that has just been clicked on in the TemplatePane
 	 * @param spriteType
@@ -124,9 +123,9 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection("DefensiveModifiers", unit.getDefensiveModifiers(), content);
-		// addString("Hit Points", unit.getHitPoints().toString());
-		// addString("Move Points", unit.getMovePoints().toString());
-		// addString("Move Pattern", unit.getMovePattern().toString());
+		addString("Hit Points", unit.getHitPoints().toString());
+		addString("Move Points", unit.getMovePoints().toString());
+		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
 
@@ -143,10 +142,15 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	}
 
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
-		content = checkForNull(label, content);
-		for (Object o : collection) {
-			content += o + "\n";
 
+		content = checkForNull(label, content);
+		for (VoogaEntity o : collection) {
+			content += o + "\n";
+//			if (o.getImgPath() != null) {
+//				Image oImage = new Image(o.getImgPath());
+//				ImageView oIV = new ImageView(oImage);
+//				content += oIV;
+//			}
 		}
 		content += "\n";
 		return content;

@@ -1,50 +1,60 @@
 package frontend.factory.worldview;
 
-import frontend.interfaces.worldview.GridViewExternal;
+import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 
 /**
  * @author Created by th174 on 4/19/17.
  */
-public class MinimapPane extends BaseUIManager<Parent> {
-	private static final double MINIMAP_SCALE = .2;
+public class MinimapPane extends BaseUIManager<Pane> {
 	private final Rectangle gridViewPortBounds;
 	private final Pane view;
+	private final Node mapContent;
 
-	public MinimapPane(GridViewExternal gridView) {
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setContent(gridView.getObject());
+	private ImageView minimapSnapshot;
+
+	public MinimapPane(ScrollPane scrollPane, Controller controller) {
+		super(controller);
+		this.mapContent = scrollPane.getContent();
 		this.gridViewPortBounds = new Rectangle();
+		view = new Pane();
 		gridViewPortBounds.setFill(Color.TRANSPARENT);
 		gridViewPortBounds.setStroke(Color.RED);
 		gridViewPortBounds.setStrokeWidth(2);
-		Rectangle minimap = new Rectangle(scrollPane.getContent().getBoundsInLocal().getWidth() * MINIMAP_SCALE,
-				scrollPane.getContent().getBoundsInLocal().getHeight() * MINIMAP_SCALE);
-		minimap.setMouseTransparent(true);
-		view = new Pane();
-		view.getChildren().addAll(minimap, gridViewPortBounds);
+		gridViewPortBounds.setStrokeType(StrokeType.INSIDE);
+		double ratio = scrollPane.getContent().getBoundsInLocal().getHeight() / scrollPane.getContent().getBoundsInLocal().getWidth();
+		view.setMinWidth(150);
+		view.setMinHeight(150 * ratio);
+		view.minHeightProperty().bind(view.widthProperty().multiply(ratio));
+		view.maxHeightProperty().bind(view.widthProperty().multiply(ratio));
+		minimapSnapshot = new ImageView();
+		minimapSnapshot.setMouseTransparent(true);
+		minimapSnapshot.fitWidthProperty().bind(view.widthProperty());
+		minimapSnapshot.fitHeightProperty().bind(view.heightProperty());
+		Node map = scrollPane.getContent();
+		view.getChildren().addAll(minimapSnapshot, map, gridViewPortBounds);
 		ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
 			double viewPortWidth = scrollPane.getViewportBounds().getWidth();
 			double viewPortHeight = scrollPane.getViewportBounds().getHeight();
 			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
 			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
-			double minimapWidth = minimap.getWidth();
-			double minimapHeight = minimap.getHeight();
+			double minimapWidth = minimapSnapshot.getFitWidth();
+			double minimapHeight = minimapSnapshot.getFitHeight();
 			gridViewPortBounds.setWidth(Math.min(1, viewPortWidth / contentWidth) * minimapWidth);
 			gridViewPortBounds.setHeight(Math.min(1, viewPortHeight / contentHeight) * minimapHeight);
 			gridViewPortBounds.relocate(
-					calcMinimapOffset(scrollPane.getHvalue(), scrollPane.getHmin(), scrollPane.getHmax(), contentWidth,
-							viewPortWidth, minimapWidth),
-					calcMinimapOffset(scrollPane.getVvalue(), scrollPane.getVmin(), scrollPane.getVmax(), contentHeight,
-							viewPortHeight, minimapHeight));
+					calcMinimapOffset(scrollPane.getHvalue(), scrollPane.getHmin(), scrollPane.getHmax(), contentWidth, viewPortWidth, minimapWidth),
+					calcMinimapOffset(scrollPane.getVvalue(), scrollPane.getVmin(), scrollPane.getVmax(), contentHeight, viewPortHeight, minimapHeight));
 		};
 		scrollPane.viewportBoundsProperty().addListener(changeListener);
 		scrollPane.getContent().boundsInLocalProperty().addListener(changeListener);
@@ -55,34 +65,37 @@ public class MinimapPane extends BaseUIManager<Parent> {
 			double viewPortHeight = scrollPane.getViewportBounds().getHeight();
 			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
 			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
-			double minimapWidth = minimap.getWidth();
-			double minimapHeight = minimap.getHeight();
+			double minimapWidth = minimapSnapshot.getFitWidth();
+			double minimapHeight = minimapSnapshot.getFitHeight();
 			double newX = Math.max(0, event.getX() - gridViewPortBounds.getWidth() / 2.0);
 			double newY = Math.max(0, event.getY() - gridViewPortBounds.getHeight() / 2.0);
 			gridViewPortBounds.relocate(newX, newY);
-			scrollPane.setHvalue(calcScrollOffset(newX, scrollPane.getHmin(), scrollPane.getHmax(), contentWidth,
-					viewPortWidth, minimapWidth));
-			scrollPane.setVvalue(calcScrollOffset(newY, scrollPane.getVmin(), scrollPane.getVmax(), contentHeight,
-					viewPortHeight, minimapHeight));
+			scrollPane.setHvalue(calcScrollOffset(newX, scrollPane.getHmin(), scrollPane.getHmax(), contentWidth, viewPortWidth, minimapWidth));
+			scrollPane.setVvalue(calcScrollOffset(newY, scrollPane.getVmin(), scrollPane.getVmax(), contentHeight, viewPortHeight, minimapHeight));
 		};
 		view.setOnMousePressed(mouseEvent);
 		view.setOnMouseDragged(mouseEvent);
-	}
-
-	private double calcMinimapOffset(double scrollValue, double scrollMin, double scrollMax, double contentSize,
-			double viewportSize, double minimapSize) {
-		return (contentSize - viewportSize) * (scrollValue - scrollMin) / (scrollMax - scrollMin) / contentSize
-				* minimapSize;
-	}
-
-	private double calcScrollOffset(double minimapOffset, double scrollMin, double scrollMax, double contentSize,
-			double viewportSize, double minimapSize) {
-		return minimapOffset * contentSize / minimapSize / (contentSize - viewportSize) * (scrollMax - scrollMin)
-				+ scrollMin;
+		update();
 	}
 
 	@Override
-	public Parent getObject() {
+	public void update() {
+		mapContent.snapshot(param -> {
+			minimapSnapshot.setImage(param.getImage());
+			return null;
+		}, null, null);
+	}
+
+	private double calcMinimapOffset(double scrollValue, double scrollMin, double scrollMax, double contentSize, double viewportSize, double minimapSize) {
+		return (contentSize - viewportSize) * (scrollValue - scrollMin) / (scrollMax - scrollMin) / contentSize * minimapSize;
+	}
+
+	private double calcScrollOffset(double minimapOffset, double scrollMin, double scrollMax, double contentSize, double viewportSize, double minimapSize) {
+		return minimapOffset * contentSize / minimapSize / (contentSize - viewportSize) * (scrollMax - scrollMin) + scrollMin;
+	}
+
+	@Override
+	public Pane getObject() {
 		return view;
 	}
 }

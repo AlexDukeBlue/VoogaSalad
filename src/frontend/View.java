@@ -33,10 +33,11 @@ import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
 import frontend.util.BaseUIManager;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
@@ -49,12 +50,14 @@ public class View extends BaseUIManager<Region> {
 	}
 
 	private boolean editable;
-	private BorderPane myBorder;
+	private SplitPane outerSplitPane;
+	private SplitPane innerSplitPane;
 	private VoogaMenuBar menuBar;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
 	private TemplatePaneExternal tempPane;
 	private GameObserver gameObserver;
+	//private RulesPane rulesPane;				//TODO For when rules pane is created
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -68,7 +71,7 @@ public class View extends BaseUIManager<Region> {
 		super(controller);
 		myStage = stage;
 		this.editable = editable;
-		initBorderPane();
+		placePanes();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
 	}
@@ -88,10 +91,40 @@ public class View extends BaseUIManager<Region> {
 			menuBar.setEditable(false);
 		}
 	}
+	
+	public void toggleRulesPane(){
+//		if(myBorder.getLeft() == null){
+//			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
+//		} else {
+//			myBorder.setLeft(null);
+//		}
+	}
+	
+	public void toggleTemplatePane(){
+		//TODO
+//		if(myBorder.getRight() == null){
+//			myBorder.setRight(tempPane.getObject());
+//		} else {
+//			myBorder.setRight(null);
+//		}
+	}
+	
+	public void toggleDetailsPane(){
+		//TODO
+//		if(myBorder.getBottom() == null){
+//			myBorder.setBottom(detailPane.getObject());
+//		} else {
+//			myBorder.setBottom(null);
+//		}
+	}
+	
+	public void toggleStatsPane(){
+		//TODO
+	}
 
 	@Override
 	public Region getObject() {
-		return myBorder;
+		return outerSplitPane;
 	}
 
 	/**
@@ -126,10 +159,15 @@ public class View extends BaseUIManager<Region> {
 		myAlert.showAndWait();
 	}
 
-	private void initBorderPane() {
+	private void placePanes() {
 		initPanes();
-		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
-				detailPane.getObject(), null);
+		innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
+		innerSplitPane.setDividerPositions(1);
+		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
+		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPosition(0, 0);
+		outerSplitPane.setDividerPosition(1, .8);
+		outerSplitPane.setOrientation(Orientation.VERTICAL);
 	}
 
 	/**
@@ -152,6 +190,7 @@ public class View extends BaseUIManager<Region> {
 		worldView.addGridViewObserver(gameObserver);
 		worldView.addCellViewObserver(gameObserver);
 		worldView.addUnitViewObserver(gameObserver);
+		//rulesPane = new RulesPane(); 				//TODO For when rules pane is created
 	}
 
 	/**
@@ -160,7 +199,7 @@ public class View extends BaseUIManager<Region> {
 	 * changes.
 	 */
 	private void enterAuthorMode() {
-		addSidePanes();
+//		addSidePanes();
 	}
 
 	/**
@@ -168,24 +207,24 @@ public class View extends BaseUIManager<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		removeSidePanes();
+
+
+//		removeSidePanes();
 	}
 
-	/**
-	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
-	 */
-	private void addSidePanes() {
-		myBorder.setRight(tempPane.getObject());
-		// myBorder.setLeft();
-	}
-
-	/**
-	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
-	 */
-	private void removeSidePanes() {
-		myBorder.setLeft(null);
-		myBorder.setRight(null);
-	}
+//	/**
+//	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
+//	 */
+//	private void addSidePanes() {
+//		innerSplitPane.getItems().add(tempPane.getObject());
+//	}
+//
+//	/**
+//	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
+//	 */
+//	private void removeSidePanes() {
+//		innerSplitPane.getItems().remove(tempPane.getObject());
+//	}
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {

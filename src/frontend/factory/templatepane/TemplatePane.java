@@ -98,6 +98,8 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
 		VBox contentPane = new VBox();
+		contentPane.setPadding(new Insets(5,5,5,5));
+		contentPane.setSpacing(5);
 		for (VoogaEntity sprite : sprites) {
 			VBox spriteContent = new VBox();
 			spriteContent.setBorder(new Border(
