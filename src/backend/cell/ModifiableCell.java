@@ -1,26 +1,16 @@
 package backend.cell;
 
-import static backend.util.ImmutableVoogaObject.getPredefined;
-
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.util.Ability;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.ModifiableTriggeredEffect;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import backend.util.*;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+
+import static backend.util.ImmutableVoogaObject.getPredefined;
 
 /**
  * @author Created by th174 on 3/31/2017.
@@ -88,11 +78,18 @@ public class ModifiableCell implements Cell {
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.FORTIFIED);
 
+	private static final Map<Class<? extends VoogaEntity>,BiConsumer<VoogaEntity,ModifiableCell>> actionOnClass = new HashMap<>();
+
+	static {
+		actionOnClass.put(ModifiableTerrain.class, (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain));
+		actionOnClass.put(ModifiableUnit.class, ((unit,cell) -> cell.addOccupants((Unit)unit)));
+		actionOnClass.put(Ability.class, ((ability,cell) -> cell.getTerrain().addAbility((Ability)ability)));
+	}
+
 	private final Map<String, Unit> occupants;
 	private Shape shape;
 	private Terrain terrain;
 	private CoordinateTuple coordinates;
-	private Map<Class<? extends VoogaEntity>,BiConsumer<VoogaEntity,ModifiableCell>> actionOnClass;
 
 	public ModifiableCell() {
 		this(null, null, null);
@@ -103,12 +100,6 @@ public class ModifiableCell implements Cell {
 		this.terrain = terrain;
 		this.coordinates = location;
 		occupants = new HashMap<>();
-		actionOnClass = new HashMap<>();
-		BiConsumer<VoogaEntity,ModifiableCell> consumer = (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain);
-		System.out.println(consumer);
-		actionOnClass.put(ModifiableTerrain.class, (Serializable & BiConsumer)consumer);
-		actionOnClass.put(ModifiableUnit.class, (Serializable & BiConsumer)((unit,cell) -> ((ModifiableCell) cell).addOccupants((Unit)unit)));
-		actionOnClass.put(Ability.class, (Serializable & BiConsumer)((ability,cell) -> ((ModifiableCell) cell).getTerrain().addAbility((Ability)ability)));
 	}
 
 	public ModifiableCell addTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
