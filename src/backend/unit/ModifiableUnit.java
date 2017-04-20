@@ -7,16 +7,14 @@ import backend.player.Player;
 import backend.unit.properties.*;
 import backend.util.*;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/30/2017.
  */
-public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit, Serializable {
-	private volatile static int totalUnits = 0;
-	private static final String MAGIC = "-\\d{4,}$";
+public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
+	private transient static final String MAGIC = "-(\\d{4,}$)";
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("X")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
@@ -51,8 +49,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends Terrain, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
-		super(unitName.replaceAll(MAGIC, "") + String.format("-%04d", totalUnits), unitDescription, imgPath);
-		totalUnits++;
+		super(unitName, unitDescription, imgPath);
 		this.faction = faction;
 		this.terrainMoveCosts = new HashMap<>(moveCosts);
 		this.stats = new UnitStats(unitStats.parallelStream().map(UnitStat::copy).collect(Collectors.toList()));
@@ -75,6 +72,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public ModifiableUnit copy() {
+		setName(getName().m);
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
 

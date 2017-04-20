@@ -11,8 +11,6 @@ import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import frontend.util.Updatable;
-import util.io.Serializer;
-import util.io.Unserializer;
 import util.net.Modifier;
 
 import java.time.Duration;
@@ -25,9 +23,9 @@ public interface Controller {
 
 	GameBoard getGrid();
 
-	void startClient(String host, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout);
+	void startClient(String host, int port, Duration timeout);
 
-	void startServer(ReadonlyGameplayState gameState, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout);
+	void startServer(ReadonlyGameplayState gameState, int port, Duration timeout);
 
 	Cell getCell(CoordinateTuple tuple);
 
@@ -40,8 +38,6 @@ public interface Controller {
 	ImmutablePlayer getPlayer(String name);
 
 	<U extends ReadonlyGameplayState> void setGameState(U newGameState);
-
-	GameBoard getModifiableCells();
 
 	<U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier);
 

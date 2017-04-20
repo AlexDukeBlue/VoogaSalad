@@ -1,7 +1,7 @@
 package frontend.startup;
 
+import backend.grid.GridPattern;
 import backend.util.ReadonlyGameplayState;
-import backend.util.io.XMLSerializer;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
@@ -27,6 +27,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import util.net.ObservableHost;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,7 +44,6 @@ import java.util.ResourceBundle;
  * @authors Sam, ncp14
  */
 public class StartupSelectionScreen extends VBox {
-
 	private ResourceBundle SelectionProperties = ResourceBundle.getBundle("frontend/properties/SelectionProperties");
 	private StartupScreen ui;
 	private Stage stage;
@@ -197,28 +197,27 @@ public class StartupSelectionScreen extends VBox {
 
 	private void create(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		XMLSerializer<ReadonlyGameplayState> xmlSerializer = new XMLSerializer<>();
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver((o, arg) -> {
+			GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
+			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
+			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 			createGame();
-			control.startServer((ReadonlyGameplayState) arg,port,xmlSerializer,xmlSerializer, Duration.ofSeconds(30));
 		});
+
 	}
 
 	private void join(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		GameWizard wiz = new GameWizard();
-		wiz.show();
-		wiz.addObserver((o, arg) -> createGame());
-
+		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 	}
 
 	private void load(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		GameWizard wiz = new GameWizard();
-		wiz.addObserver((o, arg) -> createGame());
-		wiz.show();
+		control.startServer(null /*should be loaded gamestate*/, port, Duration.ofSeconds(30));
+		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
+		createGame();
 	}
 
 	private void createGame() {

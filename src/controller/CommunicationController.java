@@ -11,10 +11,9 @@ import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
+import backend.util.io.XMLSerializer;
 import frontend.util.Updatable;
 import javafx.application.Platform;
-import util.io.Serializer;
-import util.io.Unserializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
 import util.net.ObservableServer;
@@ -22,6 +21,7 @@ import util.net.ObservableServer;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
+	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
 	private AuthoringGameState mGameState;
 	private Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
@@ -41,7 +42,7 @@ public class CommunicationController implements Controller {
 	private final String playerName;
 	private final CountDownLatch waitForReady;
 
-	public CommunicationController(String username){
+	public CommunicationController(String username) {
 		this(username, Collections.emptyList());
 	}
 
@@ -52,11 +53,12 @@ public class CommunicationController implements Controller {
 		this.executor = Executors.newCachedThreadPool();
 	}
 
-	public void startClient(String host, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout) {
+	public void startClient(String host, int port, Duration timeout) {
 		try {
-			mClient = new ObservableClient<>(host, port, serializer, unserializer, timeout);
+			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
 			mClient.addListener(this::updateGameState);
 			executor.execute(mClient);
+			String playerName = this.playerName;
 			sendModifier((AuthoringGameState state) -> {
 				state.addPlayer(new Player(playerName, "Test player", ""));
 				return state;
@@ -66,9 +68,9 @@ public class CommunicationController implements Controller {
 		}
 	}
 
-	public void startServer(ReadonlyGameplayState gameState, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout) {
+	public void startServer(ReadonlyGameplayState gameState, int port, Duration timeout) {
 		try {
-			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, serializer, unserializer, timeout);
+			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
 			System.out.println("Server started successfully...");
 		} catch (Exception e) {
@@ -78,7 +80,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public GameBoard getGrid() {
-		return mGameState.getGrid();
+		return getGameState().getGrid();
 	}
 
 	@Override
@@ -108,27 +110,31 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public ReadonlyGameplayState getReadOnlyGameState() {
-		return mGameState;
+		return getGameState();
 	}
 
 	@Override
 	public AuthoringGameState getAuthoringGameState() {
+		try {
+			waitForReady.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return mGameState;
 	}
 
 	@Override
 	public GameplayState getGameState() {
-		return mGameState;
+		return getAuthoringGameState();
 	}
 
 	@Override
 	public ImmutablePlayer getPlayer(String name) {
-		return mGameState.getPlayerByName(name);
+		return getGameState().getPlayerByName(name);
 	}
 
-	@Override
-	public GameBoard getModifiableCells() {
-		return mGameState.getGrid();
+	public Map<CoordinateTuple, Cell> getModifiableCells() {
+		return getGameState().getGrid().getCells();
 	}
 
 	@Override
@@ -145,12 +151,12 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public Collection<? extends Unit> getUnits() {
-		return mGameState.getGrid().getUnits();
+		return getGameState().getGrid().getUnits();
 	}
 
 	@Override
 	public Collection<? extends Unit> getUnitTemplates() {
-		return (Collection<? extends Unit>) mGameState.getTemplateByCategory("unit").getAll();
+		return (Collection<? extends Unit>) getAuthoringGameState().getTemplateByCategory("unit").getAll();
 	}
 
 	@Override
@@ -171,7 +177,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public Collection<? extends Terrain> getTerrainTemplates() {
-		return (Collection<? extends Terrain>) mGameState.getTemplateByCategory("terrain").getAll();
+		return (Collection<? extends Terrain>) getAuthoringGameState().getTemplateByCategory("terrain").getAll();
 	}
 
 	@Override
@@ -193,7 +199,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public Collection<? extends Team> getTeamTemplates() {
-		return (Collection<? extends Team>) mGameState.getTemplateByCategory("team").getAll();
+		return (Collection<? extends Team>) getAuthoringGameState().getTemplateByCategory("team").getAll();
 	}
 
 	@Override
