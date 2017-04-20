@@ -89,7 +89,7 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 			cl.update();
 			cellViewObjects.getChildren().add(cl.getObject());
 			cl.getPolygon().setOnMouseClicked(event -> {
-				if (event.getButton().equals(MouseButton.PRIMARY)) cellClicked(cl);
+				if (event.getButton().equals(MouseButton.PRIMARY)) cellClicked(coordinate);
 			});
 		});
 	}
@@ -100,9 +100,8 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 		shouldCopy = true;
 	}
 
-	private void cellClicked(CellView cell) {
+	private void cellClicked(CoordinateTuple cellClickedLocation) {
 		if (unitClickedName != null) {
-			CoordinateTuple cellClickedLocation = cell.getCoordinateTuple();
 			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
 			String unitClickedName = this.unitClickedName;
 			if (shouldCopy) {
