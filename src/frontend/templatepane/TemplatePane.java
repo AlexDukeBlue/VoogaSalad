@@ -32,7 +32,7 @@ import java.util.Collection;
  *         and dragging features work
  */
 
-public class TemplatePane extends BaseUIManager<Region> {
+public class TemplatePane extends BaseUIManager<VBox> {
 
 	VBox pane = new VBox();
 	Collection<? extends Unit> units;
@@ -64,7 +64,6 @@ public class TemplatePane extends BaseUIManager<Region> {
 		spritePane.setCollapsible(true);
 		spritePane.setExpanded(false);
 		pane.getChildren().add(spritePane);
-		
 	}
 
 	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
@@ -131,7 +130,7 @@ public class TemplatePane extends BaseUIManager<Region> {
 	}
 
 	@Override
-	public Region getObject() {
+	public VBox getObject() {
 		return pane;
 	}
 

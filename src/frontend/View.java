@@ -25,6 +25,7 @@ import frontend.detailpane.DetailPane;
 import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
+import frontend.worldview.MinimapPane;
 import frontend.worldview.WorldView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -38,7 +39,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-public class View extends BaseUIManager<Region> implements Observer{
+public class View extends BaseUIManager<Region> implements Observer {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private Stage myStage;
 
@@ -56,12 +57,12 @@ public class View extends BaseUIManager<Region> implements Observer{
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
 	}
-	
-	public View(Controller controller, Stage stage){
+
+	public View(Controller controller, Stage stage) {
 		this(controller, stage, true);
 	}
-	
-	public View(Controller controller, Stage stage, boolean editable){
+
+	public View(Controller controller, Stage stage, boolean editable) {
 		super(controller);
 		myStage = stage;
 		this.editable = editable;
@@ -75,8 +76,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;		
-		if(editable){
+		this.editable = editable;
+		if (editable) {
 			enterAuthorMode();
 			menuBar.setEditable(true);
 		} else {
@@ -89,11 +90,11 @@ public class View extends BaseUIManager<Region> implements Observer{
 	public Region getObject() {
 		return myBorder;
 	}
-	
+
 	/**
 	 * @return The Stage that the View is being displayed on
 	 */
-	public Stage getStage(){
+	public Stage getStage() {
 		return myStage;
 	}
 
@@ -139,9 +140,10 @@ public class View extends BaseUIManager<Region> implements Observer{
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
+		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane()).getObject());
 		tempPane.addObserver(this);
 	}
-	
+
 	/**
 	 * Performs all necessary actions to convert the View into development mode.
 	 * If the View is already in development mode, then nothing visually
@@ -184,11 +186,11 @@ public class View extends BaseUIManager<Region> implements Observer{
 
 	@Override
 	public void update(Observable observable, Object object) {
-		if (observable == tempPane){
-			detailPane.setContent((VoogaEntity)object, "");
-			worldView.templateClicked((VoogaEntity)object);
+		if (observable == tempPane) {
+			detailPane.setContent((VoogaEntity) object, "");
+			worldView.templateClicked((VoogaEntity) object);
 		}
 	}
 
-	
+
 }
