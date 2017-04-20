@@ -32,7 +32,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
@@ -50,7 +49,6 @@ public class View extends BaseUIManager<Region> implements Observer {
 	}
 
 	private boolean editable;
-	private BorderPane myBorder;
 	private SplitPane outerSplitPane;
 	private SplitPane innerSplitPane;
 	private VoogaMenuBar menuBar;
@@ -92,7 +90,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 
 	@Override
 	public Region getObject() {
-		return myBorder;
+		return outerSplitPane;
 	}
 
 	/**
@@ -133,9 +131,6 @@ public class View extends BaseUIManager<Region> implements Observer {
 		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
 		outerSplitPane.setDividerPositions(.8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
-		myBorder = new BorderPane();
-		myBorder.setTop(menuBar.getObject());
-		myBorder.setCenter(outerSplitPane);
 	}
 
 	/**
@@ -161,7 +156,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 	 * changes.
 	 */
 	private void enterAuthorMode() {
-		addSidePanes();
+//		addSidePanes();
 	}
 
 	/**
@@ -169,24 +164,22 @@ public class View extends BaseUIManager<Region> implements Observer {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		removeSidePanes();
+//		removeSidePanes();
 	}
 
-	/**
-	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
-	 */
-	private void addSidePanes() {
-		myBorder.setRight(tempPane.getObject());
-		//myBorder.setLeft();
-	}
-
-	/**
-	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
-	 */
-	private void removeSidePanes() {
-		myBorder.setLeft(null);
-		myBorder.setRight(null);
-	}
+//	/**
+//	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
+//	 */
+//	private void addSidePanes() {
+//		innerSplitPane.getItems().add(tempPane.getObject());
+//	}
+//
+//	/**
+//	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
+//	 */
+//	private void removeSidePanes() {
+//		innerSplitPane.getItems().remove(tempPane.getObject());
+//	}
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {
