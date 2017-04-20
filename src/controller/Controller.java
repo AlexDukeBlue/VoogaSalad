@@ -5,6 +5,7 @@ import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
+import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
@@ -56,4 +57,10 @@ public interface Controller {
 	void removeFromUpdated(Updatable objectToUpdate);
 
 	String getPlayerName();
+
+	Collection<? extends Team> getTeamTemplates();
+
+	void addTeamTemplates(Team[] teamTemplates);
+
+	void removeTeamTemplates(Team[] teamTemplates);
 }

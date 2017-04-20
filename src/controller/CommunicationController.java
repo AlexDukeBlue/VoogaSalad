@@ -6,6 +6,7 @@ import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
+import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
@@ -134,6 +135,7 @@ public class CommunicationController implements Controller {
 		return (Collection<? extends Unit>) mGameState.getTemplateByCategory("unit").getAll();
 	}
 
+	@Override
 	public void addUnitTemplates(Unit... unitTemplates) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory("unit").addAll(unitTemplates);
@@ -154,6 +156,7 @@ public class CommunicationController implements Controller {
 		return (Collection<? extends Terrain>) mGameState.getTemplateByCategory("terrain").getAll();
 	}
 
+	@Override
 	public void addTerrainTemplates(Terrain... terrainTemplates) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory("terrain").addAll(terrainTemplates);
@@ -168,6 +171,31 @@ public class CommunicationController implements Controller {
 			return state;
 		});
 	}
+	
+	
+	
+	@Override
+	public Collection<? extends Team> getTeamTemplates() {
+		return (Collection<? extends Team>) mGameState.getTemplateByCategory("team").getAll();
+	}
+	
+	@Override
+	public void addTeamTemplates(Team... teamTemplates) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getTemplateByCategory("team").addAll(teamTemplates);
+			return state;
+		});
+	}
+	
+	@Override
+	public void removeTeamTemplates(Team... teamTemplates) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getTemplateByCategory("team").removeAll(teamTemplates);
+			return state;
+		});
+	}
+	
+	
 
 	@Override
 	public void addToUpdated(Updatable updatable) {
