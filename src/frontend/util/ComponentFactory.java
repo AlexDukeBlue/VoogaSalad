@@ -12,23 +12,53 @@ import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+/**
+ * @author Alexander Zapata
+ *
+ */
 public class ComponentFactory {
 
 	private File initialDirectory;
 	private String oopsURL;
 
+	/**
+	 * Returns a button with the appropriate name and EventHandler<ActionEvent>
+	 * 
+	 * @param name
+	 * @param eventHandler
+	 * @return Button
+	 */
 	public Button getButton(String name, EventHandler<ActionEvent> eventHandler) {
 		return new Button(name) {{setOnAction(eventHandler);}};
 	}
 	
+	/**
+	 * Returns a MenuItem with the appropriate name and EventHandler<ActionEvent>
+	 * 
+	 * @param name
+	 * @param eventHandler
+	 * @return MenuItem
+	 */
 	public MenuItem getMenuItem(String name, EventHandler<ActionEvent> eventHandler){
 		return new MenuItem(name) {{setOnAction(eventHandler);}};
 	}
 	
+	/**
+	 * Returns a menu with the Appropriate name.
+	 * 
+	 * 
+	 * @param name
+	 * @return Menu
+	 */
 	public Menu getMenu(String name){
 		return new Menu(name);
 	}
 
+	/**
+	 * Returns a FileChooser Dialog Box.
+	 * 
+	 * @return FileChooser
+	 */
 	public FileChooser getFileChooser() {
 		FileChooser myChooser = new FileChooser();
 		myChooser.setInitialDirectory(initialDirectory);
@@ -36,6 +66,15 @@ public class ComponentFactory {
 		return myChooser;
 	}
   
+	/**
+	 * Returns an image of size x,y with the image from the given URLString.
+	 * If invalid, returns an "oopsImage" of pre-set URLString
+	 * 
+	 * @param imageURL
+	 * @param x
+	 * @param y
+	 * @return Image
+	 */
 	public Image getURLImage(String imageURL, int x, int y){
 		Image img = null;
 		try{

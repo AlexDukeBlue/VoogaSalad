@@ -14,21 +14,33 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- * @author Zapata
+ * @author Alexander Zapata
  */
 
 //TODO: Implement some way to checkTurnState() to determine if it is the beginning or end of a turn. Implement restart(), save() and load() (Tavo's job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
-	private ObservableServer<GameplayState> server;
+	private ObservableServer<GameplayState> myServer;
 	private Consumer<GameplayState> stateUpdateListener = this::checkGame;
 
-	public DieselEngine(ObservableServer<GameplayState> s) {
-		server = s;
+	/**
+	 * This constructor passes in the ObservableServer<GameplayState> that the GameEngine will communicate with
+	 * and add listeners to.
+	 * 
+	 * @param server
+	 */
+	public DieselEngine(ObservableServer<GameplayState> server) {
+		myServer = server;
 		server.addListener(stateUpdateListener);
 		Executors.newSingleThreadExecutor().submit(server);
 	}
 
+	/**
+	 * This method compiles all of the necessary checking methods to run at the change of a GameState.
+	 * This method is what gets passed to the Server to execute with lambdas.
+	 * 
+	 * @param state
+	 */
 	private void checkGame(GameplayState state) {
 		checkTurnRules(state);
 		checkTurnEvents(state);
@@ -56,15 +68,33 @@ public class DieselEngine implements GameEngine {
 		return newGameState;
 	}
 
+	/**
+	 * This method will take the TurnRequirements within GameState (which are wrapped by Requirement)
+	 * and in the case they are all satisfied call state.endTurn().
+	 * 
+	 * @param state
+	 */
 	private void checkTurnRules(GameplayState state) {
 		if (!state.getTurnRequirements().parallelStream()
 				.allMatch(e -> e.getBiPredicate().test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied()) state.endTurn();
 	}
 
+	/**
+	 * This method will go through all of the TurnEvents (wrapped by Actionables) and execute their BIPredicates when added
+	 * as a listener in the Server.
+	 * 
+	 * @param state
+	 */
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.getBiComsumer().accept(state.getCurrentPlayer(), state)));
+		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.getBiConsumer().accept(state.getCurrentPlayer(), state)));
 	}
 
+	/**
+	 * This method goes through all of the objectives of the GameState so that every-time a state changes
+	 * the Server can check for a winner.
+	 * 
+	 * @param state
+	 */
 	private void checkObjectives(GameplayState state) {
 		state.getObjectives().parallelStream().forEach(e -> {
 			Result result = e.getResultQuad().determine(state.getCurrentPlayer(), state);
