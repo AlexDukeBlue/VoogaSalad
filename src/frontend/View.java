@@ -52,6 +52,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 	private WorldView worldView;
 	private DetailPane detailPane;
 	private TemplatePane tempPane;
+	//private RulesPane rulesPane;				//TODO For when rules pane is created
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -83,6 +84,34 @@ public class View extends BaseUIManager<Region> implements Observer{
 			enterPlayMode();
 			menuBar.setEditable(false);
 		}
+	}
+	
+	public void toggleRulesPane(){
+		if(myBorder.getLeft() == null){
+			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
+		} else {
+			myBorder.setLeft(null);
+		}
+	}
+	
+	public void toggleTemplatePane(){
+		if(myBorder.getRight() == null){
+			myBorder.setRight(tempPane.getObject());
+		} else {
+			myBorder.setRight(null);
+		}
+	}
+	
+	public void toggleDetailsPane(){
+		if(myBorder.getBottom() == null){
+			myBorder.setBottom(detailPane.getObject());
+		} else {
+			myBorder.setBottom(null);
+		}
+	}
+	
+	public void toggleStatsPane(){
+		//TODO
 	}
 
 	@Override
@@ -124,6 +153,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 		initPanes();
 		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
 				detailPane.getObject(), null);
+		//myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
+		//		detailPane.getObject(), rulesPane.getObject());											//TODO For when rules pane is created
 	}
 
 	/**
@@ -140,6 +171,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
 		tempPane.addObserver(this);
+		//rulesPane = new RulesPane(); 				//TODO For when rules pane is created
 	}
 	
 	/**
@@ -164,15 +196,15 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 */
 	private void addSidePanes() {
 		myBorder.setRight(tempPane.getObject());
-		//myBorder.setLeft();
+		//myBorder.setLeft(rulesPane.getObject());			//TODO For when rules pane is created
 	}
 
 	/**
 	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
 	 */
 	private void removeSidePanes() {
-		myBorder.setLeft(null);
 		myBorder.setRight(null);
+		myBorder.setLeft(null);
 	}
 
 	public static Image getImg(String imgPath) {
