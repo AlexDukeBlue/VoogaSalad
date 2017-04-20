@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * @author Created by th174 on 4/5/17.
  */
-public interface TriggeredEffect extends VoogaEntity {
+public interface TriggeredEffect extends PassiveAbility {
 	@Override
 	TriggeredEffect copy();
 

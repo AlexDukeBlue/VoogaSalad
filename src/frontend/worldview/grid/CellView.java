@@ -1,8 +1,6 @@
 package frontend.worldview.grid;
 
 
-import java.util.ArrayList;
-
 import backend.grid.CoordinateTuple;
 import controller.Controller;
 import frontend.View;
@@ -16,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+
+import java.util.ArrayList;
 
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
@@ -45,9 +45,9 @@ public class CellView extends BaseUIManager<Parent> {
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellModel  The Cell object that this CellView will visually represent.
-	 * @param controller the controller object that this CellView will send information
-	 *                   to when the user interacts with the CellView
+	 * @param cellLocation The Cell object that this CellView will visually represent.
+	 * @param controller   the controller object that this CellView will send information
+	 *                     to when the user interacts with the CellView
 	 */
 	public CellView(CoordinateTuple cellLocation, Controller controller, UnitViewDelegate delegate) {
 		super(controller);
@@ -145,19 +145,24 @@ public class CellView extends BaseUIManager<Parent> {
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
 		group.getChildren().add(polygon);
+		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
+		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
-
 				unitList.add(unitView);
-				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth() / 2));
-				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight() / 2));
-				polygon.boundsInLocalProperty().addListener(change -> {
-					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
-					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
-				});
-				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
-				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
+				unitView.getObject().setFitWidth(polygon.getBoundsInParent().getHeight() * .9);
+				unitView.getObject().setFitHeight(polygon.getBoundsInParent().getHeight() * .9);
+				unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2);
+				unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2);
+//				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth() / 2));
+//				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight() / 2));
+//				polygon.boundsInLocalProperty().addListener(change -> {
+//					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
+//					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
+//				});
+//				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
+//				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}
@@ -175,25 +180,25 @@ public class CellView extends BaseUIManager<Parent> {
 		return cellLocation;
 	}
 
-	private void mouseOver(){
-		System.out.println(unitList.size());
-		System.out.println("mousing over");
-		if (unitList.size() != 0){
-			for (int i = 0; i < unitList.size(); i++){
+	private void mouseOver() {
+//		System.out.println(unitList.size());
+//		System.out.println("mousing over");
+		if (unitList.size() != 0) {
+			for (int i = 0; i < unitList.size(); i++) {
 //				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 30);;
 			}
 		}
 	}
 
-	private void mouseOut(){
-		if (unitList.size() != 0){
-			for (int i = 0; i < unitList.size(); i++){
-				unitList.get(i).getObject().setTranslateY(i * 10);;
+	private void mouseOut() {
+		if (unitList.size() != 0) {
+			for (int i = 0; i < unitList.size(); i++) {
+				unitList.get(i).getObject().setTranslateY(i * 10);
 			}
 		}
 	}
 
-	private void pushUp(){
+	private void pushUp() {
 
 	}
 }

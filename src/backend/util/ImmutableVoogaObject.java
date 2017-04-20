@@ -8,15 +8,12 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 4/8/2017.
  */
 public abstract class ImmutableVoogaObject<T extends ImmutableVoogaObject<T>> implements VoogaEntity {
-	private volatile static int totalVoogaObjects = 0;
-	private static final String MAGIC = "-\\d{4,}$";
 	private String name;
 	private String description;
 	private String imgPath;
 
 	public ImmutableVoogaObject(String name, String description, String imgPath) {
-		this.name = name.replaceAll(MAGIC, "") + String.format("-%4d", totalVoogaObjects);
-		totalVoogaObjects++;
+		this.name = name;
 		this.description = description;
 		this.imgPath = imgPath;
 	}

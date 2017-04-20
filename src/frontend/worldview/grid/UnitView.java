@@ -17,7 +17,6 @@ import javafx.scene.image.ImageView;
  * @author dylanpeters
  */
 public class UnitView extends Sprite {
-
 	private final ImageView unitView;
 	private final String unitName;
 	private final CoordinateTuple unitLocation;

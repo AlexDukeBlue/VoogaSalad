@@ -45,7 +45,7 @@ public class ComponentFactory {
 			img = new Image(imageURL, x, y, true, false);
 		}catch (Exception e){
 			img = new Image(oopsURL);
-			System.out.println("No Image");
+//			System.out.println("No Image");
 		}
 		return img;
 	}

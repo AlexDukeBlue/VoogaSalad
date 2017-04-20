@@ -4,12 +4,12 @@ import backend.unit.properties.DefensiveModifierSet;
 import backend.unit.properties.InteractionModifier;
 import backend.unit.properties.OffensiveModifierSet;
 import backend.unit.properties.TriggeredAbilitySet;
+import backend.util.Ability;
 import backend.util.ModifiableVoogaObject;
 import backend.util.TriggeredEffect;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -22,6 +22,18 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 	private final OffensiveModifierSet offensiveModifiers;
 	private final DefensiveModifierSet defensiveModifiers;
 	private int defaultMoveCost;
+	private static final Map<Class<? extends Ability>, BiConsumer<Ability, Terrain>> actionMap = new HashMap<>();
+
+	static {
+		actionMap.put(TriggeredEffect.class, (triggered, terrain) -> terrain.addTriggeredAbilities((TriggeredEffect) triggered));
+		actionMap.put(InteractionModifier.class, (modifier, terrain) -> {
+			if (((InteractionModifier) modifier).getType().equals(InteractionModifier.DEFENSIVE)) {
+				terrain.addDefensiveModifiers((InteractionModifier) modifier);
+			} else {
+				terrain.addOffensiveModifiers((InteractionModifier) modifier);
+			}
+		});
+	}
 
 	public ModifiableTerrain(String name) {
 		this(name, DEFAULT_DEFAULT_MOVE_COST, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), "", "");
@@ -117,6 +129,11 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 				getDescription(),
 				getImgPath()
 		);
+	}
+
+	@Override
+	public void addAbility(Ability ability) {
+		actionMap.get(ability.getClass()).accept(ability, this);
 	}
 
 }

@@ -2,7 +2,6 @@ import backend.cell.ModifiableCell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.grid.*;
-import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.player.Team;
 import backend.unit.ModifiableUnit;
@@ -10,18 +9,15 @@ import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
 import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
 import backend.util.io.XMLSerializer;
 import org.junit.Test;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.function.BiPredicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -107,7 +103,7 @@ public class BackendTests {
 		AuthoringGameState authoringGameState = new AuthoringGameState("test").setGrid(board);
 		new CoordinateTuple(0, 0).getNeighbors().forEach(e -> board.get(e).arrive(ModifiableUnit.SKELETON_ARCHER.copy(), authoringGameState));
 		XMLSerializer<AuthoringGameState> serializer = new XMLSerializer<>();
-		authoringGameState.addTurnRequirements((BiPredicate<ImmutablePlayer, GameplayState> & Serializable) (player, immutableAuthoringGameState) -> 3 < 5);
+//		authoringGameState.addTurnRequirements((BiPredicate<ImmutablePlayer, GameplayState> & Serializable) (player, immutableAuthoringGameState) -> 3 < 5);
 		Files.write(Paths.get("data/saved_game_data/basic_grid_5x5.xml"), ((String) serializer.serialize(authoringGameState)).getBytes());
 		assertEquals(25, board.getCells().values().stream().filter(e -> e.getTerrain().equals(ModifiableTerrain.FLAT)).count());
 		assertEquals(4, board.getUnits().size());

@@ -10,8 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 /**
  * WorldView sets up and displays a Region object that contains a grid of
@@ -65,17 +63,19 @@ public class WorldView extends BaseUIManager<Region> {
 
 	public void templateClicked(VoogaEntity voogaEntity) {
 		myGrid.setTemplateEntityToAdd(voogaEntity);
+		
 	}
 
 	private void initialize() {
 		borderPane = new BorderPane();
 		myGrid = new GridView(getController());
 		centerAnchorPane = new AnchorPane();
-		Rectangle test = new Rectangle(200, 200, Color.TRANSPARENT);
-		test.setStroke(Color.RED);
-		test.setStrokeWidth(1);
-		AnchorPane.setTopAnchor(test, 0.0);
-		AnchorPane.setRightAnchor(test, 0.0);
+//		Rectangle test = new Rectangle(200, 200, Color.TRANSPARENT);
+//		test.setStroke(Color.RED);
+//		test.setStrokeWidth(1);
+		MinimapPane test = new MinimapPane(myGrid.getObject());
+		AnchorPane.setTopAnchor(test.getObject(), 0.0);
+		AnchorPane.setRightAnchor(test.getObject(), 0.0);
 		ChatLogView chatLogView = new ChatLogView(getController());
 		borderPane.setOnKeyPressed(event -> {
 			if (event.getCode().equals(KeyCode.ENTER)) {
@@ -84,7 +84,7 @@ public class WorldView extends BaseUIManager<Region> {
 		});
 		AnchorPane.setBottomAnchor(chatLogView.getObject(), 10.0);
 		AnchorPane.setLeftAnchor(chatLogView.getObject(), 0.0);
-		centerAnchorPane.getChildren().addAll(test, chatLogView.getObject());
+		centerAnchorPane.getChildren().addAll(test.getObject(), chatLogView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
 		centerStackPane = new StackPane();
 		centerStackPane.getChildren().add(myGrid.getObject());
