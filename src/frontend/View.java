@@ -142,12 +142,16 @@ public class View extends BaseUIManager<Region> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
 		});
-		gameObserver = GameObserverFactory.newGameObserver();
-		worldView = WorldViewFactory.newWorldView(getController(), gameObserver);
+		worldView = WorldViewFactory.newWorldView(getController());
 		detailPane = DetailPaneFactory.newDetailPane();
-		detailPane.addDetailPaneObserver(gameObserver);
 		tempPane = TemplatePaneFactory.newTemplatePane(getController());
+		gameObserver = GameObserverFactory.newGameObserver(getController(), worldView, detailPane, tempPane);
+		detailPane.addDetailPaneObserver(gameObserver);
 		tempPane.addTemplatePaneObserver(gameObserver);
+		worldView.addWorldViewObserver(gameObserver);
+		worldView.addGridViewObserver(gameObserver);
+		worldView.addCellViewObserver(gameObserver);
+		worldView.addUnitViewObserver(gameObserver);
 	}
 
 	/**

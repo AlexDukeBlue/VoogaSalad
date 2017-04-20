@@ -138,7 +138,7 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 
 	@Override
 	public void addWorldViewObserver(WorldViewObserver observer) {
-		if (!observers.contains(observer)) {
+		if (!observers.contains(observer) && observer != null) {
 			observers.add(observer);
 		}
 	}

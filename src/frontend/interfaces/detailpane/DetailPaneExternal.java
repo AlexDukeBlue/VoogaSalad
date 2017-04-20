@@ -2,6 +2,7 @@ package frontend.interfaces.detailpane;
 
 import java.util.Collection;
 
+import backend.util.VoogaEntity;
 import javafx.scene.layout.Region;
 
 public interface DetailPaneExternal {
@@ -15,5 +16,7 @@ public interface DetailPaneExternal {
 	void removeAllDetailPaneObservers(Collection<DetailPaneObserver> observers);
 	
 	Region getObject();
+
+	void setContent(VoogaEntity entity, String string);
 
 }

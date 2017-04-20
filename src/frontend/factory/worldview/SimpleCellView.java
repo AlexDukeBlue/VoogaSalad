@@ -9,7 +9,6 @@ import frontend.View;
 import frontend.factory.worldview.layout.CellViewLayoutInterface;
 import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.CellViewObserver;
-import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
@@ -24,8 +23,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
-class SimpleCellView extends BaseUIManager<Node>
-		implements CellViewLayoutInterface, CellViewExternal, UnitViewExternal {
+class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterface, CellViewExternal {
 
 	private Collection<CellViewObserver> observers;
 	private Collection<UnitViewObserver> unitViewObservers;
@@ -142,6 +140,7 @@ class SimpleCellView extends BaseUIManager<Node>
 				unitView.setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
+				unitView.addAllUnitViewObservers(unitViewObservers);
 			}
 		});
 		contextMenu.getItems().clear();
@@ -184,7 +183,7 @@ class SimpleCellView extends BaseUIManager<Node>
 
 	@Override
 	public void addCellViewObserver(CellViewObserver observer) {
-		if (!observers.contains(observer)) {
+		if (!observers.contains(observer) && observer != null) {
 			observers.add(observer);
 		}
 	}
@@ -210,7 +209,7 @@ class SimpleCellView extends BaseUIManager<Node>
 
 	@Override
 	public void addUnitViewObserver(UnitViewObserver observer) {
-		if (!unitViewObservers.contains(observer)) {
+		if (!unitViewObservers.contains(observer) && observer != null) {
 			unitViewObservers.add(observer);
 		}
 	}
@@ -248,6 +247,11 @@ class SimpleCellView extends BaseUIManager<Node>
 		if (cellViewObservers != null) {
 			cellViewObservers.stream().forEach(observer -> removeCellViewObserver(observer));
 		}
+	}
+
+	@Override
+	public CoordinateTuple getLocation() {
+		return cellLocation;
 	}
 
 }

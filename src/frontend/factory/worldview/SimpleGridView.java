@@ -60,7 +60,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
 	@Override
 	public void addGridViewObserver(GridViewObserver observer) {
-		if (!observers.contains(observer)) {
+		if (!observers.contains(observer) && observer != null) {
 			observers.add(observer);
 		}
 	}

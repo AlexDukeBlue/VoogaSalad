@@ -72,7 +72,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	@Override
 	public void addTemplatePaneObserver(TemplatePaneObserver observer) {
-		if (!observers.contains(observer)) {
+		if (!observers.contains(observer) && observer != null) {
 			observers.add(observer);
 		}
 	}

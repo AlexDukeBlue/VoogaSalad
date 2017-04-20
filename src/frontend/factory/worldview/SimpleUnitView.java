@@ -113,6 +113,8 @@ class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExternal {
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
 		unitView = new ImageView(View.getImg(unitImgPath));
+		unitView.setOnMouseClicked(
+				event -> observers.stream().forEach(observer -> observer.didClickUnitViewExternalInterface(this)));
 	}
 
 	@Override
