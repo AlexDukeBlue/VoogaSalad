@@ -1,6 +1,7 @@
 import backend.grid.GridPattern;
 import frontend.startup.StartupScreen;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -14,7 +15,7 @@ public class Main extends Application {
 		@SuppressWarnings("unused")
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		StartupScreen starter = new StartupScreen(primaryStage, 700.0, 700.0);
-		primaryStage.setScene(starter.getPrimaryScene());
+		primaryStage.setScene(new Scene(starter.getPrimaryPane()));
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
