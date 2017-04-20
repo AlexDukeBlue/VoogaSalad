@@ -3,11 +3,6 @@ package frontend.factory.worldview;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import backend.grid.CoordinateTuple;
-import backend.unit.Unit;
-import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
-import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
@@ -21,7 +16,6 @@ import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -36,9 +30,6 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	private Pane cellViewObjects;
 	private Collection<CellViewExternal> cellViews;
 	private GridLayoutDelegate myLayoutManager;
-	private String unitClickedName;
-	private CoordinateTuple unitClickedLocation;
-	private boolean shouldCopy = true;
 
 	public SimpleGridView(Controller controller, Collection<GridViewObserver> gridObservers,
 			Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
@@ -65,42 +56,6 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 			cl.update();
 			cellViewObjects.getChildren().add(cl.getObject());
 		});
-	}
-
-	public void setTemplateEntityToAdd(VoogaEntity template) {
-		unitClickedName = template.getName();
-		unitClickedLocation = null;
-		shouldCopy = true;
-	}
-
-	private void cellClicked(CoordinateTuple cellClickedLocation) {
-		if (unitClickedName != null) {
-			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
-			String unitClickedName = this.unitClickedName;
-			if (shouldCopy) {
-				getController().sendModifier((AuthoringGameState gameState) -> {
-					VoogaEntity entity = gameState.getTemplateByName(unitClickedName).copy();
-					// gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
-					System.out.println(entity);
-					gameState.getGrid().get(cellClickedLocation).addVoogaEntity(entity);
-					return gameState;
-				});
-			} else {
-				getController().sendModifier((GameplayState gameState) -> {
-					Unit unitToMove = gameState.getGrid().get(unitClickedLocation).getOccupantByName(unitClickedName);
-					unitToMove.moveTo(gameState.getGrid().get(cellClickedLocation), gameState);
-					return gameState;
-				});
-			}
-			this.shouldCopy = false;
-			this.unitClickedName = null;
-			this.unitClickedLocation = null;
-		}
-	}
-
-	public void unitClicked(SimpleUnitView unitView) {
-		unitClickedName = unitView.getUnitName();
-		unitClickedLocation = unitView.getUnitLocation();
 	}
 
 	@Override

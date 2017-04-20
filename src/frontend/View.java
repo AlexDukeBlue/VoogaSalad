@@ -130,10 +130,6 @@ public class View extends BaseUIManager<Region> {
 		initPanes();
 		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
 				detailPane.getObject(), null);
-		System.out.println(worldView.getObject());
-		System.out.println(menuBar.getObject());
-		System.out.println(tempPane.getObject());
-		System.out.println(detailPane.getObject());
 	}
 
 	/**
