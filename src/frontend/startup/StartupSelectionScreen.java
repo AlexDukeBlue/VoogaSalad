@@ -37,6 +37,8 @@ import java.io.ObjectInputStream;
 import java.util.*;
 import java.util.concurrent.Callable;
 
+import com.sun.javafx.geom.Shape;
+
 /**
  * The intro screen containing a "create new game" button.
  *
@@ -100,19 +102,19 @@ public class StartupSelectionScreen extends VBox {
 
 
 	public void setUpPane() {
-
-//		System.out.println("setUpPane");
-//		Button play = new Button(SelectionProperties.getString("Play")){{
-//			this.setOnAction(e -> play());
-//		}};
-
+		
 		Button create = new Button(SelectionProperties.getString("Create")) {{
 			this.setOnAction(e -> create());
 		}};
+		
+		Button join = new Button(SelectionProperties.getString("Join")) {{
+			this.setOnAction(e -> create());
+		}};
 
-		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but refactored by ncp14
+		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but heavily refactored and changed by ncp14
 		setButtonAnimationColors();
 		create.styleProperty().bind(generateStringBinding());
+		join.styleProperty().bind(generateStringBinding());
 
 		final Timeline timeline = new Timeline(
 				new KeyFrame(Duration.ZERO, new KeyValue(color, startColor)),
@@ -125,14 +127,29 @@ public class StartupSelectionScreen extends VBox {
 				create();
 			}
 		});
+		
+		join.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				timeline.play();
+				create();
+			}
+		});
 
 		// Create a rotating rectangle and set it as the graphic for the button
 		final Rectangle rotatingRect = new Rectangle(5, 5, 10, 6);
 		rotatingRect.setFill(Color.CORNFLOWERBLUE);
 		Pane rectHolder = generateShape(rotatingRect);
 		RotateTransition rotate = generateRotation(rotatingRect);
+		
+		// Create a rotating rectangle and set it as the graphic for the button
+	    final Rectangle rotatingRect2 = new Rectangle(5, 5, 10, 6);
+	    rotatingRect2.setFill(Color.CORNFLOWERBLUE);
+		Pane rectHolder2 = generateShape(rotatingRect2);
+		RotateTransition rotate2 = generateRotation(rotatingRect2);
 
 		create.setGraphic(rectHolder);
+		join.setGraphic(rectHolder2);
 
 		// make the rectangle rotate when the mouse hovers over the button
 		create.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -149,6 +166,21 @@ public class StartupSelectionScreen extends VBox {
 				rotatingRect.setRotate(0);
 			}
 		});
+		
+		join.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rotate2.play();
+			}
+		});
+
+		join.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rotate2.stop();
+				rotatingRect2.setRotate(0);
+			}
+		});
 
 
 //		Button edit = new Button(SelectionProperties.getString("EditGame")){{
@@ -161,6 +193,7 @@ public class StartupSelectionScreen extends VBox {
 		this.setMinHeight(400);
 		//this.getChildren().addAll(play, create, edit);
 		this.getChildren().add(create);
+		this.getChildren().add(join);
 	}
 
 	private void play() {
