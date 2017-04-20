@@ -7,10 +7,10 @@
  * @author Stone Mathers
  * Created 4/11/2017
  */
-package frontend.worldview.grid.layout_delegate.actual_classes;
+package frontend.worldview.grid.layout_delegate.classes;
 
 import backend.grid.CoordinateTuple;
-import frontend.worldview.grid.actual_classes.oldclasses.CellView;
+import frontend.worldview.grid.classes.oldclasses.CellView;
 import frontend.worldview.grid.layout_delegate.interfaces.GridLayoutDelegate;
 
 class HexagonalGridLayoutDelegate implements GridLayoutDelegate {

@@ -4,7 +4,7 @@
  * @author Stone Mathers
  * Created 4/11/2017
  */
-package frontend.worldview.grid.layout_delegate.actual_classes;
+package frontend.worldview.grid.layout_delegate.classes;
 
 import javafx.scene.shape.Polygon;
 

@@ -1,4 +1,4 @@
-package frontend.worldview.grid.actual_classes.oldclasses;
+package frontend.worldview.grid.classes.oldclasses;
 
 import backend.grid.CoordinateTuple;
 import frontend.View;

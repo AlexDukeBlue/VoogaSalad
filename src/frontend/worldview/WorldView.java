@@ -4,7 +4,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
-import frontend.worldview.grid.actual_classes.oldclasses.GridView;
+import frontend.worldview.grid.classes.oldclasses.GridView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;

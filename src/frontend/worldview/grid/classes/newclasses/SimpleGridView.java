@@ -1,8 +1,8 @@
-package frontend.worldview.grid.actual_classes.newclasses;
+package frontend.worldview.grid.classes.newclasses;
 
-import frontend.worldview.grid.external_interfaces.GridViewExternalInterface;
-import frontend.worldview.grid.external_interfaces.GridViewObserved;
-import frontend.worldview.grid.external_interfaces.GridViewObserver;
+import frontend.worldview.grid.interfaces.GridViewExternalInterface;
+import frontend.worldview.grid.interfaces.GridViewObserved;
+import frontend.worldview.grid.interfaces.GridViewObserver;
 
 class SimpleGridView implements GridViewExternalInterface, GridViewObserved{
 

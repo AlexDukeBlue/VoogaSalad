@@ -1,4 +1,4 @@
-package frontend.worldview.grid.actual_classes.oldclasses;
+package frontend.worldview.grid.classes.oldclasses;
 
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
@@ -8,7 +8,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
-import frontend.worldview.grid.layout_delegate.actual_classes.GridLayoutDelegateFactory;
+import frontend.worldview.grid.layout_delegate.classes.GridLayoutDelegateFactory;
 import frontend.worldview.grid.layout_delegate.interfaces.GridLayoutDelegate;
 import javafx.scene.Group;
 import javafx.scene.Node;

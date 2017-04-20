@@ -1,6 +1,6 @@
-package frontend.worldview.grid.layout_delegate.actual_classes;
+package frontend.worldview.grid.layout_delegate.classes;
 
-import frontend.worldview.grid.actual_classes.oldclasses.CellView;
+import frontend.worldview.grid.classes.oldclasses.CellView;
 import frontend.worldview.grid.layout_delegate.interfaces.GridLayoutDelegate;
 
 public class GridLayoutDelegateFactory implements GridLayoutDelegate{

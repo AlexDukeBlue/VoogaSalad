@@ -1,4 +1,4 @@
-package frontend.worldview.grid.external_interfaces;
+package frontend.worldview.grid.interfaces;
 
 public interface GridViewObserver {
 	

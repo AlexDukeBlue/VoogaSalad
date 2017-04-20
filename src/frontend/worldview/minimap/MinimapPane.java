@@ -1,7 +1,7 @@
-package frontend.worldview;
+package frontend.worldview.minimap;
 
 import frontend.util.BaseUIManager;
-import frontend.worldview.grid.actual_classes.oldclasses.GridView;
+import frontend.worldview.grid.classes.oldclasses.GridView;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
