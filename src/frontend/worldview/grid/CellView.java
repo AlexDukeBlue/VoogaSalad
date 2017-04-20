@@ -176,8 +176,8 @@ public class CellView extends BaseUIManager<Parent> {
 	}
 
 	private void mouseOver(){
-		System.out.println(unitList.size());
-		System.out.println("mousing over");
+//		System.out.println(unitList.size());
+//		System.out.println("mousing over");
 		if (unitList.size() != 0){
 			for (int i = 0; i < unitList.size(); i++){
 //				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 30);;

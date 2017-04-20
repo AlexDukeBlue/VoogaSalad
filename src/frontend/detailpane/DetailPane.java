@@ -120,9 +120,9 @@ public class DetailPane extends BaseUIManager<Region> {
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection("DefensiveModifiers", unit.getDefensiveModifiers(), content);
-		addString("Hit Points", unit.getHitPoints().toString());
-		addString("Move Points", unit.getMovePoints().toString());
-		addString("Move Pattern", unit.getMovePattern().toString());
+//		addString("Hit Points", unit.getHitPoints().toString());
+//		addString("Move Points", unit.getMovePoints().toString());
+//		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
 

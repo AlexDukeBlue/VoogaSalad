@@ -1,5 +1,9 @@
 package backend.cell;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
+
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
@@ -7,10 +11,7 @@ import backend.unit.Unit;
 import backend.util.GameplayState;
 import backend.util.ModifiableTriggeredEffect;
 import backend.util.TriggeredEffect;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
+import backend.util.VoogaEntity;
 
 /**
  * @author Created by th174 on 3/28/2017.
@@ -51,4 +52,6 @@ public interface Cell extends Serializable {
 	public ModifiableCell addOccupants(Unit... units);
 
 	public ModifiableCell removeOccupants(Unit... units);
+	
+	public void addVoogaEntity(VoogaEntity voogaEntity);
 }

@@ -120,8 +120,10 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 			//You can die in peace now
 			if (shouldCopy) {
 				getController().sendModifier((AuthoringGameState gameState) -> {
-					Unit newUnit = gameState.getTemplateByCategory("unit").getByName(unitClickedName).copy();
-					gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
+					VoogaEntity entity = gameState.getTemplateByName(unitClickedName).copy();
+//					gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
+					System.out.println(entity);
+					gameState.getGrid().get(cellClickedLocation).addVoogaEntity(entity);
 					return gameState;
 				});
 			} else {
