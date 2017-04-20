@@ -197,7 +197,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void createGame(ReadonlyGameplayState state, boolean editable) {
-		Controller control = new CommunicationController(System.getProperty("user.name"), state, null);
+		Controller control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100, state, null);
 		View view = new View(control);
 		// myClient.setGameState(state);
 		// control.setClient(myClient);
