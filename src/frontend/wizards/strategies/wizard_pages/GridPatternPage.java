@@ -37,6 +37,7 @@ public class GridPatternPage extends BaseWizardPage{
 		Button submit = new Button("Submit");
 		submit.setOnMouseClicked(event -> {if(!textField.getText().equals(null)) grid = new WizardGrid(Integer.parseInt(textField.getText()), vb); vb.getChildren().add(grid.getPane());});
 		vb.getChildren().add(new HBox(textField, submit));
+		canNextWritable().setValue(true); //line change here
 	}
 
 	@Override

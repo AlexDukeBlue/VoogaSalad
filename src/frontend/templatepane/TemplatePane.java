@@ -78,9 +78,9 @@ public class TemplatePane extends BaseUIManager<VBox> {
 				@Override
 				public void update(Observable o, Object arg) {
 					getController().addUnitTemplates((ModifiableUnit)arg);
+					System.out.println(((ModifiableUnit)arg).getImgPath());
 				}
 			});
-			updateTemplatePane();
 		});
 		pane.getChildren().add(addUnitButton);
 	}
@@ -108,7 +108,13 @@ public class TemplatePane extends BaseUIManager<VBox> {
 			Label spriteName = new Label(sprite.getFormattedName());
 			spriteContent.getChildren().add(spriteName);
 			if (sprite.getImgPath() != null) {
-				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));
+				System.out.println(sprite.getImgPath());
+				Image spriteImage = new Image(
+						getClass()
+						.getClassLoader()
+						.getResourceAsStream(
+								sprite
+								.getImgPath()));
 				ImageView imageNode = new ImageView(spriteImage);
 				imageNode.setFitHeight(40);
 				imageNode.setFitWidth(40);
@@ -155,11 +161,12 @@ public class TemplatePane extends BaseUIManager<VBox> {
 		terrains = terrainsIn;
 	}
 
-	public void updateTemplatePane(){
+	public void update(){
 		updateTerrains(getController().getTerrainTemplates());
 		updateUnits(getController().getUnitTemplates());
 		updatePane();
 	}
+
 
 	@Override
 	public VBox getObject() {
