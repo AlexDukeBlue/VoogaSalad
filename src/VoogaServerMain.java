@@ -14,8 +14,6 @@ public class VoogaServerMain {
 	public static final int TIMEOUT = 20;
 
 	public static void main(String[] args) throws Exception {
-		//TODO
-		@SuppressWarnings("unused")
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		XMLSerializer<GameplayState> serializer = new XMLSerializer<>();
 //		JSONSerializer<ImmutableGameState> serializer = new JSONSerializer<>(GameState.class);

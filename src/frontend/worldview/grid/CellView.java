@@ -147,22 +147,15 @@ public class CellView extends BaseUIManager<Parent> {
 		group.getChildren().add(polygon);
 		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
 		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
+		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
 				unitList.add(unitView);
-				unitView.getObject().setFitWidth(polygon.getBoundsInParent().getHeight() * .9);
-				unitView.getObject().setFitHeight(polygon.getBoundsInParent().getHeight() * .9);
-				unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2);
-				unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2);
-//				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth() / 2));
-//				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight() / 2));
-//				polygon.boundsInLocalProperty().addListener(change -> {
-//					unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
-//					unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
-//				});
-//				unitView.getObject().fitWidthProperty().set(polygon.boundsInLocalProperty().get().getWidth() * UNIT_SCALE);
-//				unitView.getObject().fitHeightProperty().set(polygon.boundsInLocalProperty().get().getHeight() * UNIT_SCALE);
+				unitView.getObject().setFitWidth(size);
+				unitView.getObject().setFitHeight(size);
+				unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
+				unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}

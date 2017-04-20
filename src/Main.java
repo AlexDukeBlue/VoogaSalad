@@ -16,7 +16,7 @@ public class Main extends Application {
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		StartupScreen starter = new StartupScreen(primaryStage, 700.0, 700.0);
 		primaryStage.setScene(new Scene(starter.getPrimaryPane()));
-		primaryStage.setResizable(false);
+		primaryStage.setResizable(true);
 		primaryStage.show();
 	}
 }

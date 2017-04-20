@@ -36,7 +36,7 @@ public class CommunicationController implements Controller {
 	private final String playerName;
 	private final CountDownLatch waitForReady;
 
-	public CommunicationController(String username, ReadonlyGameplayState gameState, Collection<Updatable> thingsToUpdate) {
+	public CommunicationController(String username, ReadonlyGameplayState gameState, int port, Collection<Updatable> thingsToUpdate) {
 		this.thingsToUpdate = new CopyOnWriteArrayList<>();
 		this.waitForReady = new CountDownLatch(1);
 		if (thingsToUpdate != null) {
@@ -44,7 +44,7 @@ public class CommunicationController implements Controller {
 		}
 		this.playerName = username;
 		try {
-			mClient = new ObservableClient<>("127.0.0.1", 10023, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
+			mClient = new ObservableClient<>("127.0.0.1", port, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
 			mClient.addListener(this::updateGameState);
 			setGameState(gameState);
 			Executors.newSingleThreadExecutor().submit(mClient);

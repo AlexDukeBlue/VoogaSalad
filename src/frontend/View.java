@@ -25,11 +25,13 @@ import frontend.detailpane.DetailPane;
 import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
+import frontend.worldview.MinimapPane;
 import frontend.worldview.WorldView;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
@@ -38,7 +40,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-public class View extends BaseUIManager<Region> implements Observer{
+public class View extends BaseUIManager<Region> implements Observer {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private Stage myStage;
 
@@ -47,7 +49,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 	}
 
 	private boolean editable;
-	private BorderPane myBorder;
+	private SplitPane outerSplitPane;
+	private SplitPane innerSplitPane;
 	private VoogaMenuBar menuBar;
 	private WorldView worldView;
 	private DetailPane detailPane;
@@ -57,12 +60,12 @@ public class View extends BaseUIManager<Region> implements Observer{
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
 	}
-	
-	public View(Controller controller, Stage stage){
+
+	public View(Controller controller, Stage stage) {
 		this(controller, stage, true);
 	}
-	
-	public View(Controller controller, Stage stage, boolean editable){
+
+	public View(Controller controller, Stage stage, boolean editable) {
 		super(controller);
 		myStage = stage;
 		this.editable = editable;
@@ -76,8 +79,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;		
-		if(editable){
+		this.editable = editable;
+		if (editable) {
 			enterAuthorMode();
 			menuBar.setEditable(true);
 		} else {
@@ -87,27 +90,29 @@ public class View extends BaseUIManager<Region> implements Observer{
 	}
 	
 	public void toggleRulesPane(){
-		if(myBorder.getLeft() == null){
-			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
-		} else {
-			myBorder.setLeft(null);
-		}
+//		if(myBorder.getLeft() == null){
+//			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
+//		} else {
+//			myBorder.setLeft(null);
+//		}
 	}
 	
 	public void toggleTemplatePane(){
-		if(myBorder.getRight() == null){
-			myBorder.setRight(tempPane.getObject());
-		} else {
-			myBorder.setRight(null);
-		}
+		//TODO
+//		if(myBorder.getRight() == null){
+//			myBorder.setRight(tempPane.getObject());
+//		} else {
+//			myBorder.setRight(null);
+//		}
 	}
 	
 	public void toggleDetailsPane(){
-		if(myBorder.getBottom() == null){
-			myBorder.setBottom(detailPane.getObject());
-		} else {
-			myBorder.setBottom(null);
-		}
+		//TODO
+//		if(myBorder.getBottom() == null){
+//			myBorder.setBottom(detailPane.getObject());
+//		} else {
+//			myBorder.setBottom(null);
+//		}
 	}
 	
 	public void toggleStatsPane(){
@@ -116,13 +121,13 @@ public class View extends BaseUIManager<Region> implements Observer{
 
 	@Override
 	public Region getObject() {
-		return myBorder;
+		return outerSplitPane;
 	}
-	
+
 	/**
 	 * @return The Stage that the View is being displayed on
 	 */
-	public Stage getStage(){
+	public Stage getStage() {
 		return myStage;
 	}
 
@@ -151,10 +156,12 @@ public class View extends BaseUIManager<Region> implements Observer{
 
 	private void initBorderPane() {
 		initPanes();
-		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
-				detailPane.getObject(), null);
-		//myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
-		//		detailPane.getObject(), rulesPane.getObject());											//TODO For when rules pane is created
+		innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
+		innerSplitPane.setDividerPositions(1);
+		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
+		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPositions(.8);
+		outerSplitPane.setOrientation(Orientation.VERTICAL);
 	}
 
 	/**
@@ -170,17 +177,18 @@ public class View extends BaseUIManager<Region> implements Observer{
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
+		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane().getObject(), getController()).getObject());
 		tempPane.addObserver(this);
 		//rulesPane = new RulesPane(); 				//TODO For when rules pane is created
 	}
-	
+
 	/**
 	 * Performs all necessary actions to convert the View into development mode.
 	 * If the View is already in development mode, then nothing visually
 	 * changes.
 	 */
 	private void enterAuthorMode() {
-		addSidePanes();
+//		addSidePanes();
 	}
 
 	/**
@@ -188,24 +196,23 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		removeSidePanes();
+
+//		removeSidePanes();
 	}
 
-	/**
-	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
-	 */
-	private void addSidePanes() {
-		myBorder.setRight(tempPane.getObject());
-		//myBorder.setLeft(rulesPane.getObject());			//TODO For when rules pane is created
-	}
-
-	/**
-	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
-	 */
-	private void removeSidePanes() {
-		myBorder.setRight(null);
-		myBorder.setLeft(null);
-	}
+//	/**
+//	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
+//	 */
+//	private void addSidePanes() {
+//		innerSplitPane.getItems().add(tempPane.getObject());
+//	}
+//
+//	/**
+//	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
+//	 */
+//	private void removeSidePanes() {
+//		innerSplitPane.getItems().remove(tempPane.getObject());
+//	}
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {
@@ -216,11 +223,11 @@ public class View extends BaseUIManager<Region> implements Observer{
 
 	@Override
 	public void update(Observable observable, Object object) {
-		if (observable == tempPane){
-			detailPane.setContent((VoogaEntity)object, "");
-			worldView.templateClicked((VoogaEntity)object);
+		if (observable == tempPane) {
+			detailPane.setContent((VoogaEntity) object, "");
+			worldView.templateClicked((VoogaEntity) object);
 		}
 	}
 
-	
+
 }
