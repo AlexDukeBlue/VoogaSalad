@@ -148,7 +148,6 @@ public class CellView extends BaseUIManager<Parent> {
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
-
 				unitList.add(unitView);
 				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth() / 2));
 				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight() / 2));
@@ -188,7 +187,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private void mouseOut(){
 		if (unitList.size() != 0){
 			for (int i = 0; i < unitList.size(); i++){
-				unitList.get(i).getObject().setTranslateY(i * 10);;
+				unitList.get(i).getObject().setTranslateY(i * 10);
 			}
 		}
 	}

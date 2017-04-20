@@ -20,16 +20,14 @@ public class MinimapPane extends BaseUIManager<Region> {
 		this.gridView = gridView;
 		this.gridViewPortBounds = new Rectangle();
 		gridViewPortBounds.setFill(Color.TRANSPARENT);
-		gridViewPortBounds.setStroke(Color.WHITE);
-		gridViewPortBounds.setStrokeWidth(1);
+		gridViewPortBounds.setStroke(Color.RED);
+		gridViewPortBounds.setStrokeWidth(2);
 		view = new Pane(gridViewPortBounds);
 		ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
 			double viewportWidth = gridView.getViewportBounds().getWidth();
-			double hoffset = calcOffset(gridView.getHmin(), gridView.getHmax(), gridView.getHvalue(), gridView.getContent().getLayoutBounds().getWidth(), viewportWidth);
+			double hoffset = calcOffset(gridView.getHmin(), gridView.getHmax(), gridView.getHvalue(), gridView.getContent().getBoundsInParent().getWidth(), viewportWidth);
 			double viewportHeight = gridView.getViewportBounds().getHeight();
-			double voffset = calcOffset(gridView.getVmin(), gridView.getVmax(), gridView.getVvalue(), gridView.getContent().getLayoutBounds().getHeight(), viewportHeight);
-			System.out.printf("Offset: [%.1f, %.1f] width: %.1f height: %.1f %n",
-					hoffset, voffset, viewportWidth, viewportHeight);
+			double voffset = calcOffset(gridView.getVmin(), gridView.getVmax(), gridView.getVvalue(), gridView.getContent().getBoundsInParent().getHeight(), viewportHeight);
 			gridViewPortBounds.setX(hoffset / 10);
 			gridViewPortBounds.setY(voffset / 10);
 			gridViewPortBounds.setWidth(viewportWidth / 10);

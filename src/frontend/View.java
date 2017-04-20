@@ -171,7 +171,6 @@ public class View extends BaseUIManager<Region> implements Observer{
 	@Override
 	public void update(Observable observable, Object object) {
 		if (observable == tempPane){
-			System.out.println(observable);
 			detailPane.setContent((VoogaEntity)object, "");
 			worldView.templateClicked((VoogaEntity)object);
 		}
