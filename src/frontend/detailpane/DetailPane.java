@@ -129,7 +129,7 @@ public class DetailPane extends BaseUIManager<Region> {
 	private void setActiveAbilititesContent(Unit unit) {
 		AAContent = addCollection("Active Abilities", unit.getActiveAbilities(), AAContent);
 		Label AALabel = new Label(AAContent);
-		System.out.print(AAContent);
+//		System.out.print(AAContent);
 		AAPane.getChildren().add(AALabel);
 		
 	}

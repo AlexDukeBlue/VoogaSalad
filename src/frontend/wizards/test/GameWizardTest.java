@@ -15,8 +15,8 @@ public class GameWizardTest extends Application {
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		GameWizard newGameWizard = new GameWizard();
 		newGameWizard.addObserver((observable, object) -> {
-			System.out.println("Observable: " + observable.toString());
-			System.out.println("Object: " + object.toString());
+//			System.out.println("Observable: " + observable.toString());
+//			System.out.println("Object: " + object.toString());
 		});
 	}
 
