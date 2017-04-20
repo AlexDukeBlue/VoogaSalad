@@ -136,6 +136,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 */
 	public void update() {
 		this.getPolygon().setOnMouseEntered(e -> mouseOver());
+		this.getPolygon().setOnMouseExited(e -> mouseOut());
 		group.getChildren().clear();
 		if (getController().getGrid().getImgPath().length() < 1) {
 			polygon.setFill(new ImagePattern(View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
@@ -174,11 +175,11 @@ public class CellView extends BaseUIManager<Parent> {
 	}
 
 	private void mouseOver() {
-//		System.out.println(unitList.size());
-//		System.out.println("mousing over");
+		System.out.println(unitList.size());
+		System.out.println("mousing over");
 		if (unitList.size() != 0) {
 			for (int i = 0; i < unitList.size(); i++) {
-//				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 30);;
+				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 60);;
 			}
 		}
 	}
@@ -186,7 +187,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private void mouseOut() {
 		if (unitList.size() != 0) {
 			for (int i = 0; i < unitList.size(); i++) {
-				unitList.get(i).getObject().setTranslateY(i * 10);
+				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() + i * 60);;
 			}
 		}
 	}
