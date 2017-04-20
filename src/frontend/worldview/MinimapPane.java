@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 
 /**
  * @author Created by th174 on 4/19/17.
@@ -25,6 +26,7 @@ public class MinimapPane extends BaseUIManager<Region> {
 		gridViewPortBounds.setFill(Color.TRANSPARENT);
 		gridViewPortBounds.setStroke(Color.RED);
 		gridViewPortBounds.setStrokeWidth(2);
+		gridViewPortBounds.setStrokeType(StrokeType.INSIDE);
 		Rectangle minimap = new Rectangle(scrollPane.getContent().getBoundsInLocal().getWidth() * MINIMAP_SCALE, scrollPane.getContent().getBoundsInLocal().getHeight() * MINIMAP_SCALE);
 		minimap.setMouseTransparent(true);
 		view = new Pane();
