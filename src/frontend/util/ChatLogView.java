@@ -42,9 +42,9 @@ public class ChatLogView extends BaseUIManager {
 		HEADER = String.format("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----Joined [No place like 127.0.0.1]'s chat room!----\n\n---%s----\n\n", Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
 		textArea = initTextArea();
-		pane.setCenter(textArea);
 		pane.setBottom(initTextInputBox());
 		mediaPlayer = new MediaPlayer(new Media(Paths.get("src/resources/steam_message_sound.mp3").toUri().toString()));
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));
 	}
 
 	@Override
@@ -82,6 +82,7 @@ public class ChatLogView extends BaseUIManager {
 
 	private HBox initTextInputBox() {
 		HBox bottomBox = new HBox();
+		//TODO: Resourcebundlify this as well
 		bottomBox.getStyleClass().add("hbox");
 		bottomBox.setAlignment(Pos.BASELINE_CENTER);
 		ComboBox<ChatMessage.AccessLevel> chatModeChooser = initComboBox();
@@ -93,6 +94,7 @@ public class ChatLogView extends BaseUIManager {
 		TextField textContentInputField = new TextField();
 		textContentInputField.setPrefWidth(600);
 		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
+		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
 		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField);
 		return bottomBox;
 	}
