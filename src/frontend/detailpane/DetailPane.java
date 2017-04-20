@@ -137,9 +137,15 @@ public class DetailPane extends BaseUIManager<Region> {
 	}
 
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
-		content = checkForNull(label, content);
-		for (Object o : collection) {
-			content += o + "\n";
+
+		content = checkForNull(label,content);
+		for (VoogaEntity o : collection) {
+		content += o + "\n";
+					if (o.getImgPath() != null) {
+						Image oImage = new Image(o.getImgPath());
+						ImageView oIV = new ImageView(oImage);
+						content += oIV;
+					}
 		}
 		content += "\n";
 		return content;
