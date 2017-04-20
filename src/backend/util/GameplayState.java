@@ -1,6 +1,7 @@
 package backend.util;
 
 import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.Resultant;
 import backend.grid.GameBoard;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
@@ -21,9 +22,9 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private final List<String> playerNames;
 	private final Map<String, ImmutablePlayer> playerList;
 	private final Map<String, Team> teams;
-	private final Collection<ResultQuadPredicate> objectives;
-	private final Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> turnActions;
-	private final Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements;
+	private final Collection<Resultant> objectives;
+	private final Map<Event, Collection<Actionable>> turnActions;
+	private final Collection<Requirement> turnRequirements;
 	private int turnNumber;
 	private int currentPlayerNumber;
 	private volatile GameBoard grid;
@@ -34,9 +35,9 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	private GameplayState(String name, GameBoard grid, int turnNumber, Map<String, Team> teams,
-	                      Collection<ResultQuadPredicate> objectives,
-	                      Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> turnActions,
-	                      Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements,
+	                      Collection<Resultant> objectives,
+	                      Map<Event, Collection<Actionable>> turnActions,
+	                      Collection<Requirement> turnRequirements,
 	                      String description, String imgPath, Random random) {
 		super(name, description, imgPath);
 		this.grid = grid;
@@ -133,23 +134,23 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
-	public Collection<ResultQuadPredicate> getObjectives() {
+	public Collection<Resultant> getObjectives() {
 		return Collections.unmodifiableCollection(objectives);
 	}
 
 	@Override
-	public Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> getTurnActions() {
+	public Map<Event, Collection<Actionable>> getTurnActions() {
 		return Collections.unmodifiableMap(turnActions);
 	}
 
 	@Override
-	public Collection<BiPredicate<ImmutablePlayer, GameplayState>> getTurnRequirements() {
+	public Collection<Requirement> getTurnRequirements() {
 		return Collections.unmodifiableCollection(turnRequirements);
 	}
 
 	@Override
 	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.test(getCurrentPlayer(), this));
+		return turnRequirements.stream().allMatch(e -> e.getBiPredicate().test(getCurrentPlayer(), this));
 	}
 
 	public GameplayState messageAll(String message, ImmutablePlayer sender) {
@@ -188,11 +189,11 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return this;
 	}
 
-	GameplayState addObjectives(ResultQuadPredicate... objectives) {
+	GameplayState addObjectives(Resultant... objectives) {
 		return addObjectives(Arrays.asList(objectives));
 	}
 
-	GameplayState addObjectives(Collection<ResultQuadPredicate> objectives) {
+	GameplayState addObjectives(Collection<Resultant> objectives) {
 		this.objectives.addAll(objectives);
 		return this;
 	}
@@ -206,12 +207,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
+	GameplayState addTurnActions(Event event, Collection<Actionable> actions) {
 		turnActions.merge(event, new ArrayList<>(actions), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
+	GameplayState addTurnActions(Event event, Actionable... actions) {
 		return addTurnActions(event, Arrays.asList(actions));
 	}
 
@@ -225,12 +226,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return removeTurnActions(event, Arrays.asList(actions));
 	}
 
-	GameplayState addTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
+	GameplayState addTurnRequirements(Collection<Requirement> turnRequirements) {
 		this.turnRequirements.addAll(turnRequirements);
 		return this;
 	}
 
-	GameplayState addTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
+	GameplayState addTurnRequirements(Requirement... turnRequirements) {
 		return addTurnRequirements(Arrays.asList(turnRequirements));
 	}
 

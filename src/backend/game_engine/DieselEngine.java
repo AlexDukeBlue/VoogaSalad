@@ -1,6 +1,7 @@
 package backend.game_engine;
 
 import backend.game_engine.ResultQuadPredicate.Result;
+import backend.player.ImmutablePlayer;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.io.XMLSerializer;
@@ -57,18 +58,36 @@ public class DieselEngine implements GameEngine {
 
 	private void checkTurnRules(GameplayState state) {
 		if (!state.getTurnRequirements().parallelStream()
-				.allMatch(e -> e.test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied()) state.endTurn();
+				.allMatch(e -> e.getBiPredicate().test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied()) state.endTurn();
 	}
 
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getCurrentPlayer(), state)));
+		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.getBiComsumer().accept(state.getCurrentPlayer(), state)));
 	}
 
 	private void checkObjectives(GameplayState state) {
 		state.getObjectives().parallelStream().forEach(e -> {
-			Result result = e.determine(state.getCurrentPlayer(), state);
-			result.accept(state.getCurrentPlayer(), state);
+			Result result = e.getResultQuad().determine(state.getCurrentPlayer(), state);
+			result.accept(state.getCurrentPlayer(), this);
 		});
+	}
+
+	@Override
+	public Object handleWin(ImmutablePlayer player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object handleLoss(ImmutablePlayer player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object handleTie() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
