@@ -4,6 +4,7 @@ import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import frontend.wizards.strategies.wizard_pages.AbilitiesAdderPage;
+import frontend.wizards.strategies.wizard_pages.GridPatternPage;
 import frontend.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.wizards.strategies.wizard_pages.TerrainMovePointPage;
 
@@ -19,6 +20,7 @@ public class UnitStrategy extends BaseStrategy<Unit> {
 	private ImageNameDescriptionPage imageNameDescriptionPage;
 	private AbilitiesAdderPage abilitiesAdderPage;
 	private TerrainMovePointPage terrainMovePointPage;
+	private GridPatternPage gridPatternPage;
 
 	public UnitStrategy(AuthoringGameState gameState) {
 		initialize(gameState);
@@ -36,11 +38,12 @@ public class UnitStrategy extends BaseStrategy<Unit> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		System.out.println("instantiating new unit...");
+//		System.out.println("instantiating new unit...");
 		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Unit");
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
 		terrainMovePointPage = new TerrainMovePointPage(gameState);
-		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage);
+		gridPatternPage = new GridPatternPage();
+		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
 	}
 
 }

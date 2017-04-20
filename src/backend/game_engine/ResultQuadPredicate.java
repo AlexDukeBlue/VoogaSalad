@@ -9,24 +9,40 @@ import java.util.function.BiConsumer;
 
 @FunctionalInterface
 public interface ResultQuadPredicate extends Serializable {
+	/**
+	 * Whatever the lambda expression that determine is set to, it has to return an Enum of Result.
+	 * 
+	 * @param player
+	 * @param state
+	 * @return
+	 */
 	Result determine(ImmutablePlayer player, GameplayState state);
 
 	enum Result {
-		//        WIN((player, gameState) -> state.handleWin(player)),
-//        LOSE((player, gameState) -> state.handleLoss(player)),
-//        TIE((player, gameState) -> state.handleTie()),
-		NONE((player, gameState) -> doNothing());
+		WIN((player, engine) -> engine.handleWin(player)),
+        LOSE((player, engine) -> engine.handleLoss(player)),
+        TIE((player, engine) -> engine.handleTie()),
+		NONE((player, engine) -> doNothing());
 
-		private BiConsumer<ImmutablePlayer, GameplayState> toExecute;
+		private BiConsumer<ImmutablePlayer, GameEngine> toExecute;
 
-		Result(BiConsumer<ImmutablePlayer, GameplayState> executeThis) {
+		Result(BiConsumer<ImmutablePlayer, GameEngine> executeThis) {
 			toExecute = executeThis;
 		}
 
-		public void accept(ImmutablePlayer player, GameplayState state) {
-			toExecute.accept(player, state);
+		/**
+		 * The lambda expression given to each Result value is accepted. The lambda defers action to the state.
+		 * 
+		 * @param player
+		 * @param engine
+		 */
+		public void accept(ImmutablePlayer player, GameEngine engine) {
+			toExecute.accept(player, engine);
 		}
 
+		/**
+		 * Does literally nothing for the NONE option.
+		 */
 		private static void doNothing() {
 		}
 	}

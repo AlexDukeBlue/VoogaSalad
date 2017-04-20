@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 3/30/2017.
  */
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit, Serializable {
+	private volatile static int totalUnits = 0;
+	private static final String MAGIC = "-\\d{4,}$";
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("X")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
@@ -44,12 +46,13 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	private Cell currentCell;
 	private boolean isVisible;
 
-	public ModifiableUnit(String unitTemplateName) {
-		this(unitTemplateName, Collections.emptySet(), null, null, Collections.emptyMap(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), "", "");
+	public ModifiableUnit(String unitName) {
+		this(unitName, Collections.emptySet(), null, null, Collections.emptyMap(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), "", "");
 	}
 
-	public ModifiableUnit(String unitTemplateName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends Terrain, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
-		super(unitTemplateName, unitDescription, imgPath);
+	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends Terrain, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
+		super(unitName.replaceAll(MAGIC, "") + String.format("-%04d", totalUnits), unitDescription, imgPath);
+		totalUnits++;
 		this.faction = faction;
 		this.terrainMoveCosts = new HashMap<>(moveCosts);
 		this.stats = new UnitStats(unitStats.parallelStream().map(UnitStat::copy).collect(Collectors.toList()));
@@ -66,6 +69,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	@Override
+	public String getFormattedName() {
+		return getName().replaceAll(MAGIC, "");
+	}
+
+	@Override
 	public ModifiableUnit copy() {
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
@@ -74,7 +82,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public void moveTo(Cell destinationCell, GameplayState gameState) {
 		processTriggers(Event.UNIT_PRE_MOVEMENT, gameState);
 		currentCell.leave(this, gameState);
-		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().getOrDefault(destinationCell.getTerrain(),destinationCell.getTerrain().getDefaultMoveCost()));
+		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().getOrDefault(destinationCell.getTerrain(), destinationCell.getTerrain().getDefaultMoveCost()));
 		destinationCell.arrive(this, gameState);
 		processTriggers(Event.UNIT_POST_MOVEMENT, gameState);
 	}
@@ -313,13 +321,12 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public static Collection<ModifiableUnit> getPredefinedUnits() {
 		return getPredefined(ModifiableUnit.class);
 	}
-	
+
 	/**
-	@Deprecated
-	public static void addToPredefinedUnits(ModifiableUnit newUnit) {
-		Collection<ModifiableUnit> current = getPredefined(ModifiableUnit.class);
-		current.add(newUnit);
-		
-	}
-	***/
+	 @Deprecated public static void addToPredefinedUnits(ModifiableUnit newUnit) {
+	 Collection<ModifiableUnit> current = getPredefined(ModifiableUnit.class);
+	 current.add(newUnit);
+
+	 }
+	 ***/
 }

@@ -8,7 +8,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class StartupScreen {
-	private Scene primaryScene;
+	public static final double DEFAULT_WIDTH = 700;
+	public static final double DEFAULT_HEIGHT = 700;
+	
 	private BorderPane primaryPane;
 	private double width, height;
 	private StartupSelectionScreen selectionScreen;
@@ -23,11 +25,7 @@ public class StartupScreen {
 		this.stage = stage;
 		this.width = width;
 		this.height = height;
-		this.initPrimaryScene();
-	}
-
-	private void initPrimaryScene() {
-		this.primaryScene = new Scene(this.initPrimaryPane());
+		this.primaryPane = initPrimaryPane();
 	}
 
 	private BorderPane initPrimaryPane() {
@@ -48,7 +46,4 @@ public class StartupScreen {
 		return primaryPane;
 	}
 
-	public Scene getPrimaryScene() {
-		return primaryScene;
-	}
 }

@@ -10,8 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 /**
  * WorldView sets up and displays a Region object that contains a grid of
@@ -26,8 +24,6 @@ import javafx.scene.shape.Rectangle;
  */
 public class WorldView extends BaseUIManager<Region> {
 
-	private StackPane centerStackPane;
-	private AnchorPane centerAnchorPane;
 	private GridView myGrid;
 	private BorderPane borderPane;
 
@@ -53,6 +49,9 @@ public class WorldView extends BaseUIManager<Region> {
 		return borderPane;
 	}
 
+	public GridView getGridPane() {
+		return myGrid;
+	}
 //	/**
 //	 * Sets the action that is performed when a cell is clicked.
 //	 * 
@@ -65,17 +64,13 @@ public class WorldView extends BaseUIManager<Region> {
 
 	public void templateClicked(VoogaEntity voogaEntity) {
 		myGrid.setTemplateEntityToAdd(voogaEntity);
+
 	}
 
 	private void initialize() {
 		borderPane = new BorderPane();
 		myGrid = new GridView(getController());
-		centerAnchorPane = new AnchorPane();
-		Rectangle test = new Rectangle(200, 200, Color.TRANSPARENT);
-		test.setStroke(Color.RED);
-		test.setStrokeWidth(1);
-		AnchorPane.setTopAnchor(test, 0.0);
-		AnchorPane.setRightAnchor(test, 0.0);
+		AnchorPane centerAnchorPane = new AnchorPane();
 		ChatLogView chatLogView = new ChatLogView(getController());
 		borderPane.setOnKeyPressed(event -> {
 			if (event.getCode().equals(KeyCode.ENTER)) {
@@ -84,9 +79,9 @@ public class WorldView extends BaseUIManager<Region> {
 		});
 		AnchorPane.setBottomAnchor(chatLogView.getObject(), 10.0);
 		AnchorPane.setLeftAnchor(chatLogView.getObject(), 0.0);
-		centerAnchorPane.getChildren().addAll(test, chatLogView.getObject());
+		centerAnchorPane.getChildren().addAll(chatLogView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
-		centerStackPane = new StackPane();
+		StackPane centerStackPane = new StackPane();
 		centerStackPane.getChildren().add(myGrid.getObject());
 		centerStackPane.getChildren().add(centerAnchorPane);
 		borderPane.setCenter(centerStackPane);

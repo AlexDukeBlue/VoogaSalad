@@ -5,12 +5,10 @@ import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.ModifiableTriggeredEffect;
-import backend.util.TriggeredEffect;
+import backend.util.*;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import static backend.util.ImmutableVoogaObject.getPredefined;
 
@@ -79,6 +77,14 @@ public class ModifiableCell implements Cell {
 	public transient static final ModifiableCell BASIC_SQUARE_FORTIFIED = new ModifiableCell()
 			.setShape(Shape.SQUARE)
 			.setTerrain(ModifiableTerrain.FORTIFIED);
+
+	private static final Map<Class<? extends VoogaEntity>,BiConsumer<VoogaEntity,ModifiableCell>> actionOnClass = new HashMap<>();
+
+	static {
+		actionOnClass.put(ModifiableTerrain.class, (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain));
+		actionOnClass.put(ModifiableUnit.class, ((unit,cell) -> cell.addOccupants((Unit)unit)));
+		actionOnClass.put(Ability.class, ((ability,cell) -> cell.getTerrain().addAbility((Ability)ability)));
+	}
 
 	private final Map<String, Unit> occupants;
 	private Shape shape;
@@ -229,5 +235,13 @@ public class ModifiableCell implements Cell {
 	@Deprecated
 	public static Collection<ModifiableCell> getPredefinedCells() {
 		return getPredefined(ModifiableCell.class);
+	}
+
+	@Override
+	public void addVoogaEntity(VoogaEntity voogaEntity) {
+//		System.out.println("Class: " + voogaEntity.getClass().toString());
+//		System.out.println("Map: " + actionOnClass);
+//		System.out.println("Action: " + actionOnClass.get(voogaEntity.getClass()));
+		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
 	}
 }

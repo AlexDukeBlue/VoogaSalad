@@ -16,8 +16,8 @@ public class UnitWizardTest extends Application {
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		UnitWizard newUnitWizard = new UnitWizard(new AuthoringGameState("Test Game State"));
 		newUnitWizard.addObserver((observable, object) -> {
-			System.out.println("Observable: " + observable.toString());
-			System.out.println("Object: " + object.toString());
+//			System.out.println("Observable: " + observable.toString());
+//			System.out.println("Object: " + object.toString());
 		});
 	}
 
