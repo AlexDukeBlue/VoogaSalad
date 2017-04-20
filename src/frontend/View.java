@@ -71,6 +71,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 		initBorderPane();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
+		update();
 	}
 
 	/**
@@ -196,5 +197,9 @@ public class View extends BaseUIManager<Region> implements Observer {
 		}
 	}
 
-
+	@Override
+	public void update() {
+		super.update();
+		this.setEditable(getController().getAuthoringGameState().isAuthoringMode());
+	}
 }

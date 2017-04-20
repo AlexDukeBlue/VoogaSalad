@@ -1,7 +1,6 @@
 package frontend.startup;
 
-import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
+import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import controller.CommunicationController;
 import controller.Controller;
@@ -28,7 +27,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import util.net.ObservableServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +36,6 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
 
 /**
  * The intro screen containing a "create new game" button.
@@ -199,50 +196,33 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	private void create(int port) {
-//		startServer(port);
+		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
+		XMLSerializer<ReadonlyGameplayState> xmlSerializer = new XMLSerializer<>();
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver((o, arg) -> {
-			createGame((AuthoringGameState) arg, port, true);
-//			stage.close();
+			createGame();
+			control.startServer((ReadonlyGameplayState) arg,port,xmlSerializer,xmlSerializer, Duration.ofSeconds(30));
 		});
-
 	}
 
 	private void join(int port) {
-//		startServer(port);
+		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		GameWizard wiz = new GameWizard();
 		wiz.show();
-		wiz.addObserver((o, arg) -> {
-			createGame((AuthoringGameState) arg, port, true);
-		});
+		wiz.addObserver((o, arg) -> createGame());
 
 	}
 
 	private void load(int port) {
-//		startServer(port);
+		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		GameWizard wiz = new GameWizard();
-		wiz.addObserver((o, arg) -> createGame((AuthoringGameState) arg, port, true));
+		wiz.addObserver((o, arg) -> createGame());
 		wiz.show();
 	}
 
-	public void startServer(int portNumber) {
-		XMLSerializer<GameplayState> serializer = new XMLSerializer<>();
-		//JSONSerializer<ImmutableGameState> serializer = new JSONSerializer<>(GameState.class);
-		try {
-			ObservableServer<GameplayState> voogaServer = new ObservableServer<>(null, portNumber, serializer, serializer, Duration.ofSeconds(TIMEOUT));
-			Executors.newSingleThreadExecutor().submit(voogaServer);
-			System.out.println("Server started successfully on port number " + portNumber + "...");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void createGame(AuthoringGameState state, int port, boolean editable) {
-		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100, state, port, null);
+	private void createGame() {
 		View view = new View(control, stage);
-		view.setEditable(editable);
 		stage.setScene(new Scene(view.getObject()));
 	}
 

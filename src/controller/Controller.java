@@ -11,8 +11,11 @@ import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import frontend.util.Updatable;
+import util.io.Serializer;
+import util.io.Unserializer;
 import util.net.Modifier;
 
+import java.time.Duration;
 import java.util.Collection;
 
 /**
@@ -21,6 +24,10 @@ import java.util.Collection;
 public interface Controller {
 
 	GameBoard getGrid();
+
+	void startClient(String host, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout);
+
+	void startServer(ReadonlyGameplayState gameState, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout);
 
 	Cell getCell(CoordinateTuple tuple);
 

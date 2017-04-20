@@ -11,16 +11,20 @@ import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
-import backend.util.io.XMLSerializer;
 import frontend.util.Updatable;
 import javafx.application.Platform;
+import util.io.Serializer;
+import util.io.Unserializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
+import util.net.ObservableServer;
 
 import java.time.Duration;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
@@ -31,28 +35,42 @@ import java.util.concurrent.Executors;
  */
 public class CommunicationController implements Controller {
 	private AuthoringGameState mGameState;
+	private Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private Collection<Updatable> thingsToUpdate;
 	private final String playerName;
 	private final CountDownLatch waitForReady;
 
-	public CommunicationController(String username, ReadonlyGameplayState gameState, int port, Collection<Updatable> thingsToUpdate) {
-		this.thingsToUpdate = new CopyOnWriteArrayList<>();
+	public CommunicationController(String username){
+		this(username, Collections.emptyList());
+	}
+
+	public CommunicationController(String username, Collection<Updatable> thingsToUpdate) {
+		this.thingsToUpdate = new CopyOnWriteArrayList<>(thingsToUpdate);
 		this.waitForReady = new CountDownLatch(1);
-		if (thingsToUpdate != null) {
-			this.thingsToUpdate.addAll(thingsToUpdate);
-		}
 		this.playerName = username;
+		this.executor = Executors.newCachedThreadPool();
+	}
+
+	public void startClient(String host, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout) {
 		try {
-			mClient = new ObservableClient<>("127.0.0.1", port, new XMLSerializer<>(), new XMLSerializer<>(), Duration.ofSeconds(60));
+			mClient = new ObservableClient<>(host, port, serializer, unserializer, timeout);
 			mClient.addListener(this::updateGameState);
-			setGameState(gameState);
-			Executors.newSingleThreadExecutor().submit(mClient);
-			//login with username
+			executor.execute(mClient);
 			sendModifier((AuthoringGameState state) -> {
-				state.addPlayer(new Player(username, "Test player", ""));
+				state.addPlayer(new Player(playerName, "Test player", ""));
 				return state;
 			});
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void startServer(ReadonlyGameplayState gameState, int port, Serializer<ReadonlyGameplayState> serializer, Unserializer<ReadonlyGameplayState> unserializer, Duration timeout) {
+		try {
+			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, serializer, unserializer, timeout);
+			executor.execute(server);
+			System.out.println("Server started successfully...");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -171,14 +189,13 @@ public class CommunicationController implements Controller {
 			return state;
 		});
 	}
-	
-	
-	
+
+
 	@Override
 	public Collection<? extends Team> getTeamTemplates() {
 		return (Collection<? extends Team>) mGameState.getTemplateByCategory("team").getAll();
 	}
-	
+
 	@Override
 	public void addTeamTemplates(Team... teamTemplates) {
 		sendModifier((AuthoringGameState state) -> {
@@ -186,7 +203,7 @@ public class CommunicationController implements Controller {
 			return state;
 		});
 	}
-	
+
 	@Override
 	public void removeTeamTemplates(Team... teamTemplates) {
 		sendModifier((AuthoringGameState state) -> {
@@ -194,8 +211,7 @@ public class CommunicationController implements Controller {
 			return state;
 		});
 	}
-	
-	
+
 
 	@Override
 	public void addToUpdated(Updatable updatable) {
