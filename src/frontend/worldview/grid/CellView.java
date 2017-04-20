@@ -45,7 +45,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private final Group group;
 	private final ContextMenu contextMenu;
 	private final UnitViewDelegate delegate;
-	private ArrayList<UnitView> unitList = new ArrayList<UnitView>();
+	private ArrayList<UnitView> unitList;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -62,6 +62,7 @@ public class CellView extends BaseUIManager<Parent> {
 		group = new Group();
 		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
+		unitList =  new ArrayList<UnitView>();
 		update();
 	}
 
@@ -163,7 +164,9 @@ public class CellView extends BaseUIManager<Parent> {
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
+				if (!unitList.contains(unitView)){
 				unitList.add(unitView);
+				}
 				toolTip(unitView);
 				unitView.getObject().setFitWidth(size);
 				unitView.getObject().setFitHeight(size);
@@ -204,6 +207,7 @@ public class CellView extends BaseUIManager<Parent> {
 		System.out.println("mousing over");
 		if (unitList.size() > 1) {
 			for (int i = 0; i < unitList.size(); i++) {
+				System.out.println(i);
 				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - (i - 1) * 60);;
 			}
 		}
