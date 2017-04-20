@@ -4,6 +4,22 @@
 package frontend.menubar;
 
 
+import backend.cell.Terrain;
+import backend.unit.Unit;
+import backend.util.io.XMLSerializer;
+import controller.Controller;
+import frontend.View;
+import frontend.startup.StartupScreen;
+import frontend.util.BaseUIManager;
+import frontend.util.ComponentFactory;
+import frontend.wizards.TerrainWizard;
+import frontend.wizards.UnitWizard;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,31 +27,6 @@ import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
-
-import backend.cell.Terrain;
-import backend.unit.Unit;
-import backend.util.AuthoringGameState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.io.XMLSerializer;
-import controller.CommunicationController;
-import controller.Controller;
-import frontend.startup.StartupScreen;
-import frontend.View;
-import frontend.util.BaseUIManager;
-import frontend.util.ComponentFactory;
-import frontend.wizards.GameWizard;
-import frontend.wizards.TerrainWizard;
-import frontend.wizards.UnitWizard;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 
 /**
@@ -97,10 +88,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		
 		setLanguageItem = factory.getMenu(getLanguage().getValue().getString("SetLanguage"));
 		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
-			MenuItem menuItem = new MenuItem(name){{
-				setOnAction(e -> getLanguage().setValue(bundle));
-			}};
-			
+			MenuItem menuItem = new MenuItem(name);
+			menuItem.setOnAction(e -> getLanguage().setValue(bundle));
 			setLanguageItem.getItems().add(menuItem);
 		});
 		
@@ -111,10 +100,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			setThemeItem.getItems().add(menuItem);
 		});
 		
-		rulesPaneItem = factory.getMenuItem("Show/Hide Rules Pane", e -> {}); ////TODO implement, resource file
-		templatePaneItem = factory.getMenuItem("Show/Hide Template Pane", e -> {}); ////TODO implement, resource file
-		detailsPaneItem = factory.getMenuItem("Show/Hide Details Pane", e -> {}); ////TODO implement, resource file
-		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> {}); ////TODO implement, resource file
+		rulesPaneItem = factory.getMenuItem("Show/Hide Rules Pane", e -> myView.toggleRulesPane()); //TODO resource file
+		templatePaneItem = factory.getMenuItem("Show/Hide Template Pane", e -> myView.toggleTemplatePane()); //TODO resource file
+		detailsPaneItem = factory.getMenuItem("Show/Hide Details Pane", e -> myView.toggleDetailsPane()); //TODO resource file
+		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> myView.toggleStatsPane()); //TODO resource file
 		editModeItem = factory.getMenuItem("Edit Mode", e -> getView().setEditable(true)); //TODO resource file, operate through controller
 		playModeItem = factory.getMenuItem("Play Mode", e -> getView().setEditable(false)); //TODO resource file, operate through controller
 		
@@ -195,7 +184,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		}
 	}
 
-	private void load() {
+	private void load() {  //TODO Make work
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 		fileChooser.setTitle("Open Resource File");

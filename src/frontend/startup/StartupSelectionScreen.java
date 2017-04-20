@@ -12,8 +12,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -21,7 +19,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -41,7 +38,6 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 /**
@@ -71,22 +67,17 @@ public class StartupSelectionScreen extends VBox {
 	public void setButtonAnimationColors() {
 		startColor = Color.web("#e08090");
 		endColor = Color.web("#80e090");
-		color = new SimpleObjectProperty<Color>(startColor);
+		color = new SimpleObjectProperty<>(startColor);
 	}
 
 	// This method returns a string that represents the color above as a JavaFX CSS function:
 	// -fx-body-color: rgb(r, g, b);
 	// with r, g, b integers between 0 and 255
 	public StringBinding generateStringBinding() {
-		StringBinding cssColorSpec = Bindings.createStringBinding(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return String.format("-fx-body-color: rgb(%d, %d, %d);",
-						(int) (256 * color.get().getRed()),
-						(int) (256 * color.get().getGreen()),
-						(int) (256 * color.get().getBlue()));
-			}
-		}, color);
+		StringBinding cssColorSpec = Bindings.createStringBinding(() -> String.format("-fx-body-color: rgb(%d, %d, %d);",
+				(int) (256 * color.get().getRed()),
+				(int) (256 * color.get().getGreen()),
+				(int) (256 * color.get().getBlue())), color);
 		return cssColorSpec;
 	}
 
@@ -125,31 +116,22 @@ public class StartupSelectionScreen extends VBox {
 				new KeyFrame(javafx.util.Duration.ZERO, new KeyValue(color, startColor)),
 				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color, endColor)));
 
-		create.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				timeline.play();
-				String port = popupWindow();
-				create(Integer.parseInt(port));
-			}
+		create.setOnAction(event -> {
+			timeline.play();
+			String port = popupWindow();
+			create(Integer.parseInt(port));
 		});
 
-		join.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				timeline.play();
-				String port = popupWindow();
-				join(Integer.parseInt(port));
-			}
+		join.setOnAction(event -> {
+			timeline.play();
+			String port = popupWindow();
+			join(Integer.parseInt(port));
 		});
 
-		load.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				timeline.play();
-				String port = popupWindow();
-				load(Integer.parseInt(port));
-			}
+		load.setOnAction(event -> {
+			timeline.play();
+			String port = popupWindow();
+			load(Integer.parseInt(port));
 		});
 
 		// Create a rotating rectangle and set it as the graphic for the button
@@ -174,56 +156,21 @@ public class StartupSelectionScreen extends VBox {
 		load.setGraphic(rectHolder3);
 
 		// make the rectangle rotate when the mouse hovers over the button
-		create.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rotate.play();
-			}
+		create.setOnMouseEntered(event -> rotate.play());
+		create.setOnMouseExited(event -> {
+			rotate.stop();
+			rotatingRect.setRotate(0);
 		});
-
-		create.setOnMouseExited(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rotate.stop();
-				rotatingRect.setRotate(0);
-			}
+		join.setOnMouseEntered(event -> rotate2.play());
+		join.setOnMouseExited(event -> {
+			rotate2.stop();
+			rotatingRect2.setRotate(0);
 		});
-
-		join.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rotate2.play();
-			}
+		load.setOnMouseEntered(event -> rotate3.play());
+		load.setOnMouseExited(event -> {
+			rotate3.stop();
+			rotatingRect3.setRotate(0);
 		});
-
-		join.setOnMouseExited(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rotate2.stop();
-				rotatingRect2.setRotate(0);
-			}
-		});
-
-		load.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rotate3.play();
-			}
-		});
-
-		load.setOnMouseExited(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rotate3.stop();
-				rotatingRect3.setRotate(0);
-			}
-		});
-
-
-//		Button edit = new Button(SelectionProperties.getString("EditGame")){{
-//			this.setOnAction(e -> edit());
-//		}};
-
 		this.setPadding(new Insets(30, 10, 10, 10));
 		this.setSpacing(10);
 		this.setMinWidth(450);
@@ -240,8 +187,7 @@ public class StartupSelectionScreen extends VBox {
 		dialog.setHeaderText("Enter a port number for your server");
 		dialog.setContentText("Port number:");
 		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) return result.get();
-		else return "10000";
+		return result.orElse("10000");
 	}
 
 	private void play() {

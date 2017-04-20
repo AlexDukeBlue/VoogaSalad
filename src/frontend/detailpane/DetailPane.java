@@ -1,6 +1,4 @@
 /**
- * 
- * 
  * @author Faith Rodriguez
  * Created 4/9/2017
  */
@@ -27,13 +25,13 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author Faith Rodriguez
- * 
+ *
  *         This class displays details about the units, as well as lets the user
  *         change aspects of a sprite and activate a unit or terrain's
  *         abilities.
- * 
+ *
  *         This class is dependent on TemplatePane and CellView classes for its
  *         ActionEvents to work effectively
  *
@@ -48,39 +46,40 @@ public class DetailPane extends BaseUIManager<Region> {
 	private String content = "";
 	private String AAContent = "";
 	private WorldView worldView;
-	
+
 	private double PANE_WIDTH = 1000;
-	
+
 
 	public DetailPane(WorldView worldView) {
 		this.worldView = worldView;
-		paneSetup();	
+		paneSetup();
 		setLabel();
 		clearContent();
 
 	}
-	
+
 	private void paneSetup() {
 		fullPane.setPrefWidth(PANE_WIDTH);
 		fullPane.setPadding(new Insets(5, 5, 5, 5));
 		fullPane.getChildren().add(imagePane);
 		fullPane.getChildren().add(infoPane);
 		fullPane.getChildren().add(AAPane);
-		imagePane.setPrefWidth(fullPane.getPrefWidth()/4);
-		infoPane.setPrefWidth(fullPane.getPrefWidth()/2);
-		AAPane.setPrefWidth(fullPane.getPrefWidth()/4);
+		fullPane.setMinHeight(0);
+		imagePane.setPrefWidth(fullPane.getPrefWidth() / 4);
+		infoPane.setPrefWidth(fullPane.getPrefWidth() / 2);
+		AAPane.setPrefWidth(fullPane.getPrefWidth() / 4);
 	}
-	
+
 	private void setLabel() {
 		spriteInfo = new Label(content);
 		infoPane.getChildren().add(spriteInfo);
 		spriteInfo.setWrapText(true);
 	}
-	
+
 	/**
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
-	 * 
+	 *
 	 * @param sprite
 	 *            A sprite that has just been clicked on in the TemplatePane
 	 * @param spriteType
@@ -91,7 +90,7 @@ public class DetailPane extends BaseUIManager<Region> {
 		setImageContent(sprite);
 		setInfoContent(sprite, spriteType);
 	}
-	
+
 	private void setImageContent(VoogaEntity sprite) {
 		Text name = new Text(sprite.getName() + "\n");
 		name.setFont(Font.font(20));
@@ -100,29 +99,28 @@ public class DetailPane extends BaseUIManager<Region> {
 		spriteImage.setFitHeight(50);
 		spriteImage.setFitWidth(50);
 		imagePane.getChildren().add(name);
-		imagePane.getChildren().add(spriteImage);		
+		imagePane.getChildren().add(spriteImage);
 	}
-	
+
 	private void setInfoContent(VoogaEntity sprite, String spriteType) {
 		addString("Description", sprite.getDescription());
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
 			setActiveAbilititesContent((ModifiableUnit) sprite);
-		}
-		else {
+		} else {
 			newSpriteInfo = new Label(setTerrainContent((ModifiableTerrain) sprite));
 		}
 		spriteInfo = newSpriteInfo;
 		setLabel();
 	}
-	
+
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection("DefensiveModifiers", unit.getDefensiveModifiers(), content);
-//		addString("Hit Points", unit.getHitPoints().toString());
-//		addString("Move Points", unit.getMovePoints().toString());
-//		addString("Move Pattern", unit.getMovePattern().toString());
+		addString("Hit Points", unit.getHitPoints().toString());
+		addString("Move Points", unit.getMovePoints().toString());
+		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
 
@@ -131,25 +129,30 @@ public class DetailPane extends BaseUIManager<Region> {
 		Label AALabel = new Label(AAContent);
 		AAPane.getChildren().add(AALabel);
 	}
-	
+
 	private String setTerrainContent(Terrain terrain) {
 		addString("Default Move Cost", ((Integer) terrain.getDefaultMoveCost()).toString());
 		addString("Default Defense Modifier", ((Integer) terrain.getDefaultMoveCost()).toString());
 		return content;
 	}
-	
+
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
+
 		content = checkForNull(label,content);
-		for (Object o : collection) {
+		for (VoogaEntity o : collection) {
 		content += o + "\n";
-					
+					if (o.getImgPath() != null) {
+						Image oImage = new Image(o.getImgPath());
+						ImageView oIV = new ImageView(oImage);
+						content += oIV;
+					}
 		}
 		content += "\n";
 		return content;
 	}
-	
+
 	private void addString(String label, String value) {
-		content = checkForNull(label,content);
+		content = checkForNull(label, content);
 		content += value + "\n";
 	}
 
@@ -168,10 +171,10 @@ public class DetailPane extends BaseUIManager<Region> {
 		AAPane.getChildren().clear();
 		imagePane.getChildren().clear();
 	}
-	
+
 	private String checkForNull(String label, String content) {
 		if (label != null) {
-			content += label + ": "; 
+			content += label + ": ";
 		}
 		return content;
 	}

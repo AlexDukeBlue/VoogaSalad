@@ -8,14 +8,19 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
+import sun.security.krb5.internal.ktab.KeyTabInputStream;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a
@@ -53,6 +58,23 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 		myScrollPane.setOnZoom(event -> {
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
+		});
+		
+		 myScrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+		        @Override
+		        public void handle(ScrollEvent event) {
+		            if (event.isControlDown()) {
+		            	cellViewObjects.setScaleX(cellViewObjects.getScaleX() + event.getDeltaY()/500);
+						cellViewObjects.setScaleY(cellViewObjects.getScaleY() + event.getDeltaY()/500);
+		                event.consume();
+		            }
+		        }
+		    });
+		
+		myScrollPane.setOnScroll(event -> {
+			if(event.isControlDown()){
+				
+			}
 		});
 		myLayoutManager = new LayoutManagerFactory();
 		populateCellViews();

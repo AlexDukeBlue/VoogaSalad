@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * @author Created by th174 on 3/31/2017.
  */
-public class ChatLogView extends BaseUIManager {
+public class ChatLogView extends BaseUIManager<BorderPane> {
 	//TODO ResourceBundlify
 	private final String HEADER;
 	private final BorderPane pane;
@@ -41,14 +40,16 @@ public class ChatLogView extends BaseUIManager {
 		super(controller);
 		HEADER = String.format("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----Joined [No place like 127.0.0.1]'s chat room!----\n\n---%s----\n\n", Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
+		pane.setMaxSize(1000, 600);
 		textArea = initTextArea();
 		pane.setBottom(initTextInputBox());
 		mediaPlayer = new MediaPlayer(new Media(Paths.get("src/resources/steam_message_sound.mp3").toUri().toString()));
+		pane.getStylesheets().clear();
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));
 	}
 
 	@Override
-	public Region getObject() {
+	public BorderPane getObject() {
 		return pane;
 	}
 
@@ -65,6 +66,7 @@ public class ChatLogView extends BaseUIManager {
 		textArea.setEditable(false);
 		textArea.setWrapText(true);
 		textArea.positionCaret(textArea.getText().length());
+		textArea.setPrefWidth(pane.getPrefWidth());
 		return textArea;
 	}
 
@@ -85,14 +87,17 @@ public class ChatLogView extends BaseUIManager {
 		//TODO: Resourcebundlify this as well
 		bottomBox.getStyleClass().add("hbox");
 		bottomBox.setAlignment(Pos.BASELINE_CENTER);
+		bottomBox.setPrefWidth(pane.getPrefWidth());
 		ComboBox<ChatMessage.AccessLevel> chatModeChooser = initComboBox();
+		bottomBox.setMaxWidth(Double.MAX_VALUE);
 		Label label1 = new Label("To:");
 		label1.setMinWidth(30);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
 		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
 		TextField textContentInputField = new TextField();
-		textContentInputField.setPrefWidth(600);
+		textContentInputField.setMinWidth(200);
+		textContentInputField.setPrefWidth(1000);
 		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
 		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField);

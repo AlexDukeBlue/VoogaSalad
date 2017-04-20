@@ -20,7 +20,7 @@ import javafx.scene.layout.StackPane;
  * languages, css stylesheets, and can be updated by the controller through the
  * updatable interface.
  *
- * @author Dylan Peters
+ * @author Dylan Peters, Timmy Huang
  */
 public class WorldView extends BaseUIManager<Region> {
 
@@ -52,19 +52,9 @@ public class WorldView extends BaseUIManager<Region> {
 	public GridView getGridPane() {
 		return myGrid;
 	}
-//	/**
-//	 * Sets the action that is performed when a cell is clicked.
-//	 * 
-//	 * @param consumer
-//	 *            consumer to execute when the cell is clicked
-//	 */
-//	public void setOnCellClick(Consumer<CellView> consumer) {
-//		myGrid.setOnCellClick(consumer);
-//	}
 
 	public void templateClicked(VoogaEntity voogaEntity) {
 		myGrid.setTemplateEntityToAdd(voogaEntity);
-
 	}
 
 	private void initialize() {
@@ -79,6 +69,7 @@ public class WorldView extends BaseUIManager<Region> {
 		});
 		AnchorPane.setBottomAnchor(chatLogView.getObject(), 10.0);
 		AnchorPane.setLeftAnchor(chatLogView.getObject(), 0.0);
+		AnchorPane.setRightAnchor(chatLogView.getObject(), 10.0);
 		centerAnchorPane.getChildren().addAll(chatLogView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
 		StackPane centerStackPane = new StackPane();

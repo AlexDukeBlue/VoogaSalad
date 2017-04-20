@@ -6,14 +6,19 @@ import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -40,7 +45,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private final Group group;
 	private final ContextMenu contextMenu;
 	private final UnitViewDelegate delegate;
-	private ArrayList<UnitView> unitList = new ArrayList<UnitView>();
+	private ArrayList<UnitView> unitList;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -57,6 +62,7 @@ public class CellView extends BaseUIManager<Parent> {
 		group = new Group();
 		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
+		unitList =  new ArrayList<UnitView>();
 		update();
 	}
 
@@ -135,7 +141,8 @@ public class CellView extends BaseUIManager<Parent> {
 	 * determine its validity
 	 */
 	public void update() {
-		this.getPolygon().setOnMouseEntered(e -> mouseOver());
+		this.getPolygon().setOnMouseEntered(e -> mouseIn());
+		this.getPolygon().setOnMouseExited(e -> mouseOut());
 		group.getChildren().clear();
 		if (getController().getGrid().getImgPath().length() < 1) {
 			polygon.setFill(new ImagePattern(View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
@@ -145,13 +152,22 @@ public class CellView extends BaseUIManager<Parent> {
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
 		group.getChildren().add(polygon);
+		
+		
+		
+		
+		
+		//should be messing with the unitview not the polygon!!
 		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
 		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
 		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
+				if (!unitList.contains(unitView)){
 				unitList.add(unitView);
+				}
+				toolTip(unitView);
 				unitView.getObject().setFitWidth(size);
 				unitView.getObject().setFitHeight(size);
 				unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
@@ -173,25 +189,54 @@ public class CellView extends BaseUIManager<Parent> {
 		return cellLocation;
 	}
 
-	private void mouseOver() {
-//		System.out.println(unitList.size());
-//		System.out.println("mousing over");
-		if (unitList.size() != 0) {
+	/*
+	 * creates a popup that gives information about the unit
+	 */
+	private void toolTip(UnitView uv){
+		Tooltip tt = new Tooltip();
+		tt.setText("Position: (" + polygon.getLayoutX() + "," + polygon.getLayoutY() + ")" 
+				+ "\nName: " + uv.getUnitName());
+		Tooltip.install(uv.getObject(), tt);
+		System.out.println("toolTip");
+		
+	}
+	
+	//this isn't working properly
+	private void mouseIn() {
+		System.out.println(unitList.size());
+		System.out.println("mousing over");
+		if (unitList.size() > 1) {
 			for (int i = 0; i < unitList.size(); i++) {
-//				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 30);;
+				System.out.println(i);
+				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - (i - 1) * 60);;
 			}
 		}
 	}
 
 	private void mouseOut() {
-		if (unitList.size() != 0) {
+		if (unitList.size() > 1) {
 			for (int i = 0; i < unitList.size(); i++) {
-				unitList.get(i).getObject().setTranslateY(i * 10);
+				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() + (i - 1) * 60);;
 			}
 		}
 	}
+	
+//	private void mouseInPane(){
+////		Rectangle rect = new Rectangle();
+////		rect.setWidth(this.getObject().getLayoutBounds().getWidth());
+////		rect.setHeight(unitList.size() * 60);
+////		rect.setX(this.getX());
+////		rect.setY(this.getY() - rect.getHeight() + polygon.getLayoutBounds().getHeight());
+//		VBox vbox = new VBox();
+//		for (UnitView each : unitList){
+//			vbox.getChildren().addAll(each.getObject());
+//		}
+//		
+//		ScrollPane sp = new ScrollPane();
+//		
+//		for (int i = 0; i < unitList.size(); i++) {
+//			unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() + (i - 1) * 60);;
+//		}
+//	}
 
-	private void pushUp() {
-
-	}
 }
