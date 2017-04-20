@@ -1,6 +1,8 @@
 package frontend.worldview.grid;
 
 
+import java.util.ArrayList;
+
 import backend.grid.CoordinateTuple;
 import controller.Controller;
 import frontend.View;
@@ -38,6 +40,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private final Group group;
 	private final ContextMenu contextMenu;
 	private final UnitViewDelegate delegate;
+	private ArrayList<UnitView> unitList = new ArrayList<UnitView>();
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -57,31 +60,31 @@ public class CellView extends BaseUIManager<Parent> {
 		update();
 	}
 
-//	/**
-//	 * Sets the action that is performed when a cell is clicked.
-//	 *
-//	 * @param consumer
-//	 *            consumer to execute when the cell is clicked
-//	 */
-//	public void setOnCellClick(Consumer<CellView> consumer) {
-//		polygon.setOnMouseClicked(event -> consumer.accept(this));
-//	}
-//
-//	/**
-//	 * Adds a copy of the Sprite to the cell and sends the request to the
-//	 * controller.
-//	 *
-//	 * @param sprite
-//	 *            sprite to copy and add to the cell
-//	 */
-//	public void add(VoogaEntity sprite) {
-//		CoordinateTuple location = cellModel.getLocation();
-//		Modifier<? extends GameplayState> toSend = game -> {
-//			game.getGrid().get(location).arrive(sprite.copy(), game);
-//			return game;
-//		};
-//		getController().sendModifier(toSend);
-//	}
+	//	/**
+	//	 * Sets the action that is performed when a cell is clicked.
+	//	 *
+	//	 * @param consumer
+	//	 *            consumer to execute when the cell is clicked
+	//	 */
+	//	public void setOnCellClick(Consumer<CellView> consumer) {
+	//		polygon.setOnMouseClicked(event -> consumer.accept(this));
+	//	}
+	//
+	//	/**
+	//	 * Adds a copy of the Sprite to the cell and sends the request to the
+	//	 * controller.
+	//	 *
+	//	 * @param sprite
+	//	 *            sprite to copy and add to the cell
+	//	 */
+	//	public void add(VoogaEntity sprite) {
+	//		CoordinateTuple location = cellModel.getLocation();
+	//		Modifier<? extends GameplayState> toSend = game -> {
+	//			game.getGrid().get(location).arrive(sprite.copy(), game);
+	//			return game;
+	//		};
+	//		getController().sendModifier(toSend);
+	//	}
 
 	public double getX() {
 		return polygon.getLayoutX();
@@ -132,6 +135,7 @@ public class CellView extends BaseUIManager<Parent> {
 	 * determine its validity
 	 */
 	public void update() {
+		this.getPolygon().setOnMouseEntered(e -> mouseOver());
 		group.getChildren().clear();
 		if (getController().getGrid().getImgPath().length() < 1) {
 			polygon.setFill(new ImagePattern(View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
@@ -144,6 +148,8 @@ public class CellView extends BaseUIManager<Parent> {
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
+
+				unitList.add(unitView);
 				unitView.getObject().layoutXProperty().bind(polygon.layoutXProperty().subtract(polygon.boundsInLocalProperty().getValue().getWidth() / 2));
 				unitView.getObject().layoutYProperty().bind(polygon.layoutYProperty().subtract(polygon.boundsInLocalProperty().getValue().getHeight() / 2));
 				polygon.boundsInLocalProperty().addListener(change -> {
@@ -167,5 +173,27 @@ public class CellView extends BaseUIManager<Parent> {
 	 */
 	CoordinateTuple getCoordinateTuple() {
 		return cellLocation;
+	}
+
+	private void mouseOver(){
+		System.out.println(unitList.size());
+		System.out.println("mousing over");
+		if (unitList.size() != 0){
+			for (int i = 0; i < unitList.size(); i++){
+//				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 30);;
+			}
+		}
+	}
+
+	private void mouseOut(){
+		if (unitList.size() != 0){
+			for (int i = 0; i < unitList.size(); i++){
+				unitList.get(i).getObject().setTranslateY(i * 10);;
+			}
+		}
+	}
+
+	private void pushUp(){
+
 	}
 }
