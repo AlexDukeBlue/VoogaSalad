@@ -52,6 +52,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends Terrain, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
 		super(unitName.replaceAll(MAGIC, "") + String.format("-%04d", totalUnits), unitDescription, imgPath);
+		totalUnits++;
 		this.faction = faction;
 		this.terrainMoveCosts = new HashMap<>(moveCosts);
 		this.stats = new UnitStats(unitStats.parallelStream().map(UnitStat::copy).collect(Collectors.toList()));
