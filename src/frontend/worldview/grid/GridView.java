@@ -11,15 +11,12 @@ import frontend.util.BaseUIManager;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
-import sun.security.krb5.internal.ktab.KeyTabInputStream;
 
 /**
  * Holds a grid to be displayed in the development and player GUI inside a
@@ -112,17 +109,14 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
 			String unitClickedName = this.unitClickedName;
 			if (shouldCopy) {
-				System.out.println("local 93: " + getController().getAuthoringGameState().getTemplateByName(unitClickedName));
 				getController().sendModifier((AuthoringGameState gameState) -> {
 					VoogaEntity entity = gameState.getTemplateByName(unitClickedName).copy();
 					gameState.getGrid().get(cellClickedLocation).addVoogaEntity(entity);
 					return gameState;
 				});
 			} else {
-				System.out.println("101: " + getController().getGrid().get(unitClickedLocation).getOccupants());
 				getController().sendModifier((GameplayState gameState) -> {
 					Unit unitToMove = gameState.getGrid().get(unitClickedLocation).getOccupantByName(unitClickedName);
-					System.out.println("104: " + gameState.getGrid().get(unitClickedLocation).getOccupants());
 					unitToMove.moveTo(gameState.getGrid().get(cellClickedLocation), gameState);
 					return gameState;
 				});

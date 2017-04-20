@@ -8,22 +8,24 @@ import backend.unit.properties.*;
 import backend.util.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/30/2017.
  */
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
-	private transient static final String MAGIC = "-(\\d{4,}$)";
+	private transient static final Pattern MAGIC = Pattern.compile("-(\\d{4,})$");
 	//TODO ResourceBundlify
-	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("X")
+	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
 			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
 			.setImgPath("resources/images/x.png")
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.addActiveAbilities(ActiveAbility.SWORD)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
-	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("O")
+	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
 			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6))
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
@@ -67,12 +69,14 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public String getFormattedName() {
-		return getName().replaceAll(MAGIC, "");
+		return getName().split("-")[0];
 	}
 
 	@Override
 	public ModifiableUnit copy() {
-		setName(getName().m);
+		Matcher m = MAGIC.matcher(getName());
+		int id = m.find() ? Integer.parseInt(m.group(0)) : 0;
+		setName(m.replaceAll(id + 1 + ""));
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
 

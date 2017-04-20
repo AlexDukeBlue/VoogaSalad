@@ -33,6 +33,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -50,7 +51,6 @@ public class View extends BaseUIManager<Region> implements Observer {
 
 	private boolean editable;
 	private SplitPane outerSplitPane;
-	private SplitPane innerSplitPane;
 	private VoogaMenuBar menuBar;
 	private WorldView worldView;
 	private DetailPane detailPane;
@@ -89,16 +89,16 @@ public class View extends BaseUIManager<Region> implements Observer {
 			menuBar.setEditable(false);
 		}
 	}
-	
-	public void toggleRulesPane(){
+
+	public void toggleRulesPane() {
 //		if(myBorder.getLeft() == null){
 //			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
 //		} else {
 //			myBorder.setLeft(null);
 //		}
 	}
-	
-	public void toggleTemplatePane(){
+
+	public void toggleTemplatePane() {
 		//TODO
 //		if(myBorder.getRight() == null){
 //			myBorder.setRight(tempPane.getObject());
@@ -106,8 +106,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 //			myBorder.setRight(null);
 //		}
 	}
-	
-	public void toggleDetailsPane(){
+
+	public void toggleDetailsPane() {
 		//TODO
 //		if(myBorder.getBottom() == null){
 //			myBorder.setBottom(detailPane.getObject());
@@ -115,8 +115,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 //			myBorder.setBottom(null);
 //		}
 	}
-	
-	public void toggleStatsPane(){
+
+	public void toggleStatsPane() {
 		//TODO
 	}
 
@@ -157,12 +157,11 @@ public class View extends BaseUIManager<Region> implements Observer {
 
 	private void placePanes() {
 		initPanes();
-		innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
+		SplitPane innerSplitPane = new SplitPane(worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane().getObject(), getController()).getObject(), tempPane.getObject()));
 		innerSplitPane.setDividerPositions(1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
-		outerSplitPane.setDividerPosition(0, 0);
-		outerSplitPane.setDividerPosition(1, .8);
+		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPositions(.8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 	}
 
@@ -179,7 +178,6 @@ public class View extends BaseUIManager<Region> implements Observer {
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
-		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane().getObject(), getController()).getObject());
 		tempPane.addObserver(this);
 		//rulesPane = new RulesPane(); 				//TODO For when rules pane is created
 	}

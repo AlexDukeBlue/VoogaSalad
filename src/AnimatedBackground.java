@@ -5,8 +5,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -116,15 +114,11 @@ protected void confFX()
     this.bot_test = new Button("CHANGE POSITIONS");
     this.bot_test.setAlignment(Pos.CENTER);
 
-    this.bot_test.setOnAction(new EventHandler<ActionEvent>() 
-    {
-        public void handle(ActionEvent e) 
+    this.bot_test.setOnAction(e -> {
+        for(Node hexagono : grp_hexagons.getChildren())
         {
-            for(Node hexagono : grp_hexagons.getChildren())
-            {
-                hexagono.setTranslateX(Math.random() * cenario.getWidth());
-                hexagono.setTranslateY(Math.random() * cenario.getHeight());
-            }
+            hexagono.setTranslateX(Math.random() * cenario.getWidth());
+            hexagono.setTranslateY(Math.random() * cenario.getHeight());
         }
     });
 

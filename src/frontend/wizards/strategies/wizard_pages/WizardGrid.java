@@ -1,17 +1,13 @@
 package frontend.wizards.strategies.wizard_pages;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import backend.grid.CoordinateTuple;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WizardGrid {
 
@@ -34,11 +30,9 @@ public class WizardGrid {
 				if(rect.getFill().equals(Color.TRANSPARENT)){ 
 					rect.setFill(Color.GREEN);
 					coordinates.add(coordinate);
-					System.out.println(coordinates.toString());
 				}else{
 					rect.setFill(Color.TRANSPARENT);
 					coordinates.remove(coordinate);
-					System.out.println(coordinates.toString());
 				}
 				});
 			}

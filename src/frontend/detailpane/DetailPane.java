@@ -25,16 +25,14 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- *
  * @author Faith Rodriguez
- *
+ *         <p>
  *         This class displays details about the units, as well as lets the user
  *         change aspects of a sprite and activate a unit or terrain's
  *         abilities.
- *
+ *         <p>
  *         This class is dependent on TemplatePane and CellView classes for its
  *         ActionEvents to work effectively
- *
  */
 public class DetailPane extends BaseUIManager<Region> {
 
@@ -80,10 +78,8 @@ public class DetailPane extends BaseUIManager<Region> {
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
 	 *
-	 * @param sprite
-	 *            A sprite that has just been clicked on in the TemplatePane
-	 * @param spriteType
-	 *            A string revealing whether the sprite is a unit or terrain
+	 * @param sprite     A sprite that has just been clicked on in the TemplatePane
+	 * @param spriteType A string revealing whether the sprite is a unit or terrain
 	 */
 	public void setContent(VoogaEntity sprite, String spriteType) {
 		clearContent();
@@ -137,15 +133,18 @@ public class DetailPane extends BaseUIManager<Region> {
 	}
 
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
-
-		content = checkForNull(label,content);
+		content = checkForNull(label, content);
 		for (VoogaEntity o : collection) {
-		content += o + "\n";
-					if (o.getImgPath() != null) {
-						Image oImage = new Image(o.getImgPath());
-						ImageView oIV = new ImageView(oImage);
-						content += oIV;
-					}
+			content += o + "\n";
+			try {
+				if (o.getImgPath() != null) {
+					Image oImage = new Image(o.getImgPath());
+					ImageView oIV = new ImageView(oImage);
+					content += oIV;
+				}
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			}
 		}
 		content += "\n";
 		return content;

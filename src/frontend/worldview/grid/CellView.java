@@ -6,19 +6,15 @@ import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -166,13 +162,8 @@ public class CellView extends BaseUIManager<Parent> {
 			if (unit != null) {
 				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
 				if (!containsUnit(unitView)){
-					System.out.println("new " + unitView.getUnitName());
 					unitList.add(unitView);
 				}
-				for (UnitView each: unitList){
-					System.out.print(each.getUnitName());
-				}
-
 				toolTip(unitView);
 				unitView.getObject().setFitWidth(size);
 				unitView.getObject().setFitHeight(size);
@@ -203,18 +194,16 @@ public class CellView extends BaseUIManager<Parent> {
 		tt.setText("Position: (" + polygon.getLayoutX() + "," + polygon.getLayoutY() + ")" 
 				+ "\nName: " + uv.getUnitName());
 		Tooltip.install(uv.getObject(), tt);
-		System.out.println("toolTip");
-
+//		System.out.println("toolTip");
 	}
 
 	//this isn't working properly
 	private void mouseIn() {
-		System.out.println(unitList.size());
-		System.out.println("mousing over");
+//		System.out.println(unitList.size());
+//		System.out.println("mousing over");
 		if (unitList.size() > 1) {
 			for (int i = 0; i < unitList.size(); i++) {
-				System.out.println(i + " " + unitList.get(i).getUnitName());
-				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 60);;
+				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 60);
 			}
 		}
 	}

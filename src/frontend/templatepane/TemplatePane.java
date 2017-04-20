@@ -1,12 +1,8 @@
 package frontend.templatepane;
 
-import java.util.Collection;
-import java.util.Observable;
-import java.util.Observer;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
@@ -25,6 +21,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author Faith Rodriguez
@@ -110,13 +108,7 @@ public class TemplatePane extends BaseUIManager<VBox> {
 			Label spriteName = new Label(sprite.getFormattedName());
 			spriteContent.getChildren().add(spriteName);
 			if (sprite.getImgPath() != null) {
-				System.out.println(sprite.getImgPath());
-				Image spriteImage = new Image(
-						getClass()
-						.getClassLoader()
-						.getResourceAsStream(
-								sprite
-								.getImgPath()));
+				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));
 				ImageView imageNode = new ImageView(spriteImage);
 				imageNode.setFitHeight(40);
 				imageNode.setFitWidth(40);
