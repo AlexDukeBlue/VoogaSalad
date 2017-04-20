@@ -63,6 +63,7 @@ public class WorldView extends BaseUIManager<Region> {
 
 	public void templateClicked(VoogaEntity voogaEntity) {
 		myGrid.setTemplateEntityToAdd(voogaEntity);
+		
 	}
 
 	private void initialize() {

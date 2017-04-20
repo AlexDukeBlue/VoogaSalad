@@ -1,6 +1,9 @@
 package frontend.startup;
 
+import backend.grid.GridPattern;
 import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
+import backend.util.io.XMLSerializer;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
@@ -18,24 +21,31 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Duration;
+import util.net.ObservableServer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.time.Duration;
+
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
 import com.sun.javafx.geom.Shape;
 
@@ -54,6 +64,8 @@ public class StartupSelectionScreen extends VBox {
 	Color startColor;
 	Color endColor;
 	ObjectProperty<Color> color;
+	
+	private final int TIMEOUT = 20; //Timeout for server. Store this in a resource file or something
 
 	public StartupSelectionScreen(Stage stage, StartupScreen ui) { //should have some sort of parameter that is passing the UI
 		this.stage = stage;
@@ -93,7 +105,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	public RotateTransition generateRotation(Rectangle rotatingRect) {
-		final RotateTransition rotate = new RotateTransition(Duration.seconds(1), rotatingRect);
+		final RotateTransition rotate = new RotateTransition(javafx.util.Duration.seconds(1), rotatingRect);
 		rotate.setByAngle(360);
 		rotate.setCycleCount(Animation.INDEFINITE);
 		rotate.setInterpolator(Interpolator.LINEAR);
@@ -103,17 +115,9 @@ public class StartupSelectionScreen extends VBox {
 
 	public void setUpPane() {
 		
-		Button create = new Button(SelectionProperties.getString("Create")) {{
-			this.setOnAction(e -> create());
-		}};
-		
-		Button join = new Button(SelectionProperties.getString("Join")) {{
-			this.setOnAction(e -> create());
-		}};
-		
-		Button load = new Button(SelectionProperties.getString("Load")) {{
-			this.setOnAction(e -> create());
-		}};
+		Button create = new Button(SelectionProperties.getString("Create"));
+		Button join = new Button(SelectionProperties.getString("Join"));
+		Button load = new Button(SelectionProperties.getString("Load"));
 
 		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but heavily refactored and changed by ncp14
 		setButtonAnimationColors();
@@ -123,14 +127,15 @@ public class StartupSelectionScreen extends VBox {
 
 
 		final Timeline timeline = new Timeline(
-				new KeyFrame(Duration.ZERO, new KeyValue(color, startColor)),
-				new KeyFrame(Duration.seconds(1), new KeyValue(color, endColor)));
+				new KeyFrame(javafx.util.Duration.ZERO, new KeyValue(color, startColor)),
+				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color, endColor)));
 
 		create.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
-				create();
+				String port = popupWindow();
+				create(Integer.parseInt(port));
 			}
 		});
 		
@@ -138,7 +143,8 @@ public class StartupSelectionScreen extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
-				create();
+				String port = popupWindow();
+				join(Integer.parseInt(port));
 			}
 		});
 		
@@ -146,7 +152,8 @@ public class StartupSelectionScreen extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
-				create();
+				String port = popupWindow();
+				load(Integer.parseInt(port));
 			}
 		});
 
@@ -232,6 +239,17 @@ public class StartupSelectionScreen extends VBox {
 		this.getChildren().add(load);
 		this.getChildren().add(join);
 	}
+	
+	public String popupWindow()
+	{
+		TextInputDialog dialog = new TextInputDialog("Enter a number");
+		dialog.setTitle("Creating server....");
+		dialog.setHeaderText("Enter a port number for your server");
+		dialog.setContentText("Port number:");
+		Optional<String> result = dialog.showAndWait();
+		if(result.isPresent()) return result.get();
+		else return "10000";
+	}
 
 	private void play() {
 		read("play");
@@ -241,7 +259,8 @@ public class StartupSelectionScreen extends VBox {
 		read("load");
 	}
 
-	private void create() {
+	private void create(int port) {
+		startServer(port);
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver(new Observer() {
@@ -253,6 +272,51 @@ public class StartupSelectionScreen extends VBox {
 			}
 		});
 
+	}
+	
+	private void join(int port) {
+		startServer(port);
+		GameWizard wiz = new GameWizard();
+		wiz.show();
+		wiz.addObserver(new Observer() {
+
+			@Override
+			public void update(Observable o, Object arg) {
+				createGame((AuthoringGameState) arg, true);
+				stage.close();
+			}
+		});
+
+	}
+	
+	private void load(int port) {
+		startServer(port);
+		GameWizard wiz = new GameWizard();
+		wiz.show();
+		wiz.addObserver(new Observer() {
+
+			@Override
+			public void update(Observable o, Object arg) {
+				createGame((AuthoringGameState) arg, true);
+				stage.close();
+			}
+		});
+
+	}
+	
+	public void startServer(int portNumber)
+	{
+		XMLSerializer<GameplayState> serializer = new XMLSerializer<>();
+		//JSONSerializer<ImmutableGameState> serializer = new JSONSerializer<>(GameState.class);
+		ObservableServer<GameplayState> voogaServer = null;
+		try {
+			voogaServer = new ObservableServer<>(null, portNumber, serializer, serializer, Duration.ofSeconds(TIMEOUT));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Executors.newSingleThreadExecutor().submit(voogaServer);
+		System.out.println("Server started successfully on port number " + portNumber + "...");
 	}
 
 	private void createGame(AuthoringGameState state, boolean editable) {

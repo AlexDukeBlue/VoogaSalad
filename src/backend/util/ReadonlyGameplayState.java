@@ -1,6 +1,7 @@
 package backend.util;
 
 import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.Resultant;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
@@ -31,11 +32,11 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 
 	double random();
 
-	Collection<ResultQuadPredicate> getObjectives();
+	Collection<Resultant> getObjectives();
 
-	Map<Event, Collection<BiConsumer<ImmutablePlayer, GameplayState>>> getTurnActions();
+	Map<Event, Collection<Actionable>> getTurnActions();
 
-	Collection<BiPredicate<ImmutablePlayer, GameplayState>> getTurnRequirements();
+	Collection<Requirement> getTurnRequirements();
 
 	boolean turnRequirementsSatisfied();
 

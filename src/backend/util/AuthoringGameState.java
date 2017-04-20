@@ -9,6 +9,7 @@ import java.util.function.BiPredicate;
 
 import backend.cell.Terrain;
 import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.GameBoard;
 import backend.grid.GridPattern;
@@ -95,12 +96,12 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	}
 
 	@Override
-	public AuthoringGameState addObjectives(ResultQuadPredicate... objectives) {
+	public AuthoringGameState addObjectives(Resultant... objectives) {
 		return (AuthoringGameState) super.addObjectives(objectives);
 	}
 
 	@Override
-	public AuthoringGameState addObjectives(Collection<ResultQuadPredicate> objectives) {
+	public AuthoringGameState addObjectives(Collection<Resultant> objectives) {
 		return (AuthoringGameState) super.addObjectives(objectives);
 	}
 
@@ -115,22 +116,22 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	}
 
 	@Override
-	public AuthoringGameState addTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
+	public AuthoringGameState addTurnActions(Event event, Collection<Actionable> actions) {
 		return (AuthoringGameState) super.addTurnActions(event, actions);
 	}
 
 	@Override
-	public AuthoringGameState addTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
+	public AuthoringGameState addTurnActions(Event event, Actionable... actions) {
 		return (AuthoringGameState) super.addTurnActions(event, actions);
 	}
 
 	@Override
-	public AuthoringGameState addTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
+	public AuthoringGameState addTurnRequirements(Collection<Requirement> turnRequirements) {
 		return (AuthoringGameState) super.addTurnRequirements(turnRequirements);
 	}
 
 	@Override
-	public AuthoringGameState addTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
+	public AuthoringGameState addTurnRequirements(Requirement... turnRequirements) {
 		return (AuthoringGameState) super.addTurnRequirements(turnRequirements);
 	}
 
