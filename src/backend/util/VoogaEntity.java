@@ -8,6 +8,10 @@ public interface VoogaEntity /*extends Serializable*/ {
 
 	String getName();
 
+	default String getFormattedName() {
+		return getName();
+	}
+
 	String getDescription();
 
 	String getImgPath();
