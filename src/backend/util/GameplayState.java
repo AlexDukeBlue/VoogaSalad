@@ -264,4 +264,16 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	public Collection<ModifiableUnit> getUnits() {
 		return allUnits;	
 	}
+
+	@Override
+	public void addUnitTemplates(ModifiableUnit mUnit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Collection<ModifiableUnit> getUnitTemplates() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
