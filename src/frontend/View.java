@@ -69,7 +69,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 		super(controller);
 		myStage = stage;
 		this.editable = editable;
-		initBorderPane();
+		placePanes();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
 	}
@@ -154,13 +154,14 @@ public class View extends BaseUIManager<Region> implements Observer {
 		myAlert.showAndWait();
 	}
 
-	private void initBorderPane() {
+	private void placePanes() {
 		initPanes();
 		innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
 		innerSplitPane.setDividerPositions(1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
-		outerSplitPane.setDividerPositions(.8);
+		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPosition(0, 0);
+		outerSplitPane.setDividerPosition(1, .8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 	}
 
