@@ -1,19 +1,8 @@
+/**
+ * 
+ */
 package frontend.menubar;
 
-import backend.util.AuthoringGameState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.io.XMLSerializer;
-import controller.CommunicationController;
-import controller.Controller;
-import frontend.View;
-import frontend.util.BaseUIManager;
-import frontend.wizards.GameWizard;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,92 +12,147 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import backend.util.AuthoringGameState;
+import backend.util.ReadonlyGameplayState;
+import backend.util.io.XMLSerializer;
+import controller.CommunicationController;
+import controller.Controller;
+import frontend.View;
+import frontend.util.BaseUIManager;
+import frontend.util.ComponentFactory;
+import frontend.wizards.GameWizard;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
+
+/**
+ * @author Stone Mathers
+ * Created 4/18/2017
+ */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
+	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
+	private MenuItem newGameItem, loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem,
+		newActiveAbilityItem, newTriggeredAbilityItem, newInteractionModifierItem, rulesPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem,
+		 editModeItem, playModeItem, helpItem, aboutItem;
+	private ComponentFactory factory;
 	private MenuBar menuBar;
-	private Menu setLanguage;
-	private Menu setTheme;
-	private MenuItem load;
-	private MenuItem save;
-	private MenuItem newGameItem;
 	private View myView;
-
-	public VoogaMenuBar(View view) {
+	
+	public VoogaMenuBar(View view, Controller controller, boolean editable){
+		super(controller);
 		myView = view;
 		menuBar = new MenuBar();
-		menuBar.setUseSystemMenuBar(true); //Because it looks badass as fuck -Timmy
+		menuBar.setUseSystemMenuBar(true);
+		factory = new ComponentFactory();
 		populateMenuBar();
-		getLanguage().addListener((observable, oldLanguage, newLanguage) -> populateMenuBar());
+		setEditable(editable);
+		getLanguage().addListener((observable, oldLanguage, newLanguage) -> {getObject().getMenus().clear(); populateMenuBar();});
 	}
-
-	@Override
-	public MenuBar getObject() {
-		return menuBar;
-	}
-
-	public void setEditable(boolean editable) {
-		save.setDisable(!editable);
-		load.setDisable(!editable);
+	
+	public void setEditable(boolean editable){
 		newGameItem.setDisable(!editable);
+		loadItem.setDisable(!editable);
+		edit.setDisable(!editable);
+		rulesPaneItem.setDisable(!editable);
+		templatePaneItem.setDisable(!editable);
+		playModeItem.setDisable(!editable);
+		
+		editModeItem.setDisable(editable);
 	}
 
-	private void populateMenuBar() {
-		menuBar.getMenus().clear();
-		Menu file = new Menu(getLanguage().getValue().getString("File"));
-		Menu language = new Menu(getLanguage().getValue().getString("Language"));
-		Menu theme = new Menu(getLanguage().getValue().getString("Theme"));
-		Menu view = new Menu("View");
-		Menu help = new Menu(getLanguage().getValue().getString("Help"));
-		menuBar.getMenus().addAll(file, language, theme, view, help);
-		load = new MenuItem(getLanguage().getValue().getString("Load")) {
-			{
-				setOnAction(e -> read());
-			}
-		};
-		save = new MenuItem(getLanguage().getValue().getString("Save")) {
-			{
-				setOnAction(e -> save());
-			}
-		};
-
-		newGameItem = new MenuItem(getLanguage().getValue().getString("Create")) {
-			{
-				setOnAction(e -> create());
-			}
-		};
-		MenuItem quit = new MenuItem(getLanguage().getValue().getString("Quit"));
-		setLanguage = new Menu(getLanguage().getValue().getString("SetLanguage"));
-		setTheme = new Menu(getLanguage().getValue().getString("SetTheme"));
-		MenuItem helpItem = new MenuItem(getLanguage().getValue().getString("Help"));
-		MenuItem editModeItem = new MenuItem("Enter Edit Mode") { //TODO get from resource files
-			{
-				setOnAction(e -> myView.setEditable(true));
-			}
-		};
-		MenuItem playModeItem = new MenuItem("Enter Play Mode") { //TODO get from resource files
-			{
-				setOnAction(e -> myView.setEditable(false));
-			}
-		};
-		file.getItems().addAll(newGameItem, load, save, quit);
-		language.getItems().add(setLanguage);
-		theme.getItems().add(setTheme);
-		view.getItems().addAll(editModeItem, playModeItem);
-		help.getItems().add(helpItem);
+	protected void populateMenuBar() {
+		initMenuItems();
+		initMenus();
+	}
+	
+	private void initMenuItems(){
+		newGameItem = factory.getMenuItem(getLanguage().getValue().getString("Create"), e -> create());
+		saveItem = factory.getMenuItem(getLanguage().getValue().getString("Save"), e -> save());
+		loadItem = factory.getMenuItem(getLanguage().getValue().getString("Load"), e -> load());
+		homeScreenItem = factory.getMenuItem("Home Screen", e -> {}); //TODO implement, resource file
+		quitItem = factory.getMenuItem(getLanguage().getValue().getString("Quit"), e -> {}); //TODO implement
+		
+		newUnitItem = factory.getMenuItem("Create New Unit", e -> {}); ////TODO implement, resource file
+		newTerrainItem = factory.getMenuItem("Create New Terrain", e -> {}); ////TODO implement, resource file
+		newActiveAbilityItem = factory.getMenuItem("Create New Active Ability", e -> {}); ////TODO implement, resource file
+		newTriggeredAbilityItem = factory.getMenuItem("Create New Triggered Ability", e -> {}); ////TODO implement, resource file
+		newInteractionModifierItem = factory.getMenuItem("Create New Interaction Modifier", e -> {}); ////TODO implement, resource file
+		
+		setLanguageItem = factory.getMenu(getLanguage().getValue().getString("SetLanguage"));
 		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
-			MenuItem menuItem = new MenuItem(name) {{
+			MenuItem menuItem = new MenuItem(name){{
 				setOnAction(e -> getLanguage().setValue(bundle));
 			}};
-
-			setLanguage.getItems().add(menuItem);
+			
+			setLanguageItem.getItems().add(menuItem);
 		});
-
+		
+		setThemeItem = factory.getMenu(getLanguage().getValue().getString("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
 			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
-			setTheme.getItems().add(menuItem);
+			setThemeItem.getItems().add(menuItem);
 		});
-
+		
+		rulesPaneItem = factory.getMenuItem("Show/Hide Rules Pane", e -> {}); ////TODO implement, resource file
+		templatePaneItem = factory.getMenuItem("Show/Hide Template Pane", e -> {}); ////TODO implement, resource file
+		detailsPaneItem = factory.getMenuItem("Show/Hide Details Pane", e -> {}); ////TODO implement, resource file
+		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> {}); ////TODO implement, resource file
+		editModeItem = factory.getMenuItem("Edit Mode", e -> getView().setEditable(true)); //TODO resource file, operate through controller
+		playModeItem = factory.getMenuItem("Play Mode", e -> getView().setEditable(false)); //TODO resource file, operate through controller
+		
+		helpItem = factory.getMenuItem(getLanguage().getValue().getString("Help"), e -> {});  //TODO implement
+		aboutItem = factory.getMenuItem("About", e -> {});  //TODO implement, resource file
+	}
+	
+	private void initMenus(){
+		file = factory.getMenu(getLanguage().getValue().getString("File"));
+		file.getItems().add(newGameItem);
+		file.getItems().add(loadItem);
+		file.getItems().add(saveItem);
+		file.getItems().add(homeScreenItem);
+		file.getItems().add(quitItem);
+		
+		edit = factory.getMenu("Edit"); //TODO resource file
+		edit.getItems().add(newUnitItem);
+		edit.getItems().add(newTerrainItem);
+		edit.getItems().add(newActiveAbilityItem);
+		edit.getItems().add(newTriggeredAbilityItem);
+		edit.getItems().add(newInteractionModifierItem);
+		
+		language = factory.getMenu(getLanguage().getValue().getString("Language"));
+		language.getItems().add(setLanguageItem);
+		
+		theme = factory.getMenu(getLanguage().getValue().getString("Theme"));
+		theme.getItems().add(setThemeItem);
+		
+		view = factory.getMenu("View"); //TODO get from resource files
+		view.getItems().add(rulesPaneItem);
+		view.getItems().add(templatePaneItem);
+		view.getItems().add(detailsPaneItem);
+		view.getItems().add(statsPaneItem);
+		view.getItems().add(editModeItem);
+		view.getItems().add(playModeItem);
+		
+		help = factory.getMenu(getLanguage().getValue().getString("Help"));
+		help.getItems().add(helpItem);
+		help.getItems().add(aboutItem);
+		
+		getObject().getMenus().add(file);
+		getObject().getMenus().add(edit);
+		getObject().getMenus().add(language);
+		getObject().getMenus().add(theme);
+		getObject().getMenus().add(view);
+		getObject().getMenus().add(help);
 	}
 
 	private void save() {
@@ -117,26 +161,34 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 			Window ownerWindow = null;
 			File file = chooser.showSaveDialog(ownerWindow);
-			Files.write(Paths.get(file.getPath()), ((String) new XMLSerializer<>().serialize(getController().getGameState())).getBytes());
+			Files.write(Paths.get(file.getPath()), ((String) new XMLSerializer<>()
+					.serialize(getController().getGameState())).getBytes());
+
 		} catch (IOException i) {
 			i.printStackTrace();
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("No file selected");
+			alert.setHeaderText("Current game will not save");
+			alert.setContentText("Would you like to try again?");
+			Optional<ButtonType> result = alert.showAndWait();
+
+			if (result.get() == ButtonType.OK) {
+				save();
+			} 
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("No file selected");
-			// alert.setGraphic(graphic); //insert DuvallSalad
 			alert.setHeaderText("Current game will not save");
 			alert.setContentText("Would you like to try again?");
 			Optional<ButtonType> result = alert.showAndWait();
-			if (result.isPresent() && result.get().getText().equals("okay")) {
+			if (result.get() == ButtonType.OK) {
 				save();
-			} else {
-				return;
-			}
+			} 
 		}
 	}
 
-	private void read() {
+	private void load() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 		fileChooser.setTitle("Open Resource File");
@@ -147,44 +199,21 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			FileInputStream fileIn = new FileInputStream(file);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 
-			// need to do something with the file
+			// have controller reset GameState using file
 
 			in.close();
 			fileIn.close();
-
-
-			// this part probs doesn't work
-			// Region pane = ui.getPrimaryPane();
-			// ((BorderPane) pane).setCenter(new View(null, null).getObject());
-
 		} catch (IOException i) {
 			i.printStackTrace();
-			return;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("No file selected");
-
-			/*
-			 * failed attempt to set DuvallSalad as graphic
-			 */
-			// ImageView graphic = new ImageView(new
-			// Image("frontend/properties/DuvallSalad.png"));
-			// graphic.setScaleX(.25);
-			// graphic.setScaleY(.25);
-			//
-			// alert.setGraphic(graphic); //insert DuvallSalad
-
 			alert.setHeaderText("Failed to load game");
-
 			alert.setContentText("Would you like to try again?");
-
 			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == new ButtonType("okay")) {
-				read();
-			} else {
-				return;
-
+			if (result.get() == ButtonType.OK) {
+				load();
 			}
 		}
 	}
@@ -193,27 +222,26 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver((o, arg) -> createGame((AuthoringGameState) arg, true));
-
 	}
 
 	private void createGame(ReadonlyGameplayState state, boolean editable) {
 		Controller control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100, state, null);
 		View view = new View(control);
-		// myClient.setGameState(state);
-		// control.setClient(myClient);
 		view.setEditable(editable);
 		Stage stage = new Stage();
 		Scene scene = new Scene(view.getObject());
 		stage.setScene(scene);
 		stage.show();
-	}
-
-	private void enterEditMode() {
 
 	}
-
+	
 	@Override
-	public void update() {
+	public MenuBar getObject() {
+		return menuBar;
+	}
+	
+	public View getView(){
+		return myView;
 
 	}
 
