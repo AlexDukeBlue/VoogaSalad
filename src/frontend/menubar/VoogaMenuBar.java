@@ -184,7 +184,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		}
 	}
 
-	private void load() {
+	private void load() {  //TODO Make work
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 		fileChooser.setTitle("Open Resource File");
