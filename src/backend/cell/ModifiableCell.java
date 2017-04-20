@@ -1,18 +1,25 @@
 package backend.cell;
 
+import static backend.util.ImmutableVoogaObject.getPredefined;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
+import backend.util.Ability;
 import backend.util.Event;
 import backend.util.GameplayState;
 import backend.util.ModifiableTriggeredEffect;
 import backend.util.TriggeredEffect;
-
-import java.util.*;
-
-import static backend.util.ImmutableVoogaObject.getPredefined;
+import backend.util.VoogaEntity;
 
 /**
  * @author Created by th174 on 3/31/2017.
@@ -84,6 +91,7 @@ public class ModifiableCell implements Cell {
 	private Shape shape;
 	private Terrain terrain;
 	private CoordinateTuple coordinates;
+	private Map<Class<? extends VoogaEntity>,BiConsumer<VoogaEntity,ModifiableCell>> actionOnClass;
 
 	public ModifiableCell() {
 		this(null, null, null);
@@ -94,6 +102,10 @@ public class ModifiableCell implements Cell {
 		this.terrain = terrain;
 		this.coordinates = location;
 		occupants = new HashMap<>();
+		actionOnClass = new HashMap<>();
+		actionOnClass.put(Terrain.class, (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain));
+		actionOnClass.put(Unit.class, (unit,cell) -> cell.addOccupants((Unit)unit));
+		actionOnClass.put(Ability.class, (ability,cell) -> cell.getTerrain().addAbility((Ability)ability));
 	}
 
 	public ModifiableCell addTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
@@ -229,5 +241,10 @@ public class ModifiableCell implements Cell {
 	@Deprecated
 	public static Collection<ModifiableCell> getPredefinedCells() {
 		return getPredefined(ModifiableCell.class);
+	}
+
+	@Override
+	public void addVoogaEntity(VoogaEntity voogaEntity) {
+		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
 	}
 }
