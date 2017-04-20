@@ -23,12 +23,15 @@ import java.util.Map;
 
 import backend.util.AuthoringGameState;
 import controller.Controller;
-import frontend.detailpane.classes.DetailPane;
+import frontend.factory.detailpane.DetailPaneFactory;
+import frontend.factory.templatepane.TemplatePaneFactory;
+import frontend.factory.worldview.MinimapPane;
+import frontend.factory.worldview.WorldViewFactory;
+import frontend.interfaces.detailpane.DetailPaneExternal;
+import frontend.interfaces.templatepane.TemplatePaneExternal;
+import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
-import frontend.templatepane.classes.TemplatePane;
 import frontend.util.BaseUIManager;
-import frontend.worldview.WorldView;
-import frontend.worldview.minimap.MinimapPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -47,9 +50,9 @@ public class View extends BaseUIManager<Region> {
 	private boolean editable;
 	private BorderPane myBorder;
 	private VoogaMenuBar menuBar;
-	private WorldView worldView;
-	private DetailPane detailPane;
-	private TemplatePane tempPane;
+	private WorldViewExternal worldView;
+	private DetailPaneExternal detailPane;
+	private TemplatePaneExternal tempPane;
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -137,10 +140,9 @@ public class View extends BaseUIManager<Region> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
 		});
-		worldView = new WorldView(getController());
-		detailPane = new DetailPane();
-		tempPane = new TemplatePane(getController());
-		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane()).getObject());
+		worldView = WorldViewFactory.newWorldView();
+		detailPane = DetailPaneFactory.newDetailPane();
+		tempPane = TemplatePaneFactory.newTemplatePane();
 	}
 
 	/**
