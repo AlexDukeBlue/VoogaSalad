@@ -152,6 +152,7 @@ public class StartupSelectionScreen extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
+				String port = popupWindow();
 				load(Integer.parseInt(port));
 			}
 		});
@@ -259,7 +260,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	private void create(int port) {
-		startServer();
+		startServer(port);
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver(new Observer() {
@@ -274,6 +275,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 	
 	private void join(int port) {
+		startServer(port);
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver(new Observer() {
@@ -288,7 +290,7 @@ public class StartupSelectionScreen extends VBox {
 	}
 	
 	private void load(int port) {
-		startServer(10070);
+		startServer(port);
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver(new Observer() {
@@ -314,7 +316,7 @@ public class StartupSelectionScreen extends VBox {
 			e.printStackTrace();
 		}
 		Executors.newSingleThreadExecutor().submit(voogaServer);
-		System.out.println("Server started successfully...");
+		System.out.println("Server started successfully on port number " + portNumber + "...");
 	}
 
 	private void createGame(AuthoringGameState state, boolean editable) {
