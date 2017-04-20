@@ -23,7 +23,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
 import frontend.menubar.VoogaMenuBar;
-import frontend.templatepane.TemplatePane;
+import frontend.templatepane.classes.TemplatePane;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
 import frontend.worldview.minimap.MinimapPane;
