@@ -2,6 +2,7 @@ package backend.cell;
 
 import static backend.util.ImmutableVoogaObject.getPredefined;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -103,9 +104,11 @@ public class ModifiableCell implements Cell {
 		this.coordinates = location;
 		occupants = new HashMap<>();
 		actionOnClass = new HashMap<>();
-		actionOnClass.put(Terrain.class, (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain));
-		actionOnClass.put(Unit.class, (unit,cell) -> cell.addOccupants((Unit)unit));
-		actionOnClass.put(Ability.class, (ability,cell) -> cell.getTerrain().addAbility((Ability)ability));
+		BiConsumer<VoogaEntity,ModifiableCell> consumer = (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain);
+		System.out.println(consumer);
+		actionOnClass.put(ModifiableTerrain.class, (Serializable & BiConsumer)consumer);
+		actionOnClass.put(ModifiableUnit.class, (Serializable & BiConsumer)((unit,cell) -> ((ModifiableCell) cell).addOccupants((Unit)unit)));
+		actionOnClass.put(Ability.class, (Serializable & BiConsumer)((ability,cell) -> ((ModifiableCell) cell).getTerrain().addAbility((Ability)ability)));
 	}
 
 	public ModifiableCell addTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
@@ -245,6 +248,9 @@ public class ModifiableCell implements Cell {
 
 	@Override
 	public void addVoogaEntity(VoogaEntity voogaEntity) {
+		System.out.println("Class: " + voogaEntity.getClass().toString());
+		System.out.println("Map: " + actionOnClass);
+		System.out.println("Action: " + actionOnClass.get(voogaEntity.getClass()));
 		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
 	}
 }
