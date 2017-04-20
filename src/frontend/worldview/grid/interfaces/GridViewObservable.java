@@ -1,6 +1,6 @@
 package frontend.worldview.grid.interfaces;
 
-public interface GridViewObserved {
+public interface GridViewObservable {
 	
 	void addGridViewObserver(GridViewObserver observer);
 	

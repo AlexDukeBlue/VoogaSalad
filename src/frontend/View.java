@@ -18,10 +18,12 @@
  */
 package frontend;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import backend.util.AuthoringGameState;
-import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.detailpane.DetailPane;
+import frontend.detailpane.classes.DetailPane;
 import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.classes.TemplatePane;
 import frontend.util.BaseUIManager;
@@ -34,12 +36,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-
-public class View extends BaseUIManager<Region> implements Observer {
+public class View extends BaseUIManager<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private Stage myStage;
 
@@ -72,8 +69,9 @@ public class View extends BaseUIManager<Region> implements Observer {
 	}
 
 	/**
-	 * @param editable True if this View can be switched into "edit" mode, false if
-	 *                 it cannot.
+	 * @param editable
+	 *            True if this View can be switched into "edit" mode, false if
+	 *            it cannot.
 	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
@@ -101,7 +99,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState AuthoringGameState that the View will now access its data from
+	 * @param newGameState
+	 *            AuthoringGameState that the View will now access its data from
 	 */
 	public void setGameState(AuthoringGameState newGameState) {
 		getController().setGameState(newGameState);
@@ -110,7 +109,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 	/**
 	 * Displays an Alert to the user containing the given message.
 	 *
-	 * @param s String alert message
+	 * @param s
+	 *            String alert message
 	 */
 	public void sendAlert(String s) {
 		Alert myAlert;
@@ -138,10 +138,9 @@ public class View extends BaseUIManager<Region> implements Observer {
 			getObject().getStylesheets().add(newValue);
 		});
 		worldView = new WorldView(getController());
-		detailPane = new DetailPane(worldView);
-		tempPane = new TemplatePane(detailPane, worldView, getController());
+		detailPane = new DetailPane();
+		tempPane = new TemplatePane(getController());
 		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane()).getObject());
-		tempPane.addObserver(this);
 	}
 
 	/**
@@ -166,7 +165,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 	 */
 	private void addSidePanes() {
 		myBorder.setRight(tempPane.getObject());
-		//myBorder.setLeft();
+		// myBorder.setLeft();
 	}
 
 	/**
@@ -183,14 +182,5 @@ public class View extends BaseUIManager<Region> implements Observer {
 		}
 		return IMAGE_CACHE.get(imgPath);
 	}
-
-	@Override
-	public void update(Observable observable, Object object) {
-		if (observable == tempPane) {
-			detailPane.setContent((VoogaEntity) object, "");
-			worldView.templateClicked((VoogaEntity) object);
-		}
-	}
-
 
 }

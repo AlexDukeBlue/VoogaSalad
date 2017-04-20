@@ -1,12 +1,17 @@
 package frontend.templatepane.classes;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import backend.cell.Terrain;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.detailpane.DetailPane;
+import frontend.detailpane.classes.DetailPane;
+import frontend.templatepane.interfaces.TemplatePaneExternal;
+import frontend.templatepane.interfaces.TemplatePaneObservable;
+import frontend.templatepane.interfaces.TemplatePaneObserver;
 import frontend.util.BaseUIManager;
-import frontend.worldview.WorldView;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -14,10 +19,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-import java.util.Collection;
 
 /**
  * @author Faith Rodriguez Created 3/29/2017
@@ -32,20 +40,48 @@ import java.util.Collection;
  *         CellView.java classes to make the clicking and dragging features work
  */
 
-public class TemplatePane extends BaseUIManager<VBox> {
+public class TemplatePane extends BaseUIManager<VBox> implements TemplatePaneExternal, TemplatePaneObservable {
 
 	private VBox pane = new VBox();
 	private Collection<? extends Unit> units;
 	private Collection<? extends Terrain> terrains;
+	private Collection<TemplatePaneObserver> observers;
 
-	public TemplatePane(DetailPane detailPaneIn, WorldView worldViewIn, Controller controller) {
+	public TemplatePane(Controller controller) {
 		super(controller);
 		units = getController().getUnitTemplates();
 		terrains = getController().getTerrainTemplates();
+		observers = new ArrayList<>();
 
 		createCollabsible("unit", units);
 		createCollabsible("terrain", terrains);
 
+	}
+
+	@Override
+	public void update() {
+		updateTerrains(getController().getTerrainTemplates());
+		updateUnits(getController().getUnitTemplates());
+		updatePane();
+	}
+
+	@Override
+	public VBox getObject() {
+		return pane;
+	}
+
+	@Override
+	public void addTemplatePaneObserver(TemplatePaneObserver observer) {
+		if (!observers.contains(observer)) {
+			observers.add(observer);
+		}
+	}
+
+	@Override
+	public void removeTemplatePaneObserver(TemplatePaneObserver observer) {
+		if (observers.contains(observer)) {
+			observers.remove(observer);
+		}
 	}
 
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
@@ -85,9 +121,7 @@ public class TemplatePane extends BaseUIManager<VBox> {
 
 	private void setOnClick(Node o, VoogaEntity sprite, String spriteType) {
 		o.setOnMouseClicked(event -> {
-			setChanged();
-			notifyObservers(sprite);
-			clearChanged();
+			observers.stream().forEach(observer -> observer.didClickVoogaEntity(this,sprite));
 		});
 	}
 
@@ -103,17 +137,6 @@ public class TemplatePane extends BaseUIManager<VBox> {
 
 	private void updateTerrains(Collection<? extends Terrain> terrainsIn) {
 		terrains = terrainsIn;
-	}
-
-	public void updateTemplatePane() {
-		updateTerrains(getController().getTerrainTemplates());
-		updateUnits(getController().getUnitTemplates());
-		updatePane();
-	}
-
-	@Override
-	public VBox getObject() {
-		return pane;
 	}
 
 }
