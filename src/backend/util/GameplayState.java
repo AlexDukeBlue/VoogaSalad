@@ -28,6 +28,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private int currentPlayerNumber;
 	private volatile GameBoard grid;
 	private boolean isAuthoringMode;
+	
+	//private Collection<ModifiableUnit> allUnits;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
