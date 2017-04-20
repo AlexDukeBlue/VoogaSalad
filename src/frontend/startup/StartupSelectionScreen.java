@@ -110,11 +110,17 @@ public class StartupSelectionScreen extends VBox {
 		Button join = new Button(SelectionProperties.getString("Join")) {{
 			this.setOnAction(e -> create());
 		}};
+		
+		Button load = new Button(SelectionProperties.getString("Load")) {{
+			this.setOnAction(e -> create());
+		}};
 
 		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but heavily refactored and changed by ncp14
 		setButtonAnimationColors();
 		create.styleProperty().bind(generateStringBinding());
 		join.styleProperty().bind(generateStringBinding());
+		load.styleProperty().bind(generateStringBinding());
+
 
 		final Timeline timeline = new Timeline(
 				new KeyFrame(Duration.ZERO, new KeyValue(color, startColor)),
@@ -135,6 +141,14 @@ public class StartupSelectionScreen extends VBox {
 				create();
 			}
 		});
+		
+		load.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				timeline.play();
+				create();
+			}
+		});
 
 		// Create a rotating rectangle and set it as the graphic for the button
 		final Rectangle rotatingRect = new Rectangle(5, 5, 10, 6);
@@ -147,9 +161,15 @@ public class StartupSelectionScreen extends VBox {
 	    rotatingRect2.setFill(Color.CORNFLOWERBLUE);
 		Pane rectHolder2 = generateShape(rotatingRect2);
 		RotateTransition rotate2 = generateRotation(rotatingRect2);
-
+		
+		final Rectangle rotatingRect3 = new Rectangle(5, 5, 10, 6);
+	    rotatingRect3.setFill(Color.CORNFLOWERBLUE);
+		Pane rectHolder3 = generateShape(rotatingRect3);
+		RotateTransition rotate3 = generateRotation(rotatingRect3);
+		
 		create.setGraphic(rectHolder);
 		join.setGraphic(rectHolder2);
+		load.setGraphic(rectHolder3);
 
 		// make the rectangle rotate when the mouse hovers over the button
 		create.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -181,6 +201,22 @@ public class StartupSelectionScreen extends VBox {
 				rotatingRect2.setRotate(0);
 			}
 		});
+		
+		load.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rotate3.play();
+			}
+		});
+
+		load.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rotate3.stop();
+				rotatingRect3.setRotate(0);
+			}
+		});
+
 
 
 //		Button edit = new Button(SelectionProperties.getString("EditGame")){{
@@ -193,6 +229,7 @@ public class StartupSelectionScreen extends VBox {
 		this.setMinHeight(400);
 		//this.getChildren().addAll(play, create, edit);
 		this.getChildren().add(create);
+		this.getChildren().add(load);
 		this.getChildren().add(join);
 	}
 
