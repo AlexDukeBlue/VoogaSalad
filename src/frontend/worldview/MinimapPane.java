@@ -1,7 +1,7 @@
 package frontend.worldview;
 
 import frontend.util.BaseUIManager;
-import frontend.worldview.grid.GridView;
+import frontend.worldview.grid.actual_classes.oldclasses.GridView;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
@@ -25,7 +25,8 @@ public class MinimapPane extends BaseUIManager<Region> {
 		gridViewPortBounds.setFill(Color.TRANSPARENT);
 		gridViewPortBounds.setStroke(Color.RED);
 		gridViewPortBounds.setStrokeWidth(2);
-		Rectangle minimap = new Rectangle(scrollPane.getContent().getBoundsInLocal().getWidth() * MINIMAP_SCALE, scrollPane.getContent().getBoundsInLocal().getHeight() * MINIMAP_SCALE);
+		Rectangle minimap = new Rectangle(scrollPane.getContent().getBoundsInLocal().getWidth() * MINIMAP_SCALE,
+				scrollPane.getContent().getBoundsInLocal().getHeight() * MINIMAP_SCALE);
 		minimap.setMouseTransparent(true);
 		view = new Pane();
 		view.getChildren().addAll(minimap, gridViewPortBounds);
@@ -39,8 +40,10 @@ public class MinimapPane extends BaseUIManager<Region> {
 			gridViewPortBounds.setWidth(Math.min(1, viewPortWidth / contentWidth) * minimapWidth);
 			gridViewPortBounds.setHeight(Math.min(1, viewPortHeight / contentHeight) * minimapHeight);
 			gridViewPortBounds.relocate(
-					calcMinimapOffset(scrollPane.getHvalue(), scrollPane.getHmin(), scrollPane.getHmax(), contentWidth, viewPortWidth, minimapWidth),
-					calcMinimapOffset(scrollPane.getVvalue(), scrollPane.getVmin(), scrollPane.getVmax(), contentHeight, viewPortHeight, minimapHeight));
+					calcMinimapOffset(scrollPane.getHvalue(), scrollPane.getHmin(), scrollPane.getHmax(), contentWidth,
+							viewPortWidth, minimapWidth),
+					calcMinimapOffset(scrollPane.getVvalue(), scrollPane.getVmin(), scrollPane.getVmax(), contentHeight,
+							viewPortHeight, minimapHeight));
 		};
 		scrollPane.viewportBoundsProperty().addListener(changeListener);
 		scrollPane.getContent().boundsInLocalProperty().addListener(changeListener);
@@ -56,19 +59,25 @@ public class MinimapPane extends BaseUIManager<Region> {
 			double newX = Math.max(0, event.getX() - gridViewPortBounds.getWidth() / 2.0);
 			double newY = Math.max(0, event.getY() - gridViewPortBounds.getHeight() / 2.0);
 			gridViewPortBounds.relocate(newX, newY);
-			scrollPane.setHvalue(calcScrollOffset(newX, scrollPane.getHmin(), scrollPane.getHmax(), contentWidth, viewPortWidth, minimapWidth));
-			scrollPane.setVvalue(calcScrollOffset(newY, scrollPane.getVmin(), scrollPane.getVmax(), contentHeight, viewPortHeight, minimapHeight));
+			scrollPane.setHvalue(calcScrollOffset(newX, scrollPane.getHmin(), scrollPane.getHmax(), contentWidth,
+					viewPortWidth, minimapWidth));
+			scrollPane.setVvalue(calcScrollOffset(newY, scrollPane.getVmin(), scrollPane.getVmax(), contentHeight,
+					viewPortHeight, minimapHeight));
 		};
 		view.setOnMousePressed(mouseEvent);
 		view.setOnMouseDragged(mouseEvent);
 	}
 
-	private double calcMinimapOffset(double scrollValue, double scrollMin, double scrollMax, double contentSize, double viewportSize, double minimapSize) {
-		return (contentSize - viewportSize) * (scrollValue - scrollMin) / (scrollMax - scrollMin) / contentSize * minimapSize;
+	private double calcMinimapOffset(double scrollValue, double scrollMin, double scrollMax, double contentSize,
+			double viewportSize, double minimapSize) {
+		return (contentSize - viewportSize) * (scrollValue - scrollMin) / (scrollMax - scrollMin) / contentSize
+				* minimapSize;
 	}
 
-	private double calcScrollOffset(double minimapOffset, double scrollMin, double scrollMax, double contentSize, double viewportSize, double minimapSize) {
-		return minimapOffset * contentSize / minimapSize / (contentSize - viewportSize) * (scrollMax - scrollMin) + scrollMin;
+	private double calcScrollOffset(double minimapOffset, double scrollMin, double scrollMax, double contentSize,
+			double viewportSize, double minimapSize) {
+		return minimapOffset * contentSize / minimapSize / (contentSize - viewportSize) * (scrollMax - scrollMin)
+				+ scrollMin;
 	}
 
 	@Override

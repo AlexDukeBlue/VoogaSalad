@@ -1,5 +1,6 @@
-package frontend.worldview.grid;
+package frontend.worldview.grid.actual_classes.oldclasses;
 
+import java.util.ArrayList;
 
 import backend.grid.CoordinateTuple;
 import controller.Controller;
@@ -14,8 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
-import java.util.ArrayList;
 
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
@@ -39,52 +38,27 @@ public class CellView extends BaseUIManager<Parent> {
 	private Polygon polygon;
 	private final Group group;
 	private final ContextMenu contextMenu;
-	private final UnitViewDelegate delegate;
 	private ArrayList<UnitView> unitList = new ArrayList<UnitView>();
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellLocation The Cell object that this CellView will visually represent.
-	 * @param controller   the controller object that this CellView will send information
-	 *                     to when the user interacts with the CellView
+	 * @param cellLocation
+	 *            The Cell object that this CellView will visually represent.
+	 * @param controller
+	 *            the controller object that this CellView will send information
+	 *            to when the user interacts with the CellView
 	 */
-	public CellView(CoordinateTuple cellLocation, Controller controller, UnitViewDelegate delegate) {
+	public CellView(CoordinateTuple cellLocation, Controller controller) {
 		super(controller);
-		this.delegate = delegate;
 		this.cellLocation = cellLocation;
 		polygon = new Polygon();
 		group = new Group();
 		contextMenu = new ContextMenu();
-		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
+		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED,
+				event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 		update();
 	}
-
-	//	/**
-	//	 * Sets the action that is performed when a cell is clicked.
-	//	 *
-	//	 * @param consumer
-	//	 *            consumer to execute when the cell is clicked
-	//	 */
-	//	public void setOnCellClick(Consumer<CellView> consumer) {
-	//		polygon.setOnMouseClicked(event -> consumer.accept(this));
-	//	}
-	//
-	//	/**
-	//	 * Adds a copy of the Sprite to the cell and sends the request to the
-	//	 * controller.
-	//	 *
-	//	 * @param sprite
-	//	 *            sprite to copy and add to the cell
-	//	 */
-	//	public void add(VoogaEntity sprite) {
-	//		CoordinateTuple location = cellModel.getLocation();
-	//		Modifier<? extends GameplayState> toSend = game -> {
-	//			game.getGrid().get(location).arrive(sprite.copy(), game);
-	//			return game;
-	//		};
-	//		getController().sendModifier(toSend);
-	//	}
 
 	public double getX() {
 		return polygon.getLayoutX();
@@ -115,14 +89,15 @@ public class CellView extends BaseUIManager<Parent> {
 	 *
 	 * @return polygon
 	 */
-	Polygon getPolygon() {
+	public Polygon getPolygon() {
 		return polygon;
 	}
 
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon Shape of cellview an instance of a cell
+	 * @param polygon
+	 *            Shape of cellview an instance of a cell
 	 */
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
@@ -138,7 +113,8 @@ public class CellView extends BaseUIManager<Parent> {
 		this.getPolygon().setOnMouseEntered(e -> mouseOver());
 		group.getChildren().clear();
 		if (getController().getGrid().getImgPath().length() < 1) {
-			polygon.setFill(new ImagePattern(View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
+			polygon.setFill(new ImagePattern(
+					View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
@@ -150,18 +126,19 @@ public class CellView extends BaseUIManager<Parent> {
 		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
-				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
+				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
 				unitList.add(unitView);
-				unitView.getObject().setFitWidth(size);
-				unitView.getObject().setFitHeight(size);
-				unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
-				unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
+				unitView.setFitWidth(size);
+				unitView.setFitHeight(size);
+				unitView.setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
+				unitView.setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 			}
 		});
 		contextMenu.getItems().clear();
-		getController().getCell(cellLocation).getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+		getController().getCell(cellLocation).getOccupants()
+				.forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
 	/**
@@ -169,16 +146,17 @@ public class CellView extends BaseUIManager<Parent> {
 	 *
 	 * @return DisplayCoordinates at which the CellView is displayed.
 	 */
-	CoordinateTuple getCoordinateTuple() {
+	public CoordinateTuple getCoordinateTuple() {
 		return cellLocation;
 	}
 
 	private void mouseOver() {
-//		System.out.println(unitList.size());
-//		System.out.println("mousing over");
+		// System.out.println(unitList.size());
+		// System.out.println("mousing over");
 		if (unitList.size() != 0) {
 			for (int i = 0; i < unitList.size(); i++) {
-//				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 30);;
+				// unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY()
+				// - i * 30);;
 			}
 		}
 	}

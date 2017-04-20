@@ -1,5 +1,5 @@
 /**
- * Implement the functional interface LayoutManager. Manages the placement of a Hexagonal CellView into a grid.
+ * Implement the functional interface GridLayoutDelegate. Manages the placement of a Hexagonal CellView into a grid.
  * Does so by translating the relative coordinates in the CellView's CoordinateTuple to absolute coordinate.
  * Absolute coordinates are calculated using the given scaling factor, minimum width, and maximum width.
  * These absolute coordinates are used to set the CellView's X and Y coordinates.
@@ -7,11 +7,13 @@
  * @author Stone Mathers
  * Created 4/11/2017
  */
-package frontend.worldview.grid;
+package frontend.worldview.grid.layout_delegate.actual_classes;
 
 import backend.grid.CoordinateTuple;
+import frontend.worldview.grid.actual_classes.oldclasses.CellView;
+import frontend.worldview.grid.layout_delegate.interfaces.GridLayoutDelegate;
 
-public class HexagonalManager implements LayoutManager {
+class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 
 	public static final int X_INDEX = 0;
 	public static final int Y_INDEX = 1;
@@ -30,19 +32,10 @@ public class HexagonalManager implements LayoutManager {
 
 		CoordinateTuple rectCoord = cell.getCoordinateTuple().convertToRectangular();
 		if ((rectCoord.get(Y_INDEX) % 2) == 0) {
-//			for (int i = 0; i < cell.getPolygon().getPoints().size(); i += 2) {
-//				cell.getPolygon().getPoints().set(i, cell.getPolygon().getPoints().get(i) + (rectCoord.get(X_INDEX) * width) + width / 2);
-//			}
 			cell.setX((rectCoord.get(X_INDEX) + .5) * width);
 		} else {
-//			for (int i = 0; i < cell.getPolygon().getPoints().size(); i += 2) {
-//				cell.getPolygon().getPoints().set(i, cell.getPolygon().getPoints().get(i) + ((rectCoord.get(X_INDEX) * width) + width));
-//			}
 			cell.setX((rectCoord.get(X_INDEX) + 1) * width);
 		}
-//		for (int i = 1; i < cell.getPolygon().getPoints().size(); i += 2) {
-//			cell.getPolygon().getPoints().set(i, cell.getPolygon().getPoints().get(i) + (rectCoord.get(Y_INDEX) * (1.5 * radius)) + radius);
-//		}
 		cell.setY(rectCoord.get(Y_INDEX) * (1.5 * radius) + radius);
 	}
 

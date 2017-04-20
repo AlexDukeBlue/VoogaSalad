@@ -1,20 +1,22 @@
 /**
- * LayoutManager is a functional interface that is used to translate the relative coordinates in a CellView's
+ * GridLayoutDelegate is a functional interface that is used to translate the relative coordinates in a CellView's
  * CoordinateTuple to absolute coordinates at which it is to be displayed in a grid. The CellView's setX() and setY()
  * methods are then called with these absolute coordinates as parameters. 
  * 
- * A different LayoutManager should be implemented for all different layouts. Primarily, different LayoutManagers
+ * A different GridLayoutDelegate should be implemented for all different layouts. Primarily, different LayoutManagers
  * are made for different shapes and different orientations of a particular shape.
  * 
- * The purpose of a LayoutManager is to encapsulate the math behind arranging shapes into a grid. It also makes
+ * The purpose of a GridLayoutDelegate is to encapsulate the math behind arranging shapes into a grid. It also makes
  * it easy to quickly swap out different grid layouts and use the same layout strategies for multiple grids.
  * 
  * @author Stone Mathers
  * Created 4/11/2017
  */
-package frontend.worldview.grid;
+package frontend.worldview.grid.layout_delegate.interfaces;
 
-public interface LayoutManager {
+import frontend.worldview.grid.actual_classes.oldclasses.CellView;
+
+public interface GridLayoutDelegate {
 
 	/**
 	 * Takes in a CellView and sets the coordinates at which it should be

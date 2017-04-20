@@ -4,7 +4,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
-import frontend.worldview.grid.GridView;
+import frontend.worldview.grid.actual_classes.oldclasses.GridView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -30,8 +30,9 @@ public class WorldView extends BaseUIManager<Region> {
 	/**
 	 * Instantiates a new instance of WorldView. Sets all values to default.
 	 *
-	 * @param controller the controller whose state will be displayed within the
-	 *                   WorldView
+	 * @param controller
+	 *            the controller whose state will be displayed within the
+	 *            WorldView
 	 */
 	public WorldView(Controller controller) {
 		setController(controller);
@@ -42,7 +43,7 @@ public class WorldView extends BaseUIManager<Region> {
 	 * Returns
 	 *
 	 * @return Region object that shows the user a visual representation of the
-	 * grid, which can be interacted with to manipulate the back end
+	 *         grid, which can be interacted with to manipulate the back end
 	 */
 	@Override
 	public Region getObject() {
@@ -52,15 +53,15 @@ public class WorldView extends BaseUIManager<Region> {
 	public GridView getGridPane() {
 		return myGrid;
 	}
-//	/**
-//	 * Sets the action that is performed when a cell is clicked.
-//	 * 
-//	 * @param consumer
-//	 *            consumer to execute when the cell is clicked
-//	 */
-//	public void setOnCellClick(Consumer<CellView> consumer) {
-//		myGrid.setOnCellClick(consumer);
-//	}
+	// /**
+	// * Sets the action that is performed when a cell is clicked.
+	// *
+	// * @param consumer
+	// * consumer to execute when the cell is clicked
+	// */
+	// public void setOnCellClick(Consumer<CellView> consumer) {
+	// myGrid.setOnCellClick(consumer);
+	// }
 
 	public void templateClicked(VoogaEntity voogaEntity) {
 		myGrid.setTemplateEntityToAdd(voogaEntity);

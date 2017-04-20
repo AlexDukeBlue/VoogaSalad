@@ -4,8 +4,6 @@
  */
 package frontend.templatepane;
 
-import frontend.worldview.grid.Sprite;
-
 /**
  * @author Stone Mathers
  * Created 3/29/2017

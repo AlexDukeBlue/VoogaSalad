@@ -4,7 +4,6 @@
  */
 package frontend.templatepane;
 
-import frontend.worldview.grid.Sprite;
 import javafx.scene.Parent;
 
 /**

@@ -4,13 +4,13 @@
  * @author Stone Mathers
  * Created 4/11/2017
  */
-package frontend.worldview.grid;
+package frontend.worldview.grid.layout_delegate.actual_classes;
 
 import javafx.scene.shape.Polygon;
 
-public class Hexagon extends Polygon {
+class Hexagon extends Polygon {
 
-	public static final double FULL_CIRCLE = Math.PI * 2;
+	private static final double FULL_CIRCLE = Math.PI * 2;
 
 	private double myMinWidth, myMaxWidth;
 
@@ -23,7 +23,7 @@ public class Hexagon extends Polygon {
 	 *            Scale relative to minWidth and maxWidth. Must be greater than
 	 *            0.0 and less than 1.0.
 	 */
-	public Hexagon(double minWidth, double maxWidth, double scale) {
+	Hexagon(double minWidth, double maxWidth, double scale) {
 		setPoints(minWidth, maxWidth, scale);
 	}
 
@@ -39,7 +39,7 @@ public class Hexagon extends Polygon {
 	 * @param maxWidth
 	 *            Maximum width
 	 */
-	public void setPoints(double scale, double minWidth, double maxWidth) {
+	void setPoints(double scale, double minWidth, double maxWidth) {
 		myMinWidth = minWidth;
 		myMaxWidth = maxWidth;
 		setPoints(scale);
@@ -53,7 +53,7 @@ public class Hexagon extends Polygon {
 	 *            Scale relative to minWidth and maxWidth. Must be greater than
 	 *            0.0 and less than 1.0.
 	 */
-	public void setPoints(double scale) {
+	private void setPoints(double scale) {
 		getPoints().clear();
 		double width = myMinWidth + ((myMaxWidth - myMinWidth) * scale);
 		double radius = width / (Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));

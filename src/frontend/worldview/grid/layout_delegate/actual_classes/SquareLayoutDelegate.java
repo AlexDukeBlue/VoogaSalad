@@ -1,6 +1,9 @@
-package frontend.worldview.grid;
+package frontend.worldview.grid.layout_delegate.actual_classes;
 
-public class SquareLayout implements LayoutManager {
+import frontend.worldview.grid.actual_classes.oldclasses.CellView;
+import frontend.worldview.grid.layout_delegate.interfaces.GridLayoutDelegate;
+
+class SquareLayoutDelegate implements GridLayoutDelegate {
 
 	private double xOffset;
 	private double yOffset;

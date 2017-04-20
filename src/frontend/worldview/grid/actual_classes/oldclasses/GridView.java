@@ -1,4 +1,4 @@
-package frontend.worldview.grid;
+package frontend.worldview.grid.actual_classes.oldclasses;
 
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
@@ -8,6 +8,8 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.util.BaseUIManager;
+import frontend.worldview.grid.layout_delegate.actual_classes.GridLayoutDelegateFactory;
+import frontend.worldview.grid.layout_delegate.interfaces.GridLayoutDelegate;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -26,11 +28,11 @@ import javafx.scene.paint.ImagePattern;
  *
  * @author Andreas Santos Created 3/29/2017
  */
-public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDelegate {
+public class GridView extends BaseUIManager<ScrollPane> {
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 	private ScrollPane myScrollPane;
 	private Pane cellViewObjects;
-	private LayoutManager myLayoutManager;
+	private GridLayoutDelegate myLayoutManager;
 	private String unitClickedName;
 	private CoordinateTuple unitClickedLocation;
 	private boolean shouldCopy = true;
@@ -54,7 +56,7 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
 		});
-		myLayoutManager = new LayoutManagerFactory();
+		myLayoutManager = new GridLayoutDelegateFactory();
 		populateCellViews();
 		myScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		myScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -70,7 +72,7 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
-			CellView cl = new CellView(coordinate, getController(), this);
+			CellView cl = new CellView(coordinate, getController());
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();
 			cellViewObjects.getChildren().add(cl.getObject());
@@ -111,7 +113,6 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 		}
 	}
 
-	@Override
 	public void unitClicked(UnitView unitView) {
 		unitClickedName = unitView.getUnitName();
 		unitClickedLocation = unitView.getUnitLocation();
