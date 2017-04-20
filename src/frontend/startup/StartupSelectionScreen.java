@@ -21,14 +21,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import util.net.ObservableServer;
@@ -107,13 +111,6 @@ public class StartupSelectionScreen extends VBox {
 		rotate.setInterpolator(Interpolator.LINEAR);
 		return rotate;
 	}
-	
-	public void addActions(Button create, Button join, Button load)
-	{
-		create.setOnAction(e -> create());
-		join.setOnAction(e -> join());
-		load.setOnAction(e -> load());
-	}
 
 
 	public void setUpPane() {
@@ -121,7 +118,6 @@ public class StartupSelectionScreen extends VBox {
 		Button create = new Button(SelectionProperties.getString("Create"));
 		Button join = new Button(SelectionProperties.getString("Join"));
 		Button load = new Button(SelectionProperties.getString("Load"));
-		addActions(create, join, load);
 
 		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but heavily refactored and changed by ncp14
 		setButtonAnimationColors();
@@ -138,7 +134,8 @@ public class StartupSelectionScreen extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
-				create();
+				String port = popupWindow();
+				create(Integer.parseInt(port));
 			}
 		});
 		
@@ -146,7 +143,8 @@ public class StartupSelectionScreen extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
-				create();
+				String port = popupWindow();
+				join(Integer.parseInt(port));
 			}
 		});
 		
@@ -154,7 +152,7 @@ public class StartupSelectionScreen extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				timeline.play();
-				create();
+				load(Integer.parseInt(port));
 			}
 		});
 
@@ -240,6 +238,17 @@ public class StartupSelectionScreen extends VBox {
 		this.getChildren().add(load);
 		this.getChildren().add(join);
 	}
+	
+	public String popupWindow()
+	{
+		TextInputDialog dialog = new TextInputDialog("Enter a number");
+		dialog.setTitle("Creating server....");
+		dialog.setHeaderText("Enter a port number for your server");
+		dialog.setContentText("Port number:");
+		Optional<String> result = dialog.showAndWait();
+		if(result.isPresent()) return result.get();
+		else return "10000";
+	}
 
 	private void play() {
 		read("play");
@@ -249,8 +258,8 @@ public class StartupSelectionScreen extends VBox {
 		read("load");
 	}
 
-	private void create() {
-		startServer(10070);
+	private void create(int port) {
+		startServer();
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver(new Observer() {
@@ -264,7 +273,7 @@ public class StartupSelectionScreen extends VBox {
 
 	}
 	
-	private void join() {
+	private void join(int port) {
 		GameWizard wiz = new GameWizard();
 		wiz.show();
 		wiz.addObserver(new Observer() {
@@ -278,7 +287,7 @@ public class StartupSelectionScreen extends VBox {
 
 	}
 	
-	private void load() {
+	private void load(int port) {
 		startServer(10070);
 		GameWizard wiz = new GameWizard();
 		wiz.show();
