@@ -42,6 +42,11 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 		update();
 	}
 
+	@Override
+	public void update() {
+
+	}
+
 	private void initialize() {
 		myScrollPane = new ScrollPane();
 		myScrollPane.setOnZoom(event -> {
@@ -62,6 +67,9 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 		});
 		myLayoutManager = new LayoutManagerFactory();
 		populateCellViews();
+		myScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		myScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		myScrollPane.setPannable(true);
 		myScrollPane.setContent(zoomGroup);
 	}
 

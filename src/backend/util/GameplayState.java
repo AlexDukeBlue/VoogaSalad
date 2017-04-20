@@ -6,7 +6,6 @@ import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.player.Team;
-import backend.unit.ModifiableUnit;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -30,7 +29,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private volatile GameBoard grid;
 	private boolean isAuthoringMode;
 	
-	private Collection<ModifiableUnit> allUnits;
+	//private Collection<ModifiableUnit> allUnits;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
@@ -244,36 +243,5 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
-	}
-
-	@Override
-	/*
-	 * 
-	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
-	 */
-	public void addUnit(ModifiableUnit mUnit) {
-		allUnits.add(mUnit);
-		
-	}
-
-	@Override
-	/*
-	 * 
-	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
-	 */
-	public Collection<ModifiableUnit> getUnits() {
-		return allUnits;	
-	}
-
-	@Override
-	public void addUnitTemplates(ModifiableUnit mUnit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Collection<ModifiableUnit> getUnitTemplates() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
