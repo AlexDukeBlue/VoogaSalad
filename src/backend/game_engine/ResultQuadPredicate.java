@@ -12,19 +12,19 @@ public interface ResultQuadPredicate extends Serializable {
 	Result determine(ImmutablePlayer player, GameplayState state);
 
 	enum Result {
-		//        WIN((player, gameState) -> state.handleWin(player)),
-//        LOSE((player, gameState) -> state.handleLoss(player)),
-//        TIE((player, gameState) -> state.handleTie()),
-		NONE((player, gameState) -> doNothing());
+		WIN((player, engine) -> engine.handleWin(player)),
+        LOSE((player, engine) -> engine.handleLoss(player)),
+        TIE((player, engine) -> engine.handleTie()),
+		NONE((player, engine) -> doNothing());
 
-		private BiConsumer<ImmutablePlayer, GameplayState> toExecute;
+		private BiConsumer<ImmutablePlayer, GameEngine> toExecute;
 
-		Result(BiConsumer<ImmutablePlayer, GameplayState> executeThis) {
+		Result(BiConsumer<ImmutablePlayer, GameEngine> executeThis) {
 			toExecute = executeThis;
 		}
 
-		public void accept(ImmutablePlayer player, GameplayState state) {
-			toExecute.accept(player, state);
+		public void accept(ImmutablePlayer player, GameEngine engine) {
+			toExecute.accept(player, engine);
 		}
 
 		private static void doNothing() {

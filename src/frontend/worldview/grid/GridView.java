@@ -15,7 +15,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 
 /**
@@ -27,7 +26,7 @@ import javafx.scene.paint.ImagePattern;
  *
  * @author Andreas Santos Created 3/29/2017
  */
-public class GridView extends BaseUIManager<Region> implements UnitViewDelegate {
+public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDelegate {
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 	private ScrollPane myScrollPane;
 	private Pane cellViewObjects;
@@ -78,7 +77,7 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 	}
 
 	@Override
-	public Region getObject() {
+	public ScrollPane getObject() {
 		return myScrollPane;
 	}
 
@@ -121,8 +120,10 @@ public class GridView extends BaseUIManager<Region> implements UnitViewDelegate 
 			//You can die in peace now
 			if (shouldCopy) {
 				getController().sendModifier((AuthoringGameState gameState) -> {
-					Unit newUnit = gameState.getTemplateByCategory("unit").getByName(unitClickedName).copy();
-					gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
+					VoogaEntity entity = gameState.getTemplateByName(unitClickedName).copy();
+//					gameState.getGrid().get(cellClickedLocation).addOccupants(newUnit);
+					System.out.println(entity);
+					gameState.getGrid().get(cellClickedLocation).addVoogaEntity(entity);
 					return gameState;
 				});
 			} else {

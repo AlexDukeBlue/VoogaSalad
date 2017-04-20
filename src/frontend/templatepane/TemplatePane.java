@@ -1,7 +1,5 @@
 package frontend.templatepane;
 
-import java.util.Collection;
-
 import backend.cell.Terrain;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
@@ -12,19 +10,14 @@ import frontend.worldview.WorldView;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import java.util.Collection;
 
 /**
  * @author Faith Rodriguez
@@ -82,7 +75,7 @@ public class TemplatePane extends BaseUIManager<Region> {
 		            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			spriteContent.setPadding(new Insets(5, 5, 5, 5));
 			// fix getName and getImage once communication sorted
-			Label spriteName = new Label(sprite.getName());
+			Label spriteName = new Label(sprite.getFormattedName());
 			spriteContent.getChildren().add(spriteName);
 			if (sprite.getImgPath() != null) {
 				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));

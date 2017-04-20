@@ -6,10 +6,6 @@
  */
 package frontend.detailpane;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
@@ -17,21 +13,18 @@ import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import frontend.util.BaseUIManager;
 import frontend.worldview.WorldView;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 
@@ -114,7 +107,7 @@ public class DetailPane extends BaseUIManager<Region> {
 		addString("Description", sprite.getDescription());
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
-			newSpriteInfo = new Label(setUnitContent((ModifiableUnit) sprite));	
+			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
 			setActiveAbilititesContent((ModifiableUnit) sprite);
 		}
 		else {
@@ -124,23 +117,23 @@ public class DetailPane extends BaseUIManager<Region> {
 		setLabel();
 	}
 	
-	private String setUnitContent(ModifiableUnit unit) {
+	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection("DefensiveModifiers", unit.getDefensiveModifiers(), content);
-		addString("Hit Points", unit.getHitPoints().toString());
-		addString("Move Points", unit.getMovePoints().toString());
-		addString("Move Pattern", unit.getMovePattern().toString());
+//		addString("Hit Points", unit.getHitPoints().toString());
+//		addString("Move Points", unit.getMovePoints().toString());
+//		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
 
-	private void setActiveAbilititesContent(ModifiableUnit unit) {
+	private void setActiveAbilititesContent(Unit unit) {
 		AAContent = addCollection("Active Abilities", unit.getActiveAbilities(), AAContent);
 		Label AALabel = new Label(AAContent);
 		AAPane.getChildren().add(AALabel);
 		
 	}
 	
-	private String setTerrainContent(ModifiableTerrain terrain) {
+	private String setTerrainContent(Terrain terrain) {
 		addString("Default Move Cost", ((Integer) terrain.getDefaultMoveCost()).toString());
 		addString("Default Defense Modifier", ((Integer) terrain.getDefaultMoveCost()).toString());
 		return content;
@@ -165,7 +158,7 @@ public class DetailPane extends BaseUIManager<Region> {
 		content += value + "\n";
 	}
 
-	private void addMoveCosts(ModifiableUnit unit) {
+	private void addMoveCosts(Unit unit) {
 		content += "Terrain Move Costs: \n";
 		Map<Terrain, Integer> MC = unit.getTerrainMoveCosts();
 		for (VoogaEntity t : MC.keySet()) {

@@ -57,6 +57,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 	
 	public View(Controller controller, boolean editable){
 		super(controller);
+		this.editable = editable;
 		initBorderPane();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
@@ -67,12 +68,13 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;
-		
+		this.editable = editable;		
 		if(editable){
-			enterDevMode();
+			enterAuthorMode();
+			menuBar.setEditable(true);
 		} else {
 			enterPlayMode();
+			menuBar.setEditable(false);
 		}
 	}
 
@@ -115,7 +117,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 * necessary panes.
 	 */
 	private void initPanes() {
-		menuBar = new VoogaMenuBar(this);
+		menuBar = new VoogaMenuBar(this, getController(), editable);
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
@@ -131,9 +133,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 * If the View is already in development mode, then nothing visually
 	 * changes.
 	 */
-	private void enterDevMode() {
+	private void enterAuthorMode() {
 		addSidePanes();
-		menuBar.setEditable(true);
 	}
 
 	/**
@@ -142,7 +143,6 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 */
 	private void enterPlayMode() {
 		removeSidePanes();
-		menuBar.setEditable(false);
 	}
 
 	/**
@@ -171,6 +171,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 	@Override
 	public void update(Observable observable, Object object) {
 		if (observable == tempPane){
+			System.out.println(observable);
 			detailPane.setContent((VoogaEntity)object, "");
 			worldView.templateClicked((VoogaEntity)object);
 		}
