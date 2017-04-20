@@ -19,7 +19,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 
 class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
@@ -38,7 +37,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	}
 
 	@Override
-	public Region getObject() {
+	public ScrollPane getObject() {
 		return myScrollPane;
 	}
 

@@ -14,6 +14,7 @@ import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.interfaces.worldview.WorldViewObserver;
 import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -50,8 +51,8 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 		initialize(gameDelegate);
 	}
 
-	public GridViewExternal getGridPane() {
-		return myGrid;
+	public ScrollPane getGridPane() {
+		return myGrid.getObject();
 	}
 
 	private void initialize(GameObserver gameDelegate) {

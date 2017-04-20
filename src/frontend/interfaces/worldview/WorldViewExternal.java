@@ -2,8 +2,8 @@ package frontend.interfaces.worldview;
 
 import java.util.Collection;
 
-import frontend.interfaces.GameObserver;
-import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Region;
 
 public interface WorldViewExternal {
 
@@ -41,6 +41,8 @@ public interface WorldViewExternal {
 
 	void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
 
-	Node getObject();
+	Region getObject();
+
+	ScrollPane getGridPane();
 
 }

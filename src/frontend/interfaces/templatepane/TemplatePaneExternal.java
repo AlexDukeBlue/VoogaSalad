@@ -2,7 +2,7 @@ package frontend.interfaces.templatepane;
 
 import java.util.Collection;
 
-import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 public interface TemplatePaneExternal {
 
@@ -14,6 +14,6 @@ public interface TemplatePaneExternal {
 
 	void removeAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers);
 
-	Region getObject();
+	VBox getObject();
 
 }

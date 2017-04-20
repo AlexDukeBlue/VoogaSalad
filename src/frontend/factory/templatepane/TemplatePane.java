@@ -10,6 +10,7 @@ import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.factory.worldview.MinimapPane;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
 import frontend.util.BaseUIManager;
@@ -50,12 +51,13 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	private Collection<? extends Unit> units;
 	private Collection<? extends Terrain> terrains;
 	private Collection<TemplatePaneObserver> observers;
+	private MinimapPane mapPane;
 
 	private Button addUnitButton;
 
-	public TemplatePane(Controller controller) {
+	public TemplatePane(Controller controller, MinimapPane mapPane) {
 		super(controller);
-
+		this.mapPane = mapPane;
 		observers = new ArrayList<>();
 		units = getController().getUnitTemplates();
 		terrains = getController().getTerrainTemplates();
@@ -63,7 +65,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		createCollabsible("unit", units);
 		addUnitButton();
 		createCollabsible("terrain", terrains);
-
+		update();
 	}
 
 	@Override
@@ -74,7 +76,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	}
 
 	@Override
-	public Region getObject() {
+	public VBox getObject() {
 		return pane;
 	}
 
@@ -159,6 +161,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	private void updatePane() {
 		pane.getChildren().clear();
+		pane.getChildren().add(mapPane.getObject());
 		createCollabsible("Unit", units);
 		addUnitButton();
 		createCollabsible("Terrain", terrains);

@@ -2,7 +2,7 @@ package frontend.interfaces.worldview;
 
 import java.util.Collection;
 
-import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 
 public interface GridViewExternal {
 
@@ -30,6 +30,6 @@ public interface GridViewExternal {
 
 	void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
 
-	Node getObject();
+	ScrollPane getObject();
 
 }
