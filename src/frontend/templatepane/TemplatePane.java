@@ -83,10 +83,10 @@ public class TemplatePane extends BaseUIManager<Region> {
 
 				@Override
 				public void update(Observable o, Object arg) {
-					updateUnits(getController().addUnitTemplate((ModifiableUnit)arg));
+					getController().addUnitTemplates((ModifiableUnit)arg);
 				}
 			});
-			updatePane();
+			updateTemplatePane();
 		});
 		pane.getChildren().add(addUnitButton);
 	}
