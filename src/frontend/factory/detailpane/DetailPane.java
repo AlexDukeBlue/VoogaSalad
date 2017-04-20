@@ -54,10 +54,10 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	private double PANE_WIDTH = 1000;
 
 	public DetailPane() {
+		observers = new ArrayList<>();
 		paneSetup();
 		setLabel();
 		clearContent();
-		observers = new ArrayList<>();
 	}
 
 	private void paneSetup() {
@@ -191,6 +191,20 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	public void removeDetailPaneObserver(DetailPaneObserver observer) {
 		if (observers.contains(observer)) {
 			observers.remove(observer);
+		}
+	}
+
+	@Override
+	public void addAllDetailPaneObservers(Collection<DetailPaneObserver> observers) {
+		if (observers != null) {
+			observers.stream().forEach(observer -> addDetailPaneObserver(observer));
+		}
+	}
+
+	@Override
+	public void removeAllDetailPaneObservers(Collection<DetailPaneObserver> observers) {
+		if (observers != null) {
+			observers.stream().forEach(observer -> removeDetailPaneObserver(observer));
 		}
 	}
 

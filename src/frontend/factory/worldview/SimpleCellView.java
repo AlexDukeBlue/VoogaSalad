@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -118,6 +119,13 @@ class SimpleCellView extends BaseUIManager<Node>
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
+
+		polygon.setOnMouseClicked(event -> {
+			if (event.getButton().equals(MouseButton.PRIMARY))
+				observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this));
+
+		});
+
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
 		group.getChildren().add(polygon);
@@ -216,26 +224,30 @@ class SimpleCellView extends BaseUIManager<Node>
 
 	@Override
 	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (unitViewObservers != null) {
+			unitViewObservers.stream().forEach(observer -> addUnitViewObserver(observer));
+		}
 	}
 
 	@Override
 	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (unitViewObservers != null) {
+			unitViewObservers.stream().forEach(observer -> removeUnitViewObserver(observer));
+		}
 	}
 
 	@Override
 	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (cellViewObservers != null) {
+			cellViewObservers.stream().forEach(observer -> addCellViewObserver(observer));
+		}
 	}
 
 	@Override
 	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (cellViewObservers != null) {
+			cellViewObservers.stream().forEach(observer -> removeCellViewObserver(observer));
+		}
 	}
 
 }

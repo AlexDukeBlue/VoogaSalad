@@ -12,6 +12,7 @@ import controller.Controller;
 import frontend.View;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
+import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.CellViewObserver;
 import frontend.interfaces.worldview.GridViewExternal;
 import frontend.interfaces.worldview.GridViewObserver;
@@ -24,6 +25,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 
 class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
@@ -32,6 +34,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 	private ScrollPane myScrollPane;
 	private Pane cellViewObjects;
+	private Collection<CellViewExternal> cellViews;
 	private GridLayoutDelegate myLayoutManager;
 	private String unitClickedName;
 	private CoordinateTuple unitClickedLocation;
@@ -44,7 +47,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	}
 
 	@Override
-	public ScrollPane getObject() {
+	public Region getObject() {
 		return myScrollPane;
 	}
 
@@ -52,21 +55,15 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 			Collection<UnitViewObserver> unitObservers) {
 		cellViewObjects.setBackground(new Background(
 				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		cellViews = new ArrayList<>();
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			SimpleCellView cl = new SimpleCellView(coordinate, getController());
-			if (cellObservers != null) {
-				cellObservers.stream().forEach(observer -> cl.addCellViewObserver(observer));
-			}
-			if (unitObservers != null) {
-				unitObservers.stream().forEach(observer -> cl.addUnitViewObserver(observer));
-			}
+			cellViews.add(cl);
+			cl.addAllCellViewObservers(cellObservers);
+			cl.addAllUnitViewObservers(unitObservers);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();
 			cellViewObjects.getChildren().add(cl.getObject());
-			cl.getPolygon().setOnMouseClicked(event -> {
-				if (event.getButton().equals(MouseButton.PRIMARY))
-					cellClicked(coordinate);
-			});
 		});
 	}
 
@@ -144,62 +141,56 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
 	@Override
 	public void addCellViewObserver(CellViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.addCellViewObserver(observer));
 	}
 
 	@Override
 	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.addAllCellViewObservers(cellViewObservers));
 	}
 
 	@Override
 	public void removeCellViewObserver(CellViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.removeCellViewObserver(observer));
 	}
 
 	@Override
 	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.removeAllCellViewObservers(cellViewObservers));
 	}
 
 	@Override
 	public void addUnitViewObserver(UnitViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.addUnitViewObserver(observer));
 	}
 
 	@Override
 	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.addAllUnitViewObservers(unitViewObservers));
 	}
 
 	@Override
 	public void removeUnitViewObserver(UnitViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.removeUnitViewObserver(observer));
 	}
 
 	@Override
 	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		cellViews.stream().forEach(cellView -> cellView.removeAllUnitViewObservers(unitViewObservers));
 	}
 
 	@Override
 	public void addAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (gridViewObservers != null) {
+			gridViewObservers.stream().forEach(observer -> addGridViewObserver(observer));
+		}
 	}
 
 	@Override
 	public void removeAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (gridViewObservers != null) {
+			gridViewObservers.stream().forEach(observer -> removeGridViewObserver(observer));
+		}
 	}
 
 }

@@ -23,10 +23,11 @@ import java.util.Map;
 
 import backend.util.AuthoringGameState;
 import controller.Controller;
+import frontend.factory.GameObserverFactory;
 import frontend.factory.detailpane.DetailPaneFactory;
 import frontend.factory.templatepane.TemplatePaneFactory;
-import frontend.factory.worldview.MinimapPane;
 import frontend.factory.worldview.WorldViewFactory;
+import frontend.interfaces.GameObserver;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
@@ -53,6 +54,7 @@ public class View extends BaseUIManager<Region> {
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
 	private TemplatePaneExternal tempPane;
+	private GameObserver gameObserver;
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -128,6 +130,10 @@ public class View extends BaseUIManager<Region> {
 		initPanes();
 		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
 				detailPane.getObject(), null);
+		System.out.println(worldView.getObject());
+		System.out.println(menuBar.getObject());
+		System.out.println(tempPane.getObject());
+		System.out.println(detailPane.getObject());
 	}
 
 	/**
@@ -140,9 +146,12 @@ public class View extends BaseUIManager<Region> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
 		});
-		worldView = WorldViewFactory.newWorldView();
+		gameObserver = GameObserverFactory.newGameObserver();
+		worldView = WorldViewFactory.newWorldView(getController(), gameObserver);
 		detailPane = DetailPaneFactory.newDetailPane();
-		tempPane = TemplatePaneFactory.newTemplatePane();
+		detailPane.addDetailPaneObserver(gameObserver);
+		tempPane = TemplatePaneFactory.newTemplatePane(getController());
+		tempPane.addTemplatePaneObserver(gameObserver);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -38,7 +39,7 @@ import javafx.scene.paint.Color;
  *         CellView.java classes to make the clicking and dragging features work
  */
 
-class TemplatePane extends BaseUIManager<VBox> implements TemplatePaneExternal {
+class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal {
 
 	private VBox pane = new VBox();
 	private Collection<? extends Unit> units;
@@ -47,9 +48,10 @@ class TemplatePane extends BaseUIManager<VBox> implements TemplatePaneExternal {
 
 	public TemplatePane(Controller controller) {
 		super(controller);
+
+		observers = new ArrayList<>();
 		units = getController().getUnitTemplates();
 		terrains = getController().getTerrainTemplates();
-		observers = new ArrayList<>();
 
 		createCollabsible("unit", units);
 		createCollabsible("terrain", terrains);
@@ -64,7 +66,7 @@ class TemplatePane extends BaseUIManager<VBox> implements TemplatePaneExternal {
 	}
 
 	@Override
-	public VBox getObject() {
+	public Region getObject() {
 		return pane;
 	}
 
@@ -119,7 +121,7 @@ class TemplatePane extends BaseUIManager<VBox> implements TemplatePaneExternal {
 
 	private void setOnClick(Node o, VoogaEntity sprite, String spriteType) {
 		o.setOnMouseClicked(event -> {
-			observers.stream().forEach(observer -> observer.didClickVoogaEntity(this,sprite));
+			observers.stream().forEach(observer -> observer.didClickVoogaEntity(this, sprite));
 		});
 	}
 
@@ -135,6 +137,20 @@ class TemplatePane extends BaseUIManager<VBox> implements TemplatePaneExternal {
 
 	private void updateTerrains(Collection<? extends Terrain> terrainsIn) {
 		terrains = terrainsIn;
+	}
+
+	@Override
+	public void addAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers) {
+		if (observers != null) {
+			observers.stream().forEach(observer -> addTemplatePaneObserver(observer));
+		}
+	}
+
+	@Override
+	public void removeAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers) {
+		if (observers != null) {
+			observers.stream().forEach(observer -> removeTemplatePaneObserver(observer));
+		}
 	}
 
 }

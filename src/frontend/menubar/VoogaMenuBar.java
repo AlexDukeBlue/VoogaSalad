@@ -14,27 +14,22 @@ import java.util.Optional;
 
 import backend.cell.Terrain;
 import backend.unit.Unit;
-import backend.util.AuthoringGameState;
-import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
-import controller.CommunicationController;
 import controller.Controller;
-import frontend.startup.StartupScreen;
 import frontend.View;
+import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
-import frontend.wizards.GameWizard;
 import frontend.wizards.TerrainWizard;
 import frontend.wizards.UnitWizard;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 

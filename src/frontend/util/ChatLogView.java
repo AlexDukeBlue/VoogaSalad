@@ -1,5 +1,14 @@
 package frontend.util;
 
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import backend.player.ChatMessage;
 import controller.Controller;
 import javafx.collections.FXCollections;
@@ -17,19 +26,10 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 /**
  * @author Created by th174 on 3/31/2017.
  */
-public class ChatLogView extends BaseUIManager {
+public class ChatLogView extends BaseUIManager<Region> {
 	//TODO ResourceBundlify
 	private final String HEADER;
 	private final BorderPane pane;

@@ -2,6 +2,8 @@ package frontend.interfaces.worldview;
 
 import java.util.Collection;
 
+import javafx.scene.Node;
+
 public interface UnitViewExternal {
 
 	void addUnitViewObserver(UnitViewObserver observer);
@@ -11,5 +13,7 @@ public interface UnitViewExternal {
 	void removeUnitViewObserver(UnitViewObserver observer);
 	
 	void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
+	
+	Node getObject();
 
 }

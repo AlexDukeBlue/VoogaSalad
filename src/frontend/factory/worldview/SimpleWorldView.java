@@ -1,5 +1,6 @@
 package frontend.factory.worldview;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -13,7 +14,6 @@ import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.interfaces.worldview.WorldViewObserver;
 import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -21,29 +21,31 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
- * WorldView sets up and displays a Region object that contains a grid of
+ * SimpleWorldView sets up and displays a Region object that contains a grid of
  * CellViews that represents the state of the grid received from the Controller
- * that is passed to the WorldView when instantiated.
+ * that is passed to the SimpleWorldView when instantiated.
  * <p>
- * The WorldView extends the BaseUIManager class so that it can change
+ * The SimpleWorldView extends the BaseUIManager class so that it can change
  * languages, css stylesheets, and can be updated by the controller through the
  * updatable interface.
  *
  * @author Dylan Peters
  */
-class WorldView extends BaseUIManager<Region> implements WorldViewExternal {
+class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal {
 
 	private GridViewExternal myGrid;
 	private BorderPane borderPane;
+	private Collection<WorldViewObserver> observers;
 
 	/**
-	 * Instantiates a new instance of WorldView. Sets all values to default.
+	 * Instantiates a new instance of SimpleWorldView. Sets all values to
+	 * default.
 	 *
 	 * @param controller
 	 *            the controller whose state will be displayed within the
-	 *            WorldView
+	 *            SimpleWorldView
 	 */
-	public WorldView(Controller controller, GameObserver gameDelegate) {
+	public SimpleWorldView(Controller controller, GameObserver gameDelegate) {
 		setController(controller);
 		initialize(gameDelegate);
 	}
@@ -54,6 +56,7 @@ class WorldView extends BaseUIManager<Region> implements WorldViewExternal {
 
 	private void initialize(GameObserver gameDelegate) {
 		borderPane = new BorderPane();
+		observers = new ArrayList<>();
 		myGrid = new SimpleGridView(getController(), Arrays.asList(gameDelegate), Arrays.asList(gameDelegate),
 				Arrays.asList(gameDelegate));
 		AnchorPane centerAnchorPane = new AnchorPane();
@@ -75,111 +78,100 @@ class WorldView extends BaseUIManager<Region> implements WorldViewExternal {
 
 	@Override
 	public void addGridViewObserver(GridViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		myGrid.addGridViewObserver(observer);
 	}
 
 	@Override
 	public void addAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		// TODO Auto-generated method stub
-		
+		myGrid.addAllGridViewObservers(gridViewObservers);
 	}
 
 	@Override
 	public void removeGridViewObserver(GridViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		myGrid.removeGridViewObserver(observer);
 	}
 
 	@Override
 	public void removeAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ScrollPane getObject() {
-		// TODO Auto-generated method stub
-		return null;
+		myGrid.removeAllGridViewObservers(gridViewObservers);
 	}
 
 	@Override
 	public void addCellViewObserver(CellViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		myGrid.addCellViewObserver(observer);
 	}
 
 	@Override
 	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		// TODO Auto-generated method stub
-		
+		myGrid.addAllCellViewObservers(cellViewObservers);
 	}
 
 	@Override
 	public void removeCellViewObserver(CellViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		myGrid.removeCellViewObserver(observer);
 	}
 
 	@Override
 	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		// TODO Auto-generated method stub
-		
+		myGrid.removeAllCellViewObservers(cellViewObservers);
 	}
 
 	@Override
 	public void addUnitViewObserver(UnitViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		myGrid.addUnitViewObserver(observer);
 	}
 
 	@Override
 	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		myGrid.addAllUnitViewObservers(unitViewObservers);
 	}
 
 	@Override
 	public void removeUnitViewObserver(UnitViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		myGrid.removeUnitViewObserver(observer);
 	}
 
 	@Override
 	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		myGrid.removeAllUnitViewObservers(unitViewObservers);
 	}
 
 	@Override
 	public void addWorldViewObserver(WorldViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		if (!observers.contains(observer)) {
+			observers.add(observer);
+		}
 	}
 
 	@Override
 	public void addAllWorldViewObservers(Collection<WorldViewObserver> worldViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (worldViewObservers != null) {
+			worldViewObservers.stream().forEach(observer -> addWorldViewObserver(observer));
+		}
 	}
 
 	@Override
 	public void removeWorldViewObserver(WorldViewObserver observer) {
-		// TODO Auto-generated method stub
-		
+		if (observers.contains(observer)) {
+			observers.remove(observer);
+		}
 	}
 
 	@Override
 	public void removeAllWorldViewObservers(Collection<WorldViewObserver> worldViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (worldViewObservers != null) {
+			worldViewObservers.stream().forEach(observer -> removeWorldViewObserver(observer));
+		}
 	}
 
 	@Override
 	public GridViewExternal getGridViewExternal() {
-		// TODO Auto-generated method stub
-		return null;
+		return myGrid;
 	}
-	
-	
+
+	@Override
+	public Region getObject() {
+		return borderPane;
+	}
+
 }

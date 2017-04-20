@@ -24,7 +24,7 @@ class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExternal {
 	 * Creates a new UnitView. Sets all values to default.
 	 */
 	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, String unitImgPath) {
-		initialize(unitName,unitLocation,unitImgPath);
+		initialize(unitName, unitLocation, unitImgPath);
 	}
 
 	public String getUnitName() {
@@ -117,14 +117,16 @@ class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExternal {
 
 	@Override
 	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (unitViewObservers != null) {
+			unitViewObservers.stream().forEach(observer -> addUnitViewObserver(observer));
+		}
 	}
 
 	@Override
 	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		// TODO Auto-generated method stub
-		
+		if (unitViewObservers != null) {
+			unitViewObservers.stream().forEach(observer -> removeUnitViewObserver(observer));
+		}
 	}
 
 }

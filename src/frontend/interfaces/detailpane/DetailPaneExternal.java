@@ -1,13 +1,19 @@
 package frontend.interfaces.detailpane;
 
-import javafx.scene.Node;
+import java.util.Collection;
+
+import javafx.scene.layout.Region;
 
 public interface DetailPaneExternal {
 	
 	void addDetailPaneObserver(DetailPaneObserver observer);
 	
+	void addAllDetailPaneObservers(Collection<DetailPaneObserver> observers);
+	
 	void removeDetailPaneObserver(DetailPaneObserver observer);
 	
-	Node getObject();
+	void removeAllDetailPaneObservers(Collection<DetailPaneObserver> observers);
+	
+	Region getObject();
 
 }

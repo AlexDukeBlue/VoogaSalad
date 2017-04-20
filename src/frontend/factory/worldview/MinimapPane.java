@@ -4,23 +4,24 @@ import frontend.interfaces.worldview.GridViewExternal;
 import frontend.util.BaseUIManager;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
  * @author Created by th174 on 4/19/17.
  */
-public class MinimapPane extends BaseUIManager<Region> {
+public class MinimapPane extends BaseUIManager<Parent> {
 	private static final double MINIMAP_SCALE = .2;
 	private final Rectangle gridViewPortBounds;
 	private final Pane view;
 
 	public MinimapPane(GridViewExternal gridView) {
-		ScrollPane scrollPane = gridView.getObject();
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setContent(gridView.getObject());
 		this.gridViewPortBounds = new Rectangle();
 		gridViewPortBounds.setFill(Color.TRANSPARENT);
 		gridViewPortBounds.setStroke(Color.RED);
@@ -81,7 +82,7 @@ public class MinimapPane extends BaseUIManager<Region> {
 	}
 
 	@Override
-	public Region getObject() {
+	public Parent getObject() {
 		return view;
 	}
 }
