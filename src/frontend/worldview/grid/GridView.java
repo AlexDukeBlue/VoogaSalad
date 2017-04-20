@@ -95,9 +95,9 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 	}
 
 	public void setTemplateEntityToAdd(VoogaEntity template) {
-			unitClickedName = template.getName();
-			unitClickedLocation = null;
-			shouldCopy = true;
+		unitClickedName = template.getName();
+		unitClickedLocation = null;
+		shouldCopy = true;
 	}
 
 	private void cellClicked(CellView cell) {
@@ -105,17 +105,6 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 			CoordinateTuple cellClickedLocation = cell.getCoordinateTuple();
 			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
 			String unitClickedName = this.unitClickedName;
-			//YOU HAVE TO GET THE SERVER'S UNIT, NOT THE LOCAL UNIT
-			//unitToArrive is the client's version
-			//unitToMove is the server's version. You have to get it from the gameState
-			//If you add unitToArrive to the server's grid, suddenly the server has 2 units
-			//unitToMove != unitToArrive
-			//you can't move unitToArrive on the server, since that unit doesn't exist on the server
-			//however, a unit with the exact same name and location do exist on the server
-			//so you can get the server's version using the name and location
-			//note that you can't have 2 units with the same name on the same spot (this is hard enforced in the backend with a map)
-			//Dylan I figured it out man
-			//You can die in peace now
 			if (shouldCopy) {
 				getController().sendModifier((AuthoringGameState gameState) -> {
 					VoogaEntity entity = gameState.getTemplateByName(unitClickedName).copy();
