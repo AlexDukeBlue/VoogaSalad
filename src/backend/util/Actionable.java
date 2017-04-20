@@ -14,7 +14,7 @@ public class Actionable {
 		nameOf = name;
 	}
 	
-	public BiConsumer<ImmutablePlayer, GameplayState> getBiComsumer() {
+	public BiConsumer<ImmutablePlayer, GameplayState> getBiConsumer() {
 		return biCon;
 	}
 	
