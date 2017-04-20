@@ -17,6 +17,7 @@ import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import controller.CommunicationController;
 import controller.Controller;
+import frontend.startup.StartupScreen;
 import frontend.View;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
@@ -78,7 +79,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newGameItem = factory.getMenuItem(getLanguage().getValue().getString("Create"), e -> create());
 		saveItem = factory.getMenuItem(getLanguage().getValue().getString("Save"), e -> save());
 		loadItem = factory.getMenuItem(getLanguage().getValue().getString("Load"), e -> load());
-		homeScreenItem = factory.getMenuItem("Home Screen", e -> {}); //TODO implement, resource file
+		homeScreenItem = factory.getMenuItem("Home Screen", e -> {
+			
+			StartupScreen su = new StartupScreen(myView.getStage(), StartupScreen.DEFAULT_WIDTH, StartupScreen.DEFAULT_HEIGHT);
+			myView.getStage().setScene(su.getPrimaryScene());
+			
+			}); //TODO implement, resource file
 		quitItem = factory.getMenuItem(getLanguage().getValue().getString("Quit"), e -> {}); //TODO implement
 		
 		newUnitItem = factory.getMenuItem("Create New Unit", e -> {}); ////TODO implement, resource file

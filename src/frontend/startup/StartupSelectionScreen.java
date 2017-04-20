@@ -206,28 +206,16 @@ public class StartupSelectionScreen extends VBox {
 
 	private void create() {
 		GameWizard wiz = new GameWizard();
+		wiz.addObserver((o, arg) -> createGame((AuthoringGameState) arg, true));
 		wiz.show();
-		wiz.addObserver(new Observer() {
-
-			@Override
-			public void update(Observable o, Object arg) {
-				createGame((AuthoringGameState) arg, true);
-				stage.close();
-			}
-		});
-
 	}
 
 	private void createGame(AuthoringGameState state, boolean editable) {
 		Controller control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100, state, null);
 		View view = new View(control);
-		//myClient.setGameState(state);
-		//control.setClient(myClient);
 		view.setEditable(editable);
-		Stage stage = new Stage();
-		Scene scene = new Scene(view.getObject());
-		stage.setScene(scene);
-		stage.show();
+		stage.setScene(new Scene(view.getObject()));
+		//stage.show();
 
 	}
 

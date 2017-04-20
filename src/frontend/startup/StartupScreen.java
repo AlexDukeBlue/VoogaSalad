@@ -8,6 +8,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class StartupScreen {
+	public static final double DEFAULT_WIDTH = 700;
+	public static final double DEFAULT_HEIGHT = 700;
+	
 	private Scene primaryScene;
 	private BorderPane primaryPane;
 	private double width, height;
