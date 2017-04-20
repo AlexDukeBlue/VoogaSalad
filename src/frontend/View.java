@@ -55,6 +55,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 	private WorldView worldView;
 	private DetailPane detailPane;
 	private TemplatePane tempPane;
+	//private RulesPane rulesPane;				//TODO For when rules pane is created
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -68,7 +69,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 		super(controller);
 		myStage = stage;
 		this.editable = editable;
-		initBorderPane();
+		placePanes();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
 	}
@@ -86,6 +87,36 @@ public class View extends BaseUIManager<Region> implements Observer {
 			enterPlayMode();
 			menuBar.setEditable(false);
 		}
+	}
+	
+	public void toggleRulesPane(){
+//		if(myBorder.getLeft() == null){
+//			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
+//		} else {
+//			myBorder.setLeft(null);
+//		}
+	}
+	
+	public void toggleTemplatePane(){
+		//TODO
+//		if(myBorder.getRight() == null){
+//			myBorder.setRight(tempPane.getObject());
+//		} else {
+//			myBorder.setRight(null);
+//		}
+	}
+	
+	public void toggleDetailsPane(){
+		//TODO
+//		if(myBorder.getBottom() == null){
+//			myBorder.setBottom(detailPane.getObject());
+//		} else {
+//			myBorder.setBottom(null);
+//		}
+	}
+	
+	public void toggleStatsPane(){
+		//TODO
 	}
 
 	@Override
@@ -123,13 +154,14 @@ public class View extends BaseUIManager<Region> implements Observer {
 		myAlert.showAndWait();
 	}
 
-	private void initBorderPane() {
+	private void placePanes() {
 		initPanes();
 		innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
 		innerSplitPane.setDividerPositions(1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
-		outerSplitPane.setDividerPositions(.8);
+		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPosition(0, 0);
+		outerSplitPane.setDividerPosition(1, .8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 	}
 
@@ -148,6 +180,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 		tempPane = new TemplatePane(detailPane, worldView, getController());
 		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane().getObject(), getController()).getObject());
 		tempPane.addObserver(this);
+		//rulesPane = new RulesPane(); 				//TODO For when rules pane is created
 	}
 
 	/**
@@ -164,6 +197,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
+
 //		removeSidePanes();
 	}
 
