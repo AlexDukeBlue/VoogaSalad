@@ -41,10 +41,12 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 	boolean turnRequirementsSatisfied();
 	
 	
-	//Next two methods depricated...
-	void addUnit(ModifiableUnit mUnit);
-	void getUnits (Collection<ModifiableUnit> allUnits);
 	
+	//Next four methods depricated...
+	void addUnit(ModifiableUnit mUnit);
+	Collection<ModifiableUnit> getUnits();	
+	void addUnitTemplates(ModifiableUnit mUnit);
+	Collection<ModifiableUnit> getUnitTemplates();	
 	
 
 	@Override

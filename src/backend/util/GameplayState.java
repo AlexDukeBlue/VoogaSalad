@@ -29,6 +29,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private int currentPlayerNumber;
 	private volatile GameBoard grid;
 	private boolean isAuthoringMode;
+	
+	private Collection<ModifiableUnit> allUnits;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
@@ -245,14 +247,21 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
+	/*
+	 * 
+	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
+	 */
 	public void addUnit(ModifiableUnit mUnit) {
-		// TODO Auto-generated method stub
+		allUnits.add(mUnit);
 		
 	}
 
 	@Override
-	public void getUnits(Collection<ModifiableUnit> allUnits) {
-		// TODO Auto-generated method stub
-		
+	/*
+	 * 
+	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
+	 */
+	public Collection<ModifiableUnit> getUnits() {
+		return allUnits;	
 	}
 }

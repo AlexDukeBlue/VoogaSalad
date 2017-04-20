@@ -126,10 +126,13 @@ public class CommunicationController implements Controller {
 		return ModifiableUnit.getPredefinedUnits();
 	}
 	
+	
 	public void addUnitTemplates(ModifiableUnit newUnit) {
-		Collection<ModifiableUnit> currentUnits =  ModifiableUnit.getPredefinedUnits();
-		currentUnits.add(newUnit);
-		
+		mGameState.addUnitTemplates(newUnit);
+	}
+	
+	public void addUnits(ModifiableUnit newUnit) {
+		mGameState.addUnit(newUnit);
 	}
 
 	@Override
