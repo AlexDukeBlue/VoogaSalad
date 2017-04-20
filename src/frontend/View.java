@@ -27,8 +27,10 @@ import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
 import frontend.worldview.MinimapPane;
 import frontend.worldview.WorldView;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -49,6 +51,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 
 	private boolean editable;
 	private BorderPane myBorder;
+	private SplitPane outerSplitPane;
+	private SplitPane innerSplitPane;
 	private VoogaMenuBar menuBar;
 	private WorldView worldView;
 	private DetailPane detailPane;
@@ -123,8 +127,15 @@ public class View extends BaseUIManager<Region> implements Observer {
 
 	private void initBorderPane() {
 		initPanes();
-		myBorder = new BorderPane(worldView.getObject(), menuBar.getObject(), tempPane.getObject(),
-				detailPane.getObject(), null);
+		innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
+		innerSplitPane.setDividerPositions(1);
+		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
+		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPositions(.8);
+		outerSplitPane.setOrientation(Orientation.VERTICAL);
+		myBorder = new BorderPane();
+		myBorder.setTop(menuBar.getObject());
+		myBorder.setCenter(outerSplitPane);
 	}
 
 	/**
@@ -140,7 +151,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 		worldView = new WorldView(getController());
 		detailPane = new DetailPane(worldView);
 		tempPane = new TemplatePane(detailPane, worldView, getController());
-		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane()).getObject());
+		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane().getObject(), getController()).getObject());
 		tempPane.addObserver(this);
 	}
 
