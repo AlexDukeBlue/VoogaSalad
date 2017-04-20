@@ -18,15 +18,22 @@
  */
 package frontend;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import backend.util.AuthoringGameState;
-import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.detailpane.DetailPane;
+import frontend.factory.GameObserverFactory;
+import frontend.factory.detailpane.DetailPaneFactory;
+import frontend.factory.templatepane.TemplatePaneFactory;
+import frontend.factory.worldview.MinimapPane;
+import frontend.factory.worldview.WorldViewFactory;
+import frontend.interfaces.GameObserver;
+import frontend.interfaces.detailpane.DetailPaneExternal;
+import frontend.interfaces.templatepane.TemplatePaneExternal;
+import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
-import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
-import frontend.worldview.MinimapPane;
-import frontend.worldview.WorldView;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -35,12 +42,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-
-public class View extends BaseUIManager<Region> implements Observer {
+public class View extends BaseUIManager<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private Stage myStage;
 
@@ -52,10 +54,11 @@ public class View extends BaseUIManager<Region> implements Observer {
 	private SplitPane outerSplitPane;
 	private SplitPane innerSplitPane;
 	private VoogaMenuBar menuBar;
-	private WorldView worldView;
-	private DetailPane detailPane;
-	private TemplatePane tempPane;
-	//private RulesPane rulesPane;				//TODO For when rules pane is created
+	private WorldViewExternal worldView;
+	private DetailPaneExternal detailPane;
+	private TemplatePaneExternal tempPane;
+	private GameObserver gameObserver;
+	// private RulesPane rulesPane; //TODO For when rules pane is created
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -75,8 +78,9 @@ public class View extends BaseUIManager<Region> implements Observer {
 	}
 
 	/**
-	 * @param editable True if this View can be switched into "edit" mode, false if
-	 *                 it cannot.
+	 * @param editable
+	 *            True if this View can be switched into "edit" mode, false if
+	 *            it cannot.
 	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
@@ -88,35 +92,36 @@ public class View extends BaseUIManager<Region> implements Observer {
 			menuBar.setEditable(false);
 		}
 	}
-	
-	public void toggleRulesPane(){
-//		if(myBorder.getLeft() == null){
-//			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
-//		} else {
-//			myBorder.setLeft(null);
-//		}
+
+	public void toggleRulesPane() {
+		// if(myBorder.getLeft() == null){
+		// //myBorder.setLeft(rulesPane.getObject()); //TODO For when rules pane
+		// is created
+		// } else {
+		// myBorder.setLeft(null);
+		// }
 	}
-	
-	public void toggleTemplatePane(){
-		//TODO
-//		if(myBorder.getRight() == null){
-//			myBorder.setRight(tempPane.getObject());
-//		} else {
-//			myBorder.setRight(null);
-//		}
+
+	public void toggleTemplatePane() {
+		// TODO
+		// if(myBorder.getRight() == null){
+		// myBorder.setRight(tempPane.getObject());
+		// } else {
+		// myBorder.setRight(null);
+		// }
 	}
-	
-	public void toggleDetailsPane(){
-		//TODO
-//		if(myBorder.getBottom() == null){
-//			myBorder.setBottom(detailPane.getObject());
-//		} else {
-//			myBorder.setBottom(null);
-//		}
+
+	public void toggleDetailsPane() {
+		// TODO
+		// if(myBorder.getBottom() == null){
+		// myBorder.setBottom(detailPane.getObject());
+		// } else {
+		// myBorder.setBottom(null);
+		// }
 	}
-	
-	public void toggleStatsPane(){
-		//TODO
+
+	public void toggleStatsPane() {
+		// TODO
 	}
 
 	@Override
@@ -134,7 +139,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState AuthoringGameState that the View will now access its data from
+	 * @param newGameState
+	 *            AuthoringGameState that the View will now access its data from
 	 */
 	public void setGameState(AuthoringGameState newGameState) {
 		getController().setGameState(newGameState);
@@ -143,7 +149,8 @@ public class View extends BaseUIManager<Region> implements Observer {
 	/**
 	 * Displays an Alert to the user containing the given message.
 	 *
-	 * @param s String alert message
+	 * @param s
+	 *            String alert message
 	 */
 	public void sendAlert(String s) {
 		Alert myAlert;
@@ -175,12 +182,18 @@ public class View extends BaseUIManager<Region> implements Observer {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
 		});
-		worldView = new WorldView(getController());
-		detailPane = new DetailPane(worldView);
-		tempPane = new TemplatePane(detailPane, worldView, getController());
-		tempPane.getObject().getChildren().add(0, new MinimapPane(worldView.getGridPane().getObject(), getController()).getObject());
-		tempPane.addObserver(this);
-		//rulesPane = new RulesPane(); 				//TODO For when rules pane is created
+		worldView = WorldViewFactory.newWorldView(getController());
+		detailPane = DetailPaneFactory.newDetailPane();
+		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
+				new MinimapPane(worldView.getGridPane(), getController()));
+		gameObserver = GameObserverFactory.newGameObserver(getController(), worldView, detailPane, tempPane);
+		detailPane.addDetailPaneObserver(gameObserver);
+		tempPane.addTemplatePaneObserver(gameObserver);
+		worldView.addWorldViewObserver(gameObserver);
+		worldView.addGridViewObserver(gameObserver);
+		worldView.addCellViewObserver(gameObserver);
+		worldView.addUnitViewObserver(gameObserver);
+		// rulesPane = new RulesPane(); //TODO For when rules pane is created
 	}
 
 	/**
@@ -189,7 +202,7 @@ public class View extends BaseUIManager<Region> implements Observer {
 	 * changes.
 	 */
 	private void enterAuthorMode() {
-//		addSidePanes();
+		// addSidePanes();
 	}
 
 	/**
@@ -198,22 +211,23 @@ public class View extends BaseUIManager<Region> implements Observer {
 	 */
 	private void enterPlayMode() {
 
-//		removeSidePanes();
+		// removeSidePanes();
 	}
 
-//	/**
-//	 * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
-//	 */
-//	private void addSidePanes() {
-//		innerSplitPane.getItems().add(tempPane.getObject());
-//	}
-//
-//	/**
-//	 * Removes the ToolsPane and TemplatePane from the sides of the View's GUI.
-//	 */
-//	private void removeSidePanes() {
-//		innerSplitPane.getItems().remove(tempPane.getObject());
-//	}
+	// /**
+	// * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
+	// */
+	// private void addSidePanes() {
+	// innerSplitPane.getItems().add(tempPane.getObject());
+	// }
+	//
+	// /**
+	// * Removes the ToolsPane and TemplatePane from the sides of the View's
+	// GUI.
+	// */
+	// private void removeSidePanes() {
+	// innerSplitPane.getItems().remove(tempPane.getObject());
+	// }
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {
@@ -221,14 +235,5 @@ public class View extends BaseUIManager<Region> implements Observer {
 		}
 		return IMAGE_CACHE.get(imgPath);
 	}
-
-	@Override
-	public void update(Observable observable, Object object) {
-		if (observable == tempPane) {
-			detailPane.setContent((VoogaEntity) object, "");
-			worldView.templateClicked((VoogaEntity) object);
-		}
-	}
-
 
 }

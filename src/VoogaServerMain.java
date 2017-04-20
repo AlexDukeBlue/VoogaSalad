@@ -13,10 +13,11 @@ public class VoogaServerMain {
 	public static final int PORT = 10023;
 	public static final int TIMEOUT = 20;
 
+	
 	public static void main(String[] args) throws Exception {
+		@SuppressWarnings("unused")
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
 		XMLSerializer<GameplayState> serializer = new XMLSerializer<>();
-//		JSONSerializer<ImmutableGameState> serializer = new JSONSerializer<>(GameState.class);
 		ObservableServer<GameplayState> voogaServer = new ObservableServer<>(null, PORT, serializer, serializer, Duration.ofSeconds(TIMEOUT));
 		Executors.newSingleThreadExecutor().submit(voogaServer);
 		System.out.println("Server started successfully...");
