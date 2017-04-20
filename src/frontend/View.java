@@ -22,9 +22,6 @@ import backend.util.AuthoringGameState;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.detailpane.DetailPane;
-import frontend.menubar.AuthorMenuBar;
-import frontend.menubar.PlayModeMenuBar;
-import frontend.menubar.PlayOnlyMenuBar;
 import frontend.menubar.VoogaMenuBar;
 import frontend.templatepane.TemplatePane;
 import frontend.util.BaseUIManager;
@@ -60,8 +57,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 	
 	public View(Controller controller, boolean editable){
 		super(controller);
+		this.editable = editable;
 		initBorderPane();
-		setEditable(editable);
 	}
 
 	/**
@@ -69,14 +66,13 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		if(this.editable != editable){
-			this.editable = editable;
-		
-			if(editable){
-				enterAuthorMode();
-			} else {
-				enterPlayMode();
-			}
+		this.editable = editable;		
+		if(editable){
+			enterAuthorMode();
+			menuBar.setEditable(true);
+		} else {
+			enterPlayMode();
+			menuBar.setEditable(false);
 		}
 	}
 
@@ -119,11 +115,7 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 * necessary panes.
 	 */
 	private void initPanes() {
-		if(editable){
-			menuBar = new AuthorMenuBar(this, getController());
-		} else {
-			menuBar = new PlayOnlyMenuBar(this, getController());
-		}
+		menuBar = new VoogaMenuBar(this, getController(), editable);
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
@@ -141,7 +133,6 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 */
 	private void enterAuthorMode() {
 		addSidePanes();
-		menuBar = new AuthorMenuBar(this, getController());
 	}
 
 	/**
@@ -150,7 +141,6 @@ public class View extends BaseUIManager<Region> implements Observer{
 	 */
 	private void enterPlayMode() {
 		removeSidePanes();
-		menuBar = new PlayModeMenuBar(this, getController());
 	}
 
 	/**
