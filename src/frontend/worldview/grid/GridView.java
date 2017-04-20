@@ -48,20 +48,6 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 
 	private void initialize() {
 		myScrollPane = new ScrollPane();
-		myScrollPane.setOnZoom(event -> {
-			Node e = myScrollPane.getContent();
-			if (e.getScaleX() < 1.5) {
-				e.setScaleX(e.getScaleX() * event.getZoomFactor());
-				e.setScaleY(e.getScaleY() * event.getZoomFactor());
-			} else {
-				e.setScaleX(1.1);
-				e.setScaleY(1.1);
-			}
-		});
-		myScrollPane.setOnScrollFinished(event -> {
-//			System.out.println(myScrollPane.getViewportBounds().getMinX());
-//			System.out.println(myScrollPane.getViewportBounds().getMinY());
-		});
 		cellViewObjects = new Pane();
 		Group zoomGroup = new Group(cellViewObjects);
 		myScrollPane.setOnZoom(event -> {
