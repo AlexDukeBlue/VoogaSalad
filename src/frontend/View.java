@@ -31,6 +31,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ import java.util.Observer;
 
 public class View extends BaseUIManager<Region> implements Observer{
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
+	private Stage myStage;
 
 	static {
 		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
@@ -52,11 +54,16 @@ public class View extends BaseUIManager<Region> implements Observer{
 	private TemplatePane tempPane;
 
 	public View(Controller controller) {
-		this(controller, true);
+		this(controller, new Stage(), true);
 	}
 	
-	public View(Controller controller, boolean editable){
+	public View(Controller controller, Stage stage){
+		this(controller, stage, true);
+	}
+	
+	public View(Controller controller, Stage stage, boolean editable){
 		super(controller);
+		myStage = stage;
 		this.editable = editable;
 		initBorderPane();
 		setEditable(editable);
@@ -81,6 +88,13 @@ public class View extends BaseUIManager<Region> implements Observer{
 	@Override
 	public Region getObject() {
 		return myBorder;
+	}
+	
+	/**
+	 * @return The Stage that the View is being displayed on
+	 */
+	public Stage getStage(){
+		return myStage;
 	}
 
 	/**
