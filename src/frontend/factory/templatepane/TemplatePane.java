@@ -2,16 +2,21 @@ package frontend.factory.templatepane;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
 
 import backend.cell.Terrain;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
 import frontend.util.BaseUIManager;
+import frontend.wizards.UnitWizard;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
@@ -46,6 +51,8 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	private Collection<? extends Terrain> terrains;
 	private Collection<TemplatePaneObserver> observers;
 
+	private Button addUnitButton;
+
 	public TemplatePane(Controller controller) {
 		super(controller);
 
@@ -54,6 +61,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		terrains = getController().getTerrainTemplates();
 
 		createCollabsible("unit", units);
+		addUnitButton();
 		createCollabsible("terrain", terrains);
 
 	}
@@ -84,6 +92,27 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		}
 	}
 
+	public TemplatePane(Collection<? extends Unit> unitTemplate) {
+		// TODO Auto-generated constructor stub
+	}
+
+	private void addUnitButton() {
+		addUnitButton = new Button("add unit");
+		addUnitButton.setOnAction(e -> {
+			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
+			wiz.show();
+			wiz.addObserver(new Observer() {
+
+				@Override
+				public void update(Observable o, Object arg) {
+					getController().addUnitTemplates((ModifiableUnit) arg);
+					System.out.println(((ModifiableUnit) arg).getImgPath());
+				}
+			});
+		});
+		pane.getChildren().add(addUnitButton);
+	}
+
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
@@ -98,7 +127,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
 		VBox contentPane = new VBox();
-		contentPane.setPadding(new Insets(5,5,5,5));
+		contentPane.setPadding(new Insets(5, 5, 5, 5));
 		contentPane.setSpacing(5);
 		for (VoogaEntity sprite : sprites) {
 			VBox spriteContent = new VBox();
@@ -109,6 +138,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 			Label spriteName = new Label(sprite.getFormattedName());
 			spriteContent.getChildren().add(spriteName);
 			if (sprite.getImgPath() != null) {
+				System.out.println(sprite.getImgPath());
 				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));
 				ImageView imageNode = new ImageView(spriteImage);
 				imageNode.setFitHeight(40);
@@ -129,8 +159,9 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	private void updatePane() {
 		pane.getChildren().clear();
-		createCollabsible("Terrain", terrains);
 		createCollabsible("Unit", units);
+		addUnitButton();
+		createCollabsible("Terrain", terrains);
 	}
 
 	private void updateUnits(Collection<? extends Unit> unitsIn) {

@@ -50,8 +50,14 @@ class AuthoringObserver implements GameObserver {
 			} else {
 				CoordinateTuple location = cell.getLocation();
 				controller.sendModifier((GameplayState gameState) -> {
-					Unit unitToMove = gameState.getGrid().get(unitClickedLocation).getOccupantByName(unitClickedName);
-					unitToMove.moveTo(gameState.getGrid().get(location), gameState);
+					Unit unitToMove = gameState.getGrid()
+							.get(unitClickedLocation)
+							.getOccupantByName(unitClickedName);
+					unitToMove.moveTo(
+							gameState
+							.getGrid()
+							.get(location)
+							, gameState);
 					return gameState;
 				});
 			}

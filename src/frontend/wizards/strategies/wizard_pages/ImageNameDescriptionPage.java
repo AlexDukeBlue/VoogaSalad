@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 /**
  * The WizardPage for creating any object that needs to include an image, name, and/or description
@@ -101,7 +102,15 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		File file = choose.showOpenDialog(null);
 		if (file != null) {
 			imageView.setImage(View.getImg(file.toURI().toString()));
-			imagePath = file.toURI().toString();
+			imagePath = file.toURI().toString(); //todo make this a relative path
+			try {
+				System.out.println(getClass().getClassLoader().getResource(".").toURI().relativize(file.toURI()));
+			} catch (URISyntaxException e) {
+				// BAD!!!
+				e.printStackTrace();
+			}
+			System.out.println(imagePath);
+			System.out.println(getClass().getClassLoader().getResource(".").getPath());
 		}
 	}
 
