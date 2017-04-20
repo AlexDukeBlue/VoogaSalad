@@ -35,7 +35,7 @@ public class GridPatternPage extends BaseWizardPage{
 		vb = new VBox();
 		textField = new TextField("Type in n, for n*n GridPattern");
 		Button submit = new Button("Submit");
-		submit.setOnMouseClicked(event -> {if(!textField.getText().equals(null)) grid = new WizardGrid(Integer.parseInt(textField.getText()), vb.getParent());});
+		submit.setOnMouseClicked(event -> {if(!textField.getText().equals(null)) grid = new WizardGrid(Integer.parseInt(textField.getText()), vb); vb.getChildren().add(grid.getPane());});
 		vb.getChildren().add(new HBox(textField, submit));
 	}
 
