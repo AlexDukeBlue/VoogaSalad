@@ -59,8 +59,8 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 			}
 		});
 		myScrollPane.setOnScrollFinished(event -> {
-			System.out.println(myScrollPane.getViewportBounds().getMinX());
-			System.out.println(myScrollPane.getViewportBounds().getMinY());
+//			System.out.println(myScrollPane.getViewportBounds().getMinX());
+//			System.out.println(myScrollPane.getViewportBounds().getMinY());
 		});
 		cellViewObjects = new Pane();
 		Group zoomGroup = new Group(cellViewObjects);
@@ -95,11 +95,9 @@ public class GridView extends BaseUIManager<ScrollPane> implements UnitViewDeleg
 	}
 
 	public void setTemplateEntityToAdd(VoogaEntity template) {
-		if (template instanceof Unit) {
 			unitClickedName = template.getName();
 			unitClickedLocation = null;
 			shouldCopy = true;
-		}
 	}
 
 	private void cellClicked(CellView cell) {

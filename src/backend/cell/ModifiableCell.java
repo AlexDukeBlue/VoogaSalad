@@ -239,9 +239,9 @@ public class ModifiableCell implements Cell {
 
 	@Override
 	public void addVoogaEntity(VoogaEntity voogaEntity) {
-		System.out.println("Class: " + voogaEntity.getClass().toString());
-		System.out.println("Map: " + actionOnClass);
-		System.out.println("Action: " + actionOnClass.get(voogaEntity.getClass()));
+//		System.out.println("Class: " + voogaEntity.getClass().toString());
+//		System.out.println("Map: " + actionOnClass);
+//		System.out.println("Action: " + actionOnClass.get(voogaEntity.getClass()));
 		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
 	}
 }
