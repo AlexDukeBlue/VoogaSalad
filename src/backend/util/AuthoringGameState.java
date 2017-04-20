@@ -21,11 +21,13 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-public class AuthoringGameState extends GameplayState implements VoogaEntity {
+public class AuthoringGameState extends GameplayState implements VoogaEntity,ReadonlyGameplayState {
 	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeabilities", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
 
 	private Map<String, ModifiableVoogaCollection> templates;
-
+	
+	private Collection<ModifiableUnit> allUnitTemplates;
+	
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
 		templates = new HashMap<>();
@@ -170,6 +172,24 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity {
 	//Name can be Terrain, OffensiveModifier, DefensiveModifier, Cell, CellTriggeredEffect, UnitTriggeredEffect, ActiveAbility, Unit, UnitStat, GridPattern, GameBoard
 	//Case and space character insensitive
 	public ModifiableVoogaCollection<VoogaEntity, ?> getTemplateByCategory(String categoryName) {
-		return templates.get(categoryName.replaceAll(" ", "")/*.replaceAll("s$", "")*/.toLowerCase());
+		return templates.get(categoryName.replaceAll(" ", "").toLowerCase());
+	}
+	
+	
+	/*
+	 * 
+	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
+	 */
+	public void addUnitTemplate(ModifiableUnit mUnit) {
+		allUnitTemplates.add(mUnit);
+		
+	}
+
+	/*
+	 * 
+	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
+	 */
+	public Collection<ModifiableUnit> getUnitTemplates() {
+		return allUnitTemplates;	
 	}
 }

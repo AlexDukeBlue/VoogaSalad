@@ -21,8 +21,6 @@ import frontend.View;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import frontend.wizards.GameWizard;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -101,12 +99,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		setThemeItem = factory.getMenu(getLanguage().getValue().getString("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
-			menuItem.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					getStyleSheet().setValue(fileName);
-				}
-			});
+			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
 			setThemeItem.getItems().add(menuItem);
 		});
 		
@@ -232,7 +225,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void createGame(ReadonlyGameplayState state, boolean editable) {
-		Controller control = new CommunicationController(state, null);
+		Controller control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100, state, null);
 		View view = new View(control);
 		view.setEditable(editable);
 		Stage stage = new Stage();

@@ -59,6 +59,8 @@ public class View extends BaseUIManager<Region> implements Observer{
 		super(controller);
 		this.editable = editable;
 		initBorderPane();
+		setEditable(editable);
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
 	}
 
 	/**

@@ -313,4 +313,13 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public static Collection<ModifiableUnit> getPredefinedUnits() {
 		return getPredefined(ModifiableUnit.class);
 	}
+	
+	/**
+	@Deprecated
+	public static void addToPredefinedUnits(ModifiableUnit newUnit) {
+		Collection<ModifiableUnit> current = getPredefined(ModifiableUnit.class);
+		current.add(newUnit);
+		
+	}
+	***/
 }

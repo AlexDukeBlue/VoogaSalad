@@ -74,7 +74,6 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 
 	@Override
 	public void update() {
-		super.update();
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * Alex
  *
  * @author Created by th174 on 3/28/2017.
  */

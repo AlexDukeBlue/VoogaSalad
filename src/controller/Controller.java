@@ -4,8 +4,8 @@ import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
-import backend.grid.ModifiableGameBoard;
 import backend.player.ImmutablePlayer;
+import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
@@ -34,20 +34,33 @@ public interface Controller {
 
 	<U extends ReadonlyGameplayState> void setGameState(U newGameState);
 
-	ModifiableGameBoard getModifiableCells();
+	GameBoard getModifiableCells();
 
 	<U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier);
 
 	Collection<? extends Unit> getUnits();
 
-	Collection<? extends Terrain> getTerrains();
-
 	Collection<? extends Unit> getUnitTemplates();
 
+	void addUnitTemplates(Unit... unitTemplates);
+
+	void removeUnitTemplates(Unit... unitTemplates);
+
 	Collection<? extends Terrain> getTerrainTemplates();
+
+	void addTerrainTemplates(Terrain... terrainTemplates);
+
+	void removeTerrainTemplates(Terrain... terrainTemplates);
 
 	void addToUpdated(Updatable objectToUpdate);
 
 	void removeFromUpdated(Updatable objectToUpdate);
 
+	String getPlayerName();
+
+	Collection<? extends Team> getTeamTemplates();
+
+	void addTeamTemplates(Team[] teamTemplates);
+
+	void removeTeamTemplates(Team[] teamTemplates);
 }
