@@ -136,7 +136,6 @@ public class DetailPane extends BaseUIManager<Region> {
 	private void setActiveAbilititesContent(ModifiableUnit unit) {
 		AAContent = addCollection("Active Abilities", unit.getActiveAbilities(), AAContent);
 		Label AALabel = new Label(AAContent);
-		System.out.print(AAContent);
 		AAPane.getChildren().add(AALabel);
 		
 	}
@@ -149,9 +148,13 @@ public class DetailPane extends BaseUIManager<Region> {
 	
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
 		content = checkForNull(label,content);
-		for (Object o : collection) {
+		for (VoogaEntity o : collection) {
 		content += o + "\n";
-					
+					if (o.getImgPath() != null) {
+						Image oImage = new Image(o.getImgPath());
+						ImageView oIV = new ImageView(oImage);
+						content += oIV;
+					}
 		}
 		content += "\n";
 		return content;
