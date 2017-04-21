@@ -11,10 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -46,9 +43,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_STYLE_KEY = "DefaultStyleSheet";
 
-	private ObjectProperty<ResourceBundle> language;
-	private ObjectProperty<String> styleSheet;
-	private Controller controller;
+	private final ObjectProperty<ResourceBundle> language;
+	private final ObjectProperty<String> styleSheet;
+	private final Controller controller;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
@@ -60,6 +57,11 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	}
 
 	public BaseUIManager(Controller controller) {
+		this.controller = controller;
+		if (Objects.nonNull(controller)) {
+			this.controller.removeFromUpdated(this);
+			this.controller.addToUpdated(this);
+		}
 		language = new SimpleObjectProperty<>();
 		language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<>();
@@ -69,17 +71,6 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 				((Parent) getObject()).getStylesheets().add(newValue);
 			}
 		});
-//		styleSheet.setValue(ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(DEFAULT_STYLE_KEY));
-		setController(controller);
-	}
-
-	public void setController(Controller controller) {
-		this.controller = controller;
-		if (this.controller != null) {
-			this.controller.removeFromUpdated(this); // prevent this from
-			// getting updated twice
-			this.controller.addToUpdated(this);
-		}
 	}
 
 	public Controller getController() {

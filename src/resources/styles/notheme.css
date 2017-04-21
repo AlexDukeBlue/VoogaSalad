@@ -1,8 +1,11 @@
-.root {
+.combo-box-base, .cell, .text-area, .text-field, .hbox, .label {
     -fx-font-size: 13px;
     -fx-font-family: Arial;
     -fx-background-color: transparent;
+    -fx-focus-color: transparent;
     -fx-text-fill: #ffffff;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
 }
 
 .combo-box-base, .cell {

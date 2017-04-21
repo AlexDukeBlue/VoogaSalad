@@ -13,8 +13,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * SimpleWorldView sets up and displays a Region object that contains a grid of
@@ -37,12 +37,11 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	 * Instantiates a new instance of SimpleWorldView. Sets all values to
 	 * default.
 	 *
-	 * @param controller
-	 *            the controller whose state will be displayed within the
-	 *            SimpleWorldView
+	 * @param controller the controller whose state will be displayed within the
+	 *                   SimpleWorldView
 	 */
 	public SimpleWorldView(Controller controller, GameObserver gameDelegate) {
-		setController(controller);
+		super(controller);
 		initialize(gameDelegate);
 	}
 
@@ -53,8 +52,8 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	private void initialize(GameObserver gameDelegate) {
 		borderPane = new BorderPane();
 		observers = new ArrayList<>();
-		myGrid = new SimpleGridView(getController(), Arrays.asList(gameDelegate), Arrays.asList(gameDelegate),
-				Arrays.asList(gameDelegate));
+		myGrid = new SimpleGridView(getController(), Collections.singletonList(gameDelegate), Collections.singletonList(gameDelegate),
+				Collections.singletonList(gameDelegate));
 		AnchorPane centerAnchorPane = new AnchorPane();
 		ChatLogView chatLogView = new ChatLogView(getController());
 		borderPane.setOnKeyPressed(event -> {
@@ -62,8 +61,9 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 				chatLogView.setExpandedState(!chatLogView.isExpanded());
 			}
 		});
-		AnchorPane.setBottomAnchor(chatLogView.getObject(), 10.0);
-		AnchorPane.setLeftAnchor(chatLogView.getObject(), 0.0);
+		AnchorPane.setBottomAnchor(chatLogView.getObject(), 5.0);
+		AnchorPane.setLeftAnchor(chatLogView.getObject(), 30.0);
+		AnchorPane.setRightAnchor(chatLogView.getObject(), 30.0);
 		centerAnchorPane.getChildren().addAll(chatLogView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
 		StackPane centerStackPane = new StackPane();
@@ -142,7 +142,7 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	@Override
 	public void addAllWorldViewObservers(Collection<WorldViewObserver> worldViewObservers) {
 		if (worldViewObservers != null) {
-			worldViewObservers.stream().forEach(observer -> addWorldViewObserver(observer));
+			worldViewObservers.forEach(this::addWorldViewObserver);
 		}
 	}
 
@@ -156,7 +156,7 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	@Override
 	public void removeAllWorldViewObservers(Collection<WorldViewObserver> worldViewObservers) {
 		if (worldViewObservers != null) {
-			worldViewObservers.stream().forEach(observer -> removeWorldViewObserver(observer));
+			worldViewObservers.forEach(this::removeWorldViewObserver);
 		}
 	}
 

@@ -1,14 +1,5 @@
 package frontend.util;
 
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import backend.player.ChatMessage;
 import controller.Controller;
 import javafx.collections.FXCollections;
@@ -24,6 +15,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/31/2017.
@@ -70,7 +70,6 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		textArea.setEditable(false);
 		textArea.setWrapText(true);
 		textArea.positionCaret(textArea.getText().length());
-		textArea.setPrefWidth(pane.getPrefWidth());
 		return textArea;
 	}
 
@@ -90,10 +89,10 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		HBox bottomBox = new HBox();
 		// TODO: Resourcebundlify this as well
 		bottomBox.getStyleClass().add("hbox");
-		bottomBox.setAlignment(Pos.BASELINE_CENTER);
-		bottomBox.setPrefWidth(pane.getPrefWidth());
+		bottomBox.setAlignment(Pos.BASELINE_LEFT);
+//		bottomBox.minWidthProperty().bind(pane.widthProperty());
+//		bottomBox.maxWidthProperty().bind(pane.widthProperty());
 		ComboBox<ChatMessage.AccessLevel> chatModeChooser = initComboBox();
-		bottomBox.setMaxWidth(Double.MAX_VALUE);
 		Label label1 = new Label("To:");
 		label1.setMinWidth(30);
 		TextField messageRecipientField = new TextField();

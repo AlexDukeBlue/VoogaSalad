@@ -7,7 +7,7 @@ import frontend.interfaces.templatepane.TemplatePaneExternal;
 public class TemplatePaneFactory {
 	
 	public static TemplatePaneExternal newTemplatePane(Controller controller,MinimapPane mapPane){
-		return new TemplatePane(controller, mapPane);
+		return new TemplatePane(controller);
 	}
 
 }

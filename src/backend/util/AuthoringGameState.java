@@ -1,12 +1,5 @@
 package backend.util;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
-
 import backend.cell.Terrain;
 import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.Resultant;
@@ -22,10 +15,17 @@ import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
 import backend.unit.properties.ModifiableUnitStat;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+
 public class AuthoringGameState extends GameplayState implements VoogaEntity,ReadonlyGameplayState {
 	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeabilities", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
 
-	private Map<String, ModifiableVoogaCollection> templates;
+	private Map<String, ModifiableVoogaCollection<VoogaEntity,ModifiableVoogaCollection>> templates;
 	
 	private Collection<ModifiableUnit> allUnitTemplates;
 	
@@ -172,36 +172,12 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 
 	//Name can be Terrain, OffensiveModifier, DefensiveModifier, Cell, CellTriggeredEffect, UnitTriggeredEffect, ActiveAbility, Unit, UnitStat, GridPattern, GameBoard
 	//Case and space character insensitive
-	public ModifiableVoogaCollection<VoogaEntity, ?> getTemplateByCategory(String categoryName) {
-		return templates.get(categoryName.replaceAll(" ", "").toLowerCase());
+	//Plural singular insensitive
+	public ModifiableVoogaCollection<VoogaEntity,ModifiableVoogaCollection> getTemplateByCategory(String categoryName) {
+		return templates.get(categoryName.replaceAll(" ", "").replaceAll("s$","").toLowerCase());
 	}
 	
 	public VoogaEntity getTemplateByName(String name){
-		for (ModifiableVoogaCollection collection : templates.values()){
-			for (Object voogaEntity : collection.getAll()){
-				if (((VoogaEntity)voogaEntity).getName().equals(name)){
-					return (VoogaEntity)voogaEntity;
-				}
-			}
-		}
-		return null;
-	}
-	
-	
-	/*
-	 * 
-	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
-	 */
-	public void addUnitTemplate(ModifiableUnit mUnit) {
-		allUnitTemplates.add(mUnit);
-		
-	}
-
-	/*
-	 * 
-	 * Perhaps depricated? not really sure if I did this right ask ncp14 for more details
-	 */
-	public Collection<ModifiableUnit> getUnitTemplates() {
-		return allUnitTemplates;	
+		return templates.values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getName().equals(name)).findAny().orElse(null);
 	}
 }

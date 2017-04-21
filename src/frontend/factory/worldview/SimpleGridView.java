@@ -1,17 +1,10 @@
 package frontend.factory.worldview;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import controller.Controller;
 import frontend.View;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
-import frontend.interfaces.worldview.CellViewExternal;
-import frontend.interfaces.worldview.CellViewObserver;
-import frontend.interfaces.worldview.GridViewExternal;
-import frontend.interfaces.worldview.GridViewObserver;
-import frontend.interfaces.worldview.UnitViewObserver;
+import frontend.interfaces.worldview.*;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -20,6 +13,9 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
@@ -32,7 +28,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
 	public SimpleGridView(Controller controller, Collection<GridViewObserver> gridObservers,
 			Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
-		setController(controller);
+		super(controller);
 		initialize(gridObservers, cellObservers, unitObservers);
 	}
 

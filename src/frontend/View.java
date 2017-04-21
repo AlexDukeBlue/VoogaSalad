@@ -37,6 +37,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -159,7 +160,7 @@ public class View extends BaseUIManager<Region> {
 
 	private void placePanes() {
 		initPanes();
-		SplitPane innerSplitPane = new SplitPane(worldView.getObject(), tempPane.getObject());
+		SplitPane innerSplitPane = new SplitPane(worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject()));
 		innerSplitPane.setDividerPositions(1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
 		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());

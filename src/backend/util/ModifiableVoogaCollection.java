@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 /**
  * @author Created by th174 on 3/30/2017.
  */
-public class ModifiableVoogaCollection<T extends VoogaEntity, U extends ModifiableVoogaCollection<T, U>> extends ModifiableVoogaObject<U> implements ImmutableVoogaCollection<T> {
+public class ModifiableVoogaCollection<T extends VoogaEntity, U extends ModifiableVoogaCollection> extends ModifiableVoogaObject<ModifiableVoogaCollection<T,U>> implements ImmutableVoogaCollection<T> {
 	private final Map<String, T> gameObjects;
 
 	@SafeVarargs

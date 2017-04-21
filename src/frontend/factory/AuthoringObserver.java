@@ -24,7 +24,7 @@ class AuthoringObserver implements GameObserver {
 	private TemplatePaneExternal templatePane;
 
 	public AuthoringObserver(Controller controller, WorldViewExternal worldView, DetailPaneExternal detailPane,
-			TemplatePaneExternal templatePane) {
+	                         TemplatePaneExternal templatePane) {
 		this.controller = controller;
 		this.worldView = worldView;
 		this.detailPane = detailPane;
@@ -34,18 +34,16 @@ class AuthoringObserver implements GameObserver {
 	@Override
 	public void didClickCellViewExternalInterface(CellViewExternal cell) {
 		// TODO Auto-generated method stub
-//		System.out.println("CellViewExternalCell: " + cell + "\n");
 		if (unitClickedName != null) {
 			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
 			String unitClickedName = this.unitClickedName;
+			CoordinateTuple location = cell.getLocation();
 			if (shouldCopy) {
-				CoordinateTuple location = cell.getLocation();
 				controller.sendModifier((AuthoringGameState gameState) -> {
 					gameState.getGrid().get(location).addVoogaEntity(gameState.getTemplateByName(unitClickedName).copy());
 					return gameState;
 				});
 			} else {
-				CoordinateTuple location = cell.getLocation();
 				controller.sendModifier((GameplayState gameState) -> {
 					Unit unitToMove = gameState.getGrid().get(unitClickedLocation).getOccupantByName(unitClickedName);
 					unitToMove.moveTo(gameState.getGrid().get(location), gameState);
@@ -60,21 +58,13 @@ class AuthoringObserver implements GameObserver {
 
 	@Override
 	public void didClickUnitViewExternalInterface(UnitViewExternal unit) {
-		// TODO Auto-generated method stub
-//		System.out.println("UnitViewExternalCell: " + unit + "\n");
-
 		unitClickedName = unit.getUnitName();
 		unitClickedLocation = unit.getUnitLocation();
 	}
 
 	@Override
 	public void didClickVoogaEntity(TemplatePaneExternal templatePane, VoogaEntity entity) {
-		// TODO Auto-generated method stub
-//		System.out.println("TemplatePane: " + templatePane);
-//		System.out.println("VoogaEntity: " + entity + "\n");
-
 		detailPane.setContent(entity, "");
-
 		unitClickedName = entity.getName();
 		unitClickedLocation = null;
 		shouldCopy = true;
