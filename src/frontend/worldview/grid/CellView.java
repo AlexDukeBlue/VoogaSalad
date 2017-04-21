@@ -5,7 +5,11 @@ import backend.grid.CoordinateTuple;
 import controller.Controller;
 import frontend.View;
 import frontend.factory.worldview.SimpleUnitView;
+import frontend.factory.worldview.layout.CellViewLayoutInterface;
+import frontend.interfaces.worldview.CellViewExternal;
+import frontend.interfaces.worldview.CellViewObserver;
 import frontend.interfaces.worldview.UnitViewExternal;
+import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -13,12 +17,16 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * A Cell object is an immovable object on which Terrains and Units can be
@@ -33,13 +41,17 @@ import java.util.ArrayList;
  *
  * @author Dylan Peters
  */
-public class CellView extends BaseUIManager<Parent> {
+public class CellView extends BaseUIManager<Parent> implements CellViewLayoutInterface, CellViewExternal {
+	private Collection<CellViewObserver> observers;
+	private Collection<UnitViewObserver> unitViewObservers;
+
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
 	private static final double UNIT_SCALE = 0.75;
 
 	private final CoordinateTuple cellLocation;
 	private Polygon polygon;
+	private String polygonFillImgPath;
 	private final Group group;
 	private final ContextMenu contextMenu;
 	private ArrayList<UnitViewExternal> unitList;
@@ -54,39 +66,14 @@ public class CellView extends BaseUIManager<Parent> {
 	public CellView(CoordinateTuple cellLocation, Controller controller) {
 		super(controller);
 		this.cellLocation = cellLocation;
-		polygon = new Polygon();
-		group = new Group();
+		unitList = new ArrayList<>();
+		unitViewObservers = new ArrayList<>();
+		observers = new ArrayList<>();
 		contextMenu = new ContextMenu();
-		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
-		unitList =  new ArrayList<UnitViewExternal>();
+		setPolygon(new Polygon());
+		group = new Group(polygon);
 		update();
 	}
-
-	//	/**
-	//	 * Sets the action that is performed when a cell is clicked.
-	//	 *
-	//	 * @param consumer
-	//	 *            consumer to execute when the cell is clicked
-	//	 */
-	//	public void setOnCellClick(Consumer<CellView> consumer) {
-	//		polygon.setOnMouseClicked(event -> consumer.accept(this));
-	//	}
-	//
-	//	/**
-	//	 * Adds a copy of the Sprite to the cell and sends the request to the
-	//	 * controller.
-	//	 *
-	//	 * @param sprite
-	//	 *            sprite to copy and add to the cell
-	//	 */
-	//	public void add(VoogaEntity sprite) {
-	//		CoordinateTuple location = cellModel.getLocation();
-	//		Modifier<? extends GameplayState> toSend = game -> {
-	//			game.getGrid().get(location).arrive(sprite.copy(), game);
-	//			return game;
-	//		};
-	//		getController().sendModifier(toSend);
-	//	}
 
 	public double getX() {
 		return polygon.getLayoutX();
@@ -104,6 +91,26 @@ public class CellView extends BaseUIManager<Parent> {
 		polygon.setLayoutY(y);
 	}
 
+	@Override
+	public Polygon getPolygon() {
+		return polygon;
+	}
+
+	@Override
+	public void setPolygon(Polygon polygon) {
+		this.polygon = polygon;
+		polygon.setStrokeWidth(CELL_STROKE);
+		polygon.setStroke(CELL_OUTLINE);
+		polygon.setOnMouseEntered(e -> mouseIn());
+		polygon.setOnMouseExited(e -> mouseOut(e.getX()));
+		polygon.setOnMouseClicked(event -> {
+			if (event.getButton().equals(MouseButton.PRIMARY)) {
+				observers.stream().filter(Objects::nonNull).forEach(observer -> observer.didClickCellViewExternalInterface(this));
+			}
+		});
+		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
+	}
+
 	/**
 	 * Returns an object that can be displayed to the user to show the Cell
 	 */
@@ -113,57 +120,30 @@ public class CellView extends BaseUIManager<Parent> {
 	}
 
 	/**
-	 * returns the polygon that serves as the shape of the cell
-	 *
-	 * @return polygon
-	 */
-	Polygon getPolygon() {
-		return polygon;
-	}
-
-	/**
-	 * sets the group to contain a different polygon
-	 *
-	 * @param polygon Shape of cellview an instance of a cell
-	 */
-	public void setPolygon(Polygon polygon) {
-		group.getChildren().remove(polygon);
-		this.polygon = polygon;
-		update();
-	}
-
-	/**
 	 * passes a cell's location to the controller for the backend to use, and
 	 * determine its validity
 	 */
 	public void update() {
-		this.getPolygon().setOnMouseEntered(e -> mouseIn());
-		this.getPolygon().setOnMouseExited(e -> mouseOut(e.getX()));
-		group.getChildren().clear();
-		if (getController().getGrid().getImgPath().length() < 1) {
-			polygon.setFill(new ImagePattern(View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
+		String imgPath = getController().getGrid().getImgPath();
+		if (imgPath.length() < 1) {
+			if (!imgPath.equals(polygonFillImgPath)) {
+				polygon.setFill(new ImagePattern(View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
+				polygonFillImgPath = imgPath;
+			}
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
-		polygon.setStrokeWidth(CELL_STROKE);
-		polygon.setStroke(CELL_OUTLINE);
-		group.getChildren().add(polygon);
-
-
-
-
-
 		//should be messing with the unitview not the polygon!!
 		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
 		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
 		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
 		unitList.clear();
+		group.getChildren().clear();
+		group.getChildren().addAll(polygon);
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
 				UnitViewExternal unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
-				if (!containsUnit(unitView)){
-					unitList.add(unitView);
-				}
+				unitList.add(unitView);
 				toolTip(unitView);
 				unitView.getObject().setFitWidth(size);
 				unitView.getObject().setFitHeight(size);
@@ -171,27 +151,19 @@ public class CellView extends BaseUIManager<Parent> {
 				unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
+				unitView.addAllUnitViewObservers(unitViewObservers);
 			}
 		});
 		contextMenu.getItems().clear();
 		getController().getCell(cellLocation).getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
-	/**
-	 * Returns the coordinateTuple at which the CellView is displayed
-	 *
-	 * @return DisplayCoordinates at which the CellView is displayed.
-	 */
-	CoordinateTuple getCoordinateTuple() {
-		return cellLocation;
-	}
-
 	/*
 	 * creates a popup that gives information about the unit
 	 */
-	private void toolTip(UnitViewExternal uv){
+	private void toolTip(UnitViewExternal uv) {
 		Tooltip tt = new Tooltip();
-		tt.setText("Position: (" + polygon.getLayoutX() + "," + polygon.getLayoutY() + ")" 
+		tt.setText("Position: (" + polygon.getLayoutX() + "," + polygon.getLayoutY() + ")"
 				+ "\nName: " + uv.getUnitName());
 		Tooltip.install(uv.getObject(), tt);
 //		System.out.println("toolTip");
@@ -199,8 +171,6 @@ public class CellView extends BaseUIManager<Parent> {
 
 	//this isn't working properly
 	private void mouseIn() {
-//		System.out.println(unitList.size());
-//		System.out.println("mousing over");
 		if (unitList.size() > 1) {
 			for (int i = 0; i < unitList.size(); i++) {
 				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() - i * 60);
@@ -208,20 +178,52 @@ public class CellView extends BaseUIManager<Parent> {
 		}
 	}
 
-	private boolean containsUnit(UnitViewExternal unit){
-		for (UnitViewExternal each: unitList){
-			if (each.getUnitName() == unit.getUnitName()){
-				return true;
-			}
-		}
-		return false;
+	private void mouseOut(double d) {
+		IntStream.range(0, unitList.size()).parallel().forEach(i -> unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() + i * 60));
 	}
 
-	private void mouseOut(double d) {
-		if (unitList.size() > 1) {
-			for (int i = 0; i < unitList.size(); i++) {
-				unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() + i * 60);;
-			}
-		}
+	@Override
+	public void addUnitViewObserver(UnitViewObserver observer) {
+		unitViewObservers.add(observer);
+	}
+
+	@Override
+	public void removeUnitViewObserver(UnitViewObserver observer) {
+		unitViewObservers.remove(observer);
+	}
+
+	@Override
+	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
+		this.unitViewObservers.addAll(unitViewObservers);
+	}
+
+	@Override
+	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
+		this.unitViewObservers.removeAll(unitViewObservers);
+	}
+
+	@Override
+	public void addCellViewObserver(CellViewObserver observer) {
+		observers.add(observer);
+	}
+
+	@Override
+	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
+		observers.addAll(cellViewObservers);
+	}
+
+	@Override
+	public void removeCellViewObserver(CellViewObserver observer) {
+		observers.remove(observer);
+	}
+
+	@Override
+	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
+		observers.removeAll(cellViewObservers);
+	}
+
+	@Override
+	public CoordinateTuple getLocation() {
+		return cellLocation;
 	}
 }

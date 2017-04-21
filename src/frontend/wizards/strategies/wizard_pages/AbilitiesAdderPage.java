@@ -5,7 +5,6 @@ import backend.util.AuthoringGameState;
 import frontend.View;
 import frontend.wizards.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.wizards.strategies.wizard_pages.util.VerticalTableInputView;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 
 import java.util.Collection;
@@ -36,13 +35,7 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 		table = new VerticalTableInputView();
 		rowToAbility = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).forEach(ability -> {
-			Image image;
-			try {
-				image = View.getImg(ability.getImgPath());
-			} catch (Exception e) {
-				image = null;
-			}
-			SelectableInputRow row = new SelectableInputRow(image, ability.getName(), ability.getDescription());
+			SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()), ability.getName(), ability.getDescription());
 			rowToAbility.put(row, (ActiveAbility<?>) ability);
 			table.getChildren().add(row);
 		});

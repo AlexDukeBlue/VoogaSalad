@@ -5,6 +5,7 @@ import frontend.interfaces.GameObserver;
 import frontend.interfaces.worldview.*;
 import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
+import frontend.worldview.grid.GridView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -14,7 +15,6 @@ import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * SimpleWorldView sets up and displays a Region object that contains a grid of
@@ -52,8 +52,10 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	private void initialize(GameObserver gameDelegate) {
 		borderPane = new BorderPane();
 		observers = new ArrayList<>();
-		myGrid = new SimpleGridView(getController(), Collections.singletonList(gameDelegate), Collections.singletonList(gameDelegate),
-				Collections.singletonList(gameDelegate));
+		myGrid = new GridView(getController());
+		myGrid.addGridViewObserver(gameDelegate);
+		myGrid.addUnitViewObserver(gameDelegate);
+		myGrid.addCellViewObserver(gameDelegate);
 		AnchorPane centerAnchorPane = new AnchorPane();
 		ChatLogView chatLogView = new ChatLogView(getController());
 		borderPane.setOnKeyPressed(event -> {

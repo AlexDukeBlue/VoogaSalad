@@ -166,7 +166,7 @@ public class View extends BaseUIManager<Region> {
 		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
 		outerSplitPane.setDividerPositions(0, .8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
-		SplitPane.setResizableWithParent(menuBar.getObject(), false);		//In case user is on Windows and MenuBar is in the View
+		SplitPane.setResizableWithParent(menuBar.getObject(), false);        //In case user is on Windows and MenuBar is in the View
 	}
 
 	/**

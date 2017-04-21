@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 public class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExternal {
 
@@ -95,40 +97,30 @@ public class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExter
 
 	@Override
 	public void addUnitViewObserver(UnitViewObserver observer) {
-		if (!observers.contains(observer)) {
-			observers.add(observer);
-		}
+		observers.addAll(Collections.singleton(observer));
 	}
 
 	@Override
 	public void removeUnitViewObserver(UnitViewObserver observer) {
-		if (observers.contains(observer)) {
-			observers.remove(observer);
-		}
+		observers.removeAll(Collections.singleton(observer));
 	}
 
 	private void initialize(String unitName, CoordinateTuple unitLocation, String unitImgPath) {
 		observers = new ArrayList<>();
-
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
 		unitView = new ImageView(View.getImg(unitImgPath));
-		unitView.setOnMouseClicked(
-				event -> observers.stream().forEach(observer -> observer.didClickUnitViewExternalInterface(this)));
+		unitView.setOnMouseClicked(event -> observers.stream().filter(Objects::nonNull).forEach(observer -> observer.didClickUnitViewExternalInterface(this)));
 	}
 
 	@Override
 	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		if (unitViewObservers != null) {
-			unitViewObservers.stream().forEach(observer -> addUnitViewObserver(observer));
-		}
+		observers.addAll(unitViewObservers);
 	}
 
 	@Override
 	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		if (unitViewObservers != null) {
-			unitViewObservers.stream().forEach(observer -> removeUnitViewObserver(observer));
-		}
+		observers.removeAll(unitViewObservers);
 	}
 
 }

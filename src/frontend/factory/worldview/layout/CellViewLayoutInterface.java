@@ -28,6 +28,6 @@ public interface CellViewLayoutInterface {
 	 */
 	public void setPolygon(Polygon polygon);
 
-	public CoordinateTuple getCoordinateTuple();
+	public CoordinateTuple getLocation();
 
 }

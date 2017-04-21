@@ -26,9 +26,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeabilities", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
 
 	private Map<String, ModifiableVoogaCollection<VoogaEntity,ModifiableVoogaCollection>> templates;
-	
-	private Collection<ModifiableUnit> allUnitTemplates;
-	
+
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
 		templates = new HashMap<>();
@@ -174,7 +172,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	//Case and space character insensitive
 	//Plural singular insensitive
 	public ModifiableVoogaCollection<VoogaEntity,ModifiableVoogaCollection> getTemplateByCategory(String categoryName) {
-		return templates.get(categoryName.replaceAll(" ", "").replaceAll("s$","").toLowerCase());
+		return templates.get(categoryName.replaceAll(" ", "").replaceAll("(?<!ie)s$","").toLowerCase());
 	}
 	
 	public VoogaEntity getTemplateByName(String name){

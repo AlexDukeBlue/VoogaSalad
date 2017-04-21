@@ -33,7 +33,6 @@ class AuthoringObserver implements GameObserver {
 
 	@Override
 	public void didClickCellViewExternalInterface(CellViewExternal cell) {
-		// TODO Auto-generated method stub
 		if (unitClickedName != null) {
 			CoordinateTuple unitClickedLocation = this.unitClickedLocation;
 			String unitClickedName = this.unitClickedName;

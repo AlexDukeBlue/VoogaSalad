@@ -28,7 +28,7 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 		double width = minWidth + ((maxWidth - minWidth) * scaleFactor);
 		double radius = width / (Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
 
-		CoordinateTuple rectCoord = cell.getCoordinateTuple().convertToRectangular();
+		CoordinateTuple rectCoord = cell.getLocation().convertToRectangular();
 		if ((rectCoord.get(Y_INDEX) % 2) == 0) {
 			cell.setX((rectCoord.get(X_INDEX) + .5) * width);
 		} else {

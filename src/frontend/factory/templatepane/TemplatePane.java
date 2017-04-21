@@ -1,5 +1,7 @@
 package frontend.factory.templatepane;
 
+import backend.cell.ModifiableTerrain;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -7,6 +9,8 @@ import frontend.View;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
 import frontend.util.BaseUIManager;
+import frontend.wizards.TerrainWizard;
+import frontend.wizards.UnitWizard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -43,25 +47,23 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	private VBox pane = new VBox();
 	private Map<String, VBox> contents;
-	private Map<VBox, Integer> numberOfTemplates;
 	private Collection<TemplatePaneObserver> observers;
 
 	public TemplatePane(Controller controller) {
 		super(controller);
 		contents = new HashMap<>();
-		numberOfTemplates = new HashMap<>();
 		observers = new ArrayList<>();
 		Stream.of("Units", "Terrains").map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll())).forEach(e -> createCollabsible(e.getKey(), e.getValue()));
+		addUnitButton();
+		addTerrainButton();
 		update();
 	}
 
 	@Override
 	public void update() {
 		contents.forEach((key, value) -> {
-			if (value.getChildren().size() != numberOfTemplates.get(value)) {
-				value.getChildren().clear();
-				value.getChildren().addAll(createContent(getController().getAuthoringGameState().getTemplateByCategory(key).getAll()));
-				numberOfTemplates.put(value, value.getChildren().size());
+			if (value.getChildren().size() != getController().getAuthoringGameState().getTemplateByCategory(key).size()) {
+				value.getChildren().setAll(createContent(getController().getAuthoringGameState().getTemplateByCategory(key).getAll()));
 			}
 		});
 	}
@@ -106,29 +108,33 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		box.setAlignment(Pos.TOP_RIGHT);
 		box.setSpacing(0);
 		box.setPadding(Insets.EMPTY);
-		//Need to be able to add template with XML, remove with name
+		addButton.setOnMouseClicked(event -> System.out.println("You clicked add button in " + ((TitledPane) addButton.getParent().getParent().getParent().getParent()).getText()));
+		removeButton.setOnMouseClicked(event -> System.out.println("You clicked remove button in " + ((TitledPane) addButton.getParent().getParent().getParent().getParent()).getText()));
+		//TODO: add template with XML, remove with name
 		return box;
 	}
 
-//	private void addUnitButton() {
-//		Button addUnitButton = new Button("add unit");
-//		addUnitButton.setOnAction(e -> {
-//			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
-//			wiz.show();
-//			wiz.addObserver((o, arg) -> getController().addUnitTemplates((ModifiableUnit) arg));
-//		});
-//		pane.getChildren().add(addUnitButton);
-//	}
-//
-//	private void addTerrainButton() {
-//		Button addTerrainButton = new Button("add terrain");
-//		addTerrainButton.setOnAction(e -> {
-//			TerrainWizard wiz = new TerrainWizard(getController().getAuthoringGameState());
-//			wiz.show();
-//			wiz.addObserver((o, arg) -> getController().addTerrainTemplates((ModifiableTerrain) arg));
-//		});
-//		pane.getChildren().add(addTerrainButton);
-//	}
+	@Deprecated
+	private void addUnitButton() {
+		Button addUnitButton = new Button("add unit");
+		addUnitButton.setOnAction(e -> {
+			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
+			wiz.show();
+			wiz.addObserver((o, arg) -> getController().addUnitTemplates((ModifiableUnit) arg));
+		});
+		pane.getChildren().add(addUnitButton);
+	}
+
+	@Deprecated
+	private void addTerrainButton() {
+		Button addTerrainButton = new Button("add terrain");
+		addTerrainButton.setOnAction(e -> {
+			TerrainWizard wiz = new TerrainWizard(getController().getAuthoringGameState());
+			wiz.show();
+			wiz.addObserver((o, arg) -> getController().addTerrainTemplates((ModifiableTerrain) arg));
+		});
+		pane.getChildren().add(addTerrainButton);
+	}
 
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
@@ -138,7 +144,6 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		contentPane.setSpacing(0);
 		contentPane.getChildren().addAll(createContent(sprites));
 		contents.put(label, contentPane);
-		numberOfTemplates.put(contentPane, contentPane.getChildren().size());
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		VBox box = new VBox(scroller, createAddRemoveButton());

@@ -9,6 +9,7 @@ import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -27,7 +28,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	private GridLayoutDelegate myLayoutManager;
 
 	public SimpleGridView(Controller controller, Collection<GridViewObserver> gridObservers,
-			Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
+	                      Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
 		super(controller);
 		initialize(gridObservers, cellObservers, unitObservers);
 	}
@@ -38,7 +39,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	}
 
 	private void populateCellViews(Collection<CellViewObserver> cellObservers,
-			Collection<UnitViewObserver> unitObservers) {
+	                               Collection<UnitViewObserver> unitObservers) {
 		cellViewObjects.setBackground(new Background(
 				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		cellViews = new ArrayList<>();
@@ -68,10 +69,10 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 	}
 
 	private void initialize(Collection<GridViewObserver> gridObservers, Collection<CellViewObserver> cellObservers,
-			Collection<UnitViewObserver> unitObservers) {
+	                        Collection<UnitViewObserver> unitObservers) {
 		observers = new ArrayList<>();
 		if (gridObservers != null) {
-			gridObservers.stream().forEach(observer -> addGridViewObserver(observer));
+			gridObservers.forEach(observer -> addGridViewObserver(observer));
 		}
 
 		myScrollPane = new ScrollPane();
@@ -80,6 +81,13 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 		myScrollPane.setOnZoom(event -> {
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
+		});
+		myScrollPane.addEventFilter(ScrollEvent.ANY, event -> {
+			if (event.isShortcutDown()) {
+				cellViewObjects.setScaleX(cellViewObjects.getScaleX() + event.getDeltaY() / 500);
+				cellViewObjects.setScaleY(cellViewObjects.getScaleY() + event.getDeltaY() / 500);
+				event.consume();
+			}
 		});
 		myLayoutManager = new GridLayoutDelegateFactory();
 		populateCellViews(cellObservers, unitObservers);
@@ -91,49 +99,47 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
 	@Override
 	public void addCellViewObserver(CellViewObserver observer) {
-		cellViews.stream().forEach(cellView -> cellView.addCellViewObserver(observer));
+		cellViews.forEach(cellView -> cellView.addCellViewObserver(observer));
 	}
 
 	@Override
 	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		cellViews.stream().forEach(cellView -> cellView.addAllCellViewObservers(cellViewObservers));
+		cellViews.forEach(cellView -> cellView.addAllCellViewObservers(cellViewObservers));
 	}
 
 	@Override
 	public void removeCellViewObserver(CellViewObserver observer) {
-		cellViews.stream().forEach(cellView -> cellView.removeCellViewObserver(observer));
+		cellViews.forEach(cellView -> cellView.removeCellViewObserver(observer));
 	}
 
 	@Override
 	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		cellViews.stream().forEach(cellView -> cellView.removeAllCellViewObservers(cellViewObservers));
+		cellViews.forEach(cellView -> cellView.removeAllCellViewObservers(cellViewObservers));
 	}
 
 	@Override
 	public void addUnitViewObserver(UnitViewObserver observer) {
-		cellViews.stream().forEach(cellView -> cellView.addUnitViewObserver(observer));
+		cellViews.forEach(cellView -> cellView.addUnitViewObserver(observer));
 	}
 
 	@Override
 	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		cellViews.stream().forEach(cellView -> cellView.addAllUnitViewObservers(unitViewObservers));
+		cellViews.forEach(cellView -> cellView.addAllUnitViewObservers(unitViewObservers));
 	}
 
 	@Override
 	public void removeUnitViewObserver(UnitViewObserver observer) {
-		cellViews.stream().forEach(cellView -> cellView.removeUnitViewObserver(observer));
+		cellViews.forEach(cellView -> cellView.removeUnitViewObserver(observer));
 	}
 
 	@Override
 	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		cellViews.stream().forEach(cellView -> cellView.removeAllUnitViewObservers(unitViewObservers));
+		cellViews.forEach(cellView -> cellView.removeAllUnitViewObservers(unitViewObservers));
 	}
 
 	@Override
 	public void addAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		if (gridViewObservers != null) {
-			gridViewObservers.stream().forEach(observer -> addGridViewObserver(observer));
-		}
+		gridViewObservers.forEach(observer -> addGridViewObserver(observer));
 	}
 
 	@Override

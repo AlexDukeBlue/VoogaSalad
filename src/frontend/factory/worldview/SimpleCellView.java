@@ -148,15 +148,6 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 				.forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
-	/**
-	 * Returns the coordinateTuple at which the CellView is displayed
-	 *
-	 * @return DisplayCoordinates at which the CellView is displayed.
-	 */
-	@Override
-	public CoordinateTuple getCoordinateTuple() {
-		return cellLocation;
-	}
 
 	private void mouseOver() {
 		// System.out.println(unitList.size());
