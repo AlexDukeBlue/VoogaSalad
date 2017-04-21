@@ -39,15 +39,14 @@ public class NumericInputRow extends BaseUIManager<Region> {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				try {
-					if (newValue.isEmpty()) {
-						myNumericalInputField.setText("0");
-					}
 					Integer.parseInt(newValue);
 				} catch (Exception e) {
-					myNumericalInputField.setText("0");
+					if (!newValue.isEmpty()){
+						myNumericalInputField.setText("0");
+					}
 				}
 				setChanged();
-				notifyObservers(Integer.parseInt(myNumericalInputField.getText()));
+				notifyObservers(getValue());
 				clearChanged();
 			}
 		});
