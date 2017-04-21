@@ -19,7 +19,6 @@
 package frontend;
 
 import backend.util.AuthoringGameState;
-import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.factory.GameObserverFactory;
 import frontend.factory.detailpane.DetailPaneFactory;
@@ -38,12 +37,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
 public class View extends BaseUIManager<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
@@ -81,9 +78,8 @@ public class View extends BaseUIManager<Region> {
 	}
 
 	/**
-	 * @param editable
-	 *            True if this View can be switched into "edit" mode, false if
-	 *            it cannot.
+	 * @param editable True if this View can be switched into "edit" mode, false if
+	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
@@ -141,8 +137,7 @@ public class View extends BaseUIManager<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState
-	 *            AuthoringGameState that the View will now access its data from
+	 * @param newGameState AuthoringGameState that the View will now access its data from
 	 */
 	public void setGameState(AuthoringGameState newGameState) {
 		getController().setGameState(newGameState);
@@ -151,8 +146,7 @@ public class View extends BaseUIManager<Region> {
 	/**
 	 * Displays an Alert to the user containing the given message.
 	 *
-	 * @param s
-	 *            String alert message
+	 * @param s String alert message
 	 */
 	public void sendAlert(String s) {
 		Alert myAlert;
@@ -232,7 +226,12 @@ public class View extends BaseUIManager<Region> {
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {
-			IMAGE_CACHE.put(imgPath, new Image(imgPath));
+			try {
+				IMAGE_CACHE.put(imgPath, new Image(imgPath));
+			} catch (Exception e) {
+				System.out.println("Error opening image: " + imgPath);
+				IMAGE_CACHE.put(imgPath, IMAGE_CACHE.get(""));
+			}
 		}
 		return IMAGE_CACHE.get(imgPath);
 	}

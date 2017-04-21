@@ -20,5 +20,4 @@ public interface UnitViewExternal {
 	String getUnitName();
 
 	CoordinateTuple getUnitLocation();
-
 }

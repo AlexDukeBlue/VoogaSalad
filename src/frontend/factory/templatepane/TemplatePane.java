@@ -5,6 +5,7 @@ import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.View;
 import frontend.factory.worldview.MinimapPane;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
@@ -16,15 +17,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * @author Faith Rodriguez Created 3/29/2017
@@ -97,14 +95,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		addUnitButton.setOnAction(e -> {
 			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
 			wiz.show();
-			wiz.addObserver(new Observer() {
-
-				@Override
-				public void update(Observable o, Object arg) {
-					getController().addUnitTemplates((ModifiableUnit) arg);
-					System.out.println(((ModifiableUnit) arg).getImgPath());
-				}
-			});
+			wiz.addObserver((o, arg) -> getController().addUnitTemplates((ModifiableUnit) arg));
 		});
 		pane.getChildren().add(addUnitButton);
 	}
@@ -130,12 +121,10 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 			spriteContent.setBorder(new Border(
 					new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 			spriteContent.setPadding(new Insets(5, 5, 5, 5));
-			// fix getName and getImage once communication sorted
 			Label spriteName = new Label(sprite.getFormattedName());
 			spriteContent.getChildren().add(spriteName);
 			if (sprite.getImgPath() != null) {
-				Image spriteImage = new Image(getClass().getClassLoader().getResourceAsStream(sprite.getImgPath()));
-				ImageView imageNode = new ImageView(spriteImage);
+				ImageView imageNode = new ImageView(View.getImg(sprite.getImgPath()));
 				imageNode.setFitHeight(40);
 				imageNode.setFitWidth(40);
 				spriteContent.getChildren().add(imageNode);

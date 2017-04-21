@@ -1,5 +1,6 @@
 package frontend.util;
 
+import frontend.View;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -83,9 +84,10 @@ public class ComponentFactory {
 			URL url = new URL(imageURL);
 			img = (Image) url.getContent();
 			url.openConnection();
+			//don't create images, use View.getImg
 			img = new Image(imageURL, x, y, true, false);
 		} catch (Exception e) {
-			img = new Image(oopsURL);
+			return View.getImg(oopsURL);
 //			System.out.println("No Image");
 		}
 		return img;

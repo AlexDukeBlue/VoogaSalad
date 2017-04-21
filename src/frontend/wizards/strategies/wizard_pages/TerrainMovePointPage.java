@@ -1,15 +1,15 @@
 package frontend.wizards.strategies.wizard_pages;
 
+import backend.cell.Terrain;
+import backend.util.AuthoringGameState;
+import frontend.View;
+import frontend.wizards.strategies.wizard_pages.util.NumericInputRow;
+import frontend.wizards.strategies.wizard_pages.util.VerticalTableInputView;
+import javafx.scene.layout.Region;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import backend.cell.Terrain;
-import backend.util.AuthoringGameState;
-import frontend.wizards.strategies.wizard_pages.util.NumericInputRow;
-import frontend.wizards.strategies.wizard_pages.util.VerticalTableInputView;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 
 /**
  * The WizardPage for setting the move cost of different types of units across a terrain
@@ -45,13 +45,7 @@ public class TerrainMovePointPage extends BaseWizardPage {
 		table = new VerticalTableInputView();
 		rowToTerrain = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.TERRAIN).forEach(terrain -> {
-			Image image;
-			try {
-				image = new Image(terrain.getImgPath());
-			} catch (Exception e) {
-				image = null;
-			}
-			NumericInputRow row = new NumericInputRow(image, terrain.getName(), terrain.getDescription());
+			NumericInputRow row = new NumericInputRow(View.getImg(terrain.getImgPath()), terrain.getName(), terrain.getDescription());
 			rowToTerrain.put(row, (Terrain)terrain);
 			table.getChildren().add(row);
 		});

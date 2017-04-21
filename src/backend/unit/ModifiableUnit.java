@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 3/30/2017.
  */
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
-	private transient static final Pattern MAGIC = Pattern.compile("-(\\d{4,})$");
+	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
@@ -69,14 +69,14 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public String getFormattedName() {
-		return getName().split("-")[0];
+		return getName().split("_")[0];
 	}
 
 	@Override
 	public ModifiableUnit copy() {
 		Matcher m = MAGIC.matcher(getName());
-		int id = m.find() ? Integer.parseInt(m.group(0)) : 0;
-		setName(m.replaceAll(id + 1 + ""));
+		int id = m.find() ? Integer.parseInt(m.group(1)) : 0;
+		setName(String.format("%s_%02d", m.replaceAll(""), id + 1));
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
 

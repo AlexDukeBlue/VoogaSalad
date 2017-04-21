@@ -9,12 +9,12 @@ import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
+import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.detailpane.DetailPaneObserver;
 import frontend.util.BaseUIManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -95,8 +95,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	private void setImageContent(VoogaEntity sprite) {
 		Text name = new Text(sprite.getName() + "\n");
 		name.setFont(Font.font(20));
-		Image image = new Image(sprite.getImgPath());
-		ImageView spriteImage = new ImageView(image);
+		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
 		spriteImage.setFitHeight(50);
 		spriteImage.setFitWidth(50);
 		imagePane.getChildren().add(name);
@@ -119,8 +118,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection("DefensiveModifiers", unit.getDefensiveModifiers(), content);
-		addString("Hit Points", unit.getHitPoints().toString());
-		addString("Move Points", unit.getMovePoints().toString());
+		unit.getUnitStats().forEach(e -> addString(e.getFormattedName(),e.toString()));
 		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
@@ -141,14 +139,9 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 		content = checkForNull(label, content);
 		for (VoogaEntity o : collection) {
 			content += o + "\n";
-			try {
-				if (o.getImgPath() != null) {
-					Image oImage = new Image(o.getImgPath());
-					ImageView oIV = new ImageView(oImage);
-					content += oIV;
-				}
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+			if (o.getImgPath() != null) {
+				ImageView oIV = new ImageView(View.getImg(o.getImgPath()));
+				content += oIV;
 			}
 		}
 		content += "\n";

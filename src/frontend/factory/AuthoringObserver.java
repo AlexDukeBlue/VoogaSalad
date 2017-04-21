@@ -61,7 +61,7 @@ class AuthoringObserver implements GameObserver {
 	@Override
 	public void didClickUnitViewExternalInterface(UnitViewExternal unit) {
 		// TODO Auto-generated method stub
-		System.out.println("UnitViewExternalCell: " + unit + "\n");
+//		System.out.println("UnitViewExternalCell: " + unit + "\n");
 
 		unitClickedName = unit.getUnitName();
 		unitClickedLocation = unit.getUnitLocation();
@@ -70,8 +70,8 @@ class AuthoringObserver implements GameObserver {
 	@Override
 	public void didClickVoogaEntity(TemplatePaneExternal templatePane, VoogaEntity entity) {
 		// TODO Auto-generated method stub
-		System.out.println("TemplatePane: " + templatePane);
-		System.out.println("VoogaEntity: " + entity + "\n");
+//		System.out.println("TemplatePane: " + templatePane);
+//		System.out.println("VoogaEntity: " + entity + "\n");
 
 		detailPane.setContent(entity, "");
 
