@@ -1,5 +1,8 @@
 package frontend.factory.worldview;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import backend.grid.CoordinateTuple;
 import controller.Controller;
 import frontend.View;
@@ -19,9 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterface, CellViewExternal {
 

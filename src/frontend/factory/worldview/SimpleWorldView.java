@@ -1,20 +1,25 @@
 package frontend.factory.worldview;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import controller.Controller;
 import frontend.interfaces.GameObserver;
-import frontend.interfaces.worldview.*;
+import frontend.interfaces.worldview.CellViewObserver;
+import frontend.interfaces.worldview.GridViewExternal;
+import frontend.interfaces.worldview.GridViewObserver;
+import frontend.interfaces.worldview.UnitViewObserver;
+import frontend.interfaces.worldview.WorldViewExternal;
+import frontend.interfaces.worldview.WorldViewObserver;
 import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
-import frontend.worldview.grid.GridView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * SimpleWorldView sets up and displays a Region object that contains a grid of
@@ -37,8 +42,9 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	 * Instantiates a new instance of SimpleWorldView. Sets all values to
 	 * default.
 	 *
-	 * @param controller the controller whose state will be displayed within the
-	 *                   SimpleWorldView
+	 * @param controller
+	 *            the controller whose state will be displayed within the
+	 *            SimpleWorldView
 	 */
 	public SimpleWorldView(Controller controller, GameObserver gameDelegate) {
 		super(controller);
@@ -52,10 +58,8 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	private void initialize(GameObserver gameDelegate) {
 		borderPane = new BorderPane();
 		observers = new ArrayList<>();
-		myGrid = new GridView(getController());
-		myGrid.addGridViewObserver(gameDelegate);
-		myGrid.addUnitViewObserver(gameDelegate);
-		myGrid.addCellViewObserver(gameDelegate);
+		myGrid = new SimpleGridView(getController(), Arrays.asList(gameDelegate), Arrays.asList(gameDelegate),
+				Arrays.asList(gameDelegate));
 		AnchorPane centerAnchorPane = new AnchorPane();
 		ChatLogView chatLogView = new ChatLogView(getController());
 		borderPane.setOnKeyPressed(event -> {
