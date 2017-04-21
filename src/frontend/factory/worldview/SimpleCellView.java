@@ -9,6 +9,7 @@ import frontend.View;
 import frontend.factory.worldview.layout.CellViewLayoutInterface;
 import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.CellViewObserver;
+import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
@@ -16,8 +17,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -110,44 +111,56 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	@Override
 	public void update() {
 		this.getPolygon().setOnMouseEntered(e -> mouseOver());
-		group.getChildren().clear();
 		if (getController().getGrid().getImgPath().length() < 1) {
 			polygon.setFill(new ImagePattern(
 					View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
-
-		polygon.setOnMouseClicked(event -> {
-			if (event.getButton().equals(MouseButton.PRIMARY))
-				observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this));
-
-		});
-
+		if (!group.getChildren().contains(polygon)){
+			group.getChildren().add(polygon);
+		}
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
-		group.getChildren().add(polygon);
-		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
-		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
-		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
-		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
-			if (unit != null) {
-				SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
-				unitList.add(unitView);
-				unitView.setFitWidth(size);
-				unitView.setFitHeight(size);
-				unitView.setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
-				unitView.setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
-				group.getChildren().add(unitView.getObject());
-				unitView.getObject().toFront();
-				unitView.addAllUnitViewObservers(unitViewObservers);
-			}
-		});
-		contextMenu.getItems().clear();
-		getController().getCell(cellLocation).getOccupants()
-				.forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+
+		if (unitList.size() != getController().getCell(cellLocation).getOccupants().size()) {
+			unitList.clear();
+			double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
+			double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
+			double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
+			group.getChildren().clear();
+			group.getChildren().addAll(polygon);
+			getController().getCell(cellLocation).getOccupants().forEach(unit -> {
+				if (unit != null) {
+					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
+					unitList.add(unitView);
+					toolTip(unitView);
+					unitView.getObject().setFitWidth(size);
+					unitView.getObject().setFitHeight(size);
+					unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
+					unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
+					group.getChildren().add(unitView.getObject());
+					unitView.getObject().toFront();
+					unitView.addAllUnitViewObservers(unitViewObservers);
+				}
+			});
+			contextMenu.getItems().clear();
+
+			getController().getCell(cellLocation).getOccupants()
+					.forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+		}
 	}
 
+	/*
+	 * creates a popup that gives information about the unit
+	 */
+	private void toolTip(UnitViewExternal uv) {
+		Tooltip tt = new Tooltip();
+		tt.setText("Position: (" + polygon.getLayoutX() + "," + polygon.getLayoutY() + ")" + "\nName: "
+				+ uv.getUnitName());
+		Tooltip.install(uv.getObject(), tt);
+		// System.out.println("toolTip");
+	}
 
 	private void mouseOver() {
 		// System.out.println(unitList.size());
@@ -195,6 +208,8 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED,
 				event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
+		polygon.setOnMouseClicked(
+				event -> observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this)));
 		update();
 	}
 
