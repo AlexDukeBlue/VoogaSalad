@@ -133,29 +133,30 @@ public class CellView extends BaseUIManager<Parent> implements CellViewLayoutInt
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
-		//should be messing with the unitview not the polygon!!
-		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
-		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
-		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
-		unitList.clear();
-		group.getChildren().clear();
-		group.getChildren().addAll(polygon);
-		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
-			if (unit != null) {
-				UnitViewExternal unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
-				unitList.add(unitView);
-				toolTip(unitView);
-				unitView.getObject().setFitWidth(size);
-				unitView.getObject().setFitHeight(size);
-				unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
-				unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
-				group.getChildren().add(unitView.getObject());
-				unitView.getObject().toFront();
-				unitView.addAllUnitViewObservers(unitViewObservers);
-			}
-		});
-		contextMenu.getItems().clear();
-		getController().getCell(cellLocation).getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+		if (unitList.size() != getController().getCell(cellLocation).getOccupants().size()) {
+			unitList.clear();
+			double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
+			double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
+			double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
+			group.getChildren().clear();
+			group.getChildren().addAll(polygon);
+			getController().getCell(cellLocation).getOccupants().forEach(unit -> {
+				if (unit != null) {
+					UnitViewExternal unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
+					unitList.add(unitView);
+					toolTip(unitView);
+					unitView.getObject().setFitWidth(size);
+					unitView.getObject().setFitHeight(size);
+					unitView.getObject().setX(xCenter - unitView.getObject().getBoundsInParent().getWidth() / 2.0);
+					unitView.getObject().setY(yCenter - unitView.getObject().getBoundsInParent().getHeight() / 2.0);
+					group.getChildren().add(unitView.getObject());
+					unitView.getObject().toFront();
+					unitView.addAllUnitViewObservers(unitViewObservers);
+				}
+			});
+			contextMenu.getItems().clear();
+			getController().getCell(cellLocation).getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+		}
 	}
 
 	/*
