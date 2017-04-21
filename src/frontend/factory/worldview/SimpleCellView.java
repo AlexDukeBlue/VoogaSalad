@@ -101,6 +101,9 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
 		this.polygon = polygon;
+		polygon.setOnMouseClicked(
+				event -> observers.stream().forEach(observer -> observer
+						.didClickCellViewExternalInterface(this)));
 		update();
 	}
 
@@ -117,7 +120,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
-		if (!group.getChildren().contains(polygon)){
+		if (!group.getChildren().contains(polygon)) {
 			group.getChildren().add(polygon);
 		}
 		polygon.setStrokeWidth(CELL_STROKE);
@@ -209,7 +212,8 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED,
 				event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 		polygon.setOnMouseClicked(
-				event -> observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this)));
+				event -> observers.stream().forEach(observer -> observer
+						.didClickCellViewExternalInterface(this)));
 		update();
 	}
 
