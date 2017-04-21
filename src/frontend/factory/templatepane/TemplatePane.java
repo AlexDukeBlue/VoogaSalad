@@ -103,7 +103,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
-		VBox content = createContent(sprites, label);
+		VBox content = createContent(sprites);
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(content);
 		spritePane.setContent(scroller);
@@ -112,7 +112,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		pane.getChildren().add(spritePane);
 	}
 
-	private VBox createContent(Collection<? extends VoogaEntity> sprites, String spriteType) {
+	private VBox createContent(Collection<? extends VoogaEntity> sprites) {
 		VBox contentPane = new VBox();
 		contentPane.setPadding(new Insets(5, 5, 5, 5));
 		contentPane.setSpacing(5);
@@ -129,16 +129,14 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 				imageNode.setFitWidth(40);
 				spriteContent.getChildren().add(imageNode);
 			}
-			setOnClick(spriteContent, sprite, spriteType);
+			setOnClick(spriteContent, sprite);
 			contentPane.getChildren().add(spriteContent);
 		}
 		return contentPane;
 	}
 
-	private void setOnClick(Node o, VoogaEntity sprite, String spriteType) {
-		o.setOnMouseClicked(event -> {
-			observers.stream().forEach(observer -> observer.didClickVoogaEntity(this, sprite));
-		});
+	private void setOnClick(Node o, VoogaEntity sprite) {
+		o.setOnMouseClicked(event -> observers.forEach(observer -> observer.didClickVoogaEntity(this, sprite)));
 	}
 
 	private void updatePane() {
@@ -160,14 +158,14 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	@Override
 	public void addAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers) {
 		if (observers != null) {
-			observers.stream().forEach(observer -> addTemplatePaneObserver(observer));
+			observers.forEach(this::addTemplatePraneObserver);
 		}
 	}
 
 	@Override
 	public void removeAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers) {
 		if (observers != null) {
-			observers.stream().forEach(observer -> removeTemplatePaneObserver(observer));
+			observers.forEach(this::removeTemplatePaneObserver);
 		}
 	}
 
