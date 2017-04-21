@@ -21,11 +21,13 @@ package frontend;
 import backend.util.AuthoringGameState;
 import controller.Controller;
 import frontend.factory.GameObserverFactory;
+import frontend.factory.conditionspane.ConditionsPaneFactory;
 import frontend.factory.detailpane.DetailPaneFactory;
 import frontend.factory.templatepane.TemplatePaneFactory;
 import frontend.factory.worldview.MinimapPane;
 import frontend.factory.worldview.WorldViewFactory;
 import frontend.interfaces.GameObserver;
+import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
@@ -58,7 +60,7 @@ public class View extends BaseUIManager<Region> {
 	private DetailPaneExternal detailPane;
 	private TemplatePaneExternal tempPane;
 	private GameObserver gameObserver;
-	// private RulesPane rulesPane; //TODO For when rules pane is created
+	private ConditionsPaneExternal conditionsPane;
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -93,7 +95,7 @@ public class View extends BaseUIManager<Region> {
 		}
 	}
 
-	public void toggleRulesPane() {
+	public void toggleConditionsPane() {
 //		if(myBorder.getLeft() == null){
 //			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
 //		} else {
@@ -160,11 +162,11 @@ public class View extends BaseUIManager<Region> {
 
 	private void placePanes() {
 		initPanes();
-		SplitPane innerSplitPane = new SplitPane(worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject()));
-		innerSplitPane.setDividerPositions(1);
+		SplitPane innerSplitPane = new SplitPane(conditionsPane.getObject(), worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject()));
+		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
 		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
-		outerSplitPane.setDividerPositions(0, .8);
+		outerSplitPane.setDividerPositions(.8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		SplitPane.setResizableWithParent(menuBar.getObject(), false);        //In case user is on Windows and MenuBar is in the View
 	}
@@ -183,6 +185,7 @@ public class View extends BaseUIManager<Region> {
 		detailPane = DetailPaneFactory.newDetailPane();
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
 				new MinimapPane(worldView.getGridPane(), getController()));
+		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController());
 		gameObserver = GameObserverFactory.newGameObserver(getController(), worldView, detailPane, tempPane);
 		detailPane.addDetailPaneObserver(gameObserver);
 		tempPane.addTemplatePaneObserver(gameObserver);
@@ -190,7 +193,7 @@ public class View extends BaseUIManager<Region> {
 		worldView.addGridViewObserver(gameObserver);
 		worldView.addCellViewObserver(gameObserver);
 		worldView.addUnitViewObserver(gameObserver);
-		// rulesPane = new RulesPane(); //TODO For when rules pane is created
+		conditionsPane.addConditionsPaneObserver(gameObserver);
 	}
 
 	/**
