@@ -41,8 +41,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem,
-		newActiveAbilityItem, newTriggeredAbilityItem, newInteractionModifierItem, rulesPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem,
-		 editModeItem, playModeItem, helpItem, aboutItem;
+		newActiveAbilityItem, newTriggeredAbilityItem, newInteractionModifierItem, conditionsPaneItem,
+		templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -61,7 +61,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	public void setEditable(boolean editable){
 		loadItem.setDisable(!editable);
 		edit.setDisable(!editable);
-		rulesPaneItem.setDisable(!editable);
+		conditionsPaneItem.setDisable(!editable);
 		templatePaneItem.setDisable(!editable);
 		playModeItem.setDisable(!editable);
 		
@@ -104,7 +104,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			setThemeItem.getItems().add(menuItem);
 		});
 		
-		rulesPaneItem = factory.getMenuItem("Show/Hide Rules Pane", e -> myView.toggleRulesPane()); //TODO resource file
+		conditionsPaneItem = factory.getMenuItem("Show/Hide Conditions Pane", e -> myView.toggleConditionsPane()); //TODO resource file
 		templatePaneItem = factory.getMenuItem("Show/Hide Template Pane", e -> myView.toggleTemplatePane()); //TODO resource file
 		detailsPaneItem = factory.getMenuItem("Show/Hide Details Pane", e -> myView.toggleDetailsPane()); //TODO resource file
 		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> myView.toggleStatsPane()); //TODO resource file
@@ -136,7 +136,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		theme.getItems().add(setThemeItem);
 		
 		view = factory.getMenu("View"); //TODO get from resource files
-		view.getItems().add(rulesPaneItem);
+		view.getItems().add(conditionsPaneItem);
 		view.getItems().add(templatePaneItem);
 		view.getItems().add(detailsPaneItem);
 		view.getItems().add(statsPaneItem);
