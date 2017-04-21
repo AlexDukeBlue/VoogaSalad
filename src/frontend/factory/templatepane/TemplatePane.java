@@ -1,5 +1,6 @@
 package frontend.factory.templatepane;
 
+import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
@@ -10,6 +11,7 @@ import frontend.factory.worldview.MinimapPane;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
 import frontend.util.BaseUIManager;
+import frontend.wizards.TerrainWizard;
 import frontend.wizards.UnitWizard;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -46,6 +48,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	private MinimapPane mapPane;
 
 	private Button addUnitButton;
+	private Button addTerrainButton;
 
 	public TemplatePane(Controller controller, MinimapPane mapPane) {
 		super(controller);
@@ -100,6 +103,16 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		pane.getChildren().add(addUnitButton);
 	}
 
+	private void addTerrainButton() {
+		addTerrainButton = new Button("add terrain");
+		addTerrainButton.setOnAction(e -> {
+			TerrainWizard wiz = new TerrainWizard(getController().getAuthoringGameState());
+			wiz.show();
+			wiz.addObserver((o, arg) -> getController().addTerrainTemplates((ModifiableTerrain) arg));
+		});
+		pane.getChildren().add(addTerrainButton);
+	}
+	
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
@@ -147,6 +160,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		createCollabsible("Unit", units);
 		addUnitButton();
 		createCollabsible("Terrain", terrains);
+		addTerrainButton();
 	}
 
 	private void updateUnits(Collection<? extends Unit> unitsIn) {
