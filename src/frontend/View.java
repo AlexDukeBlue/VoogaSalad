@@ -163,9 +163,10 @@ public class View extends BaseUIManager<Region> {
 		SplitPane innerSplitPane = new SplitPane(worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject()));
 		innerSplitPane.setDividerPositions(1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(innerSplitPane, detailPane.getObject());
-		outerSplitPane.setDividerPositions(.8);
+		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
+		outerSplitPane.setDividerPositions(0, .8);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
+		SplitPane.setResizableWithParent(menuBar.getObject(), false);		//In case user is on Windows and MenuBar is in the View
 	}
 
 	/**
