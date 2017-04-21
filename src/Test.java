@@ -1,5 +1,4 @@
 import backend.grid.GridPattern;
-import frontend.startup.StartupScreen;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 

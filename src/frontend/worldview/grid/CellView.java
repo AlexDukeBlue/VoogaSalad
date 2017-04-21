@@ -4,6 +4,8 @@ package frontend.worldview.grid;
 import backend.grid.CoordinateTuple;
 import controller.Controller;
 import frontend.View;
+import frontend.factory.worldview.SimpleUnitView;
+import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.BaseUIManager;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -40,8 +42,7 @@ public class CellView extends BaseUIManager<Parent> {
 	private Polygon polygon;
 	private final Group group;
 	private final ContextMenu contextMenu;
-	private final UnitViewDelegate delegate;
-	private ArrayList<UnitView> unitList;
+	private ArrayList<UnitViewExternal> unitList;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
@@ -50,15 +51,14 @@ public class CellView extends BaseUIManager<Parent> {
 	 * @param controller   the controller object that this CellView will send information
 	 *                     to when the user interacts with the CellView
 	 */
-	public CellView(CoordinateTuple cellLocation, Controller controller, UnitViewDelegate delegate) {
+	public CellView(CoordinateTuple cellLocation, Controller controller) {
 		super(controller);
-		this.delegate = delegate;
 		this.cellLocation = cellLocation;
 		polygon = new Polygon();
 		group = new Group();
 		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
-		unitList =  new ArrayList<UnitView>();
+		unitList =  new ArrayList<UnitViewExternal>();
 		update();
 	}
 
@@ -160,7 +160,7 @@ public class CellView extends BaseUIManager<Parent> {
 		unitList.clear();
 		getController().getCell(cellLocation).getOccupants().forEach(unit -> {
 			if (unit != null) {
-				UnitView unitView = new UnitView(unit.getName(), unit.getLocation(), unit.getImgPath(), delegate);
+				UnitViewExternal unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
 				if (!containsUnit(unitView)){
 					unitList.add(unitView);
 				}
@@ -189,7 +189,7 @@ public class CellView extends BaseUIManager<Parent> {
 	/*
 	 * creates a popup that gives information about the unit
 	 */
-	private void toolTip(UnitView uv){
+	private void toolTip(UnitViewExternal uv){
 		Tooltip tt = new Tooltip();
 		tt.setText("Position: (" + polygon.getLayoutX() + "," + polygon.getLayoutY() + ")" 
 				+ "\nName: " + uv.getUnitName());
@@ -208,8 +208,8 @@ public class CellView extends BaseUIManager<Parent> {
 		}
 	}
 
-	private boolean containsUnit(UnitView unit){
-		for (UnitView each: unitList){
+	private boolean containsUnit(UnitViewExternal unit){
+		for (UnitViewExternal each: unitList){
 			if (each.getUnitName() == unit.getUnitName()){
 				return true;
 			}
@@ -224,23 +224,4 @@ public class CellView extends BaseUIManager<Parent> {
 			}
 		}
 	}
-
-	//	private void mouseInPane(){
-	////		Rectangle rect = new Rectangle();
-	////		rect.setWidth(this.getObject().getLayoutBounds().getWidth());
-	////		rect.setHeight(unitList.size() * 60);
-	////		rect.setX(this.getX());
-	////		rect.setY(this.getY() - rect.getHeight() + polygon.getLayoutBounds().getHeight());
-	//		VBox vbox = new VBox();
-	//		for (UnitView each : unitList){
-	//			vbox.getChildren().addAll(each.getObject());
-	//		}
-	//		
-	//		ScrollPane sp = new ScrollPane();
-	//		
-	//		for (int i = 0; i < unitList.size(); i++) {
-	//			unitList.get(i).getObject().setLayoutY(unitList.get(i).getObject().getLayoutY() + (i - 1) * 60);;
-	//		}
-	//	}
-
 }
