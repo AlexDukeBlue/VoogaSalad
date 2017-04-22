@@ -83,6 +83,16 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
+	public String serialize(ReadonlyGameplayState state) {
+		return (String) XML.serialize(state);
+	}
+
+	@Override
+	public ReadonlyGameplayState unserialize(String xml) {
+		return XML.unserialize(xml);
+	}
+
+	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
@@ -154,7 +164,7 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public Collection<? extends VoogaEntity> getTemplatesByCategory(String category){
+	public Collection<? extends VoogaEntity> getTemplatesByCategory(String category) {
 		return getAuthoringGameState().getTemplateByCategory(category).getAll();
 	}
 
@@ -193,7 +203,7 @@ public class CommunicationController implements Controller {
 		return playerName;
 	}
 
-	private void updateAll() {
+	public void updateAll() {
 		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
 	}
 }

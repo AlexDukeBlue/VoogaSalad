@@ -2,12 +2,14 @@ package frontend.util;
 
 import backend.player.ChatMessage;
 import controller.Controller;
+import frontend.View;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -35,6 +37,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	private final BorderPane pane;
 	private final TextArea textArea;
 	private final MediaPlayer mediaPlayer;
+	private final ImageView showHideArrow;
 	private int logLength;
 
 	public ChatLogView(Controller controller) {
@@ -44,6 +47,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 				Instant.now().atZone(ZoneId.systemDefault())
 						.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
+		showHideArrow = new ImageView(View.getImg("resources/images/triangle.png"));
 		pane.setMaxSize(1000, 600);
 		textArea = initTextArea();
 		pane.setBottom(initTextInputBox());
@@ -59,6 +63,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 
 	public void setExpandedState(boolean expandedState) {
 		pane.setCenter(expandedState ? textArea : null);
+		showHideArrow.setRotate(showHideArrow.getRotate() + 180);
 	}
 
 	public boolean isExpanded() {
@@ -89,23 +94,22 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		HBox bottomBox = new HBox();
 		// TODO: Resourcebundlify this as well
 		bottomBox.getStyleClass().add("hbox");
-		bottomBox.setAlignment(Pos.BASELINE_LEFT);
-//		bottomBox.minWidthProperty().bind(pane.widthProperty());
-//		bottomBox.maxWidthProperty().bind(pane.widthProperty());
+		bottomBox.setAlignment(Pos.CENTER);
 		ComboBox<ChatMessage.AccessLevel> chatModeChooser = initComboBox();
 		Label label1 = new Label("To:");
 		label1.setMinWidth(30);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
-		chatModeChooser.setOnAction(
-				event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
+		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setMinWidth(200);
 		textContentInputField.setPrefWidth(1000);
-		textContentInputField.setOnKeyPressed(
-				evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
+		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
-		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField);
+		showHideArrow.setOnMouseClicked(event -> setExpandedState(!isExpanded()));
+		showHideArrow.setFitWidth(20);
+		showHideArrow.setFitHeight(20);
+		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField, showHideArrow);
 		return bottomBox;
 	}
 
@@ -118,7 +122,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private void showOrHideRecipientField(HBox bottomBox, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-			Label toLabel, TextField messageRecipientField) {
+	                                      Label toLabel, TextField messageRecipientField) {
 		if (chatModeChooser.getValue().equals(ChatMessage.AccessLevel.WHISPER)) {
 			bottomBox.getChildren().add(1, messageRecipientField);
 			bottomBox.getChildren().add(1, toLabel);
@@ -130,7 +134,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private void submitMessage(KeyEvent evt, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-			TextField textContentInputField, TextField messageRecipientField) {
+	                           TextField textContentInputField, TextField messageRecipientField) {
 		if (evt.getCode() == KeyCode.ENTER && textContentInputField.getText().length() > 0) {
 			getController().sendModifier(chatModeChooser.getValue().getSendMessageModifier(
 					textContentInputField.getText(), getController().getPlayerName(), messageRecipientField.getText()));

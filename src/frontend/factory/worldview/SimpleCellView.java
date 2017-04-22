@@ -118,34 +118,27 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
-		if (!group.getChildren().contains(polygon)) {
-			group.getChildren().add(polygon);
-		}
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
-		if (unitList.size() != getCell().getOccupants().size()) {
-			unitList.forEach(e -> getController().removeFromUpdated(e));
-			unitList.clear();
-			double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
-			double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
-			double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
-			group.getChildren().clear();
-			group.getChildren().addAll(polygon);
-			getCell().getOccupants().forEach(unit -> {
-				if (unit != null) {
-					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController());
-					unitList.add(unitView);
-					toolTip(unitView);
-					unitView.setSize(size);
-					group.getChildren().add(unitView.getObject());
-					unitView.getObject().toFront();
-					unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0, yCenter - unitView.getObject().getHeight() / 2.0);
-					unitView.addAllUnitViewObservers(unitViewObservers);
-				}
-			});
-			contextMenu.getItems().clear();
-			getCell().getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
-		}
+		unitList.forEach(e -> getController().removeFromUpdated(e));
+		unitList.clear();
+		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
+		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
+		double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
+		group.getChildren().clear();
+		group.getChildren().addAll(polygon);
+		getCell().getOccupants().forEach(unit -> {
+			SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController());
+			unitList.add(unitView);
+			toolTip(unitView);
+			unitView.setSize(size);
+			group.getChildren().add(unitView.getObject());
+			unitView.getObject().toFront();
+			unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0, yCenter - unitView.getObject().getHeight() / 2.0);
+			unitView.addAllUnitViewObservers(unitViewObservers);
+		});
+		contextMenu.getItems().clear();
+		getCell().getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 	}
 
 	/**
@@ -157,7 +150,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		if (Objects.nonNull(hitpoints)) {
 			hp = String.format("\nHitpoints:%2.0f/%2.0f", hitpoints.getCurrentValue(), hitpoints.getMaxValue());
 		}
-		Tooltip.install(uv.getObject(),new Tooltip(String.format("Name:%s\nPosition: (%3.0f,%3.0f)%s", uv.getUnitName(), polygon.getLayoutX(), polygon.getLayoutY(), hp)));
+		Tooltip.install(uv.getObject(), new Tooltip(String.format("Name:%s\nPosition: %s%s", uv.getUnitName(), uv.getUnit().getLocation().toString(), hp)));
 	}
 
 	private void mouseOver() {

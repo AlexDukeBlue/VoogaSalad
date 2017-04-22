@@ -122,7 +122,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		contentPane.setPadding(Insets.EMPTY);
 		contentPane.setAlignment(Pos.CENTER_RIGHT);
 		contentPane.setSpacing(0);
-		sprites.parallelStream()
+		sprites.stream()
 				.map(entity -> new VoogaEntityButton(entity, 50, event -> observers.forEach(observer -> observer.didClickVoogaEntity(this, entity))))
 				.map(VoogaEntityButton::getObject)
 				.forEach(contentPane.getChildren()::add);

@@ -7,34 +7,26 @@ import controller.Controller;
 import frontend.View;
 import frontend.wizards.GameWizard;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import util.net.ObservableHost;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -45,20 +37,17 @@ import java.util.ResourceBundle;
  */
 public class StartupSelectionScreen extends VBox {
 	private ResourceBundle SelectionProperties = ResourceBundle.getBundle("frontend/properties/SelectionProperties");
-	private StartupScreen ui;
 	private Stage stage;
 	private Controller control;
-
-	Color startColor;
-	Color endColor;
-	ObjectProperty<Color> color;
-
+	private Color startColor;
+	private Color endColor;
+	private ObjectProperty<Color> color;
 	private final int TIMEOUT = 20; //Timeout for server. Store this in a resource file or something
 
 	public StartupSelectionScreen(Stage stage, StartupScreen ui) { //should have some sort of parameter that is passing the UI
 		this.stage = stage;
 		this.setUpPane();
-		this.ui = ui;
+		StartupScreen ui1 = ui;
 	}
 
 	public void setButtonAnimationColors() {
@@ -95,63 +84,50 @@ public class StartupSelectionScreen extends VBox {
 		return rotate;
 	}
 
-
 	public void setUpPane() {
-
 		Button create = new Button(SelectionProperties.getString("Create"));
 		Button join = new Button(SelectionProperties.getString("Join"));
 		Button load = new Button(SelectionProperties.getString("Load"));
-
 		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but heavily refactored and changed by ncp14
 		setButtonAnimationColors();
 		create.styleProperty().bind(generateStringBinding());
 		join.styleProperty().bind(generateStringBinding());
 		load.styleProperty().bind(generateStringBinding());
-
-
 		final Timeline timeline = new Timeline(
 				new KeyFrame(javafx.util.Duration.ZERO, new KeyValue(color, startColor)),
 				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color, endColor)));
-
 		create.setOnAction(event -> {
 			timeline.play();
 			String port = popupWindow();
 			create(Integer.parseInt(port));
 		});
-
 		join.setOnAction(event -> {
 			timeline.play();
 			String port = popupWindow();
 			join(Integer.parseInt(port));
 		});
-
 		load.setOnAction(event -> {
 			timeline.play();
 			String port = popupWindow();
 			load(Integer.parseInt(port));
 		});
-
 		// Create a rotating rectangle and set it as the graphic for the button
 		final Rectangle rotatingRect = new Rectangle(5, 5, 10, 6);
 		rotatingRect.setFill(Color.CORNFLOWERBLUE);
 		Pane rectHolder = generateShape(rotatingRect);
 		RotateTransition rotate = generateRotation(rotatingRect);
-
 		// Create a rotating rectangle and set it as the graphic for the button
 		final Rectangle rotatingRect2 = new Rectangle(5, 5, 10, 6);
 		rotatingRect2.setFill(Color.CORNFLOWERBLUE);
 		Pane rectHolder2 = generateShape(rotatingRect2);
 		RotateTransition rotate2 = generateRotation(rotatingRect2);
-
 		final Rectangle rotatingRect3 = new Rectangle(5, 5, 10, 6);
 		rotatingRect3.setFill(Color.CORNFLOWERBLUE);
 		Pane rectHolder3 = generateShape(rotatingRect3);
 		RotateTransition rotate3 = generateRotation(rotatingRect3);
-
 		create.setGraphic(rectHolder);
 		join.setGraphic(rectHolder2);
 		load.setGraphic(rectHolder3);
-
 		// make the rectangle rotate when the mouse hovers over the button
 		create.setOnMouseEntered(event -> rotate.play());
 		create.setOnMouseExited(event -> {
@@ -187,14 +163,6 @@ public class StartupSelectionScreen extends VBox {
 		return result.orElse("10000");
 	}
 
-	private void play() {
-		read("play");
-	}
-
-	private void edit() {
-		read("load");
-	}
-
 	private void create(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		GameWizard wiz = new GameWizard();
@@ -205,89 +173,35 @@ public class StartupSelectionScreen extends VBox {
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 			createGame();
 		});
-
 	}
 
 	private void join(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
+		control.updateAll();
 	}
 
 	private void load(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		control.startServer(null /*should be loaded gamestate*/, port, Duration.ofSeconds(30));
+		control.startServer(loadFile(), port, Duration.ofSeconds(30));
 		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 		createGame();
+		control.updateAll();
+	}
+
+	private ReadonlyGameplayState loadFile() {
+		try {
+			FileChooser chooser = new FileChooser();
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+			return control.unserialize(new String(Files.readAllBytes(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()))));
+		} catch (Exception e) {
+			Platform.exit();
+			return null;
+		}
 	}
 
 	private void createGame() {
 		View view = new View(control, stage);
 		stage.setScene(new Scene(view.getObject()));
-	}
-
-	private void read(String saveOrLoad) {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-		fileChooser.setTitle("Open Resource File");
-		Window stage = null;
-		File file = fileChooser.showOpenDialog(stage);
-
-		try {
-
-			FileInputStream fileIn = new FileInputStream(file);
-
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-
-			//need to do something with the file
-
-			in.close();
-
-			fileIn.close();
-
-			//this part probs doesn't work
-			Region pane = ui.getPrimaryPane();
-			((BorderPane) pane).setCenter(new View(null).getObject());
-
-		} catch (IOException i) {
-
-			i.printStackTrace();
-
-			return;
-
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-
-			alert.setTitle("No file selected");
-
-//			alert.setGraphic(graphic); //insert DuvallSalad
-
-			if (Objects.equals(saveOrLoad, "save")) {
-				alert.setHeaderText("Current game will not save");
-			}
-			if (Objects.equals(saveOrLoad, "load") || Objects.equals(saveOrLoad, "play")) {
-				alert.setHeaderText("Failed to load game");
-			}
-
-			alert.setContentText("Would you like to try again?");
-
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == new ButtonType("okay")) {
-				read(saveOrLoad);
-			} else {
-				return;
-
-			}
-		}
-		//		}catch(ClassNotFoundException c) {
-		//
-		//			System.out.println("Employee class not found");
-		//
-		//			c.printStackTrace();
-		//
-		//			return;
-		//
-		//		}
 	}
 }

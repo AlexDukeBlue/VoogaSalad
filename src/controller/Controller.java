@@ -24,6 +24,10 @@ public interface Controller {
 
 	GameBoard getGrid();
 
+	String serialize(ReadonlyGameplayState state);
+
+	ReadonlyGameplayState unserialize(String xml);
+
 	void startClient(String host, int port, Duration timeout);
 
 	void startServer(ReadonlyGameplayState gameState, int port, Duration timeout);
@@ -91,4 +95,6 @@ public interface Controller {
 	default void removeTeamTemplates(Team... teamTemplates) {
 		removeTemplatesByCategory("team", teamTemplates);
 	}
+
+	void updateAll();
 }

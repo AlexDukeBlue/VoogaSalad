@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +39,7 @@ public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExter
 		ImageView imageView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));
 		imageView.setX(3);
 		unitView = new Pane(imageView);
+		unitView.setPickOnBounds(true);
 		if (Objects.nonNull(getUnit().getHitPoints())) {
 			remainingHealthBar = new Rectangle();
 			remainingHealthBar.setWidth(5);
@@ -45,6 +47,8 @@ public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExter
 			healthBar.setWidth(5);
 			healthBar.setFill(Color.TRANSPARENT);
 			healthBar.setStrokeWidth(1);
+			healthBar.setStrokeType(StrokeType.OUTSIDE);
+			healthBar.setStroke(Color.WHITE);
 			healthBar.heightProperty().bind(unitView.heightProperty());
 			unitView.getChildren().addAll(remainingHealthBar, healthBar);
 		}
@@ -61,13 +65,10 @@ public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExter
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
 			if (fractionRemaining < 1 / 3.0) {
 				remainingHealthBar.setFill(Color.RED);
-				healthBar.setStroke(Color.RED);
 			} else if (fractionRemaining < 2 / 3.0) {
 				remainingHealthBar.setFill(Color.YELLOW);
-				healthBar.setStroke(Color.YELLOW);
 			} else {
 				remainingHealthBar.setFill(Color.GREEN);
-				healthBar.setStroke(Color.GREEN);
 			}
 		} catch (NullPointerException ignored) {
 		}
