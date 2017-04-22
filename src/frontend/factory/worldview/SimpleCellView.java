@@ -11,6 +11,8 @@ import frontend.interfaces.worldview.CellViewObserver;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.util.BaseUIManager;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -43,9 +45,11 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellLocation The Cell object that this CellView will visually represent.
-	 * @param controller   the controller object that this CellView will send information
-	 *                     to when the user interacts with the CellView
+	 * @param cellLocation
+	 *            The Cell object that this CellView will visually represent.
+	 * @param controller
+	 *            the controller object that this CellView will send information
+	 *            to when the user interacts with the CellView
 	 */
 	public SimpleCellView(CoordinateTuple cellLocation, Controller controller) {
 		super(controller);
@@ -93,15 +97,15 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon Shape of cellview an instance of a cell
+	 * @param polygon
+	 *            Shape of cellview an instance of a cell
 	 */
 	@Override
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
 		this.polygon = polygon;
 		polygon.setOnMouseClicked(
-				event -> observers.stream().forEach(observer -> observer
-						.didClickCellViewExternalInterface(this)));
+				event -> observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this)));
 		update();
 	}
 
@@ -113,8 +117,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	public void update() {
 		this.getPolygon().setOnMouseEntered(e -> mouseOver());
 		if (getController().getGrid().getImgPath().length() < 1) {
-			polygon.setFill(new ImagePattern(
-					View.getImg(getCell().getTerrain().getImgPath())));
+			polygon.setFill(new ImagePattern(View.getImg(getCell().getTerrain().getImgPath())));
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
@@ -134,11 +137,27 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 			unitView.setSize(size);
 			group.getChildren().add(unitView.getObject());
 			unitView.getObject().toFront();
-			unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0, yCenter - unitView.getObject().getHeight() / 2.0);
+			unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0,
+					yCenter - unitView.getObject().getHeight() / 2.0);
 			unitView.addAllUnitViewObservers(unitViewObservers);
 		});
 		contextMenu.getItems().clear();
-		getCell().getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+		getCell().getOccupants().forEach(e -> {
+			MenuItem item = new MenuItem("Select " + e.getName());
+			contextMenu.getItems().add(item);
+			item.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					unitList.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7))).forEach(u -> {
+						observers.forEach(o -> {
+							o.didClickUnitViewExternalInterface(u);
+						});
+					});
+					;
+				}
+			});
+		});
+
 	}
 
 	/**
@@ -150,7 +169,8 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		if (Objects.nonNull(hitpoints)) {
 			hp = String.format("\nHitpoints:%2.0f/%2.0f", hitpoints.getCurrentValue(), hitpoints.getMaxValue());
 		}
-		Tooltip.install(uv.getObject(), new Tooltip(String.format("Name:%s\nPosition: %s%s", uv.getUnitName(), uv.getUnit().getLocation().toString(), hp)));
+		Tooltip.install(uv.getObject(), new Tooltip(
+				String.format("Name:%s\nPosition: %s%s", uv.getUnitName(), uv.getUnit().getLocation().toString(), hp)));
 	}
 
 	private void mouseOver() {
@@ -200,8 +220,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED,
 				event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 		polygon.setOnMouseClicked(
-				event -> observers.stream().forEach(observer -> observer
-						.didClickCellViewExternalInterface(this)));
+				event -> observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this)));
 		update();
 	}
 
