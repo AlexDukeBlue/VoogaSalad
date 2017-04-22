@@ -64,7 +64,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		contents.forEach((key, value) -> {
 			if (value.getChildren().size() != getController().getAuthoringGameState().getTemplateByCategory(key).size()) {
 				value.getChildren().clear();
-				getController().getAuthoringGameState().getTemplateByCategory(key).parallelStream()
+				getController().getAuthoringGameState().getTemplateByCategory(key).stream()
 						.map(entity -> new VoogaEntityButton(entity, 50, event -> observers.forEach(observer -> observer.didClickVoogaEntity(this, entity))))
 						.map(VoogaEntityButton::getObject)
 						.forEach(value.getChildren()::add);
@@ -130,8 +130,11 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton();
-		addRemoveButton.setOnAddClicked(event -> {
-			//TODO
+		addRemoveButton.setOnAddClicked(e -> {
+			//TODO: need way to choose wizard dynamically
+			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
+			wiz.show();
+			wiz.addObserver((o, arg) -> getController().addTerrainTemplates((ModifiableTerrain) arg));
 		});
 		addRemoveButton.setOnRemovedClicked(event -> {
 			//TODO
