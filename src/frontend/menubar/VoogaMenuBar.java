@@ -189,20 +189,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void load() {  //TODO Make work
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-		fileChooser.setTitle("Open Resource File");
-		Window stage = null;
-		File file = fileChooser.showOpenDialog(stage);
-
 		try {
-			FileInputStream fileIn = new FileInputStream(file);
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-
-			// have controller reset GameState using file
-
-			in.close();
-			fileIn.close();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+			getController().setGameState(getController().unserialize(new String(Files.readAllBytes(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())))));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
