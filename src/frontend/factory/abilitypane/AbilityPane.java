@@ -57,7 +57,7 @@ public class AbilityPane extends BaseUIManager<ScrollPane> {
 	}
 
 	private Button[] createRow(Collection<? extends VoogaEntity> collection) {
-		return collection.parallelStream().map(e -> new VoogaEntityButton(e, 50, null)).map(VoogaEntityButton::getObject).toArray(Button[]::new);
+		return collection.parallelStream().map(e -> new VoogaEntityButton(e, 100, null)).map(VoogaEntityButton::getObject).toArray(Button[]::new);
 	}
 
 	@Override

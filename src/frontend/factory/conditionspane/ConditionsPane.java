@@ -10,6 +10,7 @@ import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.conditionspane.ConditionsPaneObserver;
 import frontend.util.AddRemoveButton;
 import frontend.util.BaseUIManager;
+import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
@@ -87,6 +88,7 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 		for(GameRule rule: rules){
 			//content.getChildren().add(new RuleBox(rule.getNameOf()));	//TODO
 		}
+		content.setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton();
 		addRemoveButton.setOnAddClicked(e -> createRule());
 		addRemoveButton.setOnRemovedClicked(e -> {
@@ -113,6 +115,7 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 		for(Resultant result: resultants){
 			content.getChildren().add((new ResultantBox(result.getNameOf(), getController())).getObject());	
 		}
+		content.setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton();
 		addRemoveButton.setOnAddClicked(e -> createResultant());
 		addRemoveButton.setOnRemovedClicked(e -> {
