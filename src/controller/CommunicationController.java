@@ -1,16 +1,15 @@
 package controller;
 
 import backend.cell.Cell;
-import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
-import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
+import backend.util.VoogaEntity;
 import backend.util.io.XMLSerializer;
 import frontend.util.Updatable;
 import javafx.application.Platform;
@@ -155,69 +154,25 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public Collection<? extends Unit> getUnitTemplates() {
-		return (Collection<? extends Unit>) getAuthoringGameState().getTemplateByCategory("unit").getAll();
+	public Collection<? extends VoogaEntity> getTemplatesByCategory(String category){
+		return getAuthoringGameState().getTemplateByCategory(category).getAll();
 	}
 
 	@Override
-	public void addUnitTemplates(Unit... unitTemplates) {
+	public void addTemplatesByCategory(String category, VoogaEntity... templates) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory("unit").addAll(unitTemplates);
+			state.getTemplateByCategory(category).addAll(templates);
 			return state;
 		});
 	}
 
 	@Override
-	public void removeUnitTemplates(Unit... unitTemplates) {
+	public void removeTemplatesByCategory(String category, VoogaEntity... templates) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory("unit").removeAll(unitTemplates);
+			state.getTemplateByCategory(category).removeAll(templates);
 			return state;
 		});
 	}
-
-	@Override
-	public Collection<? extends Terrain> getTerrainTemplates() {
-		return (Collection<? extends Terrain>) getAuthoringGameState().getTemplateByCategory("terrain").getAll();
-	}
-
-	@Override
-	public void addTerrainTemplates(Terrain... terrainTemplates) {
-		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory("terrain").addAll(terrainTemplates);
-			return state;
-		});
-	}
-
-	@Override
-	public void removeTerrainTemplates(Terrain... terrainTemplates) {
-		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory("terrain").removeAll(terrainTemplates);
-			return state;
-		});
-	}
-
-
-	@Override
-	public Collection<? extends Team> getTeamTemplates() {
-		return (Collection<? extends Team>) getAuthoringGameState().getTemplateByCategory("team").getAll();
-	}
-
-	@Override
-	public void addTeamTemplates(Team... teamTemplates) {
-		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory("team").addAll(teamTemplates);
-			return state;
-		});
-	}
-
-	@Override
-	public void removeTeamTemplates(Team... teamTemplates) {
-		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory("team").removeAll(teamTemplates);
-			return state;
-		});
-	}
-
 
 	@Override
 	public void addToUpdated(Updatable updatable) {

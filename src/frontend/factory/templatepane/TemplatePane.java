@@ -134,7 +134,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 			//TODO: need way to choose wizard dynamically
 			UnitWizard wiz = new UnitWizard(getController().getAuthoringGameState());
 			wiz.show();
-			wiz.addObserver((o, arg) -> getController().addTerrainTemplates((ModifiableTerrain) arg));
+			wiz.addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg));
 		});
 		addRemoveButton.setOnRemovedClicked(event -> {
 			//TODO

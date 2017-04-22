@@ -10,6 +10,7 @@ import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
+import backend.util.VoogaEntity;
 import frontend.util.Updatable;
 import util.net.Modifier;
 
@@ -43,17 +44,35 @@ public interface Controller {
 
 	Collection<? extends Unit> getUnits();
 
-	Collection<? extends Unit> getUnitTemplates();
+	Collection<? extends VoogaEntity> getTemplatesByCategory(String category);
 
-	void addUnitTemplates(Unit... unitTemplates);
+	default Collection<? extends Unit> getUnitTemplates() {
+		return (Collection<? extends Unit>) getTemplatesByCategory("unit");
+	}
 
-	void removeUnitTemplates(Unit... unitTemplates);
+	void addTemplatesByCategory(String category, VoogaEntity... templates);
 
-	Collection<? extends Terrain> getTerrainTemplates();
+	void removeTemplatesByCategory(String category, VoogaEntity... templates);
 
-	void addTerrainTemplates(Terrain... terrainTemplates);
+	default void addUnitTemplates(Unit... unitTemplates) {
+		addTemplatesByCategory("unit", unitTemplates);
+	}
 
-	void removeTerrainTemplates(Terrain... terrainTemplates);
+	default void removeUnitTemplates(Unit... unitTemplates) {
+		removeTemplatesByCategory("unit", unitTemplates);
+	}
+
+	default Collection<? extends Terrain> getTerrainTemplates() {
+		return (Collection<? extends Terrain>) getTemplatesByCategory("terrain");
+	}
+
+	default void addTerrainTemplates(Terrain... terrainTemplates) {
+		addTemplatesByCategory("terrain", terrainTemplates);
+	}
+
+	default void removeTerrainTemplates(Terrain... terrainTemplates) {
+		removeTemplatesByCategory("terrain", terrainTemplates);
+	}
 
 	void addToUpdated(Updatable objectToUpdate);
 
@@ -61,9 +80,15 @@ public interface Controller {
 
 	String getPlayerName();
 
-	Collection<? extends Team> getTeamTemplates();
+	default Collection<? extends Team> getTeamTemplates(){
+		return (Collection<? extends Team>) getTemplatesByCategory("team");
+	}
 
-	void addTeamTemplates(Team[] teamTemplates);
+	default void addTeamTemplates(Team... teamTemplates) {
+		addTemplatesByCategory("team", teamTemplates);
+	}
 
-	void removeTeamTemplates(Team[] teamTemplates);
+	default void removeTeamTemplates(Team... teamTemplates) {
+		removeTemplatesByCategory("team", teamTemplates);
+	}
 }

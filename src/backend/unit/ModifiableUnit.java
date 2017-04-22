@@ -25,7 +25,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.addActiveAbilities(ActiveAbility.SWORD)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
-			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
+			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0).setCurrentValue(10.0))
 			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6))
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.setImgPath("resources/images/o.png")

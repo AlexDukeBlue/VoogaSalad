@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * @author Created by th174 on 4/6/2017.
  */
-public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVoogaObject<ModifiableUnitStat<T>> implements UnitStat<T>, Serializable {
+public class ModifiableUnitStat<T extends Number & Comparable<T>> extends ModifiableVoogaObject<ModifiableUnitStat<T>> implements UnitStat<T>, Serializable {
 	//TODO ResourceBundlify
 	//For units
 	public transient static final ModifiableUnitStat<Double> HITPOINTS = new ModifiableUnitStat<Double>("Hitpoints")
@@ -42,14 +42,14 @@ public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVooga
 	}
 
 	public ModifiableUnitStat(String name, String description, String imgPath) {
-		this(name, null, null, description, imgPath);
+		this(name, null, null, null, description, imgPath);
 	}
 
-	public ModifiableUnitStat(String name, T minValue, T maxValue, String description, String imgPath) {
+	public ModifiableUnitStat(String name, T currentValue, T minValue, T maxValue, String description, String imgPath) {
 		super(name, description, imgPath);
 		setMaxValue(maxValue);
 		setMinValue(minValue);
-		setCurrentValue(maxValue);
+		setCurrentValue(currentValue);
 	}
 
 	@Deprecated
@@ -59,7 +59,7 @@ public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVooga
 
 	@Override
 	public ModifiableUnitStat<T> copy() {
-		return new ModifiableUnitStat<>(getName(), minValue, maxValue, getDescription(), getImgPath());
+		return new ModifiableUnitStat<>(getName(), currentValue, minValue, maxValue, getDescription(), getImgPath());
 	}
 
 	@Override
@@ -69,6 +69,7 @@ public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVooga
 
 	public ModifiableUnitStat<T> setMaxValue(T maxValue) {
 		this.maxValue = maxValue;
+		this.currentValue = maxValue;
 		return this;
 	}
 

@@ -7,7 +7,7 @@ import backend.util.VoogaEntity;
  *
  * @author Created by th174 on 3/28/2017.
  */
-public interface UnitStat<T extends Comparable<T>> extends VoogaEntity, Comparable<UnitStat<T>> {
+public interface UnitStat<T extends Number & Comparable<T>> extends VoogaEntity, Comparable<UnitStat<T>> {
 	@Override
 	UnitStat<T> copy();
 
@@ -30,6 +30,10 @@ public interface UnitStat<T extends Comparable<T>> extends VoogaEntity, Comparab
 	}
 
 	T getMinValue();
+
+	default double getFractionRemaining() {
+		return getCurrentValue().doubleValue() / getMaxValue().doubleValue();
+	}
 
 	@Override
 	default int compareTo(UnitStat<T> o) {

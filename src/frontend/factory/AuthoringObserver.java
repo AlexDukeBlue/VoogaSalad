@@ -49,7 +49,12 @@ class AuthoringObserver implements GameObserver {
 			CoordinateTuple location = cell.getLocation();
 			if (shouldCopy) {
 				controller.sendModifier((AuthoringGameState gameState) -> {
-					gameState.getGrid().get(location).addVoogaEntity(gameState.getTemplateByName(unitClickedName).copy());
+					gameState
+							.getGrid()
+							.get(location)
+							.addVoogaEntity(gameState
+									.getTemplateByName(unitClickedName)
+									.copy());
 					return gameState;
 				});
 			} else {
