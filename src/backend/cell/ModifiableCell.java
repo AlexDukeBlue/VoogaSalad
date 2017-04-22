@@ -16,74 +16,12 @@ import static backend.util.ImmutableVoogaObject.getPredefined;
  * @author Created by th174 on 3/31/2017.
  */
 public class ModifiableCell implements Cell {
-	//TODO ResourceBundlify
-	public transient static final ModifiableCell BASIC_HEXAGONAL_EMPTY = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.EMPTY);
-	public transient static final ModifiableCell BASIC_HEXAGONAL_FLAT = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.FLAT);
-	public transient static final ModifiableCell BASIC_HEXAGONAL_FOREST = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.FOREST);
-	public transient static final ModifiableCell BASIC_HEXAGONAL_WATER = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.WATER);
-	public transient static final ModifiableCell BASIC_HEXAGONAL_MOUNTAIN = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.MOUNTAIN);
-	public transient static final ModifiableCell BASIC_HEXAGONAL_FORTIFIED = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.FORTIFIED);
-	public transient static final ModifiableCell HEALING_HEXAGONAL_EMPTY = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.EMPTY)
-			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public transient static final ModifiableCell HEALING_HEXAGONAL_FLAT = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.FLAT)
-			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public transient static final ModifiableCell HEALING_HEXAGONAL_FOREST = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.FOREST)
-			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public transient static final ModifiableCell HEALING_HEXAGONAL_WATER = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.WATER)
-			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public transient static final ModifiableCell HEALING_HEXAGONAL_MOUNTAIN = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.MOUNTAIN)
-			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public transient static final ModifiableCell HEALING_HEXAGONAL_FORTIFIED = new ModifiableCell()
-			.setShape(Shape.HEXAGONAL)
-			.setTerrain(ModifiableTerrain.FORTIFIED)
-			.addTriggeredAbility(ModifiableTriggeredEffect.FULL_HEAL);
-	public transient static final ModifiableCell BASIC_SQUARE_EMPTY = new ModifiableCell()
-			.setShape(Shape.SQUARE)
-			.setTerrain(ModifiableTerrain.EMPTY);
-	public transient static final ModifiableCell BASIC_SQUARE_FLAT = new ModifiableCell()
-			.setShape(Shape.SQUARE)
-			.setTerrain(ModifiableTerrain.FLAT);
-	public transient static final ModifiableCell BASIC_SQUARE_FOREST = new ModifiableCell()
-			.setShape(Shape.SQUARE)
-			.setTerrain(ModifiableTerrain.FOREST);
-	public transient static final ModifiableCell BASIC_SQUARE_WATER = new ModifiableCell()
-			.setShape(Shape.SQUARE)
-			.setTerrain(ModifiableTerrain.WATER);
-	public transient static final ModifiableCell BASIC_SQUARE_MOUNTAIN = new ModifiableCell()
-			.setShape(Shape.SQUARE)
-			.setTerrain(ModifiableTerrain.MOUNTAIN);
-	public transient static final ModifiableCell BASIC_SQUARE_FORTIFIED = new ModifiableCell()
-			.setShape(Shape.SQUARE)
-			.setTerrain(ModifiableTerrain.FORTIFIED);
-
-	private static final Map<Class<? extends VoogaEntity>,BiConsumer<VoogaEntity,ModifiableCell>> actionOnClass = new HashMap<>();
+	private static final Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, ModifiableCell>> actionOnClass = new HashMap<>();
 
 	static {
-		actionOnClass.put(ModifiableTerrain.class, (theTerrain,cell) -> cell.setTerrain((Terrain)theTerrain));
-		actionOnClass.put(ModifiableUnit.class, ((unit,cell) -> cell.addOccupants((Unit)unit)));
-		actionOnClass.put(Ability.class, ((ability,cell) -> cell.getTerrain().addAbility((Ability)ability)));
+		actionOnClass.put(ModifiableTerrain.class, (theTerrain, cell) -> cell.setTerrain((Terrain) theTerrain));
+		actionOnClass.put(ModifiableUnit.class, ((unit, cell) -> cell.addOccupants((Unit) unit)));
+		actionOnClass.put(Ability.class, ((ability, cell) -> cell.getTerrain().addAbility((Ability) ability)));
 	}
 
 	private final Map<String, Unit> occupants;
@@ -102,14 +40,9 @@ public class ModifiableCell implements Cell {
 		occupants = new HashMap<>();
 	}
 
-	public ModifiableCell addTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
-		getTerrain().addTriggeredAbilities(modifiableTriggeredEffect);
-		return this;
-	}
-
-	public ModifiableCell removeTriggeredAbility(ModifiableTriggeredEffect modifiableTriggeredEffect) {
-		getTerrain().removeTriggeredAbilities(modifiableTriggeredEffect);
-		return this;
+	@Deprecated
+	public static Collection<ModifiableCell> getPredefinedCells() {
+		return getPredefined(ModifiableCell.class);
 	}
 
 	public ModifiableCell addOccupants(Unit... units) {
@@ -174,7 +107,7 @@ public class ModifiableCell implements Cell {
 	}
 
 	public ModifiableCell setTerrain(Terrain terrain) {
-		this.terrain = terrain;
+		this.terrain = terrain.copy();
 		return this;
 	}
 
@@ -232,16 +165,23 @@ public class ModifiableCell implements Cell {
 		getTerrain().removeTriggeredAbilitiesIf(TriggeredEffect::isExpired);
 	}
 
-	@Deprecated
-	public static Collection<ModifiableCell> getPredefinedCells() {
-		return getPredefined(ModifiableCell.class);
+	@Override
+	public void addVoogaEntity(VoogaEntity voogaEntity) {
+		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
 	}
 
 	@Override
-	public void addVoogaEntity(VoogaEntity voogaEntity) {
-//		System.out.println("Class: " + voogaEntity.getClass().toString());
-//		System.out.println("Map: " + actionOnClass);
-//		System.out.println("Action: " + actionOnClass.get(voogaEntity.getClass()));
-		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
+	public String getName() {
+		return getTerrain().getName();
+	}
+
+	@Override
+	public String getDescription() {
+		return getTerrain().getDescription();
+	}
+
+	@Override
+	public String getImgPath() {
+		return getTerrain().getImgPath();
 	}
 }

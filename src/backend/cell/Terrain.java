@@ -1,20 +1,21 @@
 package backend.cell;
 
-import static backend.util.ImmutableVoogaObject.getPredefined;
+import backend.unit.properties.InteractionModifier;
+import backend.util.Ability;
+import backend.util.HasTriggeredAbilities;
+import backend.util.TriggeredEffect;
+import backend.util.VoogaEntity;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
-import backend.unit.properties.InteractionModifier;
-import backend.util.Ability;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import static backend.util.ImmutableVoogaObject.getPredefined;
 
 /**
  * @author Created by th174 on 4/12/2017.
  */
-public interface Terrain extends VoogaEntity {
+public interface Terrain extends VoogaEntity, HasTriggeredAbilities {
 	int IMPASSABLE = Integer.MAX_VALUE;
 	Terrain EMPTY = new ModifiableTerrain("Empty")
 			.setDefaultMoveCost(IMPASSABLE)
@@ -46,6 +47,11 @@ public interface Terrain extends VoogaEntity {
 			.setDescription("A fortified defensive position")
 			.setImgPath("resources/images/castle.jpg");
 
+	@Deprecated
+	static Collection<? extends Terrain> getPredefinedTerrain() {
+		return getPredefined(Terrain.class);
+	}
+
 	Collection<? extends TriggeredEffect> getTriggeredAbilities();
 
 	Terrain addTriggeredAbilities(TriggeredEffect... triggeredAbilities);
@@ -67,14 +73,9 @@ public interface Terrain extends VoogaEntity {
 	Terrain removeDefensiveModifiers(InteractionModifier<Double>... defensiveModifiers);
 
 	int getDefaultMoveCost();
-	
+
 	public void addAbility(Ability ability);
 
 	@Override
 	ModifiableTerrain copy();
-
-	@Deprecated
-	public static Collection<? extends Terrain> getPredefinedTerrain() {
-		return getPredefined(Terrain.class);
-	}
 }

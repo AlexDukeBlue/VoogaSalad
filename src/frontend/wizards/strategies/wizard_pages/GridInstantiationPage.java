@@ -1,8 +1,5 @@
 package frontend.wizards.strategies.wizard_pages;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import backend.cell.Cell;
 import backend.cell.ModifiableCell;
 import backend.cell.Terrain;
@@ -16,6 +13,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The WizardPage for creating and specifying a grid for a game
@@ -34,7 +34,7 @@ public class GridInstantiationPage extends BaseWizardPage {
 	private ComboBox<String> cellShapeChooser;
 	private ComboBox<String> terrainChooser;
 	private Map<String, Shape> shapeMap;
-	private Map<String, Terrain> terrainMap;
+	private Map<String, Terrain> terrainMap = new HashMap<>();
 
 	public GridInstantiationPage() {
 		this(DEFAULT_TITLE);
@@ -76,21 +76,20 @@ public class GridInstantiationPage extends BaseWizardPage {
 		cols.setValue(DEFAULT_NUM_COLS);
 
 		Shape[] shapes = Shape.values();
-		shapeMap = new HashMap<String, Shape>();
+		shapeMap = new HashMap<>();
 		ObservableList<String> shapeNames = FXCollections.observableArrayList();
 		for (int i = 0; i < shapes.length; i++) {
 			shapeNames.add(shapes[i].getName());
 			shapeMap.put(shapes[i].getName(), shapes[i]);
 		}
-		cellShapeChooser = new ComboBox<String>(shapeNames);
+		cellShapeChooser = new ComboBox<>(shapeNames);
 		cellShapeChooser.setValue(shapeNames.get(0));
 		ObservableList<String> terrainNames = FXCollections.observableArrayList();
-		terrainMap = new HashMap<String, Terrain>();
-		Terrain.getPredefinedTerrain().stream().forEach(terrain -> {
+		Terrain.getPredefinedTerrain().forEach(terrain -> {
 			terrainNames.add(terrain.getName());
 			terrainMap.put(terrain.getName(), terrain);
 		});
-		terrainChooser = new ComboBox<String>(terrainNames);
+		terrainChooser = new ComboBox<>(terrainNames);
 		terrainChooser.setValue(terrainNames.get(0));
 
 		rows.setOnAction(event -> checkCanNext());

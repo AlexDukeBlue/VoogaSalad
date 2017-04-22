@@ -22,10 +22,10 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-public class AuthoringGameState extends GameplayState implements VoogaEntity,ReadonlyGameplayState {
+public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
 	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeabilities", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
 
-	private Map<String, ModifiableVoogaCollection<VoogaEntity,ModifiableVoogaCollection>> templates;
+	private Map<String, ModifiableVoogaCollection<VoogaEntity, ModifiableVoogaCollection>> templates;
 
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
@@ -107,8 +107,8 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	public AuthoringGameState addTeam(Team team) {
 		return (AuthoringGameState) super.addTeam(team);
 	}
-	
-	public void setTeams(Collection<Team> teams){
+
+	public void setTeams(Collection<Team> teams) {
 		getTeams().stream().forEach(team -> removeTeamByName(team.getName()));
 		teams.forEach(team -> addTeam(team));
 	}
@@ -171,11 +171,11 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity,Rea
 	//Name can be Terrain, OffensiveModifier, DefensiveModifier, Cell, CellTriggeredEffect, UnitTriggeredEffect, ActiveAbility, Unit, UnitStat, GridPattern, GameBoard
 	//Case and space character insensitive
 	//Plural singular insensitive
-	public ModifiableVoogaCollection<VoogaEntity,ModifiableVoogaCollection> getTemplateByCategory(String categoryName) {
-		return templates.get(categoryName.replaceAll(" ", "").replaceAll("(?<!ie)s$","").toLowerCase());
+	public ModifiableVoogaCollection<VoogaEntity, ModifiableVoogaCollection> getTemplateByCategory(String categoryName) {
+		return templates.get(categoryName.replaceAll(" ", "").replaceAll("(?<!ie)s$", "").toLowerCase());
 	}
-	
-	public VoogaEntity getTemplateByName(String name){
+
+	public VoogaEntity getTemplateByName(String name) {
 		return templates.values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getName().equals(name)).findAny().orElse(null);
 	}
 }

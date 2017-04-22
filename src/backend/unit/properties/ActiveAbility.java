@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  *
  * @author Created by th174 on 3/29/2017.
  */
-public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability,Serializable {
+public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable {
 	//All hexagonal
 	public transient static final ActiveAbility<Unit> SWORD = new ActiveAbility<>("Sword", new Attack(5, 3), GridPattern.HEXAGONAL_ADJACENT, "The attacker hits 3 times for 5 damage on any neighboring unit", "Sword.png");
 	public transient static final ActiveAbility<Unit> BOW = new ActiveAbility<>("Bow", new Attack(7, 2), GridPattern.HEXAGONAL_RAYS, "The attacker hits 2 times for 7 dmage on any unit in a straight line away from the attacker", "Bow.png");
@@ -36,6 +36,11 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 		this.effect = effect;
 	}
 
+	@Deprecated
+	public static Collection<ActiveAbility> getPredefinedActiveAbilities() {
+		return getPredefined(ActiveAbility.class);
+	}
+
 	public AbilityEffect<T> getAbilityEffect() {
 		return effect;
 	}
@@ -51,11 +56,6 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 	@Override
 	public ActiveAbility<T> copy() {
 		return new ActiveAbility<>(getName(), getAbilityEffect(), getRange(), getDescription(), getImgPath());
-	}
-
-	@Deprecated
-	public static Collection<ActiveAbility> getPredefinedActiveAbilities() {
-		return getPredefined(ActiveAbility.class);
 	}
 
 	@FunctionalInterface

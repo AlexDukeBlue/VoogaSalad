@@ -26,7 +26,7 @@ public class DieselEngine implements GameEngine {
 	/**
 	 * This constructor passes in the ObservableServer<GameplayState> that the GameEngine will communicate with
 	 * and add listeners to.
-	 * 
+	 *
 	 * @param server
 	 */
 	public DieselEngine(ObservableServer<GameplayState> server) {
@@ -38,7 +38,7 @@ public class DieselEngine implements GameEngine {
 	/**
 	 * This method compiles all of the necessary checking methods to run at the change of a GameState.
 	 * This method is what gets passed to the Server to execute with lambdas.
-	 * 
+	 *
 	 * @param state
 	 */
 	private void checkGame(GameplayState state) {
@@ -49,9 +49,9 @@ public class DieselEngine implements GameEngine {
 
 	@Override
 	public void save(GameplayState gameState) {
-		try{
+		try {
 			new XMLSerializer<GameplayState>().doSerialize(gameState);
-		}catch(Exception e){
+		} catch (Exception e) {
 			//Something here.
 		}
 	}
@@ -59,9 +59,9 @@ public class DieselEngine implements GameEngine {
 	@Override
 	public AuthoringGameState load(File gameStateFile) {
 		AuthoringGameState newGameState;
-		try{
+		try {
 			newGameState = new XMLSerializer<AuthoringGameState>().unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
-		}catch(Exception e){
+		} catch (Exception e) {
 			//Something here.
 			newGameState = null;
 		}
@@ -71,18 +71,19 @@ public class DieselEngine implements GameEngine {
 	/**
 	 * This method will take the TurnRequirements within GameState (which are wrapped by Requirement)
 	 * and in the case they are all satisfied call state.endTurn().
-	 * 
+	 *
 	 * @param state
 	 */
 	private void checkTurnRules(GameplayState state) {
 		if (!state.getTurnRequirements().parallelStream()
-				.allMatch(e -> e.getBiPredicate().test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied()) state.endTurn();
+				.allMatch(e -> e.getBiPredicate().test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied())
+			state.endTurn();
 	}
 
 	/**
 	 * This method will go through all of the TurnEvents (wrapped by Actionables) and execute their BIPredicates when added
 	 * as a listener in the Server.
-	 * 
+	 *
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
@@ -92,7 +93,7 @@ public class DieselEngine implements GameEngine {
 	/**
 	 * This method goes through all of the objectives of the GameState so that every-time a state changes
 	 * the Server can check for a winner.
-	 * 
+	 *
 	 * @param state
 	 */
 	private void checkObjectives(GameplayState state) {

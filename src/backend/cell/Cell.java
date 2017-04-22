@@ -4,10 +4,7 @@ import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.Unit;
-import backend.util.GameplayState;
-import backend.util.ModifiableTriggeredEffect;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import backend.util.*;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,7 +13,7 @@ import java.util.Map;
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public interface Cell extends Serializable {
+public interface Cell extends Serializable, HasTriggeredAbilities {
 	ModifiableCell copy();
 
 	void startTurn(GameplayState gameState);
@@ -52,6 +49,6 @@ public interface Cell extends Serializable {
 	ModifiableCell addOccupants(Unit... units);
 
 	ModifiableCell removeOccupants(Unit... units);
-	
+
 	void addVoogaEntity(VoogaEntity voogaEntity);
 }

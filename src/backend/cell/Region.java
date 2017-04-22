@@ -26,13 +26,13 @@ public class Region extends ModifiableVoogaCollection<Terrain, Region> {
 		super(name, description, imgPath, gameObjects);
 	}
 
-	@Override
-	public Region copy() {
-		return new Region(getName(), getDescription(), getImgPath(), getAll());
-	}
-
 	@Deprecated
 	public static Collection<Region> getPredefinedRegions() {
 		return getPredefined(Region.class);
+	}
+
+	@Override
+	public Region copy() {
+		return new Region(getName(), getDescription(), getImgPath(), getAll());
 	}
 }

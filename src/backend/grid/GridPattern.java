@@ -37,6 +37,11 @@ public class GridPattern extends ModifiableVoogaObject<GridPattern> implements V
 		this.relativeCoordinates = new HashSet<>(coordinates);
 	}
 
+	@Deprecated
+	public static Collection<GridPattern> getPredefinedGridPatterns() {
+		return getPredefined(GridPattern.class);
+	}
+
 	public Collection<CoordinateTuple> getCoordinates() {
 		return Collections.unmodifiableCollection(relativeCoordinates);
 	}
@@ -52,10 +57,5 @@ public class GridPattern extends ModifiableVoogaObject<GridPattern> implements V
 	@Override
 	public GridPattern copy() {
 		return new GridPattern(getName(), getDescription(), getImgPath(), getCoordinates());
-	}
-
-	@Deprecated
-	public static Collection<GridPattern> getPredefinedGridPatterns() {
-		return getPredefined(GridPattern.class);
 	}
 }

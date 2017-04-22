@@ -4,6 +4,7 @@
  */
 package frontend.factory.detailpane;
 
+import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
@@ -25,6 +26,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Faith Rodriguez
@@ -108,6 +110,8 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
 			setActiveAbilititesContent((ModifiableUnit) sprite);
+		} else if (sprite instanceof Cell) {
+			newSpriteInfo = new Label(setTerrainContent(((Cell) sprite).getTerrain()));
 		} else {
 			newSpriteInfo = new Label(setTerrainContent((ModifiableTerrain) sprite));
 		}
@@ -118,7 +122,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection("DefensiveModifiers", unit.getDefensiveModifiers(), content);
-		unit.getUnitStats().forEach(e -> addString(e.getFormattedName(),e.toString()));
+		unit.getUnitStats().forEach(e -> addString(e.getFormattedName(), e.toString()));
 		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
@@ -131,7 +135,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 
 	private String setTerrainContent(Terrain terrain) {
 		addString("Default Move Cost", ((Integer) terrain.getDefaultMoveCost()).toString());
-		addString("Default Defense Modifier", ((Integer) terrain.getDefaultMoveCost()).toString());
+		addString("Defense Modifiers", "\n"+terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^","\t"));
 		return content;
 	}
 

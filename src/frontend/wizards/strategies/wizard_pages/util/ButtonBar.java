@@ -1,9 +1,5 @@
 package frontend.wizards.strategies.wizard_pages.util;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +7,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ButtonBar extends the BaseUIManager and is a UI structure used in the creation of

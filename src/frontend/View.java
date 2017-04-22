@@ -21,6 +21,7 @@ package frontend;
 import backend.util.AuthoringGameState;
 import controller.Controller;
 import frontend.factory.GameObserverFactory;
+import frontend.factory.abilitypane.AbilityPane;
 import frontend.factory.conditionspane.ConditionsPaneFactory;
 import frontend.factory.detailpane.DetailPaneFactory;
 import frontend.factory.templatepane.TemplatePaneFactory;
@@ -58,6 +59,7 @@ public class View extends BaseUIManager<Region> {
 	private VoogaMenuBar menuBar;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
+	private AbilityPane abilityPane;
 	private TemplatePaneExternal tempPane;
 	private GameObserver gameObserver;
 	private ConditionsPaneExternal conditionsPane;
@@ -165,8 +167,10 @@ public class View extends BaseUIManager<Region> {
 		SplitPane innerSplitPane = new SplitPane(conditionsPane.getObject(), worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject()));
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, detailPane.getObject());
-		outerSplitPane.setDividerPositions(.8);
+		SplitPane bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
+		bottomPane.setDividerPosition(0,.8);
+		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, bottomPane);
+		outerSplitPane.setDividerPositions(0, 1);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		SplitPane.setResizableWithParent(menuBar.getObject(), false);        //In case user is on Windows and MenuBar is in the View
 	}
@@ -183,10 +187,11 @@ public class View extends BaseUIManager<Region> {
 		});
 		worldView = WorldViewFactory.newWorldView(getController());
 		detailPane = DetailPaneFactory.newDetailPane();
+		abilityPane = new AbilityPane();
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
 				new MinimapPane(worldView.getGridPane(), getController()));
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController());
-		gameObserver = GameObserverFactory.newGameObserver(getController(), worldView, detailPane, tempPane);
+		gameObserver = GameObserverFactory.newGameObserver(getController(), worldView, detailPane, abilityPane, tempPane);
 		detailPane.addDetailPaneObserver(gameObserver);
 		tempPane.addTemplatePaneObserver(gameObserver);
 		worldView.addWorldViewObserver(gameObserver);

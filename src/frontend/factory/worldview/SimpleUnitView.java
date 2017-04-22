@@ -1,6 +1,8 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
+import backend.unit.Unit;
+import controller.Controller;
 import frontend.View;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.interfaces.worldview.UnitViewObserver;
@@ -16,21 +18,30 @@ import java.util.Objects;
 
 public class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExternal {
 
-	private Collection<UnitViewObserver> observers;
+	private final Collection<UnitViewObserver> observers;
 
-	private ImageView unitView;
-	private String unitName;
-	private CoordinateTuple unitLocation;
+	private final ImageView unitView;
+	private final String unitName;
+	private final CoordinateTuple unitLocation;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 */
-	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, String unitImgPath) {
-		initialize(unitName, unitLocation, unitImgPath);
+	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller) {
+		super(controller);
+		observers = new ArrayList<>();
+		this.unitName = unitName;
+		this.unitLocation = unitLocation;
+		unitView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));
+		unitView.setOnMouseClicked(event -> observers.stream().filter(Objects::nonNull).forEach(observer -> observer.didClickUnitViewExternalInterface(this)));
 	}
 
 	public String getUnitName() {
 		return unitName;
+	}
+
+	public Unit getUnit() {
+		return getController().getCell(unitLocation).getOccupantByName(unitName);
 	}
 
 	public CoordinateTuple getUnitLocation() {
@@ -103,14 +114,6 @@ public class SimpleUnitView extends BaseUIManager<Node> implements UnitViewExter
 	@Override
 	public void removeUnitViewObserver(UnitViewObserver observer) {
 		observers.removeAll(Collections.singleton(observer));
-	}
-
-	private void initialize(String unitName, CoordinateTuple unitLocation, String unitImgPath) {
-		observers = new ArrayList<>();
-		this.unitName = unitName;
-		this.unitLocation = unitLocation;
-		unitView = new ImageView(View.getImg(unitImgPath));
-		unitView.setOnMouseClicked(event -> observers.stream().filter(Objects::nonNull).forEach(observer -> observer.didClickUnitViewExternalInterface(this)));
 	}
 
 	@Override

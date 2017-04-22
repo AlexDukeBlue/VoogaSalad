@@ -23,8 +23,8 @@ public class VoogaJavaEngine implements VoogaScriptEngine {
 
 	private void compile(Map<String, Object> bindings) throws IOException {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		String[] paramNames = bindings.keySet().toArray(new String[0]);
-		Class<?>[] temp = bindings.values().stream().map(Object::getClass).collect(Collectors.toList()).toArray(new Class[0]);
+		String[] paramNames = bindings.keySet().toArray(new String[bindings.size()]);
+		Class<?>[] temp = bindings.values().stream().map(Object::getClass).collect(Collectors.toList()).toArray(new Class[bindings.size()]);
 		String methodArgs = IntStream.range(0, temp.length)
 				.mapToObj(i -> temp[i].getCanonicalName() + " " + paramNames[i])
 				.collect(Collectors.joining(", "));

@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Created by th174 on 3/28/2017.
  */
 public class Player extends ModifiableVoogaObject<Player> implements ImmutablePlayer {
@@ -39,6 +38,11 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 		return team;
 	}
 
+	public Player setTeam(Team team) {
+		this.team = team;
+		return this;
+	}
+
 	@Override
 	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
 		return grid.getUnits().parallelStream().filter(e -> e.getOwner().equals(this)).collect(Collectors.toSet());
@@ -52,11 +56,6 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	@Override
 	public Collection<Cell> getExploredCells() {
 		return null;
-	}
-
-	public Player setTeam(Team team) {
-		this.team = team;
-		return this;
 	}
 
 	@Override

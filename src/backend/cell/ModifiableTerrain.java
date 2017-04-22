@@ -18,10 +18,6 @@ import java.util.stream.Collectors;
  */
 public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> implements Terrain {
 	public static final int DEFAULT_DEFAULT_MOVE_COST = 1;
-	private final TriggeredAbilitySet triggeredAbilities;
-	private final OffensiveModifierSet offensiveModifiers;
-	private final DefensiveModifierSet defensiveModifiers;
-	private int defaultMoveCost;
 	private static final Map<Class<? extends Ability>, BiConsumer<Ability, Terrain>> actionMap = new HashMap<>();
 
 	static {
@@ -34,6 +30,11 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 			}
 		});
 	}
+
+	private final TriggeredAbilitySet triggeredAbilities;
+	private final OffensiveModifierSet offensiveModifiers;
+	private final DefensiveModifierSet defensiveModifiers;
+	private int defaultMoveCost;
 
 	public ModifiableTerrain(String name) {
 		this(name, DEFAULT_DEFAULT_MOVE_COST, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), "", "");

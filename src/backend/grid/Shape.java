@@ -36,8 +36,8 @@ public enum Shape {
 	public int getDimension() {
 		return dimension;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
 }

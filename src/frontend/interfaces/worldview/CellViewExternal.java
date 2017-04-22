@@ -1,5 +1,6 @@
 package frontend.interfaces.worldview;
 
+import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 
 import java.util.Collection;
@@ -16,6 +17,8 @@ public interface CellViewExternal {
 	
 	CoordinateTuple getLocation();
 
+	Cell getCell();
+
 	void addUnitViewObserver(UnitViewObserver observer);
 
 	void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
@@ -23,5 +26,4 @@ public interface CellViewExternal {
 	void removeUnitViewObserver(UnitViewObserver observer);
 
 	void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
-
 }

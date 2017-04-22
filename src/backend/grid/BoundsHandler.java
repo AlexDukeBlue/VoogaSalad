@@ -38,23 +38,9 @@ public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> implement
 		this.boundsGetter = boundsGetter;
 	}
 
-	public CoordinateTuple getMappedCoordinate(GameBoard grid, CoordinateTuple input) {
-		return boundsGetter.mapCoordinate(input, grid);
-	}
-
-	@Override
-	public BoundsHandler copy() {
-		return new BoundsHandler(getName(), boundsGetter, getDescription(), getImgPath());
-	}
-
 	@Deprecated
 	public static Collection<BoundsHandler> getPredefinedBoundsHandlers() {
 		return getPredefined(BoundsHandler.class);
-	}
-
-	@FunctionalInterface
-	public interface CoordinateMapper extends Serializable {
-		CoordinateTuple mapCoordinate(CoordinateTuple input, GameBoard grid);
 	}
 
 	private static CoordinateTuple fitToBound(CoordinateTuple input, GameBoard.GridBounds bounds) {
@@ -69,5 +55,19 @@ public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> implement
 				IntStream.range(0, input.dimension()).parallel()
 						.mapToObj(i -> Math.floorMod(input.get(i) - bounds.getMin(i), bounds.getMax(i) - bounds.getMin(i) + 1) + bounds.getMin(i))
 						.collect(Collectors.toList()));
+	}
+
+	public CoordinateTuple getMappedCoordinate(GameBoard grid, CoordinateTuple input) {
+		return boundsGetter.mapCoordinate(input, grid);
+	}
+
+	@Override
+	public BoundsHandler copy() {
+		return new BoundsHandler(getName(), boundsGetter, getDescription(), getImgPath());
+	}
+
+	@FunctionalInterface
+	public interface CoordinateMapper extends Serializable {
+		CoordinateTuple mapCoordinate(CoordinateTuple input, GameBoard grid);
 	}
 }

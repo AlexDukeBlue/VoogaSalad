@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 3/30/2017.
  */
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
-	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
@@ -33,7 +32,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
 			.addActiveAbilities(ActiveAbility.BOW);
-
+	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 	private final ActiveAbilitySet activeAbilities;
 	private final TriggeredAbilitySet triggeredAbilities;
 	private final OffensiveModifierSet offensiveModifiers;
@@ -60,6 +59,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		this.activeAbilities = new ActiveAbilitySet(activeAbilities);
 		this.offensiveModifiers = new OffensiveModifierSet(offensiveModifiers);
 		this.defensiveModifiers = new DefensiveModifierSet(defensiveModifiers);
+	}
+
+	@Deprecated
+	public static Collection<ModifiableUnit> getPredefinedUnits() {
+		return getPredefined(ModifiableUnit.class);
 	}
 
 	private void processTriggers(Event event, GameplayState gameState) {
@@ -130,6 +134,12 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	@Override
 	public final Cell getCurrentCell() {
 		return currentCell;
+	}
+
+	@Override
+	public final ModifiableUnit setCurrentCell(Cell currentCell) {
+		this.currentCell = currentCell;
+		return this;
 	}
 
 	@Override
@@ -294,12 +304,6 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	@Override
-	public final ModifiableUnit setCurrentCell(Cell currentCell) {
-		this.currentCell = currentCell;
-		return this;
-	}
-
-	@Override
 	public final Collection<? extends UnitStat> getUnitStats() {
 		return stats.getAll();
 	}
@@ -317,11 +321,6 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public final ModifiableUnit removeUnitStats(Collection<UnitStat> unitStat) {
 		stats.removeAll(unitStat);
 		return this;
-	}
-
-	@Deprecated
-	public static Collection<ModifiableUnit> getPredefinedUnits() {
-		return getPredefined(ModifiableUnit.class);
 	}
 
 	/**

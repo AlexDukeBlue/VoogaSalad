@@ -77,6 +77,16 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 		this.turnsRemaining = duration;
 	}
 
+	@Deprecated
+	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredUnitAbilities() {
+		return Arrays.asList(REGENERATION, HEALER, SHADOWSTALKER, POISONED);
+	}
+
+	@Deprecated
+	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredCellAbilities() {
+		return Arrays.asList(FULL_HEAL, POISON, ON_FIRE);
+	}
+
 	public Effect getEffect() {
 		return this.effect;
 	}
@@ -132,16 +142,6 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	@Override
 	public boolean isExpired() {
 		return getRemainingTurns() <= 0;
-	}
-
-	@Deprecated
-	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredUnitAbilities() {
-		return Arrays.asList(REGENERATION, HEALER, SHADOWSTALKER, POISONED);
-	}
-
-	@Deprecated
-	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredCellAbilities() {
-		return Arrays.asList(FULL_HEAL, POISON, ON_FIRE);
 	}
 }
 

@@ -38,6 +38,19 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 		this.gameBoard = gameBoard;
 	}
 
+	private static Map<CoordinateTuple, Cell> generateGameBoard(Cell templateCell, int rows, int columns) {
+		return IntStream.range(0, rows).boxed()
+				.flatMap(i -> IntStream.range(0, columns).mapToObj(j -> new CoordinateTuple(i, j)))
+				.parallel()
+				.map(e -> e.convertToDimension(templateCell.dimension()))
+				.collect(Collectors.toMap(e -> e, e -> templateCell.copy().setLocation(e)));
+	}
+
+	@Deprecated
+	public static Collection<? extends GameBoard> getPredefinedGameBoards() {
+		return getPredefined(ModifiableGameBoard.class);
+	}
+
 	@Override
 	public ModifiableGameBoard copy() {
 		return new ModifiableGameBoard(getName(), getTemplateCell(), gameBoard, getBoundsHandler(), getDescription(), getImgPath());
@@ -110,14 +123,6 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 		return minMax;
 	}
 
-	private static Map<CoordinateTuple, Cell> generateGameBoard(Cell templateCell, int rows, int columns) {
-		return IntStream.range(0, rows).boxed()
-				.flatMap(i -> IntStream.range(0, columns).mapToObj(j -> new CoordinateTuple(i, j)))
-				.parallel()
-				.map(e -> e.convertToDimension(templateCell.dimension()))
-				.collect(Collectors.toMap(e -> e, e -> templateCell.copy().setLocation(e)));
-	}
-
 	@Override
 	public Map<CoordinateTuple, Cell> getCells() {
 		return Collections.unmodifiableMap(gameBoard);
@@ -133,17 +138,6 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 		return gameBoard.entrySet().iterator();
 	}
 
-	public static class InvalidGridException extends RuntimeException {
-		InvalidGridException() {
-			super("Incorrect Grid parameters! Could not generate grid!");
-		}
-	}
-
-	@Deprecated
-	public static Collection<? extends GameBoard> getPredefinedGameBoards() {
-		return getPredefined(ModifiableGameBoard.class);
-	}
-
 	@Override
 	public String toString() {
 		String s = "";
@@ -154,5 +148,11 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 			s += "\n";
 		}
 		return s;
+	}
+
+	public static class InvalidGridException extends RuntimeException {
+		InvalidGridException() {
+			super("Incorrect Grid parameters! Could not generate grid!");
+		}
 	}
 }

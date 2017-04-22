@@ -52,6 +52,11 @@ public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVooga
 		setCurrentValue(maxValue);
 	}
 
+	@Deprecated
+	public static Collection<ModifiableUnitStat> getPredefinedUnitStats() {
+		return getPredefined(ModifiableUnitStat.class);
+	}
+
 	@Override
 	public ModifiableUnitStat<T> copy() {
 		return new ModifiableUnitStat<>(getName(), minValue, maxValue, getDescription(), getImgPath());
@@ -86,10 +91,5 @@ public class ModifiableUnitStat<T extends Comparable<T>> extends ModifiableVooga
 	public ModifiableUnitStat<T> setMinValue(T minValue) {
 		this.minValue = minValue;
 		return this;
-	}
-
-	@Deprecated
-	public static Collection<ModifiableUnitStat> getPredefinedUnitStats() {
-		return getPredefined(ModifiableUnitStat.class);
 	}
 }

@@ -3,21 +3,20 @@
  */
 package frontend.factory.conditionspane;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import backend.game_engine.Resultant;
 import backend.game_rules.GameRule;
 import controller.Controller;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.conditionspane.ConditionsPaneObserver;
+import frontend.util.AddRemoveButton;
 import frontend.util.BaseUIManager;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Stone Mathers
@@ -88,10 +87,12 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 		for(GameRule rule: rules){
 			//content.getChildren().add(new RuleBox(rule.getNameOf()));	//TODO
 		}
-		
-		Button newRule = new Button("Add Rule");    //TODO resource file OR put a "+" image
-		newRule.setOnMouseClicked(e -> createRule());
-		content.getChildren().add(newRule);
+		AddRemoveButton addRemoveButton = new AddRemoveButton();
+		addRemoveButton.setOnAddClicked(e -> createRule());
+		addRemoveButton.setOnRemovedClicked(e -> {
+			//TODO
+		});
+		content.getChildren().add(addRemoveButton.getObject());
 		
 		rulesPane.setContent(new ScrollPane(content));
 		return rulesPane;
@@ -112,11 +113,12 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 		for(Resultant result: resultants){
 			content.getChildren().add((new ResultantBox(result.getNameOf(), getController())).getObject());	
 		}
-		
-		Button newResult = new Button("Add Condition");    //TODO resource file OR put a "+" image
-		newResult.setOnMouseClicked(e -> createResultant());
-		content.getChildren().add(newResult);
-		
+		AddRemoveButton addRemoveButton = new AddRemoveButton();
+		addRemoveButton.setOnAddClicked(e -> createResultant());
+		addRemoveButton.setOnRemovedClicked(e -> {
+			//TODO
+		});
+		content.getChildren().add(addRemoveButton.getObject());
 		resultPane.setContent(new ScrollPane(content));
 		return resultPane;
 	}

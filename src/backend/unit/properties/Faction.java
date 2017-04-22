@@ -16,7 +16,7 @@ public class Faction extends ModifiableVoogaCollection<Unit, Faction> {
 	public transient static final Faction UNDEAD = new Faction("Undead")
 			.setDescription("The reanimated corpses of the dead want no more than to slake their thirst with the fresh blood of the living")
 			.setImgPath("get_spooked.png")
-			.addAll(ModifiableUnit.SKELETON_ARCHER,ModifiableUnit.SKELETON_WARRIOR);
+			.addAll(ModifiableUnit.SKELETON_ARCHER, ModifiableUnit.SKELETON_WARRIOR);
 
 	public Faction(String name) {
 		this(name, "", "");
@@ -30,11 +30,15 @@ public class Faction extends ModifiableVoogaCollection<Unit, Faction> {
 		super(name, description, imgPath, unitTypes);
 	}
 
+	public static Collection<Faction> getPredefinedFactions() {
+		return getPredefined(Faction.class);
+	}
+
 	@Override
 	public Faction addAll(Collection<? extends Unit> elements) {
 		try {
 			elements.forEach(e -> ((ModifiableUnit) e).setFaction(this));
-		} catch (ClassCastException e){
+		} catch (ClassCastException e) {
 			e.printStackTrace();
 		}
 		return super.addAll(elements);
@@ -43,9 +47,5 @@ public class Faction extends ModifiableVoogaCollection<Unit, Faction> {
 	@Override
 	public Faction copy() {
 		return new Faction(getName(), getDescription(), getImgPath(), getAll().parallelStream().map(Unit::copy).collect(Collectors.toList()));
-	}
-
-	public static Collection<Faction> getPredefinedFactions() {
-		return getPredefined(Faction.class);
 	}
 }

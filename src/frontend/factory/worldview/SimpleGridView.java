@@ -20,16 +20,21 @@ import java.util.Collection;
 
 class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
-	private Collection<GridViewObserver> observers;
+	private final Collection<GridViewObserver> observers;
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
-	private ScrollPane myScrollPane;
-	private Pane cellViewObjects;
-	private Collection<CellViewExternal> cellViews;
-	private GridLayoutDelegate myLayoutManager;
+	private final ScrollPane myScrollPane;
+	private final Pane cellViewObjects;
+	private final Collection<CellViewExternal> cellViews;
+	private final GridLayoutDelegate myLayoutManager;
 
 	public SimpleGridView(Controller controller, Collection<GridViewObserver> gridObservers,
 	                      Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
 		super(controller);
+		observers = new ArrayList<>();
+		myScrollPane = new ScrollPane();
+		cellViewObjects = new Pane();
+		cellViews = new ArrayList<>();
+		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize(gridObservers, cellObservers, unitObservers);
 	}
 
@@ -38,11 +43,8 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 		return myScrollPane;
 	}
 
-	private void populateCellViews(Collection<CellViewObserver> cellObservers,
-	                               Collection<UnitViewObserver> unitObservers) {
-		cellViewObjects.setBackground(new Background(
-				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
-		cellViews = new ArrayList<>();
+	private void populateCellViews(Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
+		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			SimpleCellView cl = new SimpleCellView(coordinate, getController());
 			cellViews.add(cl);
@@ -70,26 +72,20 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
 	private void initialize(Collection<GridViewObserver> gridObservers, Collection<CellViewObserver> cellObservers,
 	                        Collection<UnitViewObserver> unitObservers) {
-		observers = new ArrayList<>();
-		if (gridObservers != null) {
-			gridObservers.forEach(observer -> addGridViewObserver(observer));
-		}
-
-		myScrollPane = new ScrollPane();
-		cellViewObjects = new Pane();
+		observers.addAll(gridObservers);
 		Group zoomGroup = new Group(cellViewObjects);
 		myScrollPane.setOnZoom(event -> {
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
+			event.consume();
 		});
-		myScrollPane.addEventFilter(ScrollEvent.ANY, event -> {
+		cellViewObjects.addEventFilter(ScrollEvent.ANY, event -> {
 			if (event.isShortcutDown()) {
-				cellViewObjects.setScaleX(cellViewObjects.getScaleX() + event.getDeltaY() / 500);
-				cellViewObjects.setScaleY(cellViewObjects.getScaleY() + event.getDeltaY() / 500);
+				cellViewObjects.setScaleX(cellViewObjects.getScaleX() + event.getDeltaY() / 700);
+				cellViewObjects.setScaleY(cellViewObjects.getScaleY() + event.getDeltaY() / 700);
 				event.consume();
 			}
 		});
-		myLayoutManager = new GridLayoutDelegateFactory();
 		populateCellViews(cellObservers, unitObservers);
 		myScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		myScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -139,14 +135,12 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 
 	@Override
 	public void addAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		gridViewObservers.forEach(observer -> addGridViewObserver(observer));
+		observers.addAll(gridViewObservers);
 	}
 
 	@Override
 	public void removeAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		if (gridViewObservers != null) {
-			gridViewObservers.stream().forEach(observer -> removeGridViewObserver(observer));
-		}
+		observers.removeAll(gridViewObservers);
 	}
 
 }

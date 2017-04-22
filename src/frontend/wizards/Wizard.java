@@ -1,9 +1,5 @@
 package frontend.wizards;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import frontend.util.BaseUIManager;
 import frontend.wizards.strategies.WizardStrategy;
 import frontend.wizards.strategies.wizard_pages.util.ButtonBar;
@@ -11,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * The Wizard class presents a basic API for allowing the user to create new
@@ -36,7 +36,6 @@ public class Wizard<T> extends BaseUIManager<Region> {
 
 	private WizardStrategy<T> selectionStrategy;
 	private BorderPane borderPane;
-	private ButtonBar buttonBar;
 	private Stage stage;
 
 	/**
@@ -104,16 +103,16 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		this.stage = stage;
 		this.selectionStrategy = selectionStrategy;
 		borderPane = new BorderPane();
-
-		buttonBar = new ButtonBar(buttonNames);
-
+		ButtonBar buttonBar = new ButtonBar(buttonNames);
 		buttonBar.getButton("Previous").disableProperty().bind(selectionStrategy.canPrevious().not());
 		buttonBar.getButton("Next").disableProperty().bind(selectionStrategy.canNext().not());
+		buttonBar.getButton("Next").setDefaultButton(true);
 		buttonBar.getButton("Finish").disableProperty().bind(selectionStrategy.canFinish().not());
-
+		buttonBar.getButton("Finish").setDefaultButton(true);
 		buttonBar.getButton("Previous").setOnAction(event -> previous());
 		buttonBar.getButton("Next").setOnAction(event -> next());
 		buttonBar.getButton("Cancel").setOnAction(event -> cancel());
+		buttonBar.getButton("Cancel").setCancelButton(true);
 		buttonBar.getButton("Finish").setOnAction(event -> finish());
 
 		borderPane.setCenter(selectionStrategy.getObject());

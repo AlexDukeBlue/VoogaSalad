@@ -17,12 +17,12 @@ public class FactionSet extends ModifiableVoogaCollection<Faction, FactionSet> {
 		super(name, description, imgPath, factions);
 	}
 
+	public static Collection<FactionSet> getPredefinedFactionSets() {
+		return getPredefined(FactionSet.class);
+	}
+
 	@Override
 	public FactionSet copy() {
 		return new FactionSet(getName(), getDescription(), getImgPath(), getAll().parallelStream().map(Faction::copy).collect(Collectors.toList()));
-	}
-
-	public static Collection<FactionSet> getPredefinedFactionSets() {
-		return getPredefined(FactionSet.class);
 	}
 }

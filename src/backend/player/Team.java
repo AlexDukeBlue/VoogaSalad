@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * @author Created by th174 on 3/30/2017.
  */
-public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> implements VoogaEntity{
+public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> implements VoogaEntity {
 	public Team(String name, String description, String imgPath, Player... players) {
 		super(name, description, imgPath, players);
 	}

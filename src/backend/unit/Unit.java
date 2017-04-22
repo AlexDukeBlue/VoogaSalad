@@ -12,9 +12,7 @@ import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.Faction;
 import backend.unit.properties.InteractionModifier;
 import backend.unit.properties.UnitStat;
-import backend.util.GameplayState;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import backend.util.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +22,7 @@ import java.util.stream.Collectors;
  *
  * @author Created by th174 on 3/27/2017.
  */
-public interface Unit extends VoogaEntity {
+public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbilities {
 	@Override
 	Unit copy();
 
@@ -73,6 +71,8 @@ public interface Unit extends VoogaEntity {
 	}
 
 	Cell getCurrentCell();
+
+	Unit setCurrentCell(Cell currentCell);
 
 	Map<Terrain, Integer> getTerrainMoveCosts();
 
@@ -175,6 +175,4 @@ public interface Unit extends VoogaEntity {
 	Player getOwner();
 
 	Unit setOwner(Player owner);
-
-	Unit setCurrentCell(Cell currentCell);
 }

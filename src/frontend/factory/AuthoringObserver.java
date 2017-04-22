@@ -6,6 +6,7 @@ import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.factory.abilitypane.AbilityPane;
 import frontend.interfaces.GameObserver;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
@@ -21,14 +22,23 @@ class AuthoringObserver implements GameObserver {
 	private Controller controller;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
+	private AbilityPane abilityPane;
 	private TemplatePaneExternal templatePane;
 
 	public AuthoringObserver(Controller controller, WorldViewExternal worldView, DetailPaneExternal detailPane,
-	                         TemplatePaneExternal templatePane) {
+	                         AbilityPane abilityPane, TemplatePaneExternal templatePane) {
 		this.controller = controller;
 		this.worldView = worldView;
 		this.detailPane = detailPane;
 		this.templatePane = templatePane;
+		this.abilityPane = abilityPane;
+		abilityPane.setCancelButtonEvent(event -> {
+			this.shouldCopy = false;
+			this.unitClickedName = null;
+			this.unitClickedLocation = null;
+			//TODO: Also cancel other actions
+		});
+
 	}
 
 	@Override
@@ -49,21 +59,27 @@ class AuthoringObserver implements GameObserver {
 					return gameState;
 				});
 			}
-			this.shouldCopy = false;
-			this.unitClickedName = null;
-			this.unitClickedLocation = null;
+		} else {
+			detailPane.setContent(cell.getCell(), "");
+			abilityPane.setContent(cell.getCell());
 		}
+		this.shouldCopy = false;
+		this.unitClickedName = null;
+		this.unitClickedLocation = null;
 	}
 
 	@Override
 	public void didClickUnitViewExternalInterface(UnitViewExternal unit) {
 		unitClickedName = unit.getUnitName();
 		unitClickedLocation = unit.getUnitLocation();
+		detailPane.setContent(unit.getUnit(), "");
+		abilityPane.setContent(unit.getUnit());
 	}
 
 	@Override
 	public void didClickVoogaEntity(TemplatePaneExternal templatePane, VoogaEntity entity) {
 		detailPane.setContent(entity, "");
+		abilityPane.setContent(entity);
 		unitClickedName = entity.getName();
 		unitClickedLocation = null;
 		shouldCopy = true;

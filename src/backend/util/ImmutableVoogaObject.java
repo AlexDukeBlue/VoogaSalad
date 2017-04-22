@@ -18,6 +18,16 @@ public abstract class ImmutableVoogaObject<T extends ImmutableVoogaObject<T>> im
 		this.imgPath = imgPath;
 	}
 
+	public static <T> Collection<T> getPredefined(Class<T> clazz) {
+		return Arrays.stream(clazz.getFields()).map(e -> {
+			try {
+				return e.get(null);
+			} catch (IllegalAccessException e1) {
+				throw new RuntimeException("This will never happen");
+			}
+		}).filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
+	}
+
 	@Override
 	public String toString() {
 		return getName();
@@ -51,15 +61,5 @@ public abstract class ImmutableVoogaObject<T extends ImmutableVoogaObject<T>> im
 	T setImgPath(String imgPath) {
 		this.imgPath = imgPath;
 		return (T) this;
-	}
-
-	public static <T> Collection<T> getPredefined(Class<T> clazz) {
-		return Arrays.stream(clazz.getFields()).map(e -> {
-			try {
-				return e.get(null);
-			} catch (IllegalAccessException e1) {
-				throw new RuntimeException("This will never happen");
-			}
-		}).filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
 	}
 }

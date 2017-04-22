@@ -1,6 +1,5 @@
 package backend.util;
 
-import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.Resultant;
 import backend.grid.GameBoard;
 import backend.player.ImmutablePlayer;
@@ -9,8 +8,6 @@ import backend.player.Team;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 
 /**
  * @author Created by th174 on 4/11/2017.

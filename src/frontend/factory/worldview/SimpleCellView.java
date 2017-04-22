@@ -1,8 +1,6 @@
 package frontend.factory.worldview;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import controller.Controller;
 import frontend.View;
@@ -24,15 +22,16 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
-class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterface, CellViewExternal {
+import java.util.ArrayList;
+import java.util.Collection;
 
-	private Collection<CellViewObserver> observers;
-	private Collection<UnitViewObserver> unitViewObservers;
+class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterface, CellViewExternal {
 
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
 	private static final double UNIT_SCALE = 0.75;
-
+	private Collection<CellViewObserver> observers;
+	private Collection<UnitViewObserver> unitViewObservers;
 	private CoordinateTuple cellLocation;
 	private Polygon polygon;
 	private Group group;
@@ -42,11 +41,9 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellLocation
-	 *            The Cell object that this CellView will visually represent.
-	 * @param controller
-	 *            the controller object that this CellView will send information
-	 *            to when the user interacts with the CellView
+	 * @param cellLocation The Cell object that this CellView will visually represent.
+	 * @param controller   the controller object that this CellView will send information
+	 *                     to when the user interacts with the CellView
 	 */
 	public SimpleCellView(CoordinateTuple cellLocation, Controller controller) {
 		super(controller);
@@ -94,8 +91,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon
-	 *            Shape of cellview an instance of a cell
+	 * @param polygon Shape of cellview an instance of a cell
 	 */
 	@Override
 	public void setPolygon(Polygon polygon) {
@@ -116,7 +112,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		this.getPolygon().setOnMouseEntered(e -> mouseOver());
 		if (getController().getGrid().getImgPath().length() < 1) {
 			polygon.setFill(new ImagePattern(
-					View.getImg(getController().getGrid().get(cellLocation).getTerrain().getImgPath())));
+					View.getImg(getCell().getTerrain().getImgPath())));
 		} else {
 			polygon.setFill(Color.TRANSPARENT);
 		}
@@ -126,16 +122,16 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygon.setStroke(CELL_OUTLINE);
 
-		if (unitList.size() != getController().getCell(cellLocation).getOccupants().size()) {
+		if (unitList.size() != getCell().getOccupants().size()) {
 			unitList.clear();
 			double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
 			double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
 			double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
 			group.getChildren().clear();
 			group.getChildren().addAll(polygon);
-			getController().getCell(cellLocation).getOccupants().forEach(unit -> {
+			getCell().getOccupants().forEach(unit -> {
 				if (unit != null) {
-					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), unit.getImgPath());
+					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController());
 					unitList.add(unitView);
 					toolTip(unitView);
 					unitView.getObject().setFitWidth(size);
@@ -148,9 +144,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 				}
 			});
 			contextMenu.getItems().clear();
-
-			getController().getCell(cellLocation).getOccupants()
-					.forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
+			getCell().getOccupants().forEach(e -> contextMenu.getItems().add(new MenuItem(e.getName())));
 		}
 	}
 
@@ -262,6 +256,11 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	@Override
 	public CoordinateTuple getLocation() {
 		return cellLocation;
+	}
+
+	@Override
+	public Cell getCell() {
+		return getController().getCell(cellLocation);
 	}
 
 }

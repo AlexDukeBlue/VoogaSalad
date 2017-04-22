@@ -5,29 +5,26 @@ import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.View;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
+import frontend.util.AddRemoveButton;
 import frontend.util.BaseUIManager;
+import frontend.util.VoogaEntityButton;
 import frontend.wizards.TerrainWizard;
 import frontend.wizards.UnitWizard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -52,18 +49,25 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 	public TemplatePane(Controller controller) {
 		super(controller);
 		contents = new HashMap<>();
-		observers = new ArrayList<>();
+		observers = new HashSet<>();
 		Stream.of("Units", "Terrains").map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll())).forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		addUnitButton();
 		addTerrainButton();
 		update();
 	}
 
+	/**
+	 * @author th174
+	 */
 	@Override
 	public void update() {
 		contents.forEach((key, value) -> {
 			if (value.getChildren().size() != getController().getAuthoringGameState().getTemplateByCategory(key).size()) {
-				value.getChildren().setAll(createContent(getController().getAuthoringGameState().getTemplateByCategory(key).getAll()));
+				value.getChildren().clear();
+				getController().getAuthoringGameState().getTemplateByCategory(key).parallelStream()
+						.map(entity -> new VoogaEntityButton(entity, 50, event -> observers.forEach(observer -> observer.didClickVoogaEntity(this, entity))))
+						.map(VoogaEntityButton::getObject)
+						.forEach(value.getChildren()::add);
 			}
 		});
 	}
@@ -75,43 +79,18 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 
 	@Override
 	public void addTemplatePaneObserver(TemplatePaneObserver observer) {
-		if (!observers.contains(observer) && observer != null) {
+		if (observer != null) {
 			observers.add(observer);
 		}
 	}
 
 	@Override
 	public void removeTemplatePaneObserver(TemplatePaneObserver observer) {
-		if (observers.contains(observer)) {
-			observers.remove(observer);
-		}
+		observers.remove(observer);
 	}
 
 	public TemplatePane(Collection<? extends Unit> unitTemplate) {
 		// TODO Auto-generated constructor stub
-	}
-
-	private HBox createAddRemoveButton() {
-		Button addButton = new Button("+");
-		Button removeButton = new Button("-");
-		addButton.setAlignment(Pos.CENTER);
-		removeButton.setAlignment(Pos.CENTER);
-		addButton.setMinSize(20, 20);
-		addButton.setMaxSize(20, 20);
-		removeButton.setMinSize(20, 20);
-		removeButton.setMaxSize(20, 20);
-		addButton.setBorder(Border.EMPTY);
-		addButton.setPadding(Insets.EMPTY);
-		removeButton.setBorder(Border.EMPTY);
-		removeButton.setPadding(Insets.EMPTY);
-		HBox box = new HBox(addButton, removeButton);
-		box.setAlignment(Pos.TOP_RIGHT);
-		box.setSpacing(0);
-		box.setPadding(Insets.EMPTY);
-		addButton.setOnMouseClicked(event -> System.out.println("You clicked add button in " + ((TitledPane) addButton.getParent().getParent().getParent().getParent()).getText()));
-		removeButton.setOnMouseClicked(event -> System.out.println("You clicked remove button in " + ((TitledPane) addButton.getParent().getParent().getParent().getParent()).getText()));
-		//TODO: add template with XML, remove with name
-		return box;
 	}
 
 	@Deprecated
@@ -141,12 +120,23 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		spritePane.setText(label);
 		VBox contentPane = new VBox();
 		contentPane.setPadding(Insets.EMPTY);
+		contentPane.setAlignment(Pos.CENTER_RIGHT);
 		contentPane.setSpacing(0);
-		contentPane.getChildren().addAll(createContent(sprites));
+		sprites.parallelStream()
+				.map(entity -> new VoogaEntityButton(entity, 50, event -> observers.forEach(observer -> observer.didClickVoogaEntity(this, entity))))
+				.map(VoogaEntityButton::getObject)
+				.forEach(contentPane.getChildren()::add);
 		contents.put(label, contentPane);
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
-		VBox box = new VBox(scroller, createAddRemoveButton());
+		AddRemoveButton addRemoveButton = new AddRemoveButton();
+		addRemoveButton.setOnAddClicked(event -> {
+			//TODO
+		});
+		addRemoveButton.setOnRemovedClicked(event -> {
+			//TODO
+		});
+		VBox box = new VBox(scroller, addRemoveButton.getObject());
 		box.setSpacing(2);
 		box.setPadding(new Insets(2, 2, 2, 2));
 		spritePane.setContent(box);
@@ -155,42 +145,13 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		pane.getChildren().add(spritePane);
 	}
 
-	private Collection<VBox> createContent(Collection<? extends VoogaEntity> sprites) {
-		return sprites.parallelStream().map(sprite -> {
-			VBox spriteContent = new VBox();
-			spriteContent.setBorder(new Border(
-					new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-			spriteContent.setPadding(new Insets(5, 5, 5, 5));
-			Label spriteName = new Label(sprite.getFormattedName());
-			spriteContent.getChildren().add(spriteName);
-			if (sprite.getImgPath() != null) {
-				ImageView imageNode = new ImageView(View.getImg(sprite.getImgPath()));
-				imageNode.setFitHeight(40);
-				imageNode.setFitWidth(40);
-				spriteContent.getChildren().add(imageNode);
-			}
-			setOnClick(spriteContent, sprite);
-			return spriteContent;
-		}).collect(Collectors.toList());
-	}
-
-
-	private void setOnClick(Node o, VoogaEntity sprite) {
-		o.setOnMouseClicked(event -> observers.forEach(observer -> observer.didClickVoogaEntity(this, sprite)));
-	}
-
 	@Override
 	public void addAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers) {
-		if (observers != null) {
-			observers.forEach(this::addTemplatePaneObserver);
-		}
+		this.observers.addAll(observers);
 	}
 
 	@Override
 	public void removeAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers) {
-		if (observers != null) {
-			observers.forEach(this::removeTemplatePaneObserver);
-		}
+		this.observers.removeAll(observers);
 	}
-
 }
