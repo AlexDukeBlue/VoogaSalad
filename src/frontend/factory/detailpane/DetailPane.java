@@ -10,10 +10,10 @@ import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
-import frontend.interfaces.detailpane.DetailPaneObserver;
-import frontend.util.BaseUIManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -23,9 +23,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  *         This class is dependent on TemplatePane and CellView classes for its
  *         ActionEvents to work effectively
  */
-class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
+class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExternal {
 
 	private HBox fullPane = new HBox();
 	private VBox infoPane = new VBox();
@@ -47,12 +47,11 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	private Label spriteInfo;
 	private String content = "";
 	private String AAContent = "";
-	private Collection<DetailPaneObserver> observers;
 
 	private double PANE_WIDTH = 1000;
 
-	public DetailPane() {
-		observers = new ArrayList<>();
+	public DetailPane(ClickHandler clickHandler) {
+		super(clickHandler);
 		paneSetup();
 		setLabel();
 		clearContent();
@@ -83,10 +82,12 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 	 * @param sprite     A sprite that has just been clicked on in the TemplatePane
 	 * @param spriteType A string revealing whether the sprite is a unit or terrain
 	 */
-	public void setContent(VoogaEntity sprite, String spriteType) {
+	public void setContent(VoogaEntity sprite) {
 		clearContent();
-		setImageContent(sprite);
-		setInfoContent(sprite, spriteType);
+		if (Objects.nonNull(sprite)) {
+			setImageContent(sprite);
+			setInfoContent(sprite);
+		}
 	}
 
 	@Override
@@ -104,7 +105,7 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 		imagePane.getChildren().add(spriteImage);
 	}
 
-	private void setInfoContent(VoogaEntity sprite, String spriteType) {
+	private void setInfoContent(VoogaEntity sprite) {
 		addString("Description", sprite.getDescription());
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
@@ -179,33 +180,4 @@ class DetailPane extends BaseUIManager<Region> implements DetailPaneExternal {
 		}
 		return content;
 	}
-
-	@Override
-	public void addDetailPaneObserver(DetailPaneObserver observer) {
-		if (!observers.contains(observer)) {
-			observers.add(observer);
-		}
-	}
-
-	@Override
-	public void removeDetailPaneObserver(DetailPaneObserver observer) {
-		if (observers.contains(observer)) {
-			observers.remove(observer);
-		}
-	}
-
-	@Override
-	public void addAllDetailPaneObservers(Collection<DetailPaneObserver> observers) {
-		if (observers != null) {
-			observers.stream().forEach(observer -> addDetailPaneObserver(observer));
-		}
-	}
-
-	@Override
-	public void removeAllDetailPaneObservers(Collection<DetailPaneObserver> observers) {
-		if (observers != null) {
-			observers.stream().forEach(observer -> removeDetailPaneObserver(observer));
-		}
-	}
-
 }

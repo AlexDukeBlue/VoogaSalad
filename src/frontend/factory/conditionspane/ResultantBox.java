@@ -3,9 +3,9 @@
  */
 package frontend.factory.conditionspane;
 
-import backend.game_engine.ResultQuadPredicate.Result;
 import controller.Controller;
-import frontend.util.BaseUIManager;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
  * @author Stone Mathers
  * Created 4/20/2017
  */
-public class ResultantBox extends BaseUIManager<Region> {
+public class ResultantBox extends ClickableUIComponent<Region> {
 
 	private String myName;
 	private HBox myBox = new HBox();
@@ -27,9 +27,10 @@ public class ResultantBox extends BaseUIManager<Region> {
 	/**
 	 * @param resultantName
 	 * @param controller
+	 * @param clickHandler
 	 */
-	public ResultantBox(String resultantName, Controller controller){
-		super(controller);
+	public ResultantBox(String resultantName, Controller controller, ClickHandler clickHandler){
+		super(controller, clickHandler);
 		myName = resultantName;
 		initBox();
 	}

@@ -1,18 +1,10 @@
 package frontend.factory.worldview;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import controller.Controller;
-import frontend.interfaces.GameObserver;
-import frontend.interfaces.worldview.CellViewObserver;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import frontend.interfaces.worldview.GridViewExternal;
-import frontend.interfaces.worldview.GridViewObserver;
-import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.interfaces.worldview.WorldViewExternal;
-import frontend.interfaces.worldview.WorldViewObserver;
-import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
@@ -32,34 +24,31 @@ import javafx.scene.layout.StackPane;
  *
  * @author Dylan Peters
  */
-class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal {
+class SimpleWorldView extends ClickableUIComponent<Region> implements WorldViewExternal {
 
 	private GridViewExternal myGrid;
 	private BorderPane borderPane;
-	private Collection<WorldViewObserver> observers;
 
 	/**
 	 * Instantiates a new instance of SimpleWorldView. Sets all values to
 	 * default.
 	 *
-	 * @param controller
-	 *            the controller whose state will be displayed within the
-	 *            SimpleWorldView
+	 * @param controller   the controller whose state will be displayed within the
+	 *                     SimpleWorldView
+	 * @param clickHandler
 	 */
-	public SimpleWorldView(Controller controller, GameObserver gameDelegate) {
-		super(controller);
-		initialize(gameDelegate);
+	public SimpleWorldView(Controller controller, ClickHandler clickHandler) {
+		super(controller, clickHandler);
+		initialize();
 	}
 
 	public ScrollPane getGridPane() {
 		return myGrid.getObject();
 	}
 
-	private void initialize(GameObserver gameDelegate) {
+	private void initialize() {
 		borderPane = new BorderPane();
-		observers = new ArrayList<>();
-		myGrid = new SimpleGridView(getController(), Arrays.asList(gameDelegate), Arrays.asList(gameDelegate),
-				Arrays.asList(gameDelegate));
+		myGrid = new SimpleGridView(getController(), getClickHandler());
 		AnchorPane centerAnchorPane = new AnchorPane();
 		ChatLogView chatLogView = new ChatLogView(getController());
 		borderPane.setOnKeyPressed(event -> {
@@ -79,95 +68,7 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	}
 
 	@Override
-	public void addGridViewObserver(GridViewObserver observer) {
-		myGrid.addGridViewObserver(observer);
-	}
-
-	@Override
-	public void addAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		myGrid.addAllGridViewObservers(gridViewObservers);
-	}
-
-	@Override
-	public void removeGridViewObserver(GridViewObserver observer) {
-		myGrid.removeGridViewObserver(observer);
-	}
-
-	@Override
-	public void removeAllGridViewObservers(Collection<GridViewObserver> gridViewObservers) {
-		myGrid.removeAllGridViewObservers(gridViewObservers);
-	}
-
-	@Override
-	public void addCellViewObserver(CellViewObserver observer) {
-		myGrid.addCellViewObserver(observer);
-	}
-
-	@Override
-	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		myGrid.addAllCellViewObservers(cellViewObservers);
-	}
-
-	@Override
-	public void removeCellViewObserver(CellViewObserver observer) {
-		myGrid.removeCellViewObserver(observer);
-	}
-
-	@Override
-	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		myGrid.removeAllCellViewObservers(cellViewObservers);
-	}
-
-	@Override
-	public void addUnitViewObserver(UnitViewObserver observer) {
-		myGrid.addUnitViewObserver(observer);
-	}
-
-	@Override
-	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		myGrid.addAllUnitViewObservers(unitViewObservers);
-	}
-
-	@Override
-	public void removeUnitViewObserver(UnitViewObserver observer) {
-		myGrid.removeUnitViewObserver(observer);
-	}
-
-	@Override
-	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		myGrid.removeAllUnitViewObservers(unitViewObservers);
-	}
-
-	@Override
-	public void addWorldViewObserver(WorldViewObserver observer) {
-		if (!observers.contains(observer) && observer != null) {
-			observers.add(observer);
-		}
-	}
-
-	@Override
-	public void addAllWorldViewObservers(Collection<WorldViewObserver> worldViewObservers) {
-		if (worldViewObservers != null) {
-			worldViewObservers.forEach(this::addWorldViewObserver);
-		}
-	}
-
-	@Override
-	public void removeWorldViewObserver(WorldViewObserver observer) {
-		if (observers.contains(observer)) {
-			observers.remove(observer);
-		}
-	}
-
-	@Override
-	public void removeAllWorldViewObservers(Collection<WorldViewObserver> worldViewObservers) {
-		if (worldViewObservers != null) {
-			worldViewObservers.forEach(this::removeWorldViewObserver);
-		}
-	}
-
-	@Override
-	public GridViewExternal getGridViewExternal() {
+	public GridViewExternal getGridView() {
 		return myGrid;
 	}
 
@@ -176,4 +77,9 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 		return borderPane;
 	}
 
+	@Override
+	public void setClickHandler(ClickHandler clickHandler) {
+		super.setClickHandler(clickHandler);
+		myGrid.setClickHandler(clickHandler);
+	}
 }

@@ -74,6 +74,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		TextArea textArea = new TextArea(HEADER);
 		textArea.setEditable(false);
 		textArea.setWrapText(true);
+		textArea.setMouseTransparent(true);
 		textArea.positionCaret(textArea.getText().length());
 		return textArea;
 	}

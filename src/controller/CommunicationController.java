@@ -176,9 +176,9 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void removeTemplatesByCategory(String category, VoogaEntity... templates) {
+	public void removeTemplatesByCategory(String category, String... templateNames) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory(category).removeAll(templates);
+			state.getTemplateByCategory(category).removeAll(templateNames);
 			return state;
 		});
 	}
