@@ -1,16 +1,18 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import backend.unit.properties.ActiveAbility;
-import backend.util.AuthoringGameState;
-import frontend.View;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.SelectableInputRow;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
-import javafx.scene.layout.Region;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import backend.unit.properties.ActiveAbility;
+import backend.util.AuthoringGameState;
+import frontend.View;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.HorizontalTableInputView;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.SelectableInputRow;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
+import javafx.scene.layout.Region;
 
 /**
  * The WizardPage for letting users add abilities
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class AbilitiesAdderPage extends BaseWizardPage {
 
-	private VerticalTableInputView table;
+	private TableInputView table;
 	private Map<SelectableInputRow, ActiveAbility<?>> rowToAbility;
 
 	public AbilitiesAdderPage(AuthoringGameState gameState) {

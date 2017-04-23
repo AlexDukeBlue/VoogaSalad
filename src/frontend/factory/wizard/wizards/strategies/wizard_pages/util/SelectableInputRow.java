@@ -16,6 +16,7 @@ import javafx.scene.layout.Region;
  *
  */
 public class SelectableInputRow extends BaseUIManager<Region> {
+	private static final double ICON_SIZE = 30;
 
 	HBox hbox;
 	CheckBox checkbox;
@@ -41,6 +42,10 @@ public class SelectableInputRow extends BaseUIManager<Region> {
 
 	public void setImage(Image image) {
 		icon.setImage(image);
+		if (image != null){
+			icon.setFitWidth(ICON_SIZE);
+			icon.setFitHeight(ICON_SIZE);
+		}
 	}
 
 	public Image getImage() {
