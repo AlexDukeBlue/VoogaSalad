@@ -1,6 +1,7 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
 import frontend.util.BaseUIManager;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -17,7 +18,7 @@ import javafx.scene.layout.Region;
 abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPage {
 
 	private BooleanProperty canNext;
-	private String title, description;
+	private StringBinding title, description;
 
 	public BaseWizardPage() {
 		this("");
@@ -28,8 +29,8 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	public BaseWizardPage(String title, String description) {
-		this.title = title;
-		this.description = description;
+		this.title = getPolyglot().get(title);
+		this.description = getPolyglot().get(description);
 		canNext = new SimpleBooleanProperty(false);
 	}
 
@@ -39,23 +40,23 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	@Override
-	public void setTitle(String title) {
+	public void setTitle(StringBinding title) {
 		this.title = title;
 	}
 
 	@Override
 	public String getTitle() {
-		return title;
+		return title.getValue();
 	}
 
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(StringBinding description) {
 		this.description = description;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return description.getValue();
 	}
 
 	protected BooleanProperty canNextWritable() {

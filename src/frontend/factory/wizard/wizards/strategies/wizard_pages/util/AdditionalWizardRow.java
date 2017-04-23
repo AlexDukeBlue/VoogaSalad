@@ -2,6 +2,7 @@ package frontend.factory.wizard.wizards.strategies.wizard_pages.util;
 
 import frontend.factory.wizard.Wizard;
 import frontend.util.BaseUIManager;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,6 +21,18 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region>{
 	private ObjectProperty<T> objectProperty;
 	
 	public AdditionalWizardRow(String description, Wizard<T> wizard){
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return description;
+			}
+			
+		}, wizard);
+		//initialize(description,wizard);
+	}
+	
+	public AdditionalWizardRow(StringBinding description, Wizard<T> wizard){
 		initialize(description,wizard);
 	}
 
@@ -32,13 +45,15 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region>{
 		return objectProperty;
 	}
 	
-	private void initialize(String description,Wizard<T> wizard){
+	private void initialize(StringBinding description,Wizard<T> wizard){
 		hbox = new HBox();
 		checkbox = new CheckBox();
 		checkbox.setDisable(true);
-		label = new Label(description);
+		label = new Label();
+		label.textProperty().bind(description);
 		objectProperty = new SimpleObjectProperty<>(null);
-		button = new Button("Create New");
+		button = new Button();
+		button.textProperty().bind(getPolyglot().get("CreateNew"));
 		button.setOnAction(event -> {
 			wizard.addObserver((observable,object) -> {
 				objectProperty.setValue((T)object);

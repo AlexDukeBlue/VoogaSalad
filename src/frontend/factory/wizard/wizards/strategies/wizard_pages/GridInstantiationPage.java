@@ -5,6 +5,7 @@ import backend.cell.ModifiableCell;
 import backend.cell.Terrain;
 import backend.grid.Shape;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
+import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -24,10 +25,10 @@ import java.util.Map;
  *
  */
 public class GridInstantiationPage extends BaseWizardPage {
-	private static final String DEFAULT_TITLE = "Set Grid Attributes";
-	private static final String DEFAULT_DESCRIPTION = "Choose the default cell type for the grid.";
-	private static final int DEFAULT_NUM_ROWS = 10;
-	private static final int DEFAULT_NUM_COLS = 10;
+	//private static final String DEFAULT_TITLE = "Set Grid Attributes";
+	//private static final String DEFAULT_DESCRIPTION = "Choose the default cell type for the grid.";
+	//private static final int DEFAULT_NUM_ROWS = 10;
+	//private static final int DEFAULT_NUM_COLS = 10;
 
 	private VBox vbox;
 	private NumericInputRow rows, cols;
@@ -37,15 +38,17 @@ public class GridInstantiationPage extends BaseWizardPage {
 	private Map<String, Terrain> terrainMap = new HashMap<>();
 
 	public GridInstantiationPage() {
-		this(DEFAULT_TITLE);
+		this(null);
 	}
 
-	public GridInstantiationPage(String title) {
-		this(title, DEFAULT_DESCRIPTION);
+	public GridInstantiationPage(StringBinding title) {
+		this(title, null);
 	}
 
-	public GridInstantiationPage(String title, String description) {
-		super(title, description);
+	public GridInstantiationPage(StringBinding title, StringBinding description) {
+		super();
+		this.setTitle(title);
+		this.setDescription(description);
 		initialize();
 	}
 
@@ -70,10 +73,20 @@ public class GridInstantiationPage extends BaseWizardPage {
 	private void initialize() {
 		vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
-		rows = new NumericInputRow(null, "Number of Grid Rows: ", "");
-		rows.setValue(DEFAULT_NUM_ROWS);
-		cols = new NumericInputRow(null, "Number of Grid Columns: ", "");
-		cols.setValue(DEFAULT_NUM_COLS);
+		rows = new NumericInputRow(null, getPolyglot().get("Num_Grid_Rows"), new StringBinding() {
+			@Override
+			protected String computeValue() {
+				return "";
+			}		
+		});
+		rows.setValue(Integer.parseInt((getResourceBundle().getString("DEFAULT_NUM_ROWS"))));
+		cols = new NumericInputRow(null, getPolyglot().get("Num_Grid_Cols"), new StringBinding() {
+			@Override
+			protected String computeValue() {
+				return "";
+			}	
+		});
+		cols.setValue(Integer.parseInt((getResourceBundle().getString("DEFAULT_NUM_COLS"))));
 
 		Shape[] shapes = Shape.values();
 		shapeMap = new HashMap<>();
@@ -97,8 +110,12 @@ public class GridInstantiationPage extends BaseWizardPage {
 		cellShapeChooser.setOnAction(event -> checkCanNext());
 		terrainChooser.setOnAction(event -> checkCanNext());
 		
-		HBox cellShapeBox = new HBox(new Label("Set Default Cell Shape: "),cellShapeChooser);
-		HBox terrainBox = new HBox(new Label("Set Default Terrain: "),terrainChooser);
+		Label cellShape = new Label();
+		cellShape.textProperty().bind(getPolyglot().get("Default_Cell_Shape"));
+		HBox cellShapeBox = new HBox(cellShape,cellShapeChooser);
+		Label terrain = new Label();
+		terrain.textProperty().bind(getPolyglot().get("Default_Terrain"));
+		HBox terrainBox = new HBox(terrain,terrainChooser);
 
 		vbox.getChildren().addAll(rows.getObject(), cols.getObject(), cellShapeBox, terrainBox);
 		checkCanNext();

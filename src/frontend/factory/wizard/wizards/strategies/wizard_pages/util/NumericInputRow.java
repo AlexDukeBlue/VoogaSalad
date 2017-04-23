@@ -1,6 +1,7 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages.util;
 
 import frontend.util.BaseUIManager;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -20,22 +21,40 @@ import javafx.scene.layout.Region;
  *
  */
 public class NumericInputRow extends BaseUIManager<Region> {
-	private static final double IMAGE_SIZE = 30;
+	//private static final double IMAGE_SIZE = 30;
 
 	private HBox myNumericInputRow;
 	private TextField myNumericalInputField;
 	Label myNameField, myLabelField;
 
 	public NumericInputRow(Image image, String name, String label) {
+		this(image,new StringBinding() {
+			
+			@Override
+			protected String computeValue() {
+				return name;
+			}
+		}, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return label;
+			}
+			
+		});
+	}
+
+	public NumericInputRow(Image image, StringBinding name, StringBinding label) {
 		initialize(image, name, label);
 	}
 
-	private void initialize(Image image, String name, String label) {
+	private void initialize(Image image, StringBinding name, StringBinding label) {
 		myNumericInputRow = new HBox();
 
-		myNameField = new Label(name);
+		myNameField = new Label();
+		myNameField.textProperty().bind(name);
 
-		myNumericalInputField = new TextField("0");
+		myNumericalInputField = new TextField(getResourceBundle().getString("DEFAULT_ZERO"));
 		myNumericalInputField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -43,7 +62,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 					Integer.parseInt(newValue);
 				} catch (Exception e) {
 					if (!newValue.isEmpty()){
-						myNumericalInputField.setText("0");
+						myNumericalInputField.setText(getResourceBundle().getString("DEFAULT_ZERO"));
 					}
 				}
 				setChanged();
@@ -52,12 +71,13 @@ public class NumericInputRow extends BaseUIManager<Region> {
 			}
 		});
 
-		myLabelField = new Label(label);
+		myLabelField = new Label();
+		myLabelField.textProperty().bind(label);
 		
 		ImageView imageView = new ImageView(image);
 		if (image != null){
-			imageView.setFitWidth(IMAGE_SIZE);
-			imageView.setFitHeight(IMAGE_SIZE);
+			imageView.setFitWidth((Double)getResourceBundle().getObject("IMAGE_SIZE"));
+			imageView.setFitHeight((Double)getResourceBundle().getObject("IMAGE_SIZE"));
 		}
 
 		myNumericInputRow.getChildren().addAll(imageView, myNameField, myNumericalInputField, myLabelField);

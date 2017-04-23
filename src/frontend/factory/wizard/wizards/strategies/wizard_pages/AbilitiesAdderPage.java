@@ -38,7 +38,7 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
 		
-		hprow = new NumericInputRow(null, "Enter the HP for the unit: " , "HP");
+		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt") , getPolyglot().get("HP"));
 		table.getChildren().add(hprow);
 		
 		rowToAbility = new HashMap<>();

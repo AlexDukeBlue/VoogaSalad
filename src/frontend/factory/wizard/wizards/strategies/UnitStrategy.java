@@ -47,7 +47,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Unit");
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("Create New Unit"));
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
 		terrainMovePointPage = new TerrainMovePointPage(gameState);
 		gridPatternPage = new GridPatternPage();
