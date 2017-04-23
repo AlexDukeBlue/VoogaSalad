@@ -5,8 +5,6 @@ package frontend.factory.conditionspane;
 
 import controller.Controller;
 import frontend.util.BaseUIManager;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;

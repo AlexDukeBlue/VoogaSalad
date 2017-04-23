@@ -3,6 +3,7 @@ package frontend.interfaces.templatepane;
 import java.util.Collection;
 
 import javafx.scene.layout.VBox;
+import polyglot.Polyglot;
 
 public interface TemplatePaneExternal {
 
@@ -15,5 +16,7 @@ public interface TemplatePaneExternal {
 	void removeAllTemplatePaneObservers(Collection<TemplatePaneObserver> observers);
 
 	VBox getObject();
+	
+	Polyglot getPolyglot();
 
 }

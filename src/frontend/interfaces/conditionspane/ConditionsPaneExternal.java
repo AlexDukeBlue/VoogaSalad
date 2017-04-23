@@ -6,6 +6,7 @@ package frontend.interfaces.conditionspane;
 import java.util.Collection;
 
 import javafx.scene.layout.Region;
+import polyglot.Polyglot;
 
 
 
@@ -24,5 +25,7 @@ public interface ConditionsPaneExternal {
 	void removeAllConditionsPaneObservers(Collection<ConditionsPaneObserver> observers);
 
 	Region getObject();
+	
+	Polyglot getPolyglot();
 	
 }

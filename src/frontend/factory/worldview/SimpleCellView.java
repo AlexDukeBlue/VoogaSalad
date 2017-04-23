@@ -1,5 +1,9 @@
 package frontend.factory.worldview;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.unit.properties.UnitStat;
@@ -23,10 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
 
 class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterface, CellViewExternal {
 
@@ -142,13 +142,14 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		});
 		contextMenu.getItems().clear();
 		getCell().getOccupants().forEach(e -> {
-			MenuItem item = new MenuItem("Select " + e.getName());
+			MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+			getPolyglot().get("Select").addListener(change -> {
+				item.setText(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+			});
 			contextMenu.getItems().add(item);
 			item.addEventHandler(ActionEvent.ACTION, event -> {
-				unitList.stream()
-						.filter(p -> p.getUnitName().equals(item.getText().substring(7)))
-						.forEach(u -> observers
-								.forEach(o -> o.didClickUnitViewExternalInterface(u)));
+				unitList.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
+						.forEach(u -> observers.forEach(o -> o.didClickUnitViewExternalInterface(u)));
 			});
 		});
 
@@ -158,13 +159,34 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	 * creates a popup that gives information about the unit
 	 */
 	private void toolTip(UnitViewExternal uv) {
+		Tooltip toolTip = new Tooltip();
+		getPolyglot().setOnLanguageChange(event -> {
+			setToolTipString(uv, toolTip);
+			System.out.println("Language change detected in cellview");
+		});
+		setToolTipString(uv, toolTip);
+		Tooltip.install(uv.getObject(), toolTip);
+		// String hp = "";
+		// UnitStat<Double> hitpoints = uv.getUnit().getHitPoints();
+		// if (Objects.nonNull(hitpoints)) {
+		// hp = String.format("\nHitpoints:%2.0f/%2.0f",
+		// hitpoints.getCurrentValue(), hitpoints.getMaxValue());
+		// }
+		// Tooltip.install(uv.getObject(), new Tooltip(
+		// String.format("Name:%s\nPosition: %s%s", uv.getUnitName(),
+		// uv.getUnit().getLocation().toString(), hp)));
+	}
+
+	private void setToolTipString(UnitViewExternal uv, Tooltip toolTip) {
 		String hp = "";
 		UnitStat<Double> hitpoints = uv.getUnit().getHitPoints();
 		if (Objects.nonNull(hitpoints)) {
-			hp = String.format("\nHitpoints:%2.0f/%2.0f", hitpoints.getCurrentValue(), hitpoints.getMaxValue());
+			String formatString = "\n" + getPolyglot().get("Hitpoints").getValueSafe() + ": %2.0f/%2.0f";
+			hp = String.format(formatString, hitpoints.getCurrentValue(), hitpoints.getMaxValue());
 		}
-		Tooltip.install(uv.getObject(), new Tooltip(
-				String.format("Name:%s\nPosition: %s%s", uv.getUnitName(), uv.getUnit().getLocation().toString(), hp)));
+		String formatString = getPolyglot().get("Name").getValueSafe() + ": %s\n"
+				+ getPolyglot().get("Position").getValueSafe() + ": %s%s";
+		toolTip.setText(String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp));
 	}
 
 	private void mouseOver() {

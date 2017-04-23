@@ -26,7 +26,7 @@ public class AbilityPane extends BaseUIManager<ScrollPane> {
 
 	public AbilityPane() {
 		content = new GridPane();
-		ImageView cancelImg = new ImageView(View.getImg("resources/images/cancel.png"));
+		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
 		cancelImg.setFitWidth(50);
 		cancelImg.setFitHeight(50);
 		cancelButton = new Button("", cancelImg);

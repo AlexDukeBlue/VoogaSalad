@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import polyglot.Polyglot;
+import polyglot_extended.ObservablePolyglot;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -54,7 +54,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private final ObjectProperty<String> styleSheet;
 	private final Controller controller;
 	private final ResourceBundle resources;
-	private Polyglot polyglot;
+	private ObservablePolyglot polyglot;
 	private final String resourcePath;
 
 	/**
@@ -129,6 +129,21 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public void update() {
 	}
 
+	public ObservablePolyglot getPolyglot() {
+		if (polyglot == null) { // lazy instantiation to prevent excessive
+								// network access from classes that don't use
+								// the polyglot
+			try {
+				polyglot = new ObservablePolyglot(API_KEY, resourcePath);
+			} catch (Exception e) {
+				e.printStackTrace();
+				polyglot = null;
+			}
+			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
+		}
+		return polyglot;
+	}
+
 	/**
 	 * Generates a map whose keys are Strings that are the filepaths of all
 	 * ResourceBundles that this class can use for its language, and whose
@@ -194,21 +209,6 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 
 	protected ResourceBundle getResourceBundle() {
 		return resources;
-	}
-
-	protected Polyglot getPolyglot() {
-		if (polyglot == null) { // lazy instantiation to prevent excessive
-								// network access from classes that don't use
-								// the polyglot
-			try {
-				polyglot = new Polyglot(API_KEY, resourcePath);
-			} catch (Exception e) {
-				e.printStackTrace();
-				polyglot = null;
-			}
-			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
-		}
-		return polyglot;
 	}
 
 }

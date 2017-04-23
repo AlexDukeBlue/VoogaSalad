@@ -79,12 +79,12 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 	}
 
 	private void initPane() {
-		Stream.of("Rules", " End conditions").map(this::createPane).forEach(myBox.getChildren()::add);
+		Stream.of("Rules", "EndConditions").map(this::createPane).forEach(myBox.getChildren()::add);
 	}
 
 	private TitledPane createPane(String type) {
 		TitledPane rulesPane = new TitledPane();
-		rulesPane.setText(type); //TODO resource file
+		rulesPane.textProperty().bind(getPolyglot().get(type));
 		rulesPane.setCollapsible(true);
 
 		VBox content = new VBox();

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import backend.util.VoogaEntity;
 import javafx.scene.layout.Region;
+import polyglot.Polyglot;
 
 public interface DetailPaneExternal {
 	
@@ -18,5 +19,7 @@ public interface DetailPaneExternal {
 	Region getObject();
 
 	void setContent(VoogaEntity entity, String string);
+	
+	Polyglot getPolyglot();
 
 }
