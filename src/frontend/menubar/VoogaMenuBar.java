@@ -3,6 +3,12 @@
  */
 package frontend.menubar;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 import backend.unit.Unit;
 import backend.util.io.XMLSerializer;
 import controller.Controller;
@@ -12,18 +18,14 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 /**
  * @author Stone Mathers Created 4/18/2017
@@ -46,10 +48,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		factory = new ComponentFactory();
 		populateMenuBar();
 		setEditable(editable);
-		getLanguage().addListener((observable, oldLanguage, newLanguage) -> {
-			getObject().getMenus().clear();
-			populateMenuBar();
-		});
+//		getLanguage().addListener((observable, oldLanguage, newLanguage) -> {
+//			getObject().getMenus().clear();
+//			populateMenuBar();
+//		});
 	}
 
 	public void setEditable(boolean editable) {
@@ -68,8 +70,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void initMenuItems() {
-		saveItem = factory.getMenuItem(getLanguage().getValue().getString("Save"), e -> save());
-		loadItem = factory.getMenuItem(getLanguage().getValue().getString("Load"), e -> load());
+		saveItem = factory.getMenuItem(getResourceBundle().getString("Save"), e -> save());
+		loadItem = factory.getMenuItem(getResourceBundle().getString("Load"), e -> load());
 		homeScreenItem = factory.getMenuItem("Home Screen", e -> {
 
 			StartupScreen su = new StartupScreen(myView.getStage(), StartupScreen.DEFAULT_WIDTH,
@@ -77,7 +79,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
 
 		}); // TODO resource file
-		quitItem = factory.getMenuItem(getLanguage().getValue().getString("Quit"), e -> System.exit(0));
+		quitItem = factory.getMenuItem(getResourceBundle().getString("Quit"), e -> System.exit(0));
 
 		newUnitItem = factory.getMenuItem("Create New Unit", e -> create("unit")); // TODO
 		// resource
@@ -94,14 +96,14 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newInteractionModifierItem = factory.getMenuItem("Create New Interaction Modifier",
 				e -> create("interactionmodifier")); // TODO resource file
 
-		setLanguageItem = factory.getMenu(getLanguage().getValue().getString("SetLanguage"));
-		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
-			MenuItem menuItem = new MenuItem(name);
-			menuItem.setOnAction(e -> getLanguage().setValue(bundle));
-			setLanguageItem.getItems().add(menuItem);
-		});
+		setLanguageItem = factory.getMenu(getResourceBundle().getString("SetLanguage"));
+//		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
+//			MenuItem menuItem = new MenuItem(name);
+//			menuItem.setOnAction(e -> getLanguage().setValue(bundle));
+//			setLanguageItem.getItems().add(menuItem);
+//		});
 
-		setThemeItem = factory.getMenu(getLanguage().getValue().getString("SetTheme"));
+		setThemeItem = factory.getMenu(getResourceBundle().getString("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
 			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
@@ -133,14 +135,14 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		// through
 		// controller
 
-		helpItem = factory.getMenuItem(getLanguage().getValue().getString("Help"), e -> {
+		helpItem = factory.getMenuItem(getResourceBundle().getString("Help"), e -> {
 		}); // TODO implement
 		aboutItem = factory.getMenuItem("About", e -> {
 		}); // TODO implement, resource file
 	}
 
 	private void initMenus() {
-		file = factory.getMenu(getLanguage().getValue().getString("File"));
+		file = factory.getMenu(getResourceBundle().getString("File"));
 		file.getItems().add(loadItem);
 		file.getItems().add(saveItem);
 		file.getItems().add(homeScreenItem);
@@ -153,10 +155,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newTriggeredAbilityItem);
 		edit.getItems().add(newInteractionModifierItem);
 
-		language = factory.getMenu(getLanguage().getValue().getString("Language"));
+		language = factory.getMenu(getResourceBundle().getString("Language"));
 		language.getItems().add(setLanguageItem);
 
-		theme = factory.getMenu(getLanguage().getValue().getString("Theme"));
+		theme = factory.getMenu(getResourceBundle().getString("Theme"));
 		theme.getItems().add(setThemeItem);
 
 		view = factory.getMenu("View"); // TODO get from resource files
@@ -167,7 +169,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		view.getItems().add(editModeItem);
 		view.getItems().add(playModeItem);
 
-		help = factory.getMenu(getLanguage().getValue().getString("Help"));
+		help = factory.getMenu(getResourceBundle().getString("Help"));
 		help.getItems().add(helpItem);
 		help.getItems().add(aboutItem);
 
