@@ -1,12 +1,25 @@
 package frontend.startup;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 import backend.grid.GridPattern;
+import backend.util.AuthoringGameState;
 import backend.util.ReadonlyGameplayState;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
-import frontend.wizards.GameWizard;
-import javafx.animation.*;
+import frontend.factory.wizard.Wizard;
+import frontend.factory.wizard.WizardFactory;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -23,12 +36,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.net.ObservableHost;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * The intro screen containing a "create new game" button.
@@ -165,9 +172,7 @@ public class StartupSelectionScreen extends VBox {
 
 	private void create(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		GameWizard wiz = new GameWizard();
-		wiz.show();
-		wiz.addObserver((o, arg) -> {
+		WizardFactory.newWizard(AuthoringGameState.class, null).addObserver((o, arg) -> {
 			GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
 			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
