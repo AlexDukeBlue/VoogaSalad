@@ -3,15 +3,21 @@
  */
 package frontend.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Observable;
+import java.util.ResourceBundle;
+
 import com.sun.javafx.collections.UnmodifiableObservableMap;
+
 import controller.Controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-
-import java.util.*;
+import polyglot_extended.ObservablePolyglot;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -42,17 +48,26 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private static final String STYLESHEET_RESOURCE_POINTER = "resources.styles/StylePointer";
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_STYLE_KEY = "DefaultStyleSheet";
+	private static final String API_KEY = "AIzaSyB-TQZwz6yDEvQfHTK2JdWNXLa1LfLXQz8";
 
 	private final ObjectProperty<ResourceBundle> language;
 	private final ObjectProperty<String> styleSheet;
 	private final Controller controller;
+	private final ResourceBundle resources;
+	private ObservablePolyglot polyglot;
+	private final String resourcePath;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
+<<<<<<< HEAD
 	 * stylesheet to default. The default language is English.
 	 * Yo Dylan wrong project lmao
 	 *
 	 * @param clickHandler
+=======
+	 * stylesheet to default. The default language is English. Yo Dylan wrong
+	 * project lmao
+>>>>>>> resourcebundlify-2
 	 */
 	public BaseUIManager() {
 		this(null);
@@ -65,7 +80,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 			this.controller.addToUpdated(this);
 		}
 		language = new SimpleObjectProperty<>();
-		language.setValue(createDefaultResourceBundle());
+		// language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<>();
 		styleSheet.addListener((observable, oldValue, newValue) -> {
 			if (getObject() instanceof Parent) {
@@ -73,6 +88,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 				((Parent) getObject()).getStylesheets().add(newValue);
 			}
 		});
+		resourcePath = getClass().getName().replace(".", "/").substring(0,
+				getClass().getName().replace(".", "/").lastIndexOf("/")) + "/resources";
+		resources = ResourceBundle.getBundle(resourcePath);
 	}
 
 	public Controller getController() {
@@ -88,8 +106,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * the language.
 	 *
 	 * @return an ObjectProperty containing the ResourceBundle that this class
-	 * uses to populate text that the user sees
+	 *         uses to populate text that the user sees
 	 */
+	@Deprecated
 	public ObjectProperty<ResourceBundle> getLanguage() {
 		return language;
 	}
@@ -103,7 +122,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * style.
 	 *
 	 * @return an ObjectProperty containing a String pointing to the stylesheet
-	 * that this class uses to style the Parent it manages.
+	 *         that this class uses to style the Parent it manages.
 	 */
 	public ObjectProperty<String> getStyleSheet() {
 		return styleSheet;
@@ -117,15 +136,31 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public void update() {
 	}
 
+	public ObservablePolyglot getPolyglot() {
+		if (polyglot == null) { // lazy instantiation to prevent excessive
+								// network access from classes that don't use
+								// the polyglot
+			try {
+				polyglot = new ObservablePolyglot(API_KEY, resourcePath);
+			} catch (Exception e) {
+				e.printStackTrace();
+				polyglot = null;
+			}
+			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
+		}
+		return polyglot;
+	}
+
 	/**
 	 * Generates a map whose keys are Strings that are the filepaths of all
 	 * ResourceBundles that this class can use for its language, and whose
 	 * values are the ResourceBundles themselves.
 	 *
 	 * @return a map whose keys are Strings that are the filepaths of all
-	 * ResourceBundles that this class can use for its language, and
-	 * whose values are the ResourceBundles themselves.
+	 *         ResourceBundles that this class can use for its language, and
+	 *         whose values are the ResourceBundles themselves.
 	 */
+	@Deprecated
 	protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
 		Map<String, ResourceBundle> map = new HashMap<>();
 		ResourceBundle bundle = ResourceBundle.getBundle(LANGUAGE_RESOURCE_LIST);
@@ -142,14 +177,14 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * stylesheets themselves.
 	 *
 	 * @return a map whose keys are Strings that are the names of all the
-	 * possible stylesheets that this class can use, and whose values
-	 * are the stylesheets themselves.
+	 *         possible stylesheets that this class can use, and whose values
+	 *         are the stylesheets themselves.
 	 */
 	protected final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
 		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
-			map.put(getLanguage().getValue().getString(key), fileBundle.getString(key));
+			map.put(getPolyglot().get(key).getValueSafe(), fileBundle.getString(key));
 		}
 		return (UnmodifiableObservableMap<String, String>) FXCollections
 				.unmodifiableObservableMap(FXCollections.observableMap(map));
@@ -162,6 +197,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 *
 	 * @return a ResourceBundle that this class uses by default
 	 */
+	@Deprecated
 	protected ResourceBundle createDefaultResourceBundle() {
 		return ResourceBundle
 				.getBundle(ResourceBundle.getBundle(LANGUAGE_RESOURCE_POINTER).getString(DEFAULT_LANGUAGE_KEY));
@@ -177,4 +213,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	protected String createDefaultStyleSheet() {
 		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(DEFAULT_STYLE_KEY);
 	}
+
+	protected ResourceBundle getResourceBundle() {
+		return resources;
+	}
+
 }

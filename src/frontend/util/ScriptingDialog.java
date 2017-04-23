@@ -29,7 +29,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		languagesMenu = new ComboBox<>(FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
 		pane = new BorderPane();
 		scriptArea = new TextArea();
-		Button compileButton = new Button("Compile");
+		Button compileButton = new Button();
+		compileButton.textProperty().bind(getPolyglot().get("Compile"));
 		compileButton.setOnAction(evt -> {
 			try {
 				scriptEngine = VoogaScriptEngineManager.read(languagesMenu.getValue(), scriptArea.getText());
@@ -37,7 +38,9 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 				handleException(e);
 			}
 		});
-		HBox topBox = new HBox(new Label("Choose scripting language: "));
+		Label scriptingLabel = new Label();
+		scriptingLabel.textProperty().bind(getPolyglot().get("chooseScriptingLang"));
+		HBox topBox = new HBox(scriptingLabel);
 		topBox.getChildren().add(languagesMenu);
 		topBox.setAlignment(Pos.CENTER);
 		HBox bottomBox = new HBox(compileButton);
@@ -49,14 +52,15 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 
 	private void handleException(Exception e) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Syntax Error!");
+		alert.titleProperty().bind(getPolyglot().get("syntaxError"));
 		alert.setHeaderText(null);
-		alert.setContentText("An error occurred compiling your code!");
+		alert.contentTextProperty().bind(getPolyglot().get("compileError"));
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.getCause().printStackTrace(pw);
 		String exceptionText = sw.toString();
-		Label label = new Label("Stacktrace:");
+		Label label = new Label();
+		label.textProperty().bind(getPolyglot().get("stackTrace"));
 		TextArea textArea = new TextArea(exceptionText);
 		textArea.setEditable(false);
 		textArea.setWrapText(true);

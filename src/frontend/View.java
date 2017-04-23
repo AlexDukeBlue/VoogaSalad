@@ -40,6 +40,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import polyglot.PolyglotException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -152,7 +153,7 @@ public class View extends ClickableUIComponent<Region> {
 	public void sendAlert(String s) {
 		Alert myAlert;
 		myAlert = new Alert(AlertType.INFORMATION);
-		myAlert.setTitle("Information Dialog");
+		myAlert.titleProperty().bind(getPolyglot().get("informationdialog"));
 		myAlert.setHeaderText(null);
 		myAlert.setContentText(s);
 		myAlert.showAndWait();
@@ -189,6 +190,20 @@ public class View extends ClickableUIComponent<Region> {
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
 				getClickHandler());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
+		menuBar.getPolyglot().setOnLanguageChange(event -> {
+			System.out.println("Languagechange detcted in menu bar");
+			try {
+				worldView.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
+				detailPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
+				abilityPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
+				tempPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
+				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
+				System.out.println("Language change applied in view");
+			} catch (PolyglotException e) {
+				//TODO display dialog that we could not change language
+				e.printStackTrace();
+			}
+		});
 	}
 
 	/**

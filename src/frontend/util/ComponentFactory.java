@@ -1,6 +1,7 @@
 package frontend.util;
 
 import frontend.View;
+import javafx.beans.binding.StringBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -42,7 +43,17 @@ public class ComponentFactory {
 	 * @return MenuItem
 	 */
 	public MenuItem getMenuItem(String name, EventHandler<ActionEvent> eventHandler) {
-		MenuItem item = new MenuItem(name);
+		return getMenuItem(new StringBinding() {
+			@Override
+			protected String computeValue() {
+				return name;
+			}
+		}, eventHandler);
+	}
+	
+	public MenuItem getMenuItem(StringBinding name, EventHandler<ActionEvent> eventHandler){
+		MenuItem item = new MenuItem();
+		item.textProperty().bind(name);
 		item.setOnAction(eventHandler);
 		return item;
 	}
@@ -54,7 +65,18 @@ public class ComponentFactory {
 	 * @return Menu
 	 */
 	public Menu getMenu(String name) {
-		return new Menu(name);
+		return getMenu(new StringBinding() {
+			@Override
+			protected String computeValue() {
+				return name;
+			}
+		});
+	}
+	
+	public Menu getMenu(StringBinding name){
+		Menu menu = new Menu();
+		menu.textProperty().bind(name);
+		return menu;
 	}
 
 	/**

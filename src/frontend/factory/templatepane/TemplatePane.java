@@ -72,7 +72,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
-		spritePane.setText(label);
+		spritePane.textProperty().bind(getPolyglot().get(label));
 		VBox contentPane = new VBox();
 		contentPane.setPadding(Insets.EMPTY);
 		contentPane.setAlignment(Pos.CENTER_RIGHT);

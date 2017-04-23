@@ -14,6 +14,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
+import polyglot.PolyglotException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +34,16 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		cellViews = new ArrayList<>();
 		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize();
+		getPolyglot().setOnLanguageChange(change -> {
+			cellViews.stream().forEach(cellView -> {
+				try {
+					cellView.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				} catch (PolyglotException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		});
 	}
 
 	@Override

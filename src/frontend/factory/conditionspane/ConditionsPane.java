@@ -60,12 +60,12 @@ public class ConditionsPane extends ClickableUIComponent<Region> implements Cond
 	}
 
 	private void initPane() {
-		Stream.of("Rules", " End conditions").map(this::createPane).forEach(myBox.getChildren()::add);
+		Stream.of("Rules", "EndConditions").map(this::createPane).forEach(myBox.getChildren()::add);
 	}
 
 	private TitledPane createPane(String type) {
 		TitledPane rulesPane = new TitledPane();
-		rulesPane.setText(type); //TODO resource file
+		rulesPane.textProperty().bind(getPolyglot().get(type));
 		rulesPane.setCollapsible(true);
 
 		VBox content = new VBox();
