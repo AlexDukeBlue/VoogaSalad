@@ -20,6 +20,7 @@ import javafx.scene.layout.Region;
  *
  */
 public class NumericInputRow extends BaseUIManager<Region> {
+	private static final double IMAGE_SIZE = 30;
 
 	private HBox myNumericInputRow;
 	private TextField myNumericalInputField;
@@ -52,8 +53,14 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		});
 
 		myLabelField = new Label(label);
+		
+		ImageView imageView = new ImageView(image);
+		if (image != null){
+			imageView.setFitWidth(IMAGE_SIZE);
+			imageView.setFitHeight(IMAGE_SIZE);
+		}
 
-		myNumericInputRow.getChildren().addAll(new ImageView(image), myNameField, myNumericalInputField, myLabelField);
+		myNumericInputRow.getChildren().addAll(imageView, myNameField, myNumericalInputField, myLabelField);
 	}
 
 	void setName(String name) {
