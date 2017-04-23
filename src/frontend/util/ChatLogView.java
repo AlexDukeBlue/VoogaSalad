@@ -53,6 +53,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		pane.setBottom(initTextInputBox());
 		mediaPlayer = new MediaPlayer(new Media(Paths.get("src/resources/steam_message_sound.mp3").toUri().toString()));
 		pane.getStylesheets().clear();
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));
 	}
 
 	@Override
@@ -99,11 +100,13 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		label1.setMinWidth(30);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
-		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
+		chatModeChooser.setOnAction(
+				event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setMinWidth(200);
 		textContentInputField.setPrefWidth(1000);
-		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
+		textContentInputField.setOnKeyPressed(
+				evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
 		showHideArrow.setOnMouseClicked(event -> setExpandedState(!isExpanded()));
 		showHideArrow.setFitWidth(20);
@@ -121,7 +124,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private void showOrHideRecipientField(HBox bottomBox, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-	                                      Label toLabel, TextField messageRecipientField) {
+			Label toLabel, TextField messageRecipientField) {
 		if (chatModeChooser.getValue().equals(ChatMessage.AccessLevel.WHISPER)) {
 			bottomBox.getChildren().add(1, messageRecipientField);
 			bottomBox.getChildren().add(1, toLabel);
@@ -133,7 +136,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private void submitMessage(KeyEvent evt, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-	                           TextField textContentInputField, TextField messageRecipientField) {
+			TextField textContentInputField, TextField messageRecipientField) {
 		if (evt.getCode() == KeyCode.ENTER && textContentInputField.getText().length() > 0) {
 			getController().sendModifier(chatModeChooser.getValue().getSendMessageModifier(
 					textContentInputField.getText(), getController().getPlayerName(), messageRecipientField.getText()));

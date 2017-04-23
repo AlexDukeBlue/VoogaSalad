@@ -55,6 +55,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private final Controller controller;
 	private final ResourceBundle resources;
 	private Polyglot polyglot;
+	private final String resourcePath;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
@@ -80,16 +81,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 				((Parent) getObject()).getStylesheets().add(newValue);
 			}
 		});
-		String path = getClass().getName().replace(".", "/").substring(0,
+		resourcePath = getClass().getName().replace(".", "/").substring(0,
 				getClass().getName().replace(".", "/").lastIndexOf("/")) + "/resources";
-		resources = ResourceBundle.getBundle(path);
-		try {
-			polyglot = new Polyglot(API_KEY, path);
-		} catch (Exception e) {
-			e.printStackTrace();
-			polyglot = null;
-		}
-		System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
+		resources = ResourceBundle.getBundle(resourcePath);
 	}
 
 	public Controller getController() {
@@ -168,7 +162,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
-			map.put(getResourceBundle().getString(key), fileBundle.getString(key));
+			map.put(getPolyglot().get(key).getValueSafe(), fileBundle.getString(key));
 		}
 		return (UnmodifiableObservableMap<String, String>) FXCollections
 				.unmodifiableObservableMap(FXCollections.observableMap(map));
@@ -203,6 +197,17 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	}
 
 	protected Polyglot getPolyglot() {
+		if (polyglot == null) { // lazy instantiation to prevent excessive
+								// network access from classes that don't use
+								// the polyglot
+			try {
+				polyglot = new Polyglot(API_KEY, resourcePath);
+			} catch (Exception e) {
+				e.printStackTrace();
+				polyglot = null;
+			}
+			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
+		}
 		return polyglot;
 	}
 

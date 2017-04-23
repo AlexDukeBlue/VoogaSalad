@@ -50,10 +50,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		factory = new ComponentFactory();
 		populateMenuBar();
 		setEditable(editable);
-		// getLanguage().addListener((observable, oldLanguage, newLanguage) -> {
-		// getObject().getMenus().clear();
-		// populateMenuBar();
-		// });
 	}
 
 	public void setEditable(boolean editable) {
@@ -93,12 +89,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 				e -> create("interactionmodifier"));
 
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
-		// getPossibleResourceBundleNamesAndResourceBundles().forEach((name,
-		// bundle) -> {
-		// MenuItem menuItem = new MenuItem(name);
-		// menuItem.setOnAction(e -> getLanguage().setValue(bundle));
-		// setLanguageItem.getItems().add(menuItem);
-		// });
 		try {
 			getPolyglot().languages().stream().forEach(languageName -> {
 				MenuItem menuItem = new MenuItem(languageName);
@@ -116,12 +106,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		}
 
 		setThemeItem = factory.getMenu(getPolyglot().get("SetTheme"));
-		// getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) ->
-		// {
-		// MenuItem menuItem = new MenuItem(name);
-		// menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
-		// setThemeItem.getItems().add(menuItem);
-		// });
+		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
+			MenuItem menuItem = new MenuItem(name);
+			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
+			setThemeItem.getItems().add(menuItem);
+		});
 
 		conditionsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideConditions"),
 				e -> myView.toggleConditionsPane());
