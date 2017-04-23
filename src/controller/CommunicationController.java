@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
  */
 public class CommunicationController implements Controller {
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
-	private AuthoringGameState mGameState;
+	private GameplayState mGameState;
 	private Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private Collection<Updatable> thingsToUpdate;
@@ -98,7 +98,7 @@ public class CommunicationController implements Controller {
 	}
 
 	private synchronized <U extends ReadonlyGameplayState> void updateGameState(U newGameState) {
-		mGameState = (AuthoringGameState) newGameState;
+		mGameState = (GameplayState) newGameState;
 		updateAll();
 		waitForReady.countDown();
 	}
@@ -128,12 +128,12 @@ public class CommunicationController implements Controller {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return mGameState;
+		return new AuthoringGameState(mGameState);
 	}
 
 	@Override
 	public GameplayState getGameState() {
-		return getAuthoringGameState();
+		return mGameState;
 	}
 
 	@Override
@@ -195,6 +195,16 @@ public class CommunicationController implements Controller {
 		if (thingsToUpdate.contains(updatable)) {
 			thingsToUpdate.remove(updatable);
 		}
+	}
+	
+	@Override
+	public void enterAuthoringMode(){
+		setGameState(new AuthoringGameState(getGameState()));
+	}
+	
+	@Override
+	public void enterGamePlayMode(){
+		setGameState(new GameplayState(getAuthoringGameState()));
 	}
 
 	@Override

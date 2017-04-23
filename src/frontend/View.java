@@ -19,6 +19,7 @@
 package frontend;
 
 import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
 import controller.Controller;
 import frontend.factory.GameObserverFactory;
 import frontend.factory.abilitypane.AbilityPane;
@@ -79,7 +80,6 @@ public class View extends BaseUIManager<Region> {
 		placePanes();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
-		update();
 	}
 
 	/**
@@ -142,9 +142,9 @@ public class View extends BaseUIManager<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState AuthoringGameState that the View will now access its data from
+	 * @param newGameState GameplayState that the View will now access its data from
 	 */
-	public void setGameState(AuthoringGameState newGameState) {
+	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
 	}
 
@@ -248,7 +248,6 @@ public class View extends BaseUIManager<Region> {
 
 	@Override
 	public void update() {
-		super.update();
-		this.setEditable(getController().getAuthoringGameState().isAuthoringMode());
+		this.setEditable(getController().getGameState().isAuthoringMode());
 	}
 }
