@@ -81,6 +81,9 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		Matcher m = MAGIC.matcher(getName());
 		int id = m.find() ? Integer.parseInt(m.group(1)) : 0;
 		setName(String.format("%s_%02d", m.replaceAll(""), id + 1));
+		if (Objects.isNull(getHitPoints()) || Objects.isNull(getMovePoints()) || Objects.isNull(getMovePattern()) || getName().length() < 1) {
+			throw new IncompleteUnitException();
+		}
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
 
@@ -323,11 +326,9 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		return this;
 	}
 
-	/**
-	 @Deprecated public static void addToPredefinedUnits(ModifiableUnit newUnit) {
-	 Collection<ModifiableUnit> current = getPredefined(ModifiableUnit.class);
-	 current.add(newUnit);
-
-	 }
-	 ***/
+	static class IncompleteUnitException extends RuntimeException {
+		IncompleteUnitException() {
+			super("Incomplete Unit");
+		}
+	}
 }

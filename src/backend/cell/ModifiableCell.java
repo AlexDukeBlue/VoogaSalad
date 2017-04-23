@@ -71,7 +71,7 @@ public class ModifiableCell implements Cell {
 		processTriggers(Event.TURN_END, gameState);
 	}
 
-	@Override
+	g@Override
 	public CoordinateTuple getLocation() {
 		return coordinates;
 	}
@@ -152,6 +152,9 @@ public class ModifiableCell implements Cell {
 
 	@Override
 	public ModifiableCell copy() {
+		if (Objects.isNull(getShape()) || Objects.isNull(getTerrain())) {
+			throw new IncompleteCellException();
+		}
 		return new ModifiableCell(getLocation(), getShape(), getTerrain());
 	}
 
@@ -183,5 +186,11 @@ public class ModifiableCell implements Cell {
 	@Override
 	public String getImgPath() {
 		return getTerrain().getImgPath();
+	}
+
+	static class IncompleteCellException extends RuntimeException {
+		IncompleteCellException() {
+			super("Incomplete Cell");
+		}
 	}
 }
