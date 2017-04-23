@@ -12,9 +12,9 @@ public interface HasActiveAbilities extends HasLocation {
 		useActiveAbility(getActiveAbilityByName(activeAbilityName), target, gameState);
 	}
 
-	void useActiveAbility(ActiveAbility activeAbility, VoogaEntity target, GameplayState gameState);
+	void useActiveAbility(ActiveAbility<VoogaEntity> activeAbility, VoogaEntity target, GameplayState gameState);
 
-	ActiveAbility getActiveAbilityByName(String name);
+	ActiveAbility<VoogaEntity> getActiveAbilityByName(String name);
 
 	Collection<? extends ActiveAbility> getActiveAbilities();
 }

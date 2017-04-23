@@ -30,8 +30,6 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private volatile GameBoard grid;
 	private boolean isAuthoringMode;
 
-	//private Collection<ModifiableUnit> allUnits;
-
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
 	}
@@ -245,8 +243,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
-	
-	protected void setAuthoringMode(boolean isAuthoringMode){
+
+	protected void setAuthoringMode(boolean isAuthoringMode) {
 		this.isAuthoringMode = isAuthoringMode;
 	}
 }

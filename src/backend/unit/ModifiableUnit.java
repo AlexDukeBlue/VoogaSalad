@@ -10,7 +10,6 @@ import backend.util.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/30/2017.
@@ -18,15 +17,15 @@ import java.util.stream.Collectors;
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
-			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
+			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0).copy(), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5).copy())
 			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
 			.setImgPath("resources/images/x.png")
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.addActiveAbilities(ActiveAbility.SWORD)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
-			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0).setCurrentValue(10.0))
-			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6))
+			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0).setCurrentValue(10.0).copy())
+			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6).copy())
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.setImgPath("resources/images/o.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
@@ -53,7 +52,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		super(unitName, unitDescription, imgPath);
 		this.faction = faction;
 		this.terrainMoveCosts = new HashMap<>(moveCosts);
-		this.stats = new UnitStats(unitStats.parallelStream().map(UnitStat::copy).collect(Collectors.toList()));
+		this.stats = new UnitStats(unitStats);
 		this.movePattern = movePattern;
 		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
 		this.activeAbilities = new ActiveAbilitySet(activeAbilities);
@@ -110,10 +109,13 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	@Override
 	public void takeDamage(double damage) {
 		getHitPoints().setCurrentValue(getHitPoints().getCurrentValue() - damage);
+		if (getHitPoints().isEmpty()){
+			getCurrentCell().removeOccupants(this);
+		}
 	}
 
 	@Override
-	public void useActiveAbility(ActiveAbility activeAbility, VoogaEntity target, GameplayState gameState) {
+	public void useActiveAbility(ActiveAbility<VoogaEntity> activeAbility, VoogaEntity target, GameplayState gameState) {
 		processTriggers(Event.UNIT_PRE_ABILITY_USE, gameState);
 		activeAbility.affect(this, target, gameState);
 		processTriggers(Event.UNIT_POST_ABILITY_USE, gameState);

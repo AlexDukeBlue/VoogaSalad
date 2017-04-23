@@ -32,7 +32,6 @@ public abstract class ClickHandler {
 		if (Objects.isNull(selectedComponent) && clickedComponent instanceof SelectableUIComponent) {
 			setSelectedComponent((SelectableUIComponent<? extends Node>) clickedComponent);
 			this.additionalInfo = additionalInfo;
-			showDetail(clickedComponent);
 		} else if (Objects.nonNull(selectedComponent)) {
 			triggerAction(selectedComponent, clickedComponent, this.additionalInfo);
 			cancel();
@@ -42,9 +41,10 @@ public abstract class ClickHandler {
 		}
 	}
 
-	protected final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
+	public final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
 		this.selectedComponent = selectedComponent;
 		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getObject());
+		showDetail(selectedComponent);
 	}
 
 	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo);

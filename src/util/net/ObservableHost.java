@@ -63,7 +63,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	/**
 	 * @return Returns the state on the local machine, which should match the network's shared state
 	 */
-	protected final T getState() {
+	public final T getState() {
 		return state;
 	}
 

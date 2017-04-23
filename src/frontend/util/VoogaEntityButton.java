@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
+
 /**
  * @author Created by th174 on 4/21/17.
  */
@@ -26,7 +27,7 @@ public abstract class VoogaEntityButton extends SelectableUIComponent<Button> {
 		sprite.setFitHeight(size);
 		entityButton.setTooltip(new Tooltip(entity.getFormattedName()));
 		entityButton.setPadding(Insets.EMPTY);
-		entityButton.setOnMouseClicked(event -> handleClick(null));
+		entityButton.setOnMouseClicked(event -> setAsSelected());
 	}
 
 	@Override

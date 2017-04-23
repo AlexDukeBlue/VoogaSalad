@@ -18,7 +18,7 @@ public interface UnitStat<T extends Number & Comparable<T>> extends VoogaEntity,
 	T getMaxValue();
 
 	default boolean isFull() {
-		return getCurrentValue().compareTo(getMaxValue()) < 0;
+		return getCurrentValue().compareTo(getMaxValue()) >= 0;
 	}
 
 	T getCurrentValue();
@@ -26,7 +26,7 @@ public interface UnitStat<T extends Number & Comparable<T>> extends VoogaEntity,
 	UnitStat<T> setCurrentValue(T newValue);
 
 	default boolean isEmpty() {
-		return getCurrentValue().compareTo(getMinValue()) > 0;
+		return getCurrentValue().compareTo(getMinValue()) <= 0;
 	}
 
 	T getMinValue();

@@ -11,8 +11,6 @@ import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import backend.util.ReadonlyGameplayState;
-
 /**
  * This class provides a simple implementation of a client that connects to a server with a given server name and port.
  * <p>
@@ -95,6 +93,16 @@ public class ObservableClient<T> extends ObservableHost<T> {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	protected void handle(Modifier<T> modifier) {
+		super.handle(modifier);
+	}
+
+	@Override
+	protected void handle(T state) {
+		super.handle(state);
 	}
 
 	/**

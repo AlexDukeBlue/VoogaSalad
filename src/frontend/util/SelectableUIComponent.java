@@ -1,8 +1,8 @@
 package frontend.util;
 
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import javafx.scene.Node;
 
 /**
@@ -16,6 +16,10 @@ public abstract class SelectableUIComponent<T extends Node> extends ClickableUIC
 
 	public SelectableUIComponent(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
+	}
+
+	public final void setAsSelected() {
+		getClickHandler().setSelectedComponent(this);
 	}
 
 	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo);

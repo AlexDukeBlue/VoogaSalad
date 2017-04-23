@@ -5,10 +5,9 @@ import backend.unit.Unit;
 import backend.util.GameplayState;
 import backend.util.HasLocation;
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.View;
-import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
@@ -106,7 +105,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo) {
-		if (target instanceof CellViewExternal) {
+		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			CoordinateTuple unitLocation = getUnitLocation();
 			String unitName = getUnitName();
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();

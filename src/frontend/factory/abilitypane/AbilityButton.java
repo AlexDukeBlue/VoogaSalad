@@ -33,11 +33,15 @@ public class AbilityButton extends VoogaEntityButton {
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
-		if (target instanceof GameBoardObjectView && Objects.nonNull(unitLocation)) {
-			VoogaEntity abilityTarget = ((GameBoardObjectView) target).getEntity();
+		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation && Objects.nonNull(unitLocation)) {
+			String abilityTargetName = ((GameBoardObjectView) target).getEntity().getName();
+			CoordinateTuple abilityTargetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			String abilityName = getEntity().getName();
+			String unitName = this.unitName;
+			CoordinateTuple unitLocation = this.unitLocation;
 			getController().sendModifier((GameplayState gameState) -> {
-				gameState.getGrid().get(this.unitLocation).getOccupantByName(this.unitName).useActiveAbility(abilityName, abilityTarget, gameState);
+				VoogaEntity abilityTarget = gameState.getGrid().get(abilityTargetLocation).getOccupantByName(abilityTargetName);
+				gameState.getGrid().get(unitLocation).getOccupantByName(unitName).useActiveAbility(abilityName, abilityTarget, gameState);
 				return gameState;
 			});
 		}

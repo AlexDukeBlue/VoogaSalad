@@ -50,9 +50,9 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 		useActiveAbility(getActiveAbilityByName(activeAbilityName), target, gameState);
 	}
 
-	void useActiveAbility(ActiveAbility activeAbility, VoogaEntity target, GameplayState gameState);
+	void useActiveAbility(ActiveAbility<VoogaEntity> activeAbility, VoogaEntity target, GameplayState gameState);
 
-	ActiveAbility getActiveAbilityByName(String name);
+	ActiveAbility<VoogaEntity> getActiveAbilityByName(String name);
 
 	default Collection<Cell> getLegalMoves(ModifiableGameBoard grid) {
 		return getMovePattern().getCoordinates().parallelStream()
@@ -125,7 +125,9 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 
 	default double applyAllDefensiveModifiers(Double originalValue, Unit agent, GameplayState gameState) {
 		Double temp = InteractionModifier.modifyAll(getDefensiveModifiers(), originalValue, agent, this, gameState);
-		return InteractionModifier.modifyAll(getCurrentCell().getTerrain().getDefensiveModifiers(), temp, agent, this, gameState);
+		return InteractionModifier.modifyAll(getCurrentCell()
+				.getTerrain()
+				.getDefensiveModifiers(), temp, agent, this, gameState);
 	}
 
 	List<InteractionModifier<Double>> getDefensiveModifiers();

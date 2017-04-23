@@ -185,7 +185,7 @@ public class View extends ClickableUIComponent<Region> {
 		});
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getClickHandler());
-		abilityPane = new AbilityPane(getClickHandler());
+		abilityPane = new AbilityPane(getController(), getClickHandler());
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
 				getClickHandler());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());

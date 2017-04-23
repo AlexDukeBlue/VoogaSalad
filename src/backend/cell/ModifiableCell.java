@@ -160,7 +160,7 @@ public class ModifiableCell implements Cell {
 
 	@Override
 	public String toString() {
-		return "\n" + terrain.toString() + " @ " + getLocation() + "\tOccupants: " + getOccupants().size();
+		return terrain.toString() + " @ " + getLocation() + "\tOccupants: " + getOccupants().size();
 	}
 
 	private void processTriggers(Event event, GameplayState gameState) {
