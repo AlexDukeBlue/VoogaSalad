@@ -72,7 +72,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 			this.controller.addToUpdated(this);
 		}
 		language = new SimpleObjectProperty<>();
-		language.setValue(createDefaultResourceBundle());
+//		language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<>();
 		styleSheet.addListener((observable, oldValue, newValue) -> {
 			if (getObject() instanceof Parent) {
@@ -142,6 +142,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 *         ResourceBundles that this class can use for its language, and
 	 *         whose values are the ResourceBundles themselves.
 	 */
+	@Deprecated
 	protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
 		Map<String, ResourceBundle> map = new HashMap<>();
 		ResourceBundle bundle = ResourceBundle.getBundle(LANGUAGE_RESOURCE_LIST);
@@ -178,6 +179,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 *
 	 * @return a ResourceBundle that this class uses by default
 	 */
+	@Deprecated
 	protected ResourceBundle createDefaultResourceBundle() {
 		return ResourceBundle
 				.getBundle(ResourceBundle.getBundle(LANGUAGE_RESOURCE_POINTER).getString(DEFAULT_LANGUAGE_KEY));

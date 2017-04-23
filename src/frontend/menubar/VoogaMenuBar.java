@@ -104,11 +104,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 //		});
 
 		setThemeItem = factory.getMenu(getResourceBundle().getString("SetTheme"));
-		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
-			MenuItem menuItem = new MenuItem(name);
-			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
-			setThemeItem.getItems().add(menuItem);
-		});
+//		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
+//			MenuItem menuItem = new MenuItem(name);
+//			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
+//			setThemeItem.getItems().add(menuItem);
+//		});
 
 		conditionsPaneItem = factory.getMenuItem("Show/Hide Conditions Pane", e -> myView.toggleConditionsPane()); // TODO
 		// resource

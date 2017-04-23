@@ -53,7 +53,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		pane.setBottom(initTextInputBox());
 		mediaPlayer = new MediaPlayer(new Media(Paths.get("src/resources/steam_message_sound.mp3").toUri().toString()));
 		pane.getStylesheets().clear();
-		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));
+		getStyleSheet().setValue("");
 	}
 
 	@Override
