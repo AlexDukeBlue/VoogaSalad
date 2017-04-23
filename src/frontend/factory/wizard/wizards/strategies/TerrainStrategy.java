@@ -23,7 +23,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Unit");
+		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Terrain");
 		unitMovePointPage = new UnitMovePointPage(gameState);
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
 	}
