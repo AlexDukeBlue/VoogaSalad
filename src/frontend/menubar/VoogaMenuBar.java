@@ -26,6 +26,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import polyglot.PolyglotException;
 
 /**
  * @author Stone Mathers Created 4/18/2017
@@ -102,6 +103,27 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 //			menuItem.setOnAction(e -> getLanguage().setValue(bundle));
 //			setLanguageItem.getItems().add(menuItem);
 //		});
+		try {
+			System.out.println("Polyglot: " + getPolyglot());
+			System.out.println(getPolyglot().languages());
+			System.out.println(getPolyglot().languages().stream());
+			getPolyglot()
+			.languages()
+			.stream()
+			.forEach(languageName -> {
+				MenuItem menuItem = new MenuItem(languageName);
+				menuItem.setOnAction(event -> {
+					try {
+						getPolyglot().setLanguage(languageName);
+					} catch (PolyglotException e1) {
+						menuItem.setVisible(false);
+					}
+				});
+				setLanguageItem.getItems().add(menuItem);
+			});
+		} catch (PolyglotException e1) {
+			setLanguageItem.setVisible(false);
+		}
 
 		setThemeItem = factory.getMenu(getResourceBundle().getString("SetTheme"));
 //		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {

@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import voogasalad.util.polyglot.Polyglot;
+import polyglot.Polyglot;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -72,7 +72,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 			this.controller.addToUpdated(this);
 		}
 		language = new SimpleObjectProperty<>();
-//		language.setValue(createDefaultResourceBundle());
+		// language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<>();
 		styleSheet.addListener((observable, oldValue, newValue) -> {
 			if (getObject() instanceof Parent) {
@@ -85,9 +85,11 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		resources = ResourceBundle.getBundle(path);
 		try {
 			polyglot = new Polyglot(API_KEY, path);
-		} catch (Exception e){
+		} catch (Exception e) {
+			e.printStackTrace();
 			polyglot = null;
 		}
+		System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
 	}
 
 	public Controller getController() {
@@ -199,8 +201,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	protected ResourceBundle getResourceBundle() {
 		return resources;
 	}
-	
+
 	protected Polyglot getPolyglot() {
 		return polyglot;
 	}
+
 }

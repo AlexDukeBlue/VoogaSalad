@@ -156,7 +156,7 @@ public class View extends BaseUIManager<Region> {
 	public void sendAlert(String s) {
 		Alert myAlert;
 		myAlert = new Alert(AlertType.INFORMATION);
-		myAlert.setTitle("Information Dialog");
+		myAlert.titleProperty().bind(getPolyglot().get("informationdialog"));
 		myAlert.setHeaderText(null);
 		myAlert.setContentText(s);
 		myAlert.showAndWait();
