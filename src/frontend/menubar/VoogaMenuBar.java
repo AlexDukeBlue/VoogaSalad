@@ -42,7 +42,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		super(controller);
 		myView = view;
 		menuBar = new MenuBar();
-		menuBar.setUseSystemMenuBar(true);
+		//menuBar.setUseSystemMenuBar(true);
 		factory = new ComponentFactory();
 		populateMenuBar();
 		setEditable(editable);
