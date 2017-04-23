@@ -28,12 +28,16 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private int turnNumber;
 	private int currentPlayerNumber;
 	private volatile GameBoard grid;
-	private boolean isAuthoringMode;
 
 	//private Collection<ModifiableUnit> allUnits;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
+	}
+	
+	public GameplayState(AuthoringGameState gameState){
+		this(gameState.getName(), gameState.getGrid(), gameState.getTurnNumber(), getTeamMap(gameState.getTeams()), gameState.getObjectives(), gameState.getTurnActions(),
+				gameState.getTurnRequirements(), gameState.getDescription(), gameState.getImgPath(), new Random());
 	}
 
 	private GameplayState(String name, GameBoard grid, int turnNumber, Map<String, Team> teams,
@@ -51,7 +55,14 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.turnRequirements = new HashSet<>(turnRequirements);
 		this.playerList = new HashMap<>();
 		this.playerNames = new ArrayList<>();
-		this.isAuthoringMode = false;
+	}
+	
+	private static Map<String, Team> getTeamMap(Collection<Team> teams) {
+		Map<String, Team> teamMap = new HashMap<String, Team>();
+		for(Team team: teams){
+			teamMap.put(team.getName(), team);
+		}
+		return teamMap;
 	}
 
 	@Override
@@ -71,7 +82,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public boolean isAuthoringMode() {
-		return isAuthoringMode;
+		return (this instanceof AuthoringGameState);
 	}
 
 	@Override
@@ -246,7 +257,4 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
 	
-	protected void setAuthoringMode(boolean isAuthoringMode){
-		this.isAuthoringMode = isAuthoringMode;
-	}
 }

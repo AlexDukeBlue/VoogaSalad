@@ -81,6 +81,10 @@ public interface Controller {
 	void addToUpdated(Updatable objectToUpdate);
 
 	void removeFromUpdated(Updatable objectToUpdate);
+	
+	void enterAuthoringMode();
+	
+	void enterGamePlayMode();
 
 	String getPlayerName();
 
