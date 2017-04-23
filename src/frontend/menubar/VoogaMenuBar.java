@@ -42,7 +42,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		super(controller);
 		myView = view;
 		menuBar = new MenuBar();
-		menuBar.setUseSystemMenuBar(true);
+		//menuBar.setUseSystemMenuBar(true);
 		factory = new ComponentFactory();
 		populateMenuBar();
 		setEditable(editable);
@@ -120,13 +120,13 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> myView.toggleStatsPane()); // TODO
 		// resource
 		// file
-		editModeItem = factory.getMenuItem("Edit Mode", e -> getView().setEditable(true)); // TODO
+		editModeItem = factory.getMenuItem("Edit Mode", e -> getController().enterAuthoringMode()); // TODO
 		// resource
 		// file,
 		// operate
 		// through
 		// controller
-		playModeItem = factory.getMenuItem("Play Mode", e -> getView().setEditable(false)); // TODO
+		playModeItem = factory.getMenuItem("Play Mode", e -> getController().enterGamePlayMode()); // TODO
 		// resource
 		// file,
 		// operate
@@ -245,6 +245,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	public View getView() {
 		return myView;
 
+	}
+	
+	@Override
+	public void update(){
+		setEditable(getController().getGameState().isAuthoringMode());
 	}
 
 }

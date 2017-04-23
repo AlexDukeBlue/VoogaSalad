@@ -194,6 +194,16 @@ public class CommunicationController implements Controller {
 			thingsToUpdate.remove(updatable);
 		}
 	}
+	
+	@Override
+	public void enterAuthoringMode(){
+		setGameState(new AuthoringGameState(getGameState()));
+	}
+	
+	@Override
+	public void enterGamePlayMode(){
+		setGameState(new GameplayState(getAuthoringGameState()));
+	}
 
 	@Override
 	public String getPlayerName() {
