@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import polyglot.PolyglotException;
 
 class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayoutInterface, CellViewExternal {
 
@@ -45,6 +46,17 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		initialize(cellLocation);
+		getPolyglot().setOnLanguageChange(change -> {
+			unitList.stream().forEach(unitView -> {
+				try {
+					unitView.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				} catch (PolyglotException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			update();
+		});
 	}
 
 	@Override
