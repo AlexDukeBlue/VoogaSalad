@@ -23,6 +23,7 @@ public class TerrainMovePointPage extends BaseWizardPage {
 
 	private TableInputView table;
 	private Map<NumericInputRow, Terrain> rowToTerrain;
+	private NumericInputRow movePointInput;
 	
 	public TerrainMovePointPage(AuthoringGameState gameState){
 		this(DEFAULT_TITLE,gameState);
@@ -44,6 +45,10 @@ public class TerrainMovePointPage extends BaseWizardPage {
 
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
+
+		movePointInput = new NumericInputRow(null, "Enter the number of movement points for the unit: ", "move points");
+		table.getChildren().add(movePointInput);
+		
 		rowToTerrain = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.TERRAIN).forEach(terrain -> {
 			NumericInputRow row = new NumericInputRow(View.getImg(terrain.getImgPath()), terrain.getName(), terrain.getDescription());
@@ -56,6 +61,10 @@ public class TerrainMovePointPage extends BaseWizardPage {
 	public Map<Terrain, Integer> getTerrainMovePoints() {
 		return rowToTerrain.keySet().stream()
 				.collect(Collectors.toMap(row -> rowToTerrain.get(row), NumericInputRow::getValue));
+	}
+	
+	public Integer getUnitMovePoints(){
+		return movePointInput.getValue();
 	}
 
 }
