@@ -18,6 +18,8 @@ import frontend.factory.worldview.layout.CellViewLayoutInterface;
 import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -27,10 +29,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import polyglot.PolyglotException;
 import polyglot_extended.ObservablePolyglot;
 
-class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayoutInterface, CellViewExternal, PolyglotDelegate {
+class SimpleCellView extends ClickableUIComponent<Group>
+		implements CellViewLayoutInterface, CellViewExternal, PolyglotDelegate {
 
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
@@ -59,19 +61,10 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 		super(controller, clickHandler);
 		initialize(cellLocation);
 		this.delegate = delegate;
-//		getPolyglot().addLanguageChangeHandler(change -> {
-//			System.out.println("Updating cell");
-//			unitViews.stream().forEach(unitView -> {
-//				try {
-//					unitView.getPolyglot().setLanguage(getPolyglot().getLanguage());
-//				} catch (PolyglotException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			});
-//			update();
-//			System.out.println("Finished updating cell");
-//		});
+		getPolyglot().addLanguageChangeHandler(change -> {
+			setContextMenu();
+			installToolTips();
+		});
 	}
 
 	@Override
@@ -163,29 +156,37 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 			group.getChildren().addAll(polygon);
 			getCell().getOccupants().forEach(unit -> {
 				SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController(),
-						getClickHandler(),this);
+						getClickHandler(), this);
 				unitViews.add(unitView);
-				toolTip(unitView);
 				unitView.setSize(size);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
 				unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0,
 						yCenter - unitView.getObject().getHeight() / 2.0);
 			});
-			contextMenu.getItems().clear();
-			getCell().getOccupants().forEach(e -> {
-				MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
-				// getPolyglot().get("Select").addListener(change -> {
-				// item.setText(getPolyglot().get("Select").getValueSafe() + " "
-				// + e.getName());
-				// });
-				contextMenu.getItems().add(item);
-				item.addEventHandler(ActionEvent.ACTION,
-						event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
-								.forEach(f -> f.handleClick(null)));
-			});
+			setContextMenu();
+			installToolTips();
 		}
 
+	}
+
+	private void installToolTips() {
+		unitViews.stream().forEach(unitView -> toolTip(unitView));
+	}
+
+	private void setContextMenu() {
+		contextMenu.getItems().clear();
+		getCell().getOccupants().forEach(e -> {
+			MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+			// getPolyglot().get("Select").addListener(change -> {
+			// item.setText(getPolyglot().get("Select").getValueSafe() + " "
+			// + e.getName());
+			// });
+			contextMenu.getItems().add(item);
+			item.addEventHandler(ActionEvent.ACTION,
+					event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
+							.forEach(f -> f.handleClick(null)));
+		});
 	}
 
 	/**
@@ -193,10 +194,6 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	 */
 	private void toolTip(UnitViewExternal uv) {
 		Tooltip toolTip = new Tooltip();
-		getPolyglot().addLanguageChangeHandler(event -> {
-			setToolTipString(uv, toolTip);
-			System.out.println("Language change detected in cellview");
-		});
 		setToolTipString(uv, toolTip);
 		Tooltip.install(uv.getObject(), toolTip);
 		// String hp = "";
