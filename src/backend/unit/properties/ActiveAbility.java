@@ -2,6 +2,7 @@ package backend.unit.properties;
 
 import backend.cell.Cell;
 import backend.cell.Terrain;
+import backend.grid.CoordinateTuple;
 import backend.grid.GridPattern;
 import backend.unit.Unit;
 import backend.util.*;
@@ -52,9 +53,9 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 		return range;
 	}
 
-	public Collection<Cell> getLegalTargetCells(Unit abilityUser, ReadonlyGameplayState readonlyGameplayState) {
+	public Collection<Cell> getLegalTargetCells(CoordinateTuple userLocation, ReadonlyGameplayState readonlyGameplayState) {
 		return getRange().parallelStream()
-				.map(e -> e.sum(abilityUser.getLocation()))
+				.map(e -> e.sum(userLocation))
 				.map(e -> readonlyGameplayState.getGrid().get(e))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
