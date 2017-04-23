@@ -1,5 +1,7 @@
 package frontend.factory.worldview;
 
+import java.util.Objects;
+
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.GameplayState;
@@ -16,8 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-
-import java.util.Objects;
+import polyglot_extended.ObservablePolyglot;
 
 public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	private final Pane unitView;
@@ -25,12 +26,14 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	private final CoordinateTuple unitLocation;
 	private Rectangle healthBar;
 	private Rectangle remainingHealthBar;
+	private PolyglotDelegate delegate;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 */
-	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ClickHandler clickHandler) {
+	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ClickHandler clickHandler, PolyglotDelegate delegate) {
 		super(controller, clickHandler);
+		this.delegate = delegate;
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
 		ImageView imageView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));
@@ -120,5 +123,10 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
 
+	}
+	
+	@Override
+	public ObservablePolyglot getPolyglot(){
+		return delegate.getPolyglot();
 	}
 }
