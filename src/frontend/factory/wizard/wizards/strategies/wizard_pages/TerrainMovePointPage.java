@@ -1,26 +1,27 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import backend.cell.Terrain;
-import backend.util.AuthoringGameState;
-import frontend.View;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
-import javafx.scene.layout.Region;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import backend.cell.Terrain;
+import backend.util.AuthoringGameState;
+import frontend.View;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
+import javafx.scene.layout.Region;
+
 /**
- * The WizardPage for setting the move cost of different types of units across a terrain
+ * The WizardPage for setting the move cost of a unit across different terrain
  * @author Andreas
  *
  */
 public class TerrainMovePointPage extends BaseWizardPage {
 	private static final String DEFAULT_TITLE = "Set Movement Points";
-	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for each unit to cross the terrain type.";
+	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for the unit to cross each terrain type.";
 
-	private VerticalTableInputView table;
+	private TableInputView table;
 	private Map<NumericInputRow, Terrain> rowToTerrain;
 	
 	public TerrainMovePointPage(AuthoringGameState gameState){
