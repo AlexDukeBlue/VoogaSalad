@@ -12,7 +12,6 @@ import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -145,16 +144,11 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		getCell().getOccupants().forEach(e -> {
 			MenuItem item = new MenuItem("Select " + e.getName());
 			contextMenu.getItems().add(item);
-			item.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					unitList.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7))).forEach(u -> {
-						observers.forEach(o -> {
-							o.didClickUnitViewExternalInterface(u);
-						});
-					});
-					;
-				}
+			item.addEventHandler(ActionEvent.ACTION, event -> {
+				unitList.stream()
+						.filter(p -> p.getUnitName().equals(item.getText().substring(7)))
+						.forEach(u -> observers
+								.forEach(o -> o.didClickUnitViewExternalInterface(u)));
 			});
 		});
 

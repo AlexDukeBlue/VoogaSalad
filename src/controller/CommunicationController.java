@@ -113,7 +113,6 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public <U extends ReadonlyGameplayState> void setGameState(U gameState) {
-//		this.mGameState = gameState;
 		getClient().addToOutbox(gameState);
 	}
 

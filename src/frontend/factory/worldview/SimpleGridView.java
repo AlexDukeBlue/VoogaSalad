@@ -70,8 +70,7 @@ class SimpleGridView extends BaseUIManager<Node> implements GridViewExternal {
 		}
 	}
 
-	private void initialize(Collection<GridViewObserver> gridObservers, Collection<CellViewObserver> cellObservers,
-	                        Collection<UnitViewObserver> unitObservers) {
+	private void initialize(Collection<GridViewObserver> gridObservers, Collection<CellViewObserver> cellObservers, Collection<UnitViewObserver> unitObservers) {
 		observers.addAll(gridObservers);
 		Group zoomGroup = new Group(cellViewObjects);
 		myScrollPane.setOnZoom(event -> {

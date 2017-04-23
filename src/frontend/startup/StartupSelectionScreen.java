@@ -5,7 +5,7 @@ import backend.util.ReadonlyGameplayState;
 import controller.CommunicationController;
 import controller.Controller;
 import frontend.View;
-import frontend.wizards.GameWizard;
+import frontend.factory.wizard.WizardFactory;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -165,9 +165,7 @@ public class StartupSelectionScreen extends VBox {
 
 	private void create(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		GameWizard wiz = new GameWizard();
-		wiz.show();
-		wiz.addObserver((o, arg) -> {
+		WizardFactory.newWizard("gamestate", null).addObserver((o, arg) -> {
 			GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
 			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));

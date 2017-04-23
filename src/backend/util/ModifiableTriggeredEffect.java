@@ -5,6 +5,7 @@ import backend.unit.Unit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * @author Created by th174 on 3/31/2017.
@@ -116,6 +117,9 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 
 	@Override
 	public ModifiableTriggeredEffect copy() {
+		if (getName().length() < 1 || Objects.isNull(getEffect()) || getActivationTriggers().isEmpty()) {
+			throw new IncompleteTriggeredEffectException();
+		}
 		return new ModifiableTriggeredEffect(getName(), getEffect(), getDuration(), getDescription(), getImgPath(), getActivationTriggers());
 	}
 
@@ -142,6 +146,12 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	@Override
 	public boolean isExpired() {
 		return getRemainingTurns() <= 0;
+	}
+
+	private static class IncompleteTriggeredEffectException extends RuntimeException {
+		IncompleteTriggeredEffectException() {
+			super("Incomplete Triggered Effect");
+		}
 	}
 }
 

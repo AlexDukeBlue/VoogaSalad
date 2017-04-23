@@ -175,5 +175,4 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	protected String createDefaultStyleSheet() {
 		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(DEFAULT_STYLE_KEY);
 	}
-
 }

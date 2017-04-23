@@ -1,11 +1,13 @@
 /**
- * 
+ *
  */
 package frontend.factory.conditionspane;
 
 import backend.game_engine.Resultant;
 import backend.game_rules.GameRule;
+import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.conditionspane.ConditionsPaneObserver;
 import frontend.util.AddRemoveButton;
@@ -18,26 +20,27 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * @author Stone Mathers
- * Created 4/20/2017
+ *         Created 4/20/2017
  */
 public class ConditionsPane extends BaseUIManager<Region> implements ConditionsPaneExternal {
-	
+
 	private VBox myBox = new VBox();
 	private Collection<ConditionsPaneObserver> observers;
 	private Collection<Resultant> resultants;
 	private Collection<GameRule> rules;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ConditionsPane(Controller controller) {
 		super(controller);
 		observers = new ArrayList<ConditionsPaneObserver>();
-		resultants = new ArrayList<Resultant>();	//temporary
-		rules = new ArrayList<GameRule>();			//temporary
+		resultants = new ArrayList<Resultant>();    //temporary
+		rules = new ArrayList<GameRule>();            //temporary
 		//resultant = getController().getResultants();	//TODO
 		//rules = getController().getRules();			//TODO
 		initPane();
@@ -67,69 +70,37 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 	public Region getObject() {
 		return myBox;
 	}
-	
+
 	@Override
-	public void update(){
+	public void update() {
 		//TODO
 		//updateRulePane();
 		//updateResultantPane();
 	}
-	
-	private void initPane(){
-		myBox.getChildren().addAll(createRulePane(), createResultantPane());
+
+	private void initPane() {
+		Stream.of("Rules", " End conditions").map(this::createPane).forEach(myBox.getChildren()::add);
 	}
 
-	private TitledPane createRulePane() {
+	private TitledPane createPane(String type) {
 		TitledPane rulesPane = new TitledPane();
-		rulesPane.setText("Rules"); //TODO resource file
+		rulesPane.setText(type); //TODO resource file
 		rulesPane.setCollapsible(true);
-		
+
 		VBox content = new VBox();
-		for(GameRule rule: rules){
+		for (GameRule rule : rules) {
 			//content.getChildren().add(new RuleBox(rule.getNameOf()));	//TODO
 		}
 		content.setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton();
-		addRemoveButton.setOnAddClicked(e -> createRule());
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController().getAuthoringGameState()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
 		addRemoveButton.setOnRemovedClicked(e -> {
 			//TODO
 		});
 		content.getChildren().add(addRemoveButton.getObject());
-		
+
 		rulesPane.setContent(new ScrollPane(content));
 		return rulesPane;
-	}
-	
-	private void createRule(){
-		//TODO
-		//RulesWizard wiz = new RulesWizard();
-		//wiz.addObserver((wizard, rule) -> getController().addRule((GameRule) rule));
-	}
-	
-	private TitledPane createResultantPane() {
-		TitledPane resultPane = new TitledPane();
-		resultPane.setText("End Conditions"); //TODO resource file
-		resultPane.setCollapsible(true);
-		
-		VBox content = new VBox();
-		for(Resultant result: resultants){
-			content.getChildren().add((new ResultantBox(result.getNameOf(), getController())).getObject());	
-		}
-		content.setAlignment(Pos.TOP_RIGHT);
-		AddRemoveButton addRemoveButton = new AddRemoveButton();
-		addRemoveButton.setOnAddClicked(e -> createResultant());
-		addRemoveButton.setOnRemovedClicked(e -> {
-			//TODO
-		});
-		content.getChildren().add(addRemoveButton.getObject());
-		resultPane.setContent(new ScrollPane(content));
-		return resultPane;
-	}
-	
-	private void createResultant(){
-		//TODO
-		//ResultantWizard wiz = new ResultantWizard();
-		//wiz.addObserver((wizard, resultant) -> getController().addResultant((Resultant) resultant));
 	}
 
 }

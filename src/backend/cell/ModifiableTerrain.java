@@ -121,6 +121,9 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 
 	@Override
 	public ModifiableTerrain copy() {
+		if (getName().length() < 1) {
+			throw new IncompleteTerrainException();
+		}
 		return new ModifiableTerrain(
 				getName(),
 				getDefaultMoveCost(),
@@ -135,6 +138,12 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 	@Override
 	public void addAbility(Ability ability) {
 		actionMap.get(ability.getClass()).accept(ability, this);
+	}
+
+	static class IncompleteTerrainException extends RuntimeException {
+		IncompleteTerrainException() {
+			super("Incomplete Terrain");
+		}
 	}
 
 }
