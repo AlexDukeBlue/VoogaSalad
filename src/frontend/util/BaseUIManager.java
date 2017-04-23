@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import voogasalad.util.polyglot.Polyglot;
 
 /**
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
@@ -47,11 +48,13 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private static final String STYLESHEET_RESOURCE_POINTER = "resources.styles/StylePointer";
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_STYLE_KEY = "DefaultStyleSheet";
+	private static final String API_KEY = "AIzaSyB-TQZwz6yDEvQfHTK2JdWNXLa1LfLXQz8";
 
 	private final ObjectProperty<ResourceBundle> language;
 	private final ObjectProperty<String> styleSheet;
 	private final Controller controller;
 	private final ResourceBundle resources;
+	private Polyglot polyglot;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
@@ -77,8 +80,14 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 				((Parent) getObject()).getStylesheets().add(newValue);
 			}
 		});
-		resources = ResourceBundle.getBundle(getClass().getName().replace(".", "/").substring(0,
-				getClass().getName().replace(".", "/").lastIndexOf("/")) + "/resources");
+		String path = getClass().getName().replace(".", "/").substring(0,
+				getClass().getName().replace(".", "/").lastIndexOf("/")) + "/resources";
+		resources = ResourceBundle.getBundle(path);
+		try {
+			polyglot = new Polyglot(API_KEY, path);
+		} catch (Exception e){
+			polyglot = null;
+		}
 	}
 
 	public Controller getController() {
@@ -187,5 +196,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 
 	protected ResourceBundle getResourceBundle() {
 		return resources;
+	}
+	
+	protected Polyglot getPolyglot() {
+		return polyglot;
 	}
 }
