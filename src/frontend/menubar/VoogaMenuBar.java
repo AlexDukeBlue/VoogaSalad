@@ -53,7 +53,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	public void setEditable(boolean editable) {
-		System.out.println(editable);
 		loadItem.setDisable(!editable);
 		edit.setDisable(!editable);
 		conditionsPaneItem.setDisable(!editable);
@@ -214,7 +213,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 
-	private void load() {  //TODO Make work
+	private void load() {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
