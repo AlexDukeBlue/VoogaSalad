@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
-	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeabilities", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
+	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeability", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
 
 	private Map<String, ModifiableVoogaCollection<VoogaEntity, ModifiableVoogaCollection>> templates;
 
