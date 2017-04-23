@@ -144,9 +144,9 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 		contextMenu.getItems().clear();
 		getCell().getOccupants().forEach(e -> {
 			MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
-			getPolyglot().get("Select").addListener(change -> {
-				item.setText(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
-			});
+//			getPolyglot().get("Select").addListener(change -> {
+//				item.setText(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+//			});
 			contextMenu.getItems().add(item);
 			item.addEventHandler(ActionEvent.ACTION, event -> unitList.stream()
 					.filter(p -> p.getUnitName().equals(item.getText().substring(7)))
