@@ -1,18 +1,8 @@
 package frontend.factory.templatepane;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import backend.cell.ModifiableTerrain;
-import backend.cell.Terrain;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneObserver;
@@ -21,12 +11,17 @@ import frontend.util.BaseUIManager;
 import frontend.util.VoogaEntityButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Faith Rodriguez Created 3/29/2017
@@ -54,8 +49,6 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		Stream.of("Units", "Terrains")
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
-		addUnitButton();
-		addTerrainButton();
 		update();
 	}
 
@@ -97,26 +90,6 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		// TODO Auto-generated constructor stub
 	}
 
-	@Deprecated
-	private void addUnitButton() {
-		Button addUnitButton = new Button("add unit");
-		addUnitButton.setOnAction(e -> {
-			WizardFactory.newWizard(Unit.class, getController().getAuthoringGameState())
-					.addObserver((o, arg) -> getController().addUnitTemplates((ModifiableUnit) arg));
-		});
-		pane.getChildren().add(addUnitButton);
-	}
-
-	@Deprecated
-	private void addTerrainButton() {
-		Button addTerrainButton = new Button("add terrain");
-		addTerrainButton.setOnAction(e -> {
-			WizardFactory.newWizard(Terrain.class, getController().getAuthoringGameState())
-					.addObserver((o, arg) -> getController().addTerrainTemplates((ModifiableTerrain) arg));
-		});
-		pane.getChildren().add(addTerrainButton);
-	}
-
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
 		TitledPane spritePane = new TitledPane();
 		spritePane.setText(label);
@@ -132,11 +105,7 @@ class TemplatePane extends BaseUIManager<Region> implements TemplatePaneExternal
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton();
-		addRemoveButton.setOnAddClicked(e -> {
-			// TODO: need way to choose wizard dynamically
-			WizardFactory.newWizard(Unit.class, getController().getAuthoringGameState())
-					.addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg));
-		});
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
 		addRemoveButton.setOnRemovedClicked(event -> {
 			// TODO
 		});

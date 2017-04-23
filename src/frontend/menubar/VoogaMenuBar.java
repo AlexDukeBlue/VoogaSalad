@@ -1,7 +1,21 @@
 /**
- * 
+ *
  */
 package frontend.menubar;
+
+import backend.unit.Unit;
+import backend.util.io.XMLSerializer;
+import controller.Controller;
+import frontend.View;
+import frontend.factory.wizard.WizardFactory;
+import frontend.startup.StartupScreen;
+import frontend.util.BaseUIManager;
+import frontend.util.ComponentFactory;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,26 +24,6 @@ import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
-
-import backend.cell.Terrain;
-import backend.unit.Unit;
-import backend.util.io.XMLSerializer;
-import controller.Controller;
-import frontend.View;
-import frontend.factory.wizard.Wizard;
-import frontend.factory.wizard.WizardFactory;
-import frontend.startup.StartupScreen;
-import frontend.util.BaseUIManager;
-import frontend.util.ComponentFactory;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
 
 /**
  * @author Stone Mathers Created 4/18/2017
@@ -85,20 +79,20 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		}); // TODO resource file
 		quitItem = factory.getMenuItem(getLanguage().getValue().getString("Quit"), e -> System.exit(0));
 
-		newUnitItem = factory.getMenuItem("Create New Unit", e -> createUnit()); // TODO
-																					// resource
-																					// file
-		newTerrainItem = factory.getMenuItem("Create New Terrain", e -> createTerrain()); // TODO
-																							// resource
-																							// file
-		newActiveAbilityItem = factory.getMenuItem("Create New Active Ability", e -> createActiveAbility()); // TODO
-																												// resource
-																												// file
-		newTriggeredAbilityItem = factory.getMenuItem("Create New Triggered Ability", e -> createTriggeredAbility()); // TODO
-																														// resource
-																														// file
+		newUnitItem = factory.getMenuItem("Create New Unit", e -> create("unit")); // TODO
+		// resource
+		// file
+		newTerrainItem = factory.getMenuItem("Create New Terrain", e -> create("terrain")); // TODO
+		// resource
+		// file
+		newActiveAbilityItem = factory.getMenuItem("Create New Active Ability", e -> create("activeability")); // TODO
+		// resource
+		// file
+		newTriggeredAbilityItem = factory.getMenuItem("Create New Triggered Ability", e -> create("triggeredability")); // TODO
+		// resource
+		// file
 		newInteractionModifierItem = factory.getMenuItem("Create New Interaction Modifier",
-				e -> createInteractionModifier()); // TODO resource file
+				e -> create("interactionmodifier")); // TODO resource file
 
 		setLanguageItem = factory.getMenu(getLanguage().getValue().getString("SetLanguage"));
 		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
@@ -115,29 +109,29 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		});
 
 		conditionsPaneItem = factory.getMenuItem("Show/Hide Conditions Pane", e -> myView.toggleConditionsPane()); // TODO
-																													// resource
-																													// file
+		// resource
+		// file
 		templatePaneItem = factory.getMenuItem("Show/Hide Template Pane", e -> myView.toggleTemplatePane()); // TODO
-																												// resource
-																												// file
+		// resource
+		// file
 		detailsPaneItem = factory.getMenuItem("Show/Hide Details Pane", e -> myView.toggleDetailsPane()); // TODO
-																											// resource
-																											// file
+		// resource
+		// file
 		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> myView.toggleStatsPane()); // TODO
-																									// resource
-																									// file
+		// resource
+		// file
 		editModeItem = factory.getMenuItem("Edit Mode", e -> getView().setEditable(true)); // TODO
-																							// resource
-																							// file,
-																							// operate
-																							// through
-																							// controller
+		// resource
+		// file,
+		// operate
+		// through
+		// controller
 		playModeItem = factory.getMenuItem("Play Mode", e -> getView().setEditable(false)); // TODO
-																							// resource
-																							// file,
-																							// operate
-																							// through
-																							// controller
+		// resource
+		// file,
+		// operate
+		// through
+		// controller
 
 		helpItem = factory.getMenuItem(getLanguage().getValue().getString("Help"), e -> {
 		}); // TODO implement
@@ -248,38 +242,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		}
 	}
 
-	private void createUnit() {
-		WizardFactory.newWizard(Unit.class, getController().getAuthoringGameState())
-				.addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
-	}
-
-	private void createTerrain() {
-		WizardFactory.newWizard(Terrain.class, getController().getAuthoringGameState())
-				.addObserver((wizard, terrain) -> getController().addTerrainTemplates((Terrain) terrain));
-	}
-
-	private void createActiveAbility() {
-		// TODO
-		// ActiveAbilityWizard wiz = new
-		// ActiveAbilityWizard(getController().getAuthoringGameState());
-		// wiz.addObserver((wizard, ability) ->
-		// getController().addTerrainTemplates((ActiveAbility) ability));
-	}
-
-	private void createTriggeredAbility() {
-		// TODO
-		// TriggeredAbilityWizard wiz = new
-		// TriggeredAbilityWizard(getController().getAuthoringGameState());
-		// wiz.addObserver((wizard, ability) ->
-		// getController().addTerrainTemplates((TriggeredAbility) ability));
-	}
-
-	private void createInteractionModifier() {
-		// TODO
-		// InteractionModifierWizard wiz = new
-		// InteractionModifierWizard(getController().getAuthoringGameState());
-		// wiz.addObserver((wizard, modifier) ->
-		// getController().addTerrainTemplates((InteractionModifier) modifier));
+	private void create(String categoryName) {
+		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
 	}
 
 	@Override

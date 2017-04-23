@@ -172,7 +172,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	//Case and space character insensitive
 	//Plural singular insensitive
 	public ModifiableVoogaCollection<VoogaEntity, ModifiableVoogaCollection> getTemplateByCategory(String categoryName) {
-		return templates.get(categoryName.replaceAll(" ", "").replaceAll("(?<!ie)s$", "").toLowerCase());
+		return templates.get(categoryName.replaceAll(" ", "").toLowerCase().replaceAll("ies$", "y").replaceAll("s$", ""));
 	}
 
 	public VoogaEntity getTemplateByName(String name) {

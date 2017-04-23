@@ -1,37 +1,32 @@
 package frontend.factory.wizard.wizards.strategies;
 
+import backend.util.AuthoringGameState;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import backend.cell.Terrain;
-import backend.player.Team;
-import backend.unit.Unit;
-import backend.unit.properties.ActiveAbility;
-import backend.util.AuthoringGameState;
-
 public class StrategyFactory {
-	private static final Map<Class<? extends Object>, Class<? extends WizardStrategy<? extends Object>>> strategyMap;
+	private static final Map<String, Class<? extends WizardStrategy<?>>> strategyMap = new HashMap<>();
+
 	static {
-		Map<Class<? extends Object>, Class<? extends WizardStrategy<? extends Object>>> placeHolder = new HashMap<>();
-		placeHolder.put(ActiveAbility.class, ActiveAbilityStrategy.class);
-		placeHolder.put(AuthoringGameState.class, GameStrategy.class);
-		placeHolder.put(Team.class, TeamStrategy.class);
-		placeHolder.put(Terrain.class, TerrainStrategy.class);
-		placeHolder.put(Unit.class, UnitStrategy.class);
-		strategyMap = placeHolder;
+		strategyMap.put("activeability", ActiveAbilityStrategy.class);
+		strategyMap.put("gamestate", GameStrategy.class);
+		strategyMap.put("team", TeamStrategy.class);
+		strategyMap.put("terrain", TerrainStrategy.class);
+		strategyMap.put("unit", UnitStrategy.class);
 	}
 
-	public static WizardStrategy<? extends Object> newStrategy(Class<? extends Object> clazz,
-			AuthoringGameState gameState) {
+	public static WizardStrategy<?> newStrategy(String categoryName, AuthoringGameState gameState) {
+		categoryName = categoryName.replaceAll(" ", "").toLowerCase().replaceAll("ies$", "y").replaceAll("s$", "");
 		try {
-			return strategyMap.get(clazz).getConstructor(gameState.getClass()).newInstance(gameState);
+			return strategyMap.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
 		} catch (Exception e) {
 			try {
-				System.out.println(strategyMap);
-				System.out.println(strategyMap.get(clazz));
-				System.out.println(strategyMap.get(clazz).getConstructor());
-				System.out.println(strategyMap.get(clazz).getConstructor().newInstance());
-				return strategyMap.get(clazz).getConstructor().newInstance();
+				System.out.println("25" +strategyMap);
+				System.out.println("26" + strategyMap.get(categoryName));
+				System.out.println("27" + strategyMap.get(categoryName).getConstructor());
+				System.out.println("28" + strategyMap.get(categoryName).getConstructor().newInstance());
+				return strategyMap.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
 				System.out.println("Returning null");
 				return null;
