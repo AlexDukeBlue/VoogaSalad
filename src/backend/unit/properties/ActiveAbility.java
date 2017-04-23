@@ -8,6 +8,7 @@ import backend.util.*;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,10 +52,11 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 		return range;
 	}
 
-	public Collection<Cell> getLegalTargetCells(Unit abilityUser, ReadonlyGameplayState readonlyGameplayState){
+	public Collection<Cell> getLegalTargetCells(Unit abilityUser, ReadonlyGameplayState readonlyGameplayState) {
 		return getRange().parallelStream()
 				.map(e -> e.sum(abilityUser.getLocation()))
 				.map(e -> readonlyGameplayState.getGrid().get(e))
+				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 
