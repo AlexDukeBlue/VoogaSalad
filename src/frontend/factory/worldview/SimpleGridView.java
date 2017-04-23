@@ -19,7 +19,7 @@ import polyglot.PolyglotException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal {
+class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal, PolyglotDelegate {
 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 	private final ScrollPane myScrollPane;
@@ -34,16 +34,16 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		cellViews = new ArrayList<>();
 		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize();
-		getPolyglot().setOnLanguageChange(change -> {
-			cellViews.stream().forEach(cellView -> {
-				try {
-					cellView.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				} catch (PolyglotException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
-		});
+//		getPolyglot().addLanguageChangeHandler(change -> {
+//			cellViews.stream().forEach(cellView -> {
+//				try {
+//					cellView.getPolyglot().setLanguage(getPolyglot().getLanguage());
+//				} catch (PolyglotException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			});
+//		});
 	}
 
 	@Override
@@ -52,9 +52,10 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	private void populateCellViews() {
-		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		cellViewObjects.setBackground(new Background(
+				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
-			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler());
+			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), this);
 			cellViews.add(cl);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();

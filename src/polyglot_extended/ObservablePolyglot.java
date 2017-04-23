@@ -1,5 +1,7 @@
 package polyglot_extended;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 import javafx.event.Event;
@@ -11,7 +13,7 @@ import polyglot.PolyglotException;
 public class ObservablePolyglot extends Polyglot {
 	public static final EventType<Event> LANGUAGE_CHANGE_EVENT = new EventType<>("Polyglot is changing languages.");
 
-	private EventHandler<Event> languageChangeHandler;
+	private Collection<EventHandler<Event>> languageChangeHandlers;
 	private String language;
 
 	public ObservablePolyglot(String APIKey, String pathToResourceBundle) throws PolyglotException {
@@ -25,14 +27,27 @@ public class ObservablePolyglot extends Polyglot {
 	}
 
 	public void setOnLanguageChange(EventHandler<Event> eventHandler) {
-		languageChangeHandler = eventHandler;
+		languageChangeHandlers.clear();
+		addLanguageChangeHandler(eventHandler);
+	}
+	
+	public void addLanguageChangeHandler(EventHandler<Event> eventHandler){
+		if (!languageChangeHandlers.contains(eventHandler)){
+			languageChangeHandlers.add(eventHandler);
+		}
+	}
+	
+	public void removeLanguageChangeHandler(EventHandler<Event> eventHandler){
+		if (languageChangeHandlers.contains(eventHandler)){
+			languageChangeHandlers.remove(eventHandler);
+		}
 	}
 
 	@Override
 	public void setLanguage(String language) throws PolyglotException {
 		super.setLanguage(language);
 		this.language = language;
-		languageChangeHandler.handle(new Event(LANGUAGE_CHANGE_EVENT));
+		languageChangeHandlers.stream().forEach(handler -> handler.handle(new Event(LANGUAGE_CHANGE_EVENT)));
 	}
 
 	public String getLanguage() {
@@ -40,8 +55,7 @@ public class ObservablePolyglot extends Polyglot {
 	}
 
 	private void initialize() {
-		languageChangeHandler = event -> {
-		};
+		languageChangeHandlers = new ArrayList<>();
 	}
 
 }
