@@ -4,10 +4,7 @@ import backend.unit.Unit;
 import backend.util.GameplayState;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -44,11 +41,30 @@ public final class Attack implements ActiveAbility.AbilityEffect<Unit>, Serializ
 
 	@Override
 	public void useAbility(Unit user, Unit target, GameplayState game) {
-		IntStream.range(0, getNumHits()).forEach(i -> {
-			double attackDamage = user.applyAllOffensiveModifiers(getDamage(user, target, game), target, game);
-			double totalDamage = target.applyAllDefensiveModifiers(attackDamage, user, game);
-			target.takeDamage(totalDamage);
+		Optional<? extends Attack> retaliationAttack = target.getActiveAbilities().stream()
+				.filter(e -> e.getLegalTargetCells(target, game).contains(user.getCurrentCell()))
+				.map(ActiveAbility::getAbilityEffect)
+				.filter(Attack.class::isInstance)
+				.map(Attack.class::cast)
+				.findAny();
+		int numHits = getNumHits();
+		if (retaliationAttack.isPresent()) {
+			numHits = Math.max(getNumHits(), retaliationAttack.get().getNumHits());
+		}
+		IntStream.range(0, numHits).forEach(i -> {
+			if (i < getNumHits() && !target.getHitPoints().isEmpty() && !user.getHitPoints().isEmpty()) {
+				singleHit(user, target, game);
+			}
+			if (retaliationAttack.isPresent() && i < retaliationAttack.get().getNumHits() && !target.getHitPoints().isEmpty() && !user.getHitPoints().isEmpty()) {
+				retaliationAttack.get().singleHit(target, user, game);
+			}
 		});
+	}
+
+	void singleHit(Unit user, Unit target, GameplayState game) {
+		double attackDamage = user.applyAllOffensiveModifiers(getDamage(user, target, game), target, game);
+		double totalDamage = target.applyAllDefensiveModifiers(attackDamage, user, game);
+		target.takeDamage(totalDamage);
 	}
 }
 

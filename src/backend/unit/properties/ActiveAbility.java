@@ -1,5 +1,6 @@
 package backend.unit.properties;
 
+import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.GridPattern;
 import backend.unit.Unit;
@@ -7,6 +8,7 @@ import backend.util.*;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -16,8 +18,8 @@ import java.util.stream.Stream;
  */
 public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable {
 	//All hexagonal
-	public transient static final ActiveAbility<Unit> SWORD = new ActiveAbility<>("Sword", new Attack(5, 3), GridPattern.HEXAGONAL_ADJACENT, "The attacker hits 3 times for 5 damage on any neighboring unit", "resources/images/sword.png");
-	public transient static final ActiveAbility<Unit> BOW = new ActiveAbility<>("Bow", new Attack(7, 2), GridPattern.HEXAGONAL_RAYS, "The attacker hits 2 times for 7 dmage on any unit in a straight line away from the attacker", "resources/images/bow.png");
+	public transient static final ActiveAbility<Unit> SWORD = new ActiveAbility<>("Sword", new Attack(5, 3), GridPattern.SQUARE_ADJACENT, "The attacker hits 3 times for 5 damage on any neighboring unit", "resources/images/sword.png");
+	public transient static final ActiveAbility<Unit> BOW = new ActiveAbility<>("Bow", new Attack(7, 2), GridPattern.SQUARE_RAYS, "The attacker hits 2 times for 7 dmage on any unit in a straight line away from the attacker", "resources/images/bow.png");
 	public transient static final ActiveAbility<Unit> SUICIDE_SQUAD = new ActiveAbility<>("Suicide Squad, Attack!", (user, target, game) -> {
 		user.getAllNeighboringUnits(game.getGrid()).parallelStream().filter(e -> e.getTeam() != user.getTeam()).forEach(u -> u.takeDamage(10));
 		user.takeDamage(Integer.MAX_VALUE);
@@ -47,6 +49,13 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 
 	public GridPattern getRange() {
 		return range;
+	}
+
+	public Collection<Cell> getLegalTargetCells(Unit abilityUser, ReadonlyGameplayState readonlyGameplayState){
+		return getRange().parallelStream()
+				.map(e -> e.sum(abilityUser.getLocation()))
+				.map(e -> readonlyGameplayState.getGrid().get(e))
+				.collect(Collectors.toList());
 	}
 
 	public void affect(Unit user, T target, GameplayState game) {
