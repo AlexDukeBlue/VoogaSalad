@@ -4,8 +4,8 @@
 package frontend.factory.conditionspane;
 
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.SelectableUIComponent;
 import javafx.scene.control.CheckBox;

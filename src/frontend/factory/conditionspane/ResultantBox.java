@@ -46,19 +46,23 @@ public class ResultantBox extends ClickableUIComponent<Region> {
 	}
 	
 	private void initToggleBox(){
-		RadioButton win = new RadioButton("Win");		//TODO resource file OR image
+		RadioButton win = new RadioButton();
+		win.textProperty().bind(getPolyglot().get("Win"));
 		win.setToggleGroup(toggleGroup);
 		//win.selectedProperty().addListener((o, oV, nV) -> getController().setResultantByName(myName, Result.WIN));	//TODO
 		
-		RadioButton tie = new RadioButton("Tie");		//TODO resource file OR image
+		RadioButton tie = new RadioButton();
+		tie.textProperty().bind(getPolyglot().get("Tie"));
 		tie.setToggleGroup(toggleGroup);
 		//tie.selectedProperty().addListener((o, oV, nV) -> getController().setResultantByName(myName, Result.TIE));	//TODO 
 		
-		RadioButton lose = new RadioButton("Lose");	//TODO resource file OR image
+		RadioButton lose = new RadioButton();
+		lose.textProperty().bind(getPolyglot().get("Lose"));
 		lose.setToggleGroup(toggleGroup);
 		//lose.selectedProperty().addListener((o, oV, nV) -> getController().setResultantByName(myName, Result.LOSE));	//TODO 
 		
-		RadioButton none = new RadioButton("None");	//TODO resource file OR image
+		RadioButton none = new RadioButton();
+		none.textProperty().bind(getPolyglot().get("None"));
 		none.setSelected(true);
 		none.setToggleGroup(toggleGroup);
 		//none.selectedProperty().addListener((o, oV, nV) -> getController().setResultantByName(myName, Result.NONE));	//TODO 

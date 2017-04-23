@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
  */
 
 public class ChatLogView extends BaseUIManager<BorderPane> {
-	// TODO ResourceBundlify
 	private final String HEADER;
 	private final BorderPane pane;
 	private final TextArea textArea;
@@ -42,16 +41,17 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 
 	public ChatLogView(Controller controller) {
 		super(controller);
+		String formatString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----"+getPolyglot().get("Joined").getValueSafe()+" [No place like 127.0.0.1]'s "+getPolyglot().get("chat room").getValueSafe()+"!----\n\n---%s----\n\n";
 		HEADER = String.format(
-				"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----Joined [No place like 127.0.0.1]'s chat room!----\n\n---%s----\n\n",
+				formatString,
 				Instant.now().atZone(ZoneId.systemDefault())
 						.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
-		showHideArrow = new ImageView(View.getImg("resources/images/triangle.png"));
+		showHideArrow = new ImageView(View.getImg(getResourceBundle().getString("trianglePath")));
 		pane.setMaxSize(1000, 600);
 		textArea = initTextArea();
 		pane.setBottom(initTextInputBox());
-		mediaPlayer = new MediaPlayer(new Media(Paths.get("src/resources/steam_message_sound.mp3").toUri().toString()));
+		mediaPlayer = new MediaPlayer(new Media(Paths.get(getResourceBundle().getString("steamMessageSoundPath")).toUri().toString()));
 		pane.getStylesheets().clear();
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));
 	}
@@ -93,19 +93,24 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 
 	private HBox initTextInputBox() {
 		HBox bottomBox = new HBox();
-		// TODO: Resourcebundlify this as well
 		bottomBox.getStyleClass().add("hbox");
 		bottomBox.setAlignment(Pos.CENTER);
 		ComboBox<ChatMessage.AccessLevel> chatModeChooser = initComboBox();
-		Label label1 = new Label("To:");
+		Label label1 = new Label(getPolyglot().get("To").getValueSafe()+": ");
+		getPolyglot().setOnLanguageChange(event -> {
+			label1.setText(getPolyglot().get("To").getValueSafe()+": ");
+			System.out.println("Language change detected in Chatlogview");
+		});
 		label1.setMinWidth(30);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
-		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
+		chatModeChooser.setOnAction(
+				event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setMinWidth(200);
 		textContentInputField.setPrefWidth(1000);
-		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
+		textContentInputField.setOnKeyPressed(
+				evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
 		showHideArrow.setOnMouseClicked(event -> setExpandedState(!isExpanded()));
 		showHideArrow.setFitWidth(20);
@@ -123,7 +128,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private void showOrHideRecipientField(HBox bottomBox, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-	                                      Label toLabel, TextField messageRecipientField) {
+			Label toLabel, TextField messageRecipientField) {
 		if (chatModeChooser.getValue().equals(ChatMessage.AccessLevel.WHISPER)) {
 			bottomBox.getChildren().add(1, messageRecipientField);
 			bottomBox.getChildren().add(1, toLabel);
@@ -135,7 +140,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private void submitMessage(KeyEvent evt, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-	                           TextField textContentInputField, TextField messageRecipientField) {
+			TextField textContentInputField, TextField messageRecipientField) {
 		if (evt.getCode() == KeyCode.ENTER && textContentInputField.getText().length() > 0) {
 			getController().sendModifier(chatModeChooser.getValue().getSendMessageModifier(
 					textContentInputField.getText(), getController().getPlayerName(), messageRecipientField.getText()));

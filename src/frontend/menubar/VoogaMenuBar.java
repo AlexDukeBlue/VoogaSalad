@@ -3,6 +3,12 @@
  */
 package frontend.menubar;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 import backend.unit.Unit;
 import backend.util.io.XMLSerializer;
 import controller.Controller;
@@ -12,23 +18,21 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Optional;
+import polyglot.PolyglotException;
 
 /**
  * @author Stone Mathers Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
+	private static final boolean SYSTEM_MENU_BAR = false;
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
@@ -42,14 +46,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		super(controller);
 		myView = view;
 		menuBar = new MenuBar();
-		//menuBar.setUseSystemMenuBar(true);
+		menuBar.setUseSystemMenuBar(SYSTEM_MENU_BAR);
 		factory = new ComponentFactory();
 		populateMenuBar();
 		setEditable(editable);
-		getLanguage().addListener((observable, oldLanguage, newLanguage) -> {
-			getObject().getMenus().clear();
-			populateMenuBar();
-		});
 	}
 
 	public void setEditable(boolean editable) {
@@ -68,98 +68,85 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void initMenuItems() {
-		saveItem = factory.getMenuItem(getLanguage().getValue().getString("Save"), e -> save());
-		loadItem = factory.getMenuItem(getLanguage().getValue().getString("Load"), e -> load());
-		homeScreenItem = factory.getMenuItem("Home Screen", e -> {
+		saveItem = factory.getMenuItem(getPolyglot().get("Save"), e -> save());
+		loadItem = factory.getMenuItem(getPolyglot().get("Load"), e -> load());
+		homeScreenItem = factory.getMenuItem(getPolyglot().get("HomeScreen"), e -> {
 
 			StartupScreen su = new StartupScreen(myView.getStage(), StartupScreen.DEFAULT_WIDTH,
 					StartupScreen.DEFAULT_HEIGHT);
 			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
 
-		}); // TODO resource file
-		quitItem = factory.getMenuItem(getLanguage().getValue().getString("Quit"), e -> System.exit(0));
-
-		newUnitItem = factory.getMenuItem("Create New Unit", e -> create("unit")); // TODO
-		// resource
-		// file
-		newTerrainItem = factory.getMenuItem("Create New Terrain", e -> create("terrain")); // TODO
-		// resource
-		// file
-		newActiveAbilityItem = factory.getMenuItem("Create New Active Ability", e -> create("activeability")); // TODO
-		// resource
-		// file
-		newTriggeredAbilityItem = factory.getMenuItem("Create New Triggered Ability", e -> create("triggeredability")); // TODO
-		// resource
-		// file
-		newInteractionModifierItem = factory.getMenuItem("Create New Interaction Modifier",
-				e -> create("interactionmodifier")); // TODO resource file
-
-		setLanguageItem = factory.getMenu(getLanguage().getValue().getString("SetLanguage"));
-		getPossibleResourceBundleNamesAndResourceBundles().forEach((name, bundle) -> {
-			MenuItem menuItem = new MenuItem(name);
-			menuItem.setOnAction(e -> getLanguage().setValue(bundle));
-			setLanguageItem.getItems().add(menuItem);
 		});
+		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
 
-		setThemeItem = factory.getMenu(getLanguage().getValue().getString("SetTheme"));
+		newUnitItem = factory.getMenuItem(getPolyglot().get("CreateNewUnit"), e -> create("unit"));
+		newTerrainItem = factory.getMenuItem(getPolyglot().get("CreateNewTerrain"), e -> create("terrain"));
+		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
+				e -> create("activeability"));
+		newTriggeredAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewTriggeredAbility"),
+				e -> create("triggeredability"));
+		newInteractionModifierItem = factory.getMenuItem(getPolyglot().get("CreateNewInteractionModifier"),
+				e -> create("interactionmodifier"));
+
+		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
+		try {
+			getPolyglot().languages().stream().forEach(languageName -> {
+				MenuItem menuItem = new MenuItem(languageName);
+				menuItem.setOnAction(event -> {
+					try {
+						getPolyglot().setLanguage(languageName);
+					} catch (PolyglotException e1) {
+						menuItem.setVisible(false);
+					}
+				});
+				setLanguageItem.getItems().add(menuItem);
+			});
+		} catch (PolyglotException e1) {
+			setLanguageItem.setVisible(false);
+		}
+
+		setThemeItem = factory.getMenu(getPolyglot().get("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
 			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
 			setThemeItem.getItems().add(menuItem);
 		});
 
-		conditionsPaneItem = factory.getMenuItem("Show/Hide Conditions Pane", e -> myView.toggleConditionsPane()); // TODO
-		// resource
-		// file
-		templatePaneItem = factory.getMenuItem("Show/Hide Template Pane", e -> myView.toggleTemplatePane()); // TODO
-		// resource
-		// file
-		detailsPaneItem = factory.getMenuItem("Show/Hide Details Pane", e -> myView.toggleDetailsPane()); // TODO
-		// resource
-		// file
-		statsPaneItem = factory.getMenuItem("Show/Hide Stats Pane", e -> myView.toggleStatsPane()); // TODO
-		// resource
-		// file
-		editModeItem = factory.getMenuItem("Edit Mode", e -> getController().enterAuthoringMode()); // TODO
-		// resource
-		// file,
-		// operate
-		// through
-		// controller
-		playModeItem = factory.getMenuItem("Play Mode", e -> getController().enterGamePlayMode()); // TODO
-		// resource
-		// file,
-		// operate
-		// through
-		// controller
+		conditionsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideConditions"),
+				e -> myView.toggleConditionsPane());
+		templatePaneItem = factory.getMenuItem(getPolyglot().get("ShowHideTemplate"), e -> myView.toggleTemplatePane());
+		detailsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideDetails"), e -> myView.toggleDetailsPane());
+		statsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideStats"), e -> myView.toggleStatsPane());
+		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> getController().enterAuthoringMode());
+		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
 
-		helpItem = factory.getMenuItem(getLanguage().getValue().getString("Help"), e -> {
+		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
 		}); // TODO implement
-		aboutItem = factory.getMenuItem("About", e -> {
-		}); // TODO implement, resource file
+		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
+		}); // TODO implement
 	}
 
 	private void initMenus() {
-		file = factory.getMenu(getLanguage().getValue().getString("File"));
+		file = factory.getMenu(getPolyglot().get("File"));
 		file.getItems().add(loadItem);
 		file.getItems().add(saveItem);
 		file.getItems().add(homeScreenItem);
 		file.getItems().add(quitItem);
 
-		edit = factory.getMenu("Edit"); // TODO resource file
+		edit = factory.getMenu(getPolyglot().get("Edit"));
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
 		edit.getItems().add(newTriggeredAbilityItem);
 		edit.getItems().add(newInteractionModifierItem);
 
-		language = factory.getMenu(getLanguage().getValue().getString("Language"));
+		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
 
-		theme = factory.getMenu(getLanguage().getValue().getString("Theme"));
+		theme = factory.getMenu(getPolyglot().get("Theme"));
 		theme.getItems().add(setThemeItem);
 
-		view = factory.getMenu("View"); // TODO get from resource files
+		view = factory.getMenu(getPolyglot().get("View"));
 		view.getItems().add(conditionsPaneItem);
 		view.getItems().add(templatePaneItem);
 		view.getItems().add(detailsPaneItem);
@@ -167,7 +154,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		view.getItems().add(editModeItem);
 		view.getItems().add(playModeItem);
 
-		help = factory.getMenu(getLanguage().getValue().getString("Help"));
+		help = factory.getMenu(getPolyglot().get("Help"));
 		help.getItems().add(helpItem);
 		help.getItems().add(aboutItem);
 
@@ -188,44 +175,34 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			Files.write(Paths.get(file.getPath()),
 					((String) new XMLSerializer<>().serialize(getController().getGameState())).getBytes());
 
-		} catch (IOException i) {
+		} catch (Exception i) {
 			i.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("No file selected");
-			alert.setHeaderText("Current game will not save");
-			alert.setContentText("Would you like to try again?");
+			alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
+			alert.headerTextProperty().bind(getPolyglot().get("CurrentGameWillNotSave"));
+			alert.contentTextProperty().bind(getPolyglot().get("TryAgain"));
 			Optional<ButtonType> result = alert.showAndWait();
 
-			if (result.get() == ButtonType.OK) {
-				save();
-			}
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("No file selected");
-			alert.setHeaderText("Current game will not save");
-			alert.setContentText("Would you like to try again?");
-			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 				save();
 			}
 		}
 	}
 
-
 	private void load() {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(getController().unserialize(new String(Files.readAllBytes(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())))));
+			getController().setGameState(getController().unserialize(
+					new String(Files.readAllBytes(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())))));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("No file selected");
-			alert.setHeaderText("Failed to load game");
-			alert.setContentText("Would you like to try again?");
+			alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
+			alert.headerTextProperty().bind(getPolyglot().get("FailedToLoad"));
+			alert.contentTextProperty().bind(getPolyglot().get("TryAgain"));
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK) {
 				load();
@@ -234,7 +211,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
+		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState())
+				.addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
 	}
 
 	@Override
