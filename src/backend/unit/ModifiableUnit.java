@@ -17,15 +17,15 @@ import java.util.regex.Pattern;
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
-			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0).copy(), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5).copy())
+			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
 			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
 			.setImgPath("resources/images/x.png")
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.addActiveAbilities(ActiveAbility.SWORD)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
-			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0).setCurrentValue(10.0).copy())
-			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6).copy())
+			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
+			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6))
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.setImgPath("resources/images/o.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
