@@ -9,6 +9,7 @@ import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
 import frontend.View;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.HorizontalTableInputView;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
@@ -23,6 +24,7 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 
 	private TableInputView table;
 	private Map<SelectableInputRow, ActiveAbility<?>> rowToAbility;
+	private NumericInputRow hprow;
 
 	public AbilitiesAdderPage(AuthoringGameState gameState) {
 		initialize(gameState);
@@ -35,6 +37,10 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
+		
+		hprow = new NumericInputRow(null, "Enter the HP for the unit: " , "HP");
+		table.getChildren().add(hprow);
+		
 		rowToAbility = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).forEach(ability -> {
 			SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()), ability.getName(), ability.getDescription());
@@ -47,6 +53,10 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	public Collection<ActiveAbility> getSelectedAbilities() {
 		return rowToAbility.keySet().stream().filter(SelectableInputRow::getSelected).map(row -> rowToAbility.get(row))
 				.collect(Collectors.toList());
+	}
+	
+	public Integer getHP(){
+		return hprow.getValue();
 	}
 
 }

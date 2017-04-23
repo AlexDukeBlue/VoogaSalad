@@ -29,6 +29,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
+		setAuthoringMode(true);
 		templates = new HashMap<>();
 		templates.put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards()));
 		templates.put(TERRAIN, new ModifiableVoogaCollection<>("Terrain", "", "", Terrain.getPredefinedTerrain()));
