@@ -5,6 +5,8 @@ package frontend.util;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import controller.Controller;
+import frontend.ClickableUIComponent;
+import frontend.ComponentClickHandler;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -51,6 +53,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
 	 * stylesheet to default. The default language is English.
 	 * Yo Dylan wrong project lmao
+	 *
+	 * @param clickHandler
 	 */
 	public BaseUIManager() {
 		this(null);

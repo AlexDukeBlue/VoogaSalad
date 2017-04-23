@@ -2,26 +2,23 @@ package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
+import backend.util.GameplayState;
 import controller.Controller;
+import frontend.ComponentClickHandler;
 import frontend.View;
 import frontend.interfaces.worldview.UnitViewExternal;
-import frontend.interfaces.worldview.UnitViewObserver;
 import frontend.util.BaseUIManager;
+import frontend.util.SelectableUIComponent;
+import frontend.util.GameBoardObjectView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
-public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExternal {
-
-	private final Collection<UnitViewObserver> observers;
-
+public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	private final Pane unitView;
 	private final String unitName;
 	private final CoordinateTuple unitLocation;
@@ -31,9 +28,8 @@ public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExter
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 */
-	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller) {
-		super(controller);
-		observers = new ArrayList<>();
+	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ComponentClickHandler clickHandler) {
+		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
 		ImageView imageView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));
@@ -52,7 +48,7 @@ public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExter
 			healthBar.heightProperty().bind(unitView.heightProperty());
 			unitView.getChildren().addAll(remainingHealthBar, healthBar);
 		}
-		unitView.setOnMouseClicked(event -> observers.stream().filter(Objects::nonNull).forEach(observer -> observer.didClickUnitViewExternalInterface(this)));
+		unitView.setOnMouseClicked(event -> handleClick(null));
 		imageView.fitHeightProperty().bind(unitView.heightProperty());
 		imageView.fitWidthProperty().bind(unitView.widthProperty().subtract(3));
 		update();
@@ -102,23 +98,26 @@ public class SimpleUnitView extends BaseUIManager<Pane> implements UnitViewExter
 	}
 
 	@Override
-	public void addUnitViewObserver(UnitViewObserver observer) {
-		observers.addAll(Collections.singleton(observer));
+	public void deselect() {
+		super.deselect();
 	}
 
 	@Override
-	public void removeUnitViewObserver(UnitViewObserver observer) {
-		observers.removeAll(Collections.singleton(observer));
+	public void actInAuthoringMode(BaseUIManager target, Object additonalInfo) {
+		if (target instanceof GameBoardObjectView) {
+			CoordinateTuple unitClickedLocation = getUnitLocation();
+			String unitClickedName = getUnitName();
+			CoordinateTuple targetLocation = ((GameBoardObjectView) target).getEntity().getLocation();
+			getController().sendModifier((GameplayState gameState) -> {
+				Unit unitToMove = gameState.getGrid().get(this.unitLocation).getOccupantByName(this.unitName);
+				unitToMove.moveTo(gameState.getGrid().get(targetLocation), gameState);
+				return gameState;
+			});
+		}
 	}
 
 	@Override
-	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		observers.addAll(unitViewObservers);
-	}
+	public void actInGameplayMode(BaseUIManager target, Object additionalInfo) {
 
-	@Override
-	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		observers.removeAll(unitViewObservers);
 	}
-
 }

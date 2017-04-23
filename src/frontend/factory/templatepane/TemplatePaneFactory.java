@@ -1,13 +1,13 @@
 package frontend.factory.templatepane;
 
 import controller.Controller;
-import frontend.factory.worldview.MinimapPane;
+import frontend.ComponentClickHandler;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 
 public class TemplatePaneFactory {
 	
-	public static TemplatePaneExternal newTemplatePane(Controller controller,MinimapPane mapPane){
-		return new TemplatePane(controller);
+	public static TemplatePaneExternal newTemplatePane(Controller controller, ComponentClickHandler clickHandler){
+		return new TemplatePane(controller, clickHandler);
 	}
 
 }

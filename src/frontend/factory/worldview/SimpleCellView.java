@@ -4,17 +4,14 @@ import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.unit.properties.UnitStat;
 import controller.Controller;
+import frontend.ClickableUIComponent;
+import frontend.ComponentClickHandler;
 import frontend.View;
 import frontend.factory.worldview.layout.CellViewLayoutInterface;
 import frontend.interfaces.worldview.CellViewExternal;
-import frontend.interfaces.worldview.CellViewObserver;
 import frontend.interfaces.worldview.UnitViewExternal;
-import frontend.interfaces.worldview.UnitViewObserver;
-import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
@@ -25,16 +22,13 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 
-class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterface, CellViewExternal {
+class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayoutInterface, CellViewExternal {
 
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
 	private static final double UNIT_SCALE = 0.75;
-	private Collection<CellViewObserver> observers;
-	private Collection<UnitViewObserver> unitViewObservers;
 	private CoordinateTuple cellLocation;
 	private Polygon polygon;
 	private Group group;
@@ -44,14 +38,12 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellLocation
-	 *            The Cell object that this CellView will visually represent.
-	 * @param controller
-	 *            the controller object that this CellView will send information
-	 *            to when the user interacts with the CellView
+	 * @param cellLocation The Cell object that this CellView will visually represent.
+	 * @param controller   the controller object that this CellView will send information
+	 * @param clickHandler
 	 */
-	public SimpleCellView(CoordinateTuple cellLocation, Controller controller) {
-		super(controller);
+	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ComponentClickHandler clickHandler) {
+		super(controller, clickHandler);
 		initialize(cellLocation);
 	}
 
@@ -79,7 +71,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	 * Returns an object that can be displayed to the user to show the Cell
 	 */
 	@Override
-	public Parent getObject() {
+	public Group getObject() {
 		return group;
 	}
 
@@ -96,15 +88,13 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon
-	 *            Shape of cellview an instance of a cell
+	 * @param polygon Shape of cellview an instance of a cell
 	 */
 	@Override
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
 		this.polygon = polygon;
-		polygon.setOnMouseClicked(
-				event -> observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this)));
+		polygon.setOnMouseClicked(event -> handleClick(null));
 		update();
 	}
 
@@ -130,7 +120,7 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		group.getChildren().clear();
 		group.getChildren().addAll(polygon);
 		getCell().getOccupants().forEach(unit -> {
-			SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController());
+			SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController(), getClickHandler());
 			unitList.add(unitView);
 			toolTip(unitView);
 			unitView.setSize(size);
@@ -138,18 +128,14 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 			unitView.getObject().toFront();
 			unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0,
 					yCenter - unitView.getObject().getHeight() / 2.0);
-			unitView.addAllUnitViewObservers(unitViewObservers);
 		});
 		contextMenu.getItems().clear();
 		getCell().getOccupants().forEach(e -> {
 			MenuItem item = new MenuItem("Select " + e.getName());
 			contextMenu.getItems().add(item);
-			item.addEventHandler(ActionEvent.ACTION, event -> {
-				unitList.stream()
-						.filter(p -> p.getUnitName().equals(item.getText().substring(7)))
-						.forEach(u -> observers
-								.forEach(o -> o.didClickUnitViewExternalInterface(u)));
-			});
+			item.addEventHandler(ActionEvent.ACTION, event -> unitList.stream()
+					.filter(p -> p.getUnitName().equals(item.getText().substring(7)))
+					.forEach(f -> f.handleClick(null)));
 		});
 
 	}
@@ -190,74 +176,15 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 
 	}
 
-	@Override
-	public void addCellViewObserver(CellViewObserver observer) {
-		if (!observers.contains(observer) && observer != null) {
-			observers.add(observer);
-		}
-	}
-
-	@Override
-	public void removeCellViewObserver(CellViewObserver observer) {
-		if (observers.contains(observer)) {
-			observers.remove(observer);
-		}
-	}
-
 	private void initialize(CoordinateTuple cellLocation) {
-		observers = new ArrayList<>();
-		unitViewObservers = new ArrayList<>();
 		this.cellLocation = cellLocation;
 		polygon = new Polygon();
 		group = new Group();
 		contextMenu = new ContextMenu();
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED,
 				event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
-		polygon.setOnMouseClicked(
-				event -> observers.stream().forEach(observer -> observer.didClickCellViewExternalInterface(this)));
+		polygon.setOnMouseClicked(event -> handleClick(null));
 		update();
-	}
-
-	@Override
-	public void addUnitViewObserver(UnitViewObserver observer) {
-		if (!unitViewObservers.contains(observer) && observer != null) {
-			unitViewObservers.add(observer);
-		}
-	}
-
-	@Override
-	public void removeUnitViewObserver(UnitViewObserver observer) {
-		if (unitViewObservers.contains(observer)) {
-			unitViewObservers.remove(observer);
-		}
-	}
-
-	@Override
-	public void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		if (unitViewObservers != null) {
-			unitViewObservers.stream().forEach(observer -> addUnitViewObserver(observer));
-		}
-	}
-
-	@Override
-	public void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers) {
-		if (unitViewObservers != null) {
-			unitViewObservers.stream().forEach(observer -> removeUnitViewObserver(observer));
-		}
-	}
-
-	@Override
-	public void addAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		if (cellViewObservers != null) {
-			cellViewObservers.stream().forEach(observer -> addCellViewObserver(observer));
-		}
-	}
-
-	@Override
-	public void removeAllCellViewObservers(Collection<CellViewObserver> cellViewObservers) {
-		if (cellViewObservers != null) {
-			cellViewObservers.stream().forEach(observer -> removeCellViewObserver(observer));
-		}
 	}
 
 	@Override
@@ -270,4 +197,9 @@ class SimpleCellView extends BaseUIManager<Node> implements CellViewLayoutInterf
 		return getController().getCell(cellLocation);
 	}
 
+	@Override
+	public void setClickHandler(ComponentClickHandler clickHandler) {
+		super.setClickHandler(clickHandler);
+		unitList.forEach(e -> setClickHandler(clickHandler));
+	}
 }

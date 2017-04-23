@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * @author Created by th174 on 4/21/17.
  */
-public interface HasActiveAbilities extends VoogaEntity {
+public interface HasActiveAbilities extends HasLocation {
 	default void useActiveAbility(String activeAbilityName, VoogaEntity target, GameplayState gameState) {
 		useActiveAbility(getActiveAbilityByName(activeAbilityName), target, gameState);
 	}

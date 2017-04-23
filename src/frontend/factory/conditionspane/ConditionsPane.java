@@ -7,6 +7,7 @@ import backend.game_engine.Resultant;
 import backend.game_rules.GameRule;
 import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.ComponentClickHandler;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.conditionspane.ConditionsPaneObserver;
@@ -36,34 +37,14 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 	/**
 	 *
 	 */
-	public ConditionsPane(Controller controller) {
-		super(controller);
-		observers = new ArrayList<ConditionsPaneObserver>();
-		resultants = new ArrayList<Resultant>();    //temporary
-		rules = new ArrayList<GameRule>();            //temporary
+	public ConditionsPane(Controller controller, ComponentClickHandler clickHandler) {
+		super(controller, clickHandler);
+		observers = new ArrayList<>();
+		resultants = new ArrayList<>();    //temporary
+		rules = new ArrayList<>();            //temporary
 		//resultant = getController().getResultants();	//TODO
 		//rules = getController().getRules();			//TODO
 		initPane();
-	}
-
-	@Override
-	public void addConditionsPaneObserver(ConditionsPaneObserver observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void addAllConditionsPaneObservers(Collection<ConditionsPaneObserver> observers) {
-		observers.addAll(observers);
-	}
-
-	@Override
-	public void removeConditionsPaneObserver(ConditionsPaneObserver observer) {
-		observers.remove(observer);
-	}
-
-	@Override
-	public void removeAllConditionsPaneObservers(Collection<ConditionsPaneObserver> observers) {
-		observers.removeAll(observers);
 	}
 
 	@Override
@@ -94,13 +75,9 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 		content.setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton();
 		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController().getAuthoringGameState()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
-		addRemoveButton.setOnRemovedClicked(e -> {
-			//TODO
-		});
 		content.getChildren().add(addRemoveButton.getObject());
 
 		rulesPane.setContent(new ScrollPane(content));
 		return rulesPane;
 	}
-
 }

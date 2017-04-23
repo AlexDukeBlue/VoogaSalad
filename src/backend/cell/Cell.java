@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public interface Cell extends Serializable, HasTriggeredAbilities {
+public interface Cell extends Serializable, HasTriggeredAbilities,HasLocation {
 	ModifiableCell copy();
 
 	void startTurn(GameplayState gameState);

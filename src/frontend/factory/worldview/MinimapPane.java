@@ -24,7 +24,7 @@ public class MinimapPane extends BaseUIManager<Pane> {
 	private ImageView minimapSnapshot;
 
 	public MinimapPane(ScrollPane scrollPane, Controller controller) {
-		super(controller);
+		super(controller, null);
 		this.mapContent = scrollPane.getContent();
 		this.gridViewPortBounds = new Rectangle();
 		view = new Pane();

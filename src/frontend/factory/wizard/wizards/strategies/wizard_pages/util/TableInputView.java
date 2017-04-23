@@ -1,8 +1,5 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import frontend.util.BaseUIManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +7,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * TableInputView extends the BaseUIManager and is a UI structure used in the creation of
@@ -24,7 +24,7 @@ public abstract class TableInputView extends BaseUIManager<Region> {
 	private ScrollPane scrollPane;
 
 	public TableInputView() {
-		this(new ArrayList<BaseUIManager<? extends Parent>>());
+		this(new ArrayList<>());
 	}
 
 	public TableInputView(Collection<BaseUIManager<? extends Parent>> childrenToAdd) {
