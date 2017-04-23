@@ -2,19 +2,11 @@ package frontend.interfaces.worldview;
 
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
+import backend.util.HasLocation;
+import frontend.util.GameBoardObjectView;
 import javafx.scene.layout.Pane;
 
-import java.util.Collection;
-
-public interface UnitViewExternal {
-
-	void addUnitViewObserver(UnitViewObserver observer);
-
-	void addAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
-
-	void removeUnitViewObserver(UnitViewObserver observer);
-
-	void removeAllUnitViewObservers(Collection<UnitViewObserver> unitViewObservers);
+public interface UnitViewExternal extends GameBoardObjectView {
 
 	Pane getObject();
 
@@ -23,4 +15,8 @@ public interface UnitViewExternal {
 	Unit getUnit();
 
 	CoordinateTuple getUnitLocation();
+
+	default HasLocation getEntity() {
+		return getUnit();
+	}
 }

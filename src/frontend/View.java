@@ -21,20 +21,17 @@ package frontend;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import controller.Controller;
-import frontend.factory.GameObserverFactory;
 import frontend.factory.abilitypane.AbilityPane;
 import frontend.factory.conditionspane.ConditionsPaneFactory;
 import frontend.factory.detailpane.DetailPaneFactory;
 import frontend.factory.templatepane.TemplatePaneFactory;
 import frontend.factory.worldview.MinimapPane;
 import frontend.factory.worldview.WorldViewFactory;
-import frontend.interfaces.GameObserver;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
-import frontend.util.BaseUIManager;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -47,7 +44,7 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class View extends BaseUIManager<Region> {
+public class View extends ClickableUIComponent<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private Stage myStage;
 
@@ -62,7 +59,6 @@ public class View extends BaseUIManager<Region> {
 	private DetailPaneExternal detailPane;
 	private AbilityPane abilityPane;
 	private TemplatePaneExternal tempPane;
-	private GameObserver gameObserver;
 	private ConditionsPaneExternal conditionsPane;
 
 	public View(Controller controller) {
@@ -74,7 +70,7 @@ public class View extends BaseUIManager<Region> {
 	}
 
 	public View(Controller controller, Stage stage, boolean editable) {
-		super(controller);
+		super(controller, new AuthoringClickHandler());
 		myStage = stage;
 		this.editable = editable;
 		placePanes();
@@ -168,11 +164,13 @@ public class View extends BaseUIManager<Region> {
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
 		SplitPane bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
-		bottomPane.setDividerPosition(0,.8);
+		bottomPane.setDividerPosition(0, .8);
 		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, bottomPane);
 		outerSplitPane.setDividerPositions(0, 1);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		SplitPane.setResizableWithParent(menuBar.getObject(), false);        //In case user is on Windows and MenuBar is in the View
+		getClickHandler().setAbilityPane(abilityPane);
+		getClickHandler().setDetailPane(detailPane);
 	}
 
 	/**
@@ -185,20 +183,12 @@ public class View extends BaseUIManager<Region> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
 		});
-		worldView = WorldViewFactory.newWorldView(getController());
-		detailPane = DetailPaneFactory.newDetailPane();
-		abilityPane = new AbilityPane();
+		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
+		detailPane = DetailPaneFactory.newDetailPane(getClickHandler());
+		abilityPane = new AbilityPane(getClickHandler());
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
-				new MinimapPane(worldView.getGridPane(), getController()));
-		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController());
-		gameObserver = GameObserverFactory.newGameObserver(getController(), worldView, detailPane, abilityPane, tempPane);
-		detailPane.addDetailPaneObserver(gameObserver);
-		tempPane.addTemplatePaneObserver(gameObserver);
-		worldView.addWorldViewObserver(gameObserver);
-		worldView.addGridViewObserver(gameObserver);
-		worldView.addCellViewObserver(gameObserver);
-		worldView.addUnitViewObserver(gameObserver);
-		conditionsPane.addConditionsPaneObserver(gameObserver);
+				getClickHandler());
+		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 	}
 
 	/**
@@ -219,20 +209,13 @@ public class View extends BaseUIManager<Region> {
 		// removeSidePanes();
 	}
 
-	// /**
-	// * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
-	// */
-	// private void addSidePanes() {
-	// innerSplitPane.getItems().add(tempPane.getObject());
-	// }
-	//
-	// /**
-	// * Removes the ToolsPane and TemplatePane from the sides of the View's
-	// GUI.
-	// */
-	// private void removeSidePanes() {
-	// innerSplitPane.getItems().remove(tempPane.getObject());
-	// }
+	@Override
+	public void setClickHandler(ClickHandler clickHandler) {
+		super.setClickHandler(clickHandler);
+		abilityPane.setClickHandler(clickHandler);
+		worldView.setClickHandler(clickHandler);
+		detailPane.setClickHandler(clickHandler);
+	}
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {

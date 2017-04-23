@@ -56,13 +56,13 @@ public interface Controller {
 
 	void addTemplatesByCategory(String category, VoogaEntity... templates);
 
-	void removeTemplatesByCategory(String category, VoogaEntity... templates);
+	void removeTemplatesByCategory(String category, String... templateNames);
 
 	default void addUnitTemplates(Unit... unitTemplates) {
 		addTemplatesByCategory("unit", unitTemplates);
 	}
 
-	default void removeUnitTemplates(Unit... unitTemplates) {
+	default void removeUnitTemplates(String... unitTemplates) {
 		removeTemplatesByCategory("unit", unitTemplates);
 	}
 
@@ -74,7 +74,7 @@ public interface Controller {
 		addTemplatesByCategory("terrain", terrainTemplates);
 	}
 
-	default void removeTerrainTemplates(Terrain... terrainTemplates) {
+	default void removeTerrainTemplates(String... terrainTemplates) {
 		removeTemplatesByCategory("terrain", terrainTemplates);
 	}
 
@@ -96,7 +96,7 @@ public interface Controller {
 		addTemplatesByCategory("team", teamTemplates);
 	}
 
-	default void removeTeamTemplates(Team... teamTemplates) {
+	default void removeTeamTemplates(String... teamTemplates) {
 		removeTemplatesByCategory("team", teamTemplates);
 	}
 

@@ -1,9 +1,5 @@
 package frontend.factory.wizard.wizards.strategies;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
-
 import frontend.factory.wizard.wizards.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
 import javafx.beans.property.BooleanProperty;
@@ -18,6 +14,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
 
 /**
  * BaseStrategy implements default behavior for the SelectionStrategy interface.

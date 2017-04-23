@@ -51,6 +51,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
 	 * stylesheet to default. The default language is English.
 	 * Yo Dylan wrong project lmao
+	 *
+	 * @param clickHandler
 	 */
 	public BaseUIManager() {
 		this(null);

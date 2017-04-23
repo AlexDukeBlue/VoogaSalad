@@ -1,10 +1,9 @@
 package frontend.factory.abilitypane;
 
-import backend.util.HasActiveAbilities;
-import backend.util.HasTriggeredAbilities;
-import backend.util.VoogaEntity;
+import backend.util.*;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import frontend.View;
-import frontend.util.BaseUIManager;
 import frontend.util.VoogaEntityButton;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,12 +18,13 @@ import java.util.Collection;
 /**
  * @author Created by th174 on 4/21/17.
  */
-public class AbilityPane extends BaseUIManager<ScrollPane> {
+public class AbilityPane extends ClickableUIComponent<ScrollPane> {
 	private ScrollPane scrollPane;
 	private GridPane content;
 	private Button cancelButton;
 
-	public AbilityPane() {
+	public AbilityPane(ClickHandler clickHandler) {
+		super(clickHandler);
 		content = new GridPane();
 		ImageView cancelImg = new ImageView(View.getImg("resources/images/cancel.png"));
 		cancelImg.setFitWidth(50);
@@ -32,6 +32,7 @@ public class AbilityPane extends BaseUIManager<ScrollPane> {
 		cancelButton = new Button("", cancelImg);
 		cancelButton.setCancelButton(true);
 		cancelButton.setPadding(Insets.EMPTY);
+		cancelButton.setOnMouseClicked(event -> getClickHandler().cancel());
 		scrollPane = new ScrollPane(content);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -45,10 +46,10 @@ public class AbilityPane extends BaseUIManager<ScrollPane> {
 		content.addRow(1);
 		content.add(cancelButton, 0, 2);
 		if (entity instanceof HasActiveAbilities) {
-			content.addRow(0, createRow(((HasActiveAbilities) entity).getActiveAbilities()));
+			content.addRow(0, createRow(entity, ((HasActiveAbilities) entity).getActiveAbilities()));
 		}
 		if (entity instanceof HasTriggeredAbilities) {
-			content.addRow(1, createRow(((HasTriggeredAbilities) entity).getTriggeredAbilities()));
+			content.addRow(1, createRow(entity, ((HasTriggeredAbilities) entity).getTriggeredAbilities()));
 		}
 	}
 
@@ -56,8 +57,8 @@ public class AbilityPane extends BaseUIManager<ScrollPane> {
 		cancelButton.setOnMouseClicked(onCancelClicked);
 	}
 
-	private Button[] createRow(Collection<? extends VoogaEntity> collection) {
-		return collection.parallelStream().map(e -> new VoogaEntityButton(e, 100, null)).map(VoogaEntityButton::getObject).toArray(Button[]::new);
+	private Button[] createRow(VoogaEntity entity, Collection<? extends Ability> collection) {
+		return collection.parallelStream().map(e -> new AbilityButton(entity, e, 100, getController(), null)).map(VoogaEntityButton::getObject).toArray(Button[]::new);
 	}
 
 	@Override
