@@ -5,8 +5,6 @@ package frontend.util;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import controller.Controller;
-import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

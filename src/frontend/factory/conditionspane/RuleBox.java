@@ -4,8 +4,10 @@
 package frontend.factory.conditionspane;
 
 import controller.Controller;
-import frontend.ComponentClickHandler;
-import frontend.util.BaseUIManager;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
+import frontend.util.AddRemoveButton;
+import frontend.util.SelectableUIComponent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -14,7 +16,7 @@ import javafx.scene.layout.Region;
  * @author Stone Mathers
  *         Created 4/20/2017
  */
-public class RuleBox extends BaseUIManager<Region> {
+public class RuleBox extends SelectableUIComponent<Region> {
 
 	private String myName;
 	private HBox myBox = new HBox();
@@ -24,7 +26,7 @@ public class RuleBox extends BaseUIManager<Region> {
 	 * @param controller
 	 * @param clickHandler
 	 */
-	public RuleBox(String ruleName, Controller controller, ComponentClickHandler clickHandler) {
+	public RuleBox(String ruleName, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		myName = ruleName;
 		initBox();
@@ -46,5 +48,17 @@ public class RuleBox extends BaseUIManager<Region> {
 		});
 		myBox.getChildren().add(cb);
 		myBox.setOnMouseClicked(event -> handleClick(null));
+	}
+
+	@Override
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo) {
+		if (target instanceof AddRemoveButton) {
+			getController();//.removeRules(...)
+		}
+	}
+
+	@Override
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
+
 	}
 }

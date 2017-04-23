@@ -5,7 +5,7 @@ package frontend.factory.conditionspane;
 
 import controller.Controller;
 import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -29,7 +29,7 @@ public class ResultantBox extends ClickableUIComponent<Region> {
 	 * @param controller
 	 * @param clickHandler
 	 */
-	public ResultantBox(String resultantName, Controller controller, ComponentClickHandler clickHandler){
+	public ResultantBox(String resultantName, Controller controller, ClickHandler clickHandler){
 		super(controller, clickHandler);
 		myName = resultantName;
 		initBox();

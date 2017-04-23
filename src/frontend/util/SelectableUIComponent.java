@@ -2,7 +2,7 @@ package frontend.util;
 
 import controller.Controller;
 import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import javafx.scene.Node;
 
 /**
@@ -10,15 +10,15 @@ import javafx.scene.Node;
  */
 public abstract class SelectableUIComponent<T extends Node> extends ClickableUIComponent<T> {
 
-	public SelectableUIComponent(ComponentClickHandler clickHandler) {
+	public SelectableUIComponent(ClickHandler clickHandler) {
 		super(clickHandler);
 	}
 
-	public SelectableUIComponent(Controller controller, ComponentClickHandler componentClickHandler) {
-		super(controller, componentClickHandler);
+	public SelectableUIComponent(Controller controller, ClickHandler clickHandler) {
+		super(controller, clickHandler);
 	}
 
-	public abstract void actInAuthoringMode(BaseUIManager target, Object additonalInfo);
+	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo);
 
-	public abstract void actInGameplayMode(BaseUIManager target, Object additionalInfo);
+	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo);
 }

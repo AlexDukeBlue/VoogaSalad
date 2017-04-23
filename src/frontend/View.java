@@ -26,7 +26,6 @@ import frontend.factory.detailpane.DetailPaneFactory;
 import frontend.factory.templatepane.TemplatePaneFactory;
 import frontend.factory.worldview.MinimapPane;
 import frontend.factory.worldview.WorldViewFactory;
-import frontend.interfaces.GameObserver;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
@@ -59,7 +58,6 @@ public class View extends ClickableUIComponent<Region> {
 	private DetailPaneExternal detailPane;
 	private AbilityPane abilityPane;
 	private TemplatePaneExternal tempPane;
-	private GameObserver gameObserver;
 	private ConditionsPaneExternal conditionsPane;
 
 	public View(Controller controller) {
@@ -71,7 +69,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public View(Controller controller, Stage stage, boolean editable) {
-		super(controller, new AuthoringComponentClickHandler());
+		super(controller, new AuthoringClickHandler());
 		myStage = stage;
 		this.editable = editable;
 		placePanes();
@@ -171,6 +169,8 @@ public class View extends ClickableUIComponent<Region> {
 		outerSplitPane.setDividerPositions(0, 1);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		SplitPane.setResizableWithParent(menuBar.getObject(), false);        //In case user is on Windows and MenuBar is in the View
+		getClickHandler().setAbilityPane(abilityPane);
+		getClickHandler().setDetailPane(detailPane);
 	}
 
 	/**
@@ -209,20 +209,13 @@ public class View extends ClickableUIComponent<Region> {
 		// removeSidePanes();
 	}
 
-	// /**
-	// * Adds the ToolsPane and TemplatePane to the sides of the View's GUI.
-	// */
-	// private void addSidePanes() {
-	// innerSplitPane.getItems().add(tempPane.getObject());
-	// }
-	//
-	// /**
-	// * Removes the ToolsPane and TemplatePane from the sides of the View's
-	// GUI.
-	// */
-	// private void removeSidePanes() {
-	// innerSplitPane.getItems().remove(tempPane.getObject());
-	// }
+	@Override
+	public void setClickHandler(ClickHandler clickHandler) {
+		super.setClickHandler(clickHandler);
+		abilityPane.setClickHandler(clickHandler);
+		worldView.setClickHandler(clickHandler);
+		detailPane.setClickHandler(clickHandler);
+	}
 
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {

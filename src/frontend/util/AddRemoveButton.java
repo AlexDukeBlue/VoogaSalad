@@ -1,6 +1,7 @@
 package frontend.util;
 
 import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,8 +17,8 @@ public class AddRemoveButton extends ClickableUIComponent<HBox> {
 	private final HBox content;
 	private final Button addButton;
 
-	public AddRemoveButton() {
-		super(null);
+	public AddRemoveButton(ClickHandler clickHandler) {
+		super(clickHandler);
 		addButton = new Button("+");
 		Button removeButton = new Button("-");
 		addButton.setAlignment(Pos.CENTER);

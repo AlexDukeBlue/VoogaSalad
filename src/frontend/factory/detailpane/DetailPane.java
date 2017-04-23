@@ -11,7 +11,7 @@ import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
@@ -25,6 +25,7 @@ import javafx.scene.text.Text;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -49,7 +50,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private double PANE_WIDTH = 1000;
 
-	public DetailPane(ComponentClickHandler clickHandler) {
+	public DetailPane(ClickHandler clickHandler) {
 		super(clickHandler);
 		paneSetup();
 		setLabel();
@@ -83,8 +84,10 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	 */
 	public void setContent(VoogaEntity sprite) {
 		clearContent();
-		setImageContent(sprite);
-		setInfoContent(sprite);
+		if (Objects.nonNull(sprite)) {
+			setImageContent(sprite);
+			setInfoContent(sprite);
+		}
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 package frontend.factory.worldview;
 
 import controller.Controller;
-import frontend.ComponentClickHandler;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import frontend.interfaces.worldview.GridViewExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
-import frontend.util.BaseUIManager;
 import frontend.util.ChatLogView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
@@ -24,7 +24,7 @@ import javafx.scene.layout.StackPane;
  *
  * @author Dylan Peters
  */
-class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal {
+class SimpleWorldView extends ClickableUIComponent<Region> implements WorldViewExternal {
 
 	private GridViewExternal myGrid;
 	private BorderPane borderPane;
@@ -37,7 +37,7 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 	 *                     SimpleWorldView
 	 * @param clickHandler
 	 */
-	public SimpleWorldView(Controller controller, ComponentClickHandler clickHandler) {
+	public SimpleWorldView(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		initialize();
 	}
@@ -77,4 +77,9 @@ class SimpleWorldView extends BaseUIManager<Region> implements WorldViewExternal
 		return borderPane;
 	}
 
+	@Override
+	public void setClickHandler(ClickHandler clickHandler) {
+		super.setClickHandler(clickHandler);
+		myGrid.setClickHandler(clickHandler);
+	}
 }

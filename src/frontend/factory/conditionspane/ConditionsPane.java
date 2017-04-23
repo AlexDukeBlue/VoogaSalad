@@ -7,12 +7,12 @@ import backend.game_engine.Resultant;
 import backend.game_rules.GameRule;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.ComponentClickHandler;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.interfaces.conditionspane.ConditionsPaneObserver;
 import frontend.util.AddRemoveButton;
-import frontend.util.BaseUIManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * @author Stone Mathers
  *         Created 4/20/2017
  */
-public class ConditionsPane extends BaseUIManager<Region> implements ConditionsPaneExternal {
+public class ConditionsPane extends ClickableUIComponent<Region> implements ConditionsPaneExternal {
 
 	private VBox myBox = new VBox();
 	private Collection<ConditionsPaneObserver> observers;
@@ -37,7 +37,7 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 	/**
 	 *
 	 */
-	public ConditionsPane(Controller controller, ComponentClickHandler clickHandler) {
+	public ConditionsPane(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		observers = new ArrayList<>();
 		resultants = new ArrayList<>();    //temporary
@@ -73,7 +73,7 @@ public class ConditionsPane extends BaseUIManager<Region> implements ConditionsP
 			//content.getChildren().add(new RuleBox(rule.getNameOf()));	//TODO
 		}
 		content.setAlignment(Pos.TOP_RIGHT);
-		AddRemoveButton addRemoveButton = new AddRemoveButton();
+		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
 		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController().getAuthoringGameState()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
 		content.getChildren().add(addRemoveButton.getObject());
 

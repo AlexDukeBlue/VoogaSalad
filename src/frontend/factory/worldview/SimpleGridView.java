@@ -2,7 +2,7 @@ package frontend.factory.worldview;
 
 import controller.Controller;
 import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import frontend.View;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
@@ -26,7 +26,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private final Collection<SimpleCellView> cellViews;
 	private final GridLayoutDelegate myLayoutManager;
 
-	public SimpleGridView(Controller controller, ComponentClickHandler clickHandler) {
+	public SimpleGridView(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		myScrollPane = new ScrollPane();
 		cellViewObjects = new Pane();
@@ -73,7 +73,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	@Override
-	public void setClickHandler(ComponentClickHandler clickHandler) {
+	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		cellViews.forEach(e -> e.setClickHandler(clickHandler));
 	}

@@ -1,7 +1,8 @@
 package frontend.util;
 
 import backend.util.VoogaEntity;
-import frontend.ComponentClickHandler;
+import controller.Controller;
+import frontend.ClickHandler;
 import frontend.View;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,11 +14,11 @@ import javafx.scene.image.ImageView;
  */
 public abstract class VoogaEntityButton extends SelectableUIComponent<Button> {
 	private final Button entityButton;
-	private final String entityName;
+	private final VoogaEntity entity;
 
-	public VoogaEntityButton(VoogaEntity entity, int size, ComponentClickHandler clickHandler) {
-		super(clickHandler);
-		this.entityName = entity.getName();
+	public VoogaEntityButton(VoogaEntity entity, int size, Controller controller, ClickHandler clickHandler) {
+		super(controller, clickHandler);
+		this.entity = entity;
 		ImageView sprite = new ImageView(View.getImg(entity.getImgPath()));
 		entityButton = new Button("", sprite);
 		entityButton.setPadding(new Insets(5, 5, 5, 5));
@@ -33,7 +34,7 @@ public abstract class VoogaEntityButton extends SelectableUIComponent<Button> {
 		return entityButton;
 	}
 
-	protected String getEntityName() {
-		return entityName;
+	protected VoogaEntity getEntity() {
+		return entity;
 	}
 }

@@ -5,7 +5,7 @@ import backend.grid.CoordinateTuple;
 import backend.unit.properties.UnitStat;
 import controller.Controller;
 import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import frontend.View;
 import frontend.factory.worldview.layout.CellViewLayoutInterface;
 import frontend.interfaces.worldview.CellViewExternal;
@@ -42,7 +42,7 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	 * @param controller   the controller object that this CellView will send information
 	 * @param clickHandler
 	 */
-	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ComponentClickHandler clickHandler) {
+	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		initialize(cellLocation);
 	}
@@ -198,8 +198,13 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	}
 
 	@Override
-	public void setClickHandler(ComponentClickHandler clickHandler) {
+	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		unitList.forEach(e -> setClickHandler(clickHandler));
+	}
+
+	@Override
+	public String toString() {
+		return getCell().toString();
 	}
 }

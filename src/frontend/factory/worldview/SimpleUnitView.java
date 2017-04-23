@@ -3,13 +3,15 @@ package frontend.factory.worldview;
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.GameplayState;
+import backend.util.HasLocation;
 import controller.Controller;
-import frontend.ComponentClickHandler;
+import frontend.ClickableUIComponent;
+import frontend.ClickHandler;
 import frontend.View;
+import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
-import frontend.util.BaseUIManager;
-import frontend.util.SelectableUIComponent;
 import frontend.util.GameBoardObjectView;
+import frontend.util.SelectableUIComponent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -28,7 +30,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 */
-	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ComponentClickHandler clickHandler) {
+	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
@@ -103,13 +105,13 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	}
 
 	@Override
-	public void actInAuthoringMode(BaseUIManager target, Object additonalInfo) {
-		if (target instanceof GameBoardObjectView) {
-			CoordinateTuple unitClickedLocation = getUnitLocation();
-			String unitClickedName = getUnitName();
-			CoordinateTuple targetLocation = ((GameBoardObjectView) target).getEntity().getLocation();
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo) {
+		if (target instanceof CellViewExternal) {
+			CoordinateTuple unitLocation = getUnitLocation();
+			String unitName = getUnitName();
+			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			getController().sendModifier((GameplayState gameState) -> {
-				Unit unitToMove = gameState.getGrid().get(this.unitLocation).getOccupantByName(this.unitName);
+				Unit unitToMove = gameState.getGrid().get(unitLocation).getOccupantByName(unitName);
 				unitToMove.moveTo(gameState.getGrid().get(targetLocation), gameState);
 				return gameState;
 			});
@@ -117,7 +119,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	}
 
 	@Override
-	public void actInGameplayMode(BaseUIManager target, Object additionalInfo) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
 
 	}
 }

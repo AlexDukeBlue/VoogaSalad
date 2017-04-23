@@ -4,7 +4,7 @@
 package frontend.factory.conditionspane;
 
 import controller.Controller;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 
 /**
@@ -13,7 +13,7 @@ import frontend.interfaces.conditionspane.ConditionsPaneExternal;
  */
 public class ConditionsPaneFactory {
 
-	public static ConditionsPaneExternal newConditionsPane(Controller controller, ComponentClickHandler clickHandler){
+	public static ConditionsPaneExternal newConditionsPane(Controller controller, ClickHandler clickHandler){
 		return new ConditionsPane(controller, clickHandler);
 	}
 

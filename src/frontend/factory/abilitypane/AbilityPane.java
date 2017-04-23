@@ -2,7 +2,7 @@ package frontend.factory.abilitypane;
 
 import backend.util.*;
 import frontend.ClickableUIComponent;
-import frontend.ComponentClickHandler;
+import frontend.ClickHandler;
 import frontend.View;
 import frontend.util.VoogaEntityButton;
 import javafx.event.EventHandler;
@@ -23,7 +23,7 @@ public class AbilityPane extends ClickableUIComponent<ScrollPane> {
 	private GridPane content;
 	private Button cancelButton;
 
-	public AbilityPane(ComponentClickHandler clickHandler) {
+	public AbilityPane(ClickHandler clickHandler) {
 		super(clickHandler);
 		content = new GridPane();
 		ImageView cancelImg = new ImageView(View.getImg("resources/images/cancel.png"));
@@ -46,10 +46,10 @@ public class AbilityPane extends ClickableUIComponent<ScrollPane> {
 		content.addRow(1);
 		content.add(cancelButton, 0, 2);
 		if (entity instanceof HasActiveAbilities) {
-			content.addRow(0, createRow((HasLocation) entity, ((HasActiveAbilities) entity).getActiveAbilities()));
+			content.addRow(0, createRow(entity, ((HasActiveAbilities) entity).getActiveAbilities()));
 		}
 		if (entity instanceof HasTriggeredAbilities) {
-			content.addRow(1, createRow((HasLocation) entity, ((HasTriggeredAbilities) entity).getTriggeredAbilities()));
+			content.addRow(1, createRow(entity, ((HasTriggeredAbilities) entity).getTriggeredAbilities()));
 		}
 	}
 
@@ -57,8 +57,8 @@ public class AbilityPane extends ClickableUIComponent<ScrollPane> {
 		cancelButton.setOnMouseClicked(onCancelClicked);
 	}
 
-	private Button[] createRow(HasLocation entity, Collection<? extends Ability> collection) {
-		return collection.parallelStream().map(e -> new AbilityButton(entity, e, 100, null)).map(VoogaEntityButton::getObject).toArray(Button[]::new);
+	private Button[] createRow(VoogaEntity entity, Collection<? extends Ability> collection) {
+		return collection.parallelStream().map(e -> new AbilityButton(entity, e, 100, getController(), null)).map(VoogaEntityButton::getObject).toArray(Button[]::new);
 	}
 
 	@Override
