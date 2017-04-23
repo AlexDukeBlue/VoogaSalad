@@ -87,7 +87,7 @@ public class View extends BaseUIManager<Region> {
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;
+		this.editable = editable;  //TODO do through controller
 		if (editable) {
 			enterAuthorMode();
 			menuBar.setEditable(true);
