@@ -71,7 +71,7 @@ public class ModifiableCell implements Cell {
 		processTriggers(Event.TURN_END, gameState);
 	}
 
-	g@Override
+	@Override
 	public CoordinateTuple getLocation() {
 		return coordinates;
 	}

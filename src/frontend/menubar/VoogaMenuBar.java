@@ -53,6 +53,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	public void setEditable(boolean editable) {
+		System.out.println(editable);
 		loadItem.setDisable(!editable);
 		edit.setDisable(!editable);
 		conditionsPaneItem.setDisable(!editable);
