@@ -42,6 +42,7 @@ public abstract class ClickHandler {
 	}
 
 	public final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
+		cancel();
 		this.selectedComponent = selectedComponent;
 		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getObject());
 		showDetail(selectedComponent);
