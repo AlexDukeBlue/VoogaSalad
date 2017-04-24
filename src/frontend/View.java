@@ -63,31 +63,14 @@ public class View extends ClickableUIComponent<Region> {
 	private VBox rightPane;
 
 	public View(Controller controller) {
-		this(controller, new Stage(), true);
+		this(controller, new Stage());
 	}
 
 	public View(Controller controller, Stage stage) {
-		this(controller, stage, true);
-	}
-
-	public View(Controller controller, Stage stage, boolean editable) {
 		super(controller, new AuthoringClickHandler());
 		myStage = stage;
 		placePanes();
-		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
-	}
-
-	/**
-	 * @param editable True if this View can be switched into "edit" mode, false if
-	 *                 it cannot.
-	 */
-	public void setEditable(boolean editable) {
-		if (editable) {
-			getController().enterAuthoringMode();
-		} else {
-			getController().enterGamePlayMode();
-		}
 	}
 
 	private void setViewEditable(boolean editable) {

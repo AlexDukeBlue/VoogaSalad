@@ -54,7 +54,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		myNameField = new Label();
 		myNameField.textProperty().bind(name);
 
-		myNumericalInputField = new TextField(getResourceBundle().getString("DEFAULT_ZERO"));
+		myNumericalInputField = new TextField(getResourceBundle().getString("DEFAULT_ONE"));
 		myNumericalInputField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -62,7 +62,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 					Integer.parseInt(newValue);
 				} catch (Exception e) {
 					if (!newValue.isEmpty()){
-						myNumericalInputField.setText(getResourceBundle().getString("DEFAULT_ZERO"));
+						myNumericalInputField.setText(getResourceBundle().getString("DEFAULT_ONE"));
 					}
 				}
 				setChanged();
