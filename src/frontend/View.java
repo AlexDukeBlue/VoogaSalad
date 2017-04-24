@@ -18,7 +18,6 @@
  */
 package frontend;
 
-import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import controller.Controller;
 import frontend.factory.abilitypane.AbilityPane;
@@ -47,20 +46,23 @@ import java.util.Map;
 
 public class View extends ClickableUIComponent<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
+	private static final int CONDITIONS_PANE_POS = 0;
 	private Stage myStage;
 
 	static {
 		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
 	}
 
-	private boolean editable;
 	private SplitPane outerSplitPane;
+	private SplitPane innerSplitPane;
+	SplitPane bottomPane;
 	private VoogaMenuBar menuBar;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
 	private AbilityPane abilityPane;
 	private TemplatePaneExternal tempPane;
 	private ConditionsPaneExternal conditionsPane;
+	private VBox rightPane;
 
 	public View(Controller controller) {
 		this(controller, new Stage(), true);
@@ -73,7 +75,6 @@ public class View extends ClickableUIComponent<Region> {
 	public View(Controller controller, Stage stage, boolean editable) {
 		super(controller, new AuthoringClickHandler());
 		myStage = stage;
-		this.editable = editable;
 		placePanes();
 		setEditable(editable);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
@@ -84,40 +85,31 @@ public class View extends ClickableUIComponent<Region> {
 	 *                 it cannot.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;  //TODO do through controller
 		if (editable) {
+			getController().enterAuthoringMode();
 			enterAuthorMode();
-			menuBar.setEditable(true);
 		} else {
+			getController().enterGamePlayMode();
 			enterPlayMode();
-			menuBar.setEditable(false);
 		}
 	}
 
 	public void toggleConditionsPane() {
-//		if(myBorder.getLeft() == null){
-//			//myBorder.setLeft(rulesPane.getObject());				//TODO For when rules pane is created
-//		} else {
-//			myBorder.setLeft(null);
-//		}
+		if(!innerSplitPane.getItems().remove(conditionsPane.getObject())){
+			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
+		}
 	}
 
 	public void toggleTemplatePane() {
-		//TODO
-//		if(myBorder.getRight() == null){
-//			myBorder.setRight(tempPane.getObject());
-//		} else {
-//			myBorder.setRight(null);
-//		}
+		if(!innerSplitPane.getItems().remove(rightPane)){
+			innerSplitPane.getItems().add(rightPane);
+		}
 	}
 
 	public void toggleDetailsPane() {
-		//TODO
-//		if(myBorder.getBottom() == null){
-//			myBorder.setBottom(detailPane.getObject());
-//		} else {
-//			myBorder.setBottom(null);
-//		}
+		if(!outerSplitPane.getItems().remove(bottomPane)){
+			outerSplitPane.getItems().add(bottomPane);
+		}
 	}
 
 	public void toggleStatsPane() {
@@ -161,15 +153,15 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void placePanes() {
 		initPanes();
-		SplitPane innerSplitPane = new SplitPane(conditionsPane.getObject(), worldView.getObject(), new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject()));
+		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldView.getObject(), rightPane);
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		SplitPane bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
+		bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
 		bottomPane.setDividerPosition(0, .8);
 		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, bottomPane);
 		outerSplitPane.setDividerPositions(0, 1);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
-		SplitPane.setResizableWithParent(menuBar.getObject(), false);        //In case user is on Windows and MenuBar is in the View
+		SplitPane.setResizableWithParent(menuBar.getObject(), false);        
 		getClickHandler().setAbilityPane(abilityPane);
 		getClickHandler().setDetailPane(detailPane);
 	}
@@ -179,7 +171,7 @@ public class View extends ClickableUIComponent<Region> {
 	 * necessary panes.
 	 */
 	private void initPanes() {
-		menuBar = new VoogaMenuBar(this, getController(), editable);
+		menuBar = new VoogaMenuBar(this, getController(), getController().isAuthoringMode());
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
 			getObject().getStylesheets().clear();
 			getObject().getStylesheets().add(newValue);
@@ -189,6 +181,7 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane = new AbilityPane(getController(), getClickHandler());
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
 				getClickHandler());
+		rightPane = new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			System.out.println("Languagechange detcted in menu bar");
@@ -246,6 +239,6 @@ public class View extends ClickableUIComponent<Region> {
 
 	@Override
 	public void update() {
-		this.setEditable(getController().getGameState().isAuthoringMode());
+		this.setEditable(getController().isAuthoringMode());
 	}
 }

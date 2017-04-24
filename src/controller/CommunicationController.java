@@ -126,12 +126,12 @@ public class CommunicationController implements Controller {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return (AuthoringGameState) getClient().getState();
+		return new AuthoringGameState(getClient().getState());
 	}
 
 	@Override
 	public GameplayState getGameState() {
-		return getAuthoringGameState();
+		return (GameplayState) getClient().getState();
 	}
 
 	@Override
@@ -203,6 +203,10 @@ public class CommunicationController implements Controller {
 	@Override
 	public void enterGamePlayMode(){
 		setGameState(new GameplayState(getAuthoringGameState()));
+	}
+	
+	public boolean isAuthoringMode(){
+		return getGameState().isAuthoringMode();
 	}
 
 	@Override

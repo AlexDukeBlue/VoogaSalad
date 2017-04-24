@@ -49,7 +49,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		menuBar.setUseSystemMenuBar(SYSTEM_MENU_BAR);
 		factory = new ComponentFactory();
 		populateMenuBar();
-		setEditable(editable);
 	}
 
 	public void setEditable(boolean editable) {
@@ -227,7 +226,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	
 	@Override
 	public void update(){
-		setEditable(getController().getGameState().isAuthoringMode());
+		setEditable(getController().isAuthoringMode());
 	}
 
 }

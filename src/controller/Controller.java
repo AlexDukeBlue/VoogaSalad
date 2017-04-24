@@ -85,6 +85,8 @@ public interface Controller {
 	void enterAuthoringMode();
 	
 	void enterGamePlayMode();
+	
+	boolean isAuthoringMode();
 
 	String getPlayerName();
 

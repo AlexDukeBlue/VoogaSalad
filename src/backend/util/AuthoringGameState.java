@@ -44,7 +44,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 		templates.put(DEFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Defensive Modifiers", "", "", InteractionModifier.getPredefinedDefensiveModifiers()));
 	}
 
-	public AuthoringGameState(GameplayState gameState) {
+	public AuthoringGameState(ReadonlyGameplayState gameState) {
 		super(gameState.getName(), gameState.getGrid(), gameState.getDescription(), gameState.getImgPath());
 		templates = new HashMap<>();
 		//TODO change everything below to get date from the passed in GameplayState
