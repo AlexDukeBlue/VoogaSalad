@@ -11,12 +11,15 @@ import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import backend.util.VoogaEntity;
 import backend.util.io.XMLSerializer;
-import frontend.util.Updatable;
+import frontend.util.UIComponentListener;
 import javafx.application.Platform;
 import util.net.Modifier;
 import util.net.ObservableClient;
 import util.net.ObservableServer;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,9 +37,9 @@ import java.util.concurrent.Executors;
  */
 public class CommunicationController implements Controller {
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
-	private Executor executor;
+	private final Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
-	private Collection<Updatable> thingsToUpdate;
+	private final Collection<UIComponentListener> thingsToUpdate;
 	private final String playerName;
 	private final CountDownLatch waitForReady;
 
@@ -44,7 +47,7 @@ public class CommunicationController implements Controller {
 		this(username, Collections.emptyList());
 	}
 
-	public CommunicationController(String username, Collection<Updatable> thingsToUpdate) {
+	public CommunicationController(String username, Collection<UIComponentListener> thingsToUpdate) {
 		this.thingsToUpdate = new CopyOnWriteArrayList<>(thingsToUpdate);
 		this.waitForReady = new CountDownLatch(1);
 		this.playerName = username;
@@ -74,6 +77,16 @@ public class CommunicationController implements Controller {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public ReadonlyGameplayState loadFile(Path path) throws IOException {
+		return XML.unserialize(new String(Files.readAllBytes(path)));
+	}
+
+	@Override
+	public void saveFile(Path path) throws IOException {
+		Files.write(path, ((String) XML.serialize(getAuthoringGameState())).getBytes());
 	}
 
 	@Override
@@ -182,37 +195,33 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void addToUpdated(Updatable updatable) {
-		if (!thingsToUpdate.contains(updatable)) {
-			thingsToUpdate.add(updatable);
-		}
+	public void addListener(UIComponentListener listener) {
+		thingsToUpdate.add(listener);
 	}
 
 	@Override
-	public void removeFromUpdated(Updatable updatable) {
-		if (thingsToUpdate.contains(updatable)) {
-			thingsToUpdate.remove(updatable);
-		}
+	public void removeListener(UIComponentListener listener) {
+		thingsToUpdate.remove(listener);
 	}
-	
+
 	@Override
-	public void enterAuthoringMode(){
+	public void enterAuthoringMode() {
 		sendModifier((AuthoringGameState state) -> {
 			state.setAuthoringMode(true);
 			return state;
 		});
 	}
-	
+
 	@Override
-	public void enterGamePlayMode(){
+	public void enterGamePlayMode() {
 		sendModifier((AuthoringGameState state) -> {
 			state.setAuthoringMode(false);
 			return state;
 		});
-		
+
 	}
-	
-	public boolean isAuthoringMode(){
+
+	public boolean isAuthoringMode() {
 		return getGameState().isAuthoringMode();
 	}
 

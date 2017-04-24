@@ -36,12 +36,12 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		cellViews = new ArrayList<>();
 		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize();
-		getController().updateAll();
 	}
 
 	@Override
 	public void update() {
 		if (!getController().getGrid().getCells().keySet().equals(savedGridCoordinates)){
+			cellViews.forEach(e -> getController().removeListener(e));
 			cellViews.clear();
 			cellViewObjects.getChildren().clear();
 			populateCellViews();
@@ -57,10 +57,8 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
-			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler());
+			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate));
 			cellViews.add(cl);
-			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
-			cl.update();
 			cellViewObjects.getChildren().add(cl.getObject());
 		});
 	}

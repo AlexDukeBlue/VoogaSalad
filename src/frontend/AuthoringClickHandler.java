@@ -8,6 +8,6 @@ import frontend.util.SelectableUIComponent;
 public class AuthoringClickHandler extends ClickHandler {
 	@Override
 	protected void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo) {
-		selectedComponent.actInAuthoringMode(actionTarget, additionalInfo);
+		selectedComponent.actInAuthoringMode(actionTarget, additionalInfo, this);
 	}
 }

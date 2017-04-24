@@ -3,14 +3,7 @@
  */
 package frontend.menubar;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 import backend.unit.Unit;
-import backend.util.io.XMLSerializer;
 import controller.Controller;
 import frontend.View;
 import frontend.factory.wizard.WizardFactory;
@@ -18,19 +11,19 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import polyglot.PolyglotException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 /**
- * @author Stone Mathers 
- * Created 4/18/2017
+ * @author Stone Mathers
+ *         Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
@@ -170,11 +163,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			Window ownerWindow = null;
-			File file = chooser.showSaveDialog(ownerWindow);
-			Files.write(Paths.get(file.getPath()),
-					((String) new XMLSerializer<>().serialize(getController().getGameState())).getBytes());
-
+			File file = chooser.showSaveDialog(null);
+			getController().saveFile(Paths.get(file.getPath()));
 		} catch (Exception i) {
 			i.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -193,8 +183,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(getController().unserialize(
-					new String(Files.readAllBytes(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())))));
+			getController().setGameState(getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -224,9 +213,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		return myView;
 
 	}
-	
+
 	@Override
-	public void update(){
+	public void update() {
 		setEditable(getController().isAuthoringMode());
 	}
 

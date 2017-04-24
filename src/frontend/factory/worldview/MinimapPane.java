@@ -41,6 +41,7 @@ public class MinimapPane extends BaseUIManager<Pane> {
 		minimapSnapshot.setMouseTransparent(true);
 		minimapSnapshot.fitWidthProperty().bind(view.widthProperty());
 		minimapSnapshot.fitHeightProperty().bind(view.heightProperty());
+		minimapSnapshot.setPreserveRatio(true);
 		Node map = scrollPane.getContent();
 		view.getChildren().addAll(minimapSnapshot, map, gridViewPortBounds);
 		ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {

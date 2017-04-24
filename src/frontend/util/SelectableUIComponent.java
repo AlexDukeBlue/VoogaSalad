@@ -22,7 +22,7 @@ public abstract class SelectableUIComponent<T extends Node> extends ClickableUIC
 		getClickHandler().setSelectedComponent(this);
 	}
 
-	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo);
+	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler);
 
-	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo);
+	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler);
 }

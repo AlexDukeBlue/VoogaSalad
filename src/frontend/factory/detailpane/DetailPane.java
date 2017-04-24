@@ -108,6 +108,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		Text name = new Text(sprite.getName() + "\n");
 		name.setFont(Font.font(20));
 		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
+		spriteImage.setSmooth(true);
 		spriteImage.setFitHeight(50);
 		spriteImage.setFitWidth(50);
 		imagePane.getChildren().add(name);

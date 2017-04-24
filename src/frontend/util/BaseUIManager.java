@@ -38,7 +38,7 @@ import java.util.*;
  *
  * @author Dylan Peters
  */
-public abstract class BaseUIManager<T extends Node> extends Observable implements ObjectManager<T>, Updatable {
+public abstract class BaseUIManager<T extends Node> extends Observable implements ObjectManager<T>, UIComponentListener {
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -67,8 +67,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public BaseUIManager(Controller controller) {
 		this.controller = controller;
 		if (Objects.nonNull(controller)) {
-			this.controller.removeFromUpdated(this);
-			this.controller.addToUpdated(this);
+			this.controller.removeListener(this);
+			this.controller.addListener(this);
 		}
 		styleSheet = new SimpleObjectProperty<>();
 		styleSheet.addListener((observable, oldValue, newValue) -> {

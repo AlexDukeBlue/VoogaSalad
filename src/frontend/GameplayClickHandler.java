@@ -8,6 +8,6 @@ import frontend.util.SelectableUIComponent;
 public class GameplayClickHandler extends ClickHandler {
 	@Override
 	protected void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo) {
-		selectedComponent.actInGameplayMode(actionTarget, additionalInfo);
+		selectedComponent.actInGameplayMode(actionTarget, additionalInfo, this);
 	}
 }

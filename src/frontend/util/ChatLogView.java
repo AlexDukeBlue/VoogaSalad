@@ -48,6 +48,10 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 						.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
 		showHideArrow = new ImageView(View.getImg(getResourceBundle().getString("trianglePath")));
+		showHideArrow.setSmooth(true);
+		showHideArrow.setOnMouseClicked(event -> setExpandedState(!isExpanded()));
+		showHideArrow.setFitWidth(20);
+		showHideArrow.setFitHeight(20);
 		pane.setMaxSize(1000, 600);
 		textArea = initTextArea();
 		pane.setBottom(initTextInputBox());
@@ -113,9 +117,6 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		textContentInputField.setOnKeyPressed(
 				evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
-		showHideArrow.setOnMouseClicked(event -> setExpandedState(!isExpanded()));
-		showHideArrow.setFitWidth(20);
-		showHideArrow.setFitHeight(20);
 		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField, showHideArrow);
 		return bottomBox;
 	}

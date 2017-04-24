@@ -34,7 +34,6 @@ public abstract class ClickHandler {
 			this.additionalInfo = additionalInfo;
 		} else if (Objects.nonNull(selectedComponent)) {
 			triggerAction(selectedComponent, clickedComponent, this.additionalInfo);
-			cancel();
 		} else {
 			cancel();
 			showDetail(clickedComponent);

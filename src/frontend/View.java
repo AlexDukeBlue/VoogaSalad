@@ -132,7 +132,7 @@ public class View extends ClickableUIComponent<Region> {
 		bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
 		bottomPane.setDividerPositions(.8);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
-		worldAndDetailPane = new SplitPane(worldView.getGridPane(), bottomPane);
+		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
 		worldAndDetailPane.setDividerPositions(1);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);
 		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldAndDetailPane, rightPane);

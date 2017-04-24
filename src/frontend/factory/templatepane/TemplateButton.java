@@ -5,9 +5,8 @@ import backend.util.AuthoringGameState;
 import backend.util.HasLocation;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
-import frontend.interfaces.worldview.CellViewExternal;
+import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.GameBoardObjectView;
 import frontend.util.VoogaEntityButton;
@@ -24,12 +23,12 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
 		if (target instanceof AddRemoveButton) {
 			getController().removeTemplatesByCategory(templateCategory, getEntity().getName());
 		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			String unitClickedName = getEntity().getName();
-			CoordinateTuple location = ((CellViewExternal) target).getLocation();
+			CoordinateTuple location = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			getController().sendModifier((AuthoringGameState gameState) -> {
 				gameState.getGrid().get(location).addVoogaEntity(gameState.getTemplateByName(unitClickedName).copy());
 				return gameState;
@@ -38,8 +37,8 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
-		actInAuthoringMode(target, null);
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
+		actInAuthoringMode(target, null, clickHandler);
 	}
 
 	@Override

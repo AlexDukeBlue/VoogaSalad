@@ -25,7 +25,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.net.ObservableHost;
 
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Optional;
@@ -205,7 +204,7 @@ public class StartupSelectionScreen extends VBox {
 		try {
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			return control.unserialize(new String(Files.readAllBytes(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()))));
+			return control.loadFile(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()));
 		} catch (Exception e) {
 			Platform.exit();
 			return null;
