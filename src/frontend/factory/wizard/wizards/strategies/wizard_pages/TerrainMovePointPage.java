@@ -19,8 +19,6 @@ import javafx.scene.layout.Region;
  *
  */
 public class TerrainMovePointPage extends BaseWizardPage {
-	//private static final String DEFAULT_TITLE = "Set Movement Points";
-	//private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for the unit to cross each terrain type.";
 
 	private TableInputView table;
 	private Map<NumericInputRow, Terrain> rowToTerrain;
@@ -62,10 +60,8 @@ public class TerrainMovePointPage extends BaseWizardPage {
 
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
-		System.out.println("this");
-		movePointInput = new NumericInputRow(null, "Enter the number of movement points for the unit: ", "move points");
+		movePointInput = new NumericInputRow(null, getPolyglot().get("TerrainMovePoint_RowPrompt"), getPolyglot().get("Move_Points"));
 		table.getChildren().add(movePointInput);
-		System.out.println("that");
 		rowToTerrain = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.TERRAIN).forEach(terrain -> {
 			NumericInputRow row = new NumericInputRow(View.getImg(terrain.getImgPath()), terrain.getName(), terrain.getDescription());

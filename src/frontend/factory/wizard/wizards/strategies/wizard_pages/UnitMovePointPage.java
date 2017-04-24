@@ -2,6 +2,7 @@ package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.layout.Region;
 
 /**
@@ -10,26 +11,48 @@ import javafx.scene.layout.Region;
  *
  */
 public class UnitMovePointPage extends BaseWizardPage {
-	private static final String DEFAULT_TITLE = "Default Move Cost:";
-	private static final String DEFAULT_DESCRIPTION = "Enter the default amount of movement points it takes to cross the terrain type.";
 
 	private NumericInputRow numericInputRow;
 
 	public UnitMovePointPage(AuthoringGameState gameState) {
-		this(DEFAULT_TITLE, gameState);
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		}, gameState);
 	}
 
-	public UnitMovePointPage(String title, AuthoringGameState gameState) {
-		this(title, DEFAULT_DESCRIPTION, gameState);
+	public UnitMovePointPage(StringBinding title, AuthoringGameState gameState) {
+		this(title, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		}, gameState);
 	}
 
-	public UnitMovePointPage(String title, String description, AuthoringGameState gameState) {
-		super(title, description);
+	public UnitMovePointPage(StringBinding title, StringBinding description, AuthoringGameState gameState) {
+		super();
+		this.setTitle(title);
+		this.setDescription(description);
 		initialize(gameState);
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		numericInputRow = new NumericInputRow(null, DEFAULT_TITLE, "");
+		numericInputRow = new NumericInputRow(null, getPolyglot().get("Default_UnitMovePoint_Title"), 
+				new StringBinding() {
+
+					@Override
+					protected String computeValue() {
+						return "";
+					}
+			
+		});
 		canNextWritable().setValue(true);
 	}
 
