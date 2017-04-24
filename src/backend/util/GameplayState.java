@@ -33,11 +33,6 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
 		this(name, grid, 0, Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
 	}
-	
-	public GameplayState(AuthoringGameState gameState){
-		this(gameState.getName(), gameState.getGrid(), gameState.getTurnNumber(), getTeamMap(gameState.getTeams()), gameState.getObjectives(), gameState.getTurnActions(),
-				gameState.getTurnRequirements(), gameState.getDescription(), gameState.getImgPath(), new Random());
-	}
 
 	private GameplayState(String name, GameBoard grid, int turnNumber, Map<String, Team> teams,
 	                      Collection<Resultant> objectives,
