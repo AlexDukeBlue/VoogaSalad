@@ -1,6 +1,5 @@
 package frontend.startup;
 
-import backend.grid.GridPattern;
 import backend.util.ReadonlyGameplayState;
 import controller.CommunicationController;
 import controller.Controller;
@@ -17,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;

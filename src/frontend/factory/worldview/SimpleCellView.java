@@ -58,7 +58,7 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 			installToolTips();
 		});
 		update();
-		this.unitCount = -1;
+		this.unitCount = -2;
 	}
 
 	@Override
@@ -121,7 +121,7 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	 */
 	@Override
 	public void update() {
-		if (unitCount < 0 || !getCell().getTerrain().getImgPath().equals(terrainCache)) {
+		if (Objects.nonNull(getCell()) && (unitCount < 0 || !getCell().getTerrain().getImgPath().equals(terrainCache))) {
 			if (getController().getGrid().getImgPath().length() < 1) {
 				polygon.setFill(new ImagePattern(View.getImg(getCell().getTerrain().getImgPath())));
 			} else {
@@ -147,9 +147,13 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 			setContextMenu();
 
 		}
-		unitViews.forEach(unitView -> unitView.getObject().relocate(
-				xCenter - unitView.getObject().getWidth() / 2.0,
-				yCenter - unitView.getObject().getHeight() / 2.0));
+		unitViews.forEach(unitView -> {
+			unitView.setSize(polygon.getBoundsInParent().getHeight() * UNIT_SCALE);
+			unitView.getObject().relocate(
+					xCenter - unitView.getObject().getWidth() / 2.0,
+					yCenter - unitView.getObject().getHeight() / 2.0);
+
+		});
 		polygon.toBack();
 		installToolTips();
 	}

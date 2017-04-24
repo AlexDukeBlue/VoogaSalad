@@ -36,6 +36,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		cellViews = new ArrayList<>();
 		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize();
+		getController().updateAll();
 	}
 
 	@Override

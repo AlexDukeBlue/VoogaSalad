@@ -1,10 +1,9 @@
 package frontend.factory.templatepane;
 
-import backend.util.HasLocation;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.util.AddRemoveButton;
@@ -23,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * @author Faith Rodriguez Created 3/29/2017
+ * @author Faith Rodriguez, Timmy Huang Created 3/29/2017
  *         <p>
  *         This class is responsible for creating the sidebar that contains
  *         dropdown boxes of all of the created units and terrains. These units,
@@ -45,7 +44,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		contents = new HashMap<>();
 		Stream.of("Units", "Terrains")
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
-				.forEach(e -> createCollabsible(e.getKey(), (Collection<? extends HasLocation>) e.getValue()));
+				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		update();
 	}
 

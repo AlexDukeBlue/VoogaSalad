@@ -2,6 +2,7 @@ package frontend.factory.templatepane;
 
 import backend.grid.CoordinateTuple;
 import backend.util.AuthoringGameState;
+import backend.util.HasLocation;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickableUIComponent;
@@ -26,7 +27,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo) {
 		if (target instanceof AddRemoveButton) {
 			getController().removeTemplatesByCategory(templateCategory, getEntity().getName());
-		} else if (target instanceof CellViewExternal) {
+		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			String unitClickedName = getEntity().getName();
 			CoordinateTuple location = ((CellViewExternal) target).getLocation();
 			getController().sendModifier((AuthoringGameState gameState) -> {
