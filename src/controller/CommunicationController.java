@@ -116,7 +116,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public ReadonlyGameplayState getReadOnlyGameState() {
-		return getGameState();
+		return getClient().getState();
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public GameplayState getGameState() {
-		return getAuthoringGameState();
+		return (GameplayState) getClient().getState();
 	}
 
 	@Override
@@ -197,12 +197,23 @@ public class CommunicationController implements Controller {
 	
 	@Override
 	public void enterAuthoringMode(){
-		setGameState(new AuthoringGameState(getGameState()));
+		sendModifier((AuthoringGameState state) -> {
+			state.setAuthoringMode(true);
+			return state;
+		});
 	}
 	
 	@Override
 	public void enterGamePlayMode(){
-		setGameState(new GameplayState(getAuthoringGameState()));
+		sendModifier((AuthoringGameState state) -> {
+			state.setAuthoringMode(false);
+			return state;
+		});
+		
+	}
+	
+	public boolean isAuthoringMode(){
+		return getGameState().isAuthoringMode();
 	}
 
 	@Override

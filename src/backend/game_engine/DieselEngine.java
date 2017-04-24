@@ -76,7 +76,7 @@ public class DieselEngine implements GameEngine {
 	 */
 	private void checkTurnRules(GameplayState state) {
 		if (!state.getTurnRequirements().parallelStream()
-				.allMatch(e -> e.getBiPredicate().test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied())
+				.allMatch(e -> e.test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied())
 			state.endTurn();
 	}
 
@@ -87,7 +87,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.getBiConsumer().accept(state.getCurrentPlayer(), state)));
+		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getCurrentPlayer(), state)));
 	}
 
 	/**
