@@ -13,7 +13,7 @@
  * GUI components are made available to the user. The methods that instantiate the GUI should use this boolean to
  * determine which components are displayed.
  *
- * @author Stone Mathers, Dylan Peters
+ * @author Stone Mathers
  * Created 4/3/2017
  */
 package frontend;
