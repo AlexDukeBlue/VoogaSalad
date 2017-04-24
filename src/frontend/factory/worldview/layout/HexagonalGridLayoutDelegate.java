@@ -10,6 +10,7 @@
 package frontend.factory.worldview.layout;
 
 import backend.grid.CoordinateTuple;
+import javafx.scene.shape.Polygon;
 
 class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 
@@ -18,26 +19,21 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 	public static final double FULL_CIRCLE = Math.PI * 2;
 
 	@Override
-	public void layoutCell(CellViewLayoutInterface cell, double scaleFactor, double minWidth, double maxWidth) {
+	public Polygon layoutCell(double scaleFactor, double minWidth, double maxWidth, CoordinateTuple location) {
 		if (scaleFactor <= 0 || scaleFactor > 1 || minWidth <= 0) {
 			throw new RuntimeException();
 		}
-		cell.setPolygon(new Hexagon(0, 0, 0));
-		resizeHexagon((Hexagon) cell.getPolygon(), scaleFactor, minWidth, maxWidth);
-
+		Hexagon hexagon = new Hexagon(0, 0, 0);
+		hexagon.setPoints(scaleFactor, minWidth, maxWidth);
 		double width = minWidth + ((maxWidth - minWidth) * scaleFactor);
 		double radius = width / (Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
-
-		CoordinateTuple rectCoord = cell.getLocation().convertToRectangular();
+		CoordinateTuple rectCoord = location.convertToRectangular();
 		if ((rectCoord.get(Y_INDEX) % 2) == 0) {
-			cell.setX((rectCoord.get(X_INDEX) + .5) * width);
+			hexagon.setLayoutX((rectCoord.get(X_INDEX) + .5) * width);
 		} else {
-			cell.setX((rectCoord.get(X_INDEX) + 1) * width);
+			hexagon.setLayoutX((rectCoord.get(X_INDEX) + 1) * width);
 		}
-		cell.setY(rectCoord.get(Y_INDEX) * (1.5 * radius) + radius);
-	}
-
-	private void resizeHexagon(Hexagon hexagon, double scale, double min, double max) {
-		hexagon.setPoints(scale, min, max);
+		hexagon.setLayoutY(rectCoord.get(Y_INDEX) * (1.5 * radius) + radius);
+		return hexagon;
 	}
 }

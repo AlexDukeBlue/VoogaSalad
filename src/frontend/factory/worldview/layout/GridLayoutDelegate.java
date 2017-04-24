@@ -14,22 +14,22 @@
  */
 package frontend.factory.worldview.layout;
 
+import backend.grid.CoordinateTuple;
+import javafx.scene.shape.Polygon;
+
 public interface GridLayoutDelegate {
 
 	/**
 	 * Takes in a CellView and sets the coordinates at which it should be
 	 * displayed according to the set of bounding constraints that are passed
 	 * in.
-	 * 
-	 * @param cell
-	 *            CellView whose layout is to be set.
 	 * @param scaleFactor
 	 *            A scaling factor to determine where within the min-max range
 	 *            the CellView image's size will fall.
 	 * @param min
-	 *            Minimum size of a CellView
+ *            Minimum size of a CellView
 	 * @param max
-	 *            Maximum size of a CellView
+	 * @param location
 	 */
-	void layoutCell(CellViewLayoutInterface cell, double scaleFactor, double min, double max);
+	Polygon layoutCell(double scaleFactor, double min, double max, CoordinateTuple location);
 }

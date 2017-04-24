@@ -11,7 +11,11 @@ import frontend.View;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,23 +23,29 @@ import javafx.scene.shape.StrokeType;
 
 import java.util.Objects;
 
-public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
-	private final Pane unitView;
+/**
+ * @author th174
+ */
+public final class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
+	private static final double UNIT_SCALE = 0.75;
+	private final BorderPane unitView;
 	private final String unitName;
 	private final CoordinateTuple unitLocation;
-	private Rectangle healthBar;
-	private Rectangle remainingHealthBar;
+	private final Rectangle healthBar;
+	private final Rectangle remainingHealthBar;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 */
-	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ClickHandler clickHandler) {
+	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, ReadOnlyObjectProperty<Bounds> boundsProperty, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
 		ImageView imageView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));
-		imageView.setX(3);
-		unitView = new Pane(imageView);
+		imageView.setManaged(true);
+		imageView.setPickOnBounds(true);
+		imageView.setPreserveRatio(true);
+		unitView = new BorderPane();
 		unitView.setPickOnBounds(true);
 		if (Objects.nonNull(getUnit().getHitPoints())) {
 			remainingHealthBar = new Rectangle();
@@ -47,11 +57,15 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 			healthBar.setStrokeType(StrokeType.OUTSIDE);
 			healthBar.setStroke(Color.WHITE);
 			healthBar.heightProperty().bind(unitView.heightProperty());
-			unitView.getChildren().addAll(remainingHealthBar, healthBar);
+			unitView.setLeft(new Group(healthBar, remainingHealthBar));
+		} else {
+			healthBar = null;
+			remainingHealthBar = null;
 		}
+		unitView.setCenter(imageView);
 		unitView.setOnMouseClicked(event -> handleClick(null));
-		imageView.fitHeightProperty().bind(unitView.heightProperty());
-		imageView.fitWidthProperty().bind(unitView.widthProperty().subtract(3));
+		boundsProperty.addListener((observable, oldValue, newValue) -> centerInBounds(newValue));
+		centerInBounds(boundsProperty.getValue());
 		update();
 	}
 
@@ -71,21 +85,29 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 		}
 	}
 
+	@Override
 	public String getUnitName() {
 		return unitName;
 	}
 
+	@Override
 	public Unit getUnit() {
 		return getController().getCell(unitLocation).getOccupantByName(unitName);
 	}
 
+	@Override
 	public CoordinateTuple getUnitLocation() {
 		return unitLocation;
 	}
 
-	public void setSize(double size) {
-		unitView.setMinSize(size, size);
-		unitView.setMaxSize(size, size);
+	public void centerInBounds(Bounds bounds) {
+		((ImageView) unitView.getCenter()).setFitHeight(bounds.getHeight() * UNIT_SCALE);
+		unitView.setMinWidth(bounds.getWidth() * UNIT_SCALE);
+		unitView.setMaxWidth(bounds.getWidth() * UNIT_SCALE);
+		unitView.setMinHeight(bounds.getHeight() * UNIT_SCALE);
+		unitView.setMaxHeight(bounds.getHeight() * UNIT_SCALE);
+		unitView.setLayoutX(bounds.getMinX() + bounds.getWidth() * (1 - UNIT_SCALE) / 2);
+		unitView.setLayoutY(bounds.getMinY() + bounds.getHeight() * (1 - UNIT_SCALE) / 2);
 	}
 
 	/**
@@ -104,7 +126,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			CoordinateTuple unitLocation = getUnitLocation();
 			String unitName = getUnitName();
@@ -115,10 +137,12 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 				return gameState;
 			});
 		}
+		clickHandler.cancel();
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
-
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
+		//TODO Gameplay
+		actInAuthoringMode(target, additionalInfo, clickHandler);
 	}
 }

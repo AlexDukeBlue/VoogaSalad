@@ -5,7 +5,6 @@ import backend.game_engine.Resultant;
 import backend.grid.GameBoard;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
-import backend.player.Player;
 import backend.player.Team;
 
 import java.util.*;
@@ -51,10 +50,10 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.playerNames = new ArrayList<>();
 		this.isAuthoringMode = false;
 	}
-	
+
 	private static Map<String, Team> getTeamMap(Collection<Team> teams) {
 		Map<String, Team> teamMap = new HashMap<String, Team>();
-		for(Team team: teams){
+		for (Team team : teams) {
 			teamMap.put(team.getName(), team);
 		}
 		return teamMap;
@@ -79,7 +78,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	public boolean isAuthoringMode() {
 		return isAuthoringMode;
 	}
-	
+
 	@Override
 	public void setAuthoringMode(boolean isAuthoringMode) {
 		this.isAuthoringMode = isAuthoringMode;
@@ -112,12 +111,15 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	public GameplayState addPlayer(ImmutablePlayer newPlayer, Team team) {
 		if (playerNames.contains(newPlayer.getName())) {
-			((Player) newPlayer).setName(newPlayer.getName() + " (2)");
+			playerList.get(newPlayer.getName()).setTeam(newPlayer.getTeam());
+		} else {
+			playerNames.add(newPlayer.getName());
+			playerList.put(newPlayer.getName(), newPlayer);
 		}
-		playerNames.add(newPlayer.getName());
-		playerList.put(newPlayer.getName(), newPlayer);
-		team.addAll(newPlayer);
-		teams.put(team.getName(), team);
+		teams.putIfAbsent(newPlayer.getTeam().getName(),newPlayer.getTeam());
+		if (Objects.isNull(teams.get(newPlayer.getTeam().getName()).getByName(newPlayer.getName()))){
+			teams.get(newPlayer.getTeam().getName()).addAll(newPlayer);
+		}
 		return this;
 	}
 

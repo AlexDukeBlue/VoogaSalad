@@ -180,7 +180,9 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 	}
 
 	default Team getTeam() {
-		return getOwner().getTeam();
+		//TODO
+		return new Team("","","");
+//		return getOwner().getTeam();
 	}
 
 	Player getOwner();

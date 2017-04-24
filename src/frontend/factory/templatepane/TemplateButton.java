@@ -27,7 +27,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
 		if (target instanceof AddRemoveButton) {
 			getController().removeTemplatesByCategory(templateCategory, getEntity().getName());
 		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
@@ -56,8 +56,8 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
-		actInAuthoringMode(target, null);
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
+		actInAuthoringMode(target, null, clickHandler);
 	}
 
 	@Override

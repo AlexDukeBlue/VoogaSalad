@@ -11,9 +11,11 @@ import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import backend.util.VoogaEntity;
-import frontend.util.Updatable;
+import frontend.util.UIComponentListener;
 import util.net.Modifier;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collection;
 
@@ -22,11 +24,11 @@ import java.util.Collection;
  */
 public interface Controller {
 
+	ReadonlyGameplayState loadFile(Path path) throws IOException;
+
+	void saveFile(Path path) throws IOException;
+
 	GameBoard getGrid();
-
-	String serialize(ReadonlyGameplayState state);
-
-	ReadonlyGameplayState unserialize(String xml);
 
 	void startClient(String host, int port, Duration timeout);
 
@@ -78,9 +80,9 @@ public interface Controller {
 		removeTemplatesByCategory("terrain", terrainTemplates);
 	}
 
-	void addToUpdated(Updatable objectToUpdate);
+	void addListener(UIComponentListener objectToUpdate);
 
-	void removeFromUpdated(Updatable objectToUpdate);
+	void removeListener(UIComponentListener objectToUpdate);
 	
 	void enterAuthoringMode();
 	
@@ -102,5 +104,7 @@ public interface Controller {
 		removeTemplatesByCategory("team", teamTemplates);
 	}
 
-	void updateAll();
+	void addPlayer(String playerName);
+
+	void undo();
 }

@@ -27,12 +27,13 @@ public class AbilityButton extends VoogaEntityButton {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo) {
-		actInGameplayMode(target, additonalInfo);
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
+		//TODO Disallow in authoring mode?
+		actInGameplayMode(target, additonalInfo, clickHandler);
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation && Objects.nonNull(unitLocation)) {
 			String abilityTargetName = ((GameBoardObjectView) target).getEntity().getName();
 			CoordinateTuple abilityTargetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
@@ -45,5 +46,6 @@ public class AbilityButton extends VoogaEntityButton {
 				return gameState;
 			});
 		}
+		clickHandler.cancel();
 	}
 }

@@ -51,14 +51,14 @@ public class RuleBox extends SelectableUIComponent<Region> {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
 		if (target instanceof AddRemoveButton) {
 			getController();//.removeRules(...)
 		}
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
 
 	}
 }

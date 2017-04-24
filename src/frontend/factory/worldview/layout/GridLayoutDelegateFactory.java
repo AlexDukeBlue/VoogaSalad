@@ -1,18 +1,21 @@
 package frontend.factory.worldview.layout;
 
-public class GridLayoutDelegateFactory implements GridLayoutDelegate{
-	
-	GridLayoutDelegate layoutManager;
+import backend.grid.CoordinateTuple;
+import javafx.scene.shape.Polygon;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class GridLayoutDelegateFactory implements GridLayoutDelegate {
+	private static final Map<Integer, GridLayoutDelegate> DIMENSION_LAYOUT_MANAGER_MAP = new HashMap<>();
+
+	static {
+		DIMENSION_LAYOUT_MANAGER_MAP.put(2, new SquareLayoutDelegate());
+		DIMENSION_LAYOUT_MANAGER_MAP.put(3, new HexagonalGridLayoutDelegate());
+	}
 
 	@Override
-	public void layoutCell(CellViewLayoutInterface cell, double scaleFactor, double min, double max) {
-		if (cell.getLocation().dimension() == 2){
-			layoutManager = new SquareLayoutDelegate();
-		} else {
-			layoutManager = new HexagonalGridLayoutDelegate();
-		}
-		layoutManager.layoutCell(cell, scaleFactor, min, max);
+	public Polygon layoutCell(double scaleFactor, double min, double max, CoordinateTuple location) {
+		return DIMENSION_LAYOUT_MANAGER_MAP.get(location.dimension()).layoutCell(scaleFactor, min, max, location);
 	}
-	
-
 }

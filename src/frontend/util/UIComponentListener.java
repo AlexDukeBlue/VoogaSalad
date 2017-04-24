@@ -1,7 +1,7 @@
 package frontend.util;
 
 /**
- * Updatable objects should be capable of changing their state or their view
+ * UIComponentListener objects should be capable of changing their state or their view
  * when they are updated. One common pattern would be to have a view object that
  * holds a reference to a model object, and the view object can have its
  * update() method called when something in the model changes. This is
@@ -15,7 +15,7 @@ package frontend.util;
  *
  */
 @FunctionalInterface
-public interface Updatable {
+public interface UIComponentListener {
 
 	/**
 	 * Tells the object to update to reflect changes made somewhere else in the
