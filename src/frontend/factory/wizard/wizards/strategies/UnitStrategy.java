@@ -11,6 +11,7 @@ import frontend.factory.wizard.wizards.strategies.wizard_pages.AbilitiesAdderPag
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.TerrainMovePointPage;
+import javafx.beans.binding.StringBinding;
 
 /**
  * UnitStrategy implements the SelectionStrategy interface in order to allow the
@@ -47,9 +48,19 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage("Create New Unit");
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewUnit"), 
+				new StringBinding() {
+
+					@Override
+					protected String computeValue() {
+						return "";
+					}
+			
+		});
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
-		terrainMovePointPage = new TerrainMovePointPage(gameState);
+		terrainMovePointPage = new TerrainMovePointPage(getPolyglot().get("Default_TerrainMovePoint_Title"), 
+				getPolyglot().get("Default_TerrainMovePoint_Description"), 
+				gameState);
 		gridPatternPage = new GridPatternPage();
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
 	}

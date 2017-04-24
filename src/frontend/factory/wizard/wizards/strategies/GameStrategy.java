@@ -44,9 +44,12 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	}
 
 	private void initialize() {
-		gameNamePage = new ImageNameDescriptionPage(getString("CreateNewGame"), getString("CreateNewGameDesc"));
-		boardNamePage = new ImageNameDescriptionPage(getString("CreateNewBoard"), getString("CreateNewBoardDesc"));
-		gridInstantiationPage = new GridInstantiationPage();
+		gameNamePage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewGame"), 
+				getPolyglot().get("CreateNewGameDesc"));
+		boardNamePage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewBoard"), 
+				getPolyglot().get("CreateNewBoardDesc"));
+		gridInstantiationPage = new GridInstantiationPage(getPolyglot().get("Default_GridInstantiation_Title"), 
+				getPolyglot().get("Default_GridInstantiation_Description"));
 		// additionalUnitWizardsPage = new AdditionalWizardsPage<>("Create
 		// Units",
 		// "Use the wizards below to create new units", UnitWizard.class);

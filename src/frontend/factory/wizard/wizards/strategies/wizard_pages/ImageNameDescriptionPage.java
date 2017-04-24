@@ -1,6 +1,7 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
 import frontend.View;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -22,10 +23,10 @@ import java.io.File;
  * @author Andreas
  */
 public class ImageNameDescriptionPage extends BaseWizardPage {
-	private static final String DEFAULT_TITLE = "Set Image, Name, and Description";
-	private static final String DEFAULT_DESCRIPTION = "You must choose a file for the image and set the name. The description is optional.";
-	private static final double DEFAULT_INSETS = 10;
-	private static final double DEFAULT_SPACING = 10;
+	//private static final String DEFAULT_TITLE = "Set Image, Name, and Description";
+	//private static final String DEFAULT_DESCRIPTION = "You must choose a file for the image and set the name. The description is optional.";
+	//private static final double DEFAULT_INSETS = 10;
+	//private static final double DEFAULT_SPACING = 10;
 
 	private HBox hbox;
 	private Button uploadButton;
@@ -35,15 +36,31 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	private TextArea descriptionField;
 
 	public ImageNameDescriptionPage() {
-		this(DEFAULT_TITLE);
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
-	public ImageNameDescriptionPage(String title) {
-		this(title, DEFAULT_DESCRIPTION);
+	public ImageNameDescriptionPage(StringBinding title) {
+		this(title, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
-	public ImageNameDescriptionPage(String title, String description) {
-		super(title, description);
+	public ImageNameDescriptionPage(StringBinding title, StringBinding description) {
+		super();
+		this.setTitle(title);
+		this.setDescription(description);
 		initialize();
 	}
 
@@ -72,14 +89,15 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		imagePath = "";
 		hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
-		hbox.setPadding(new Insets(DEFAULT_INSETS));
-		hbox.setSpacing(DEFAULT_SPACING);
-		uploadButton = new Button("Upload Image");
+		hbox.setPadding(new Insets(Double.parseDouble(getResourceBundle().getString("DEFAULT_INSETS"))));
+		hbox.setSpacing(Double.parseDouble(getResourceBundle().getString("DEFAULT_SPACING")));
+		uploadButton = new Button();
+		uploadButton.textProperty().bind(getPolyglot().get("Upload_Image"));
 		imageView = new ImageView();
 		nameField = new TextField();
-		nameField.setPromptText("Name");
+		nameField.promptTextProperty().bind(getPolyglot().get("Name"));;
 		descriptionField = new TextArea();
-		descriptionField.setPromptText("Description (optional)");
+		descriptionField.promptTextProperty().bind(getPolyglot().get("Description"));
 		VBox imageBox = new VBox();
 		imageBox.getChildren().addAll(imageView, uploadButton);
 		VBox nameAndDescription = new VBox();
