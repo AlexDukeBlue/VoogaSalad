@@ -1,3 +1,6 @@
+#Autosaves#
+data/saved_game_data/autosaves/*
+
 # IDEA Ignores #
 ################
 *.iml

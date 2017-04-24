@@ -13,6 +13,9 @@ import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import polyglot.PolyglotException;
 
@@ -31,7 +34,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
 			newTriggeredAbilityItem, newInteractionModifierItem, conditionsPaneItem, templatePaneItem, detailsPaneItem,
-			statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem;
+			statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -71,7 +74,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		});
 		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
-
+		undoItem = factory.getMenuItem(getPolyglot().get("Undo"), e -> getController().undo());
+		undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 		newUnitItem = factory.getMenuItem(getPolyglot().get("CreateNewUnit"), e -> create("unit"));
 		newTerrainItem = factory.getMenuItem(getPolyglot().get("CreateNewTerrain"), e -> create("terrain"));
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
@@ -127,6 +131,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		file.getItems().add(quitItem);
 
 		edit = factory.getMenu(getPolyglot().get("Edit"));
+		edit.getItems().add(undoItem);
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);

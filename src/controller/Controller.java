@@ -106,5 +106,5 @@ public interface Controller {
 
 	void addPlayer(String playerName);
 
-	void updateAll();
+	void undo();
 }

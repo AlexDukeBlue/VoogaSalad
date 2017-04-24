@@ -20,27 +20,36 @@ import util.net.ObservableServer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * @author Created by ncp14
+ * @author Created by ncp14, th174
  *         This class is the communication controller which communicates between the frontend and backend.
  *         The primary purpose of my controller is to hide implementation of backend structure, specifically how
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
+	//TODO RESOURCE BUNDLE PLS
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
+	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
 	private final Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
 	private String playerName;
 	private final CountDownLatch waitForReady;
+	private Deque<Path> saveHistory;
 
 	public CommunicationController(String username) {
 		this(username, Collections.emptyList());
@@ -51,6 +60,7 @@ public class CommunicationController implements Controller {
 		this.waitForReady = new CountDownLatch(1);
 		this.playerName = username;
 		this.executor = Executors.newCachedThreadPool();
+		this.saveHistory = new ArrayDeque<>();
 	}
 
 	public void startClient(String host, int port, Duration timeout) {
@@ -82,6 +92,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void saveFile(Path path) throws IOException {
+		Files.createDirectories(path.getParent());
 		Files.write(path, ((String) XML.serialize(getAuthoringGameState())).getBytes());
 	}
 
@@ -111,7 +122,6 @@ public class CommunicationController implements Controller {
 	@Override
 	public <U extends ReadonlyGameplayState> void setGameState(U gameState) {
 		getClient().addToOutbox(gameState);
-		addPlayer(this.playerName);
 	}
 
 	@Override
@@ -220,8 +230,30 @@ public class CommunicationController implements Controller {
 		});
 	}
 
-	@Override
-	public void updateAll() {
+	private void updateAll() {
+		executor.execute(() -> {
+			try {
+				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
+				saveHistory.push(autoSavePath);
+				saveFile(autoSavePath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
+	}
+
+	public void endTurn() {
+		sendModifier(GameplayState::endTurn);
+	}
+
+	@Override
+	public void undo() {
+		try {
+			saveHistory.pop();
+			setGameState(loadFile(saveHistory.pop()));
+		} catch (IOException ignored) {
+			ignored.printStackTrace();
+		}
 	}
 }
