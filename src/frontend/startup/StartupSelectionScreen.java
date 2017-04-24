@@ -14,7 +14,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -98,18 +101,27 @@ public class StartupSelectionScreen extends VBox {
 				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color, endColor)));
 		create.setOnAction(event -> {
 			timeline.play();
-			String port = popupWindow();
-			create(Integer.parseInt(port));
+			try{
+				create(getPortNumber());
+			} catch (Exception e){
+				throwServerAlert();
+			}
 		});
 		join.setOnAction(event -> {
 			timeline.play();
-			String port = popupWindow();
-			join(Integer.parseInt(port));
+			try{
+				join(getPortNumber());
+			} catch (Exception e){
+				throwServerAlert();
+			}
 		});
 		load.setOnAction(event -> {
 			timeline.play();
-			String port = popupWindow();
-			load(Integer.parseInt(port));
+			try{
+				load(getPortNumber());
+			} catch (Exception e){
+				throwServerAlert();
+			}
 		});
 		// Create a rotating rectangle and set it as the graphic for the button
 		final Rectangle rotatingRect = new Rectangle(5, 5, 10, 6);
@@ -148,25 +160,32 @@ public class StartupSelectionScreen extends VBox {
 		this.setSpacing(10);
 		this.setMinWidth(450);
 		this.setMinHeight(400);
-		//this.getChildren().addAll(play, create, edit);
 		this.getChildren().add(create);
 		this.getChildren().add(load);
 		this.getChildren().add(join);
 	}
 
-	public String popupWindow() {
-		TextInputDialog dialog = new TextInputDialog("Enter a number");
-		dialog.setTitle("Creating server....");
-		dialog.setHeaderText("Enter a port number for your server");
-		dialog.setContentText("Port number:");
-		Optional<String> result = dialog.showAndWait();
-		return result.orElse("10000");
+	private int getPortNumber() {
+		try{
+			TextInputDialog dialog = new TextInputDialog("Enter a number");
+			dialog.setTitle("Creating server....");
+			dialog.setHeaderText("Enter a port number for your server");
+			dialog.setContentText("Port number:");
+			Optional<String> result = dialog.showAndWait();
+			if(isValidPort(Integer.parseInt(result.get()))){
+				return Integer.parseInt(result.get());
+			} else {
+				throw new RuntimeException();
+			}
+		} catch (Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void create(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		WizardFactory.newWizard("gamestate", null).addObserver((o, arg) -> {
-			GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
+			//GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
 			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 			createGame();
@@ -176,7 +195,6 @@ public class StartupSelectionScreen extends VBox {
 	private void join(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
-		control.updateAll();
 	}
 
 	private void load(int port) {
@@ -200,5 +218,15 @@ public class StartupSelectionScreen extends VBox {
 	private void createGame() {
 		View view = new View(control, stage);
 		stage.setScene(new Scene(view.getObject()));
+	}
+	
+	private boolean isValidPort(int port){
+		return (port > 1024 && port <= 65535);
+	}
+	
+	private void throwServerAlert(){
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setContentText("Invalid Port Number"); //TODO Resource bundle this jawn		
+		alert.show();
 	}
 }
