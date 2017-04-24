@@ -21,7 +21,6 @@ import javafx.scene.layout.Region;
  *
  */
 public class NumericInputRow extends BaseUIManager<Region> {
-	//private static final double IMAGE_SIZE = 30;
 
 	private HBox myNumericInputRow;
 	private TextField myNumericalInputField;
