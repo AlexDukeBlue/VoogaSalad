@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import polyglot.PolyglotException;
 
 /**
  * SimpleWorldView sets up and displays a Region object that contains a grid of
@@ -40,6 +41,14 @@ class SimpleWorldView extends ClickableUIComponent<Region> implements WorldViewE
 	public SimpleWorldView(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		initialize();
+		getPolyglot().setOnLanguageChange(change -> {
+			try {
+				myGrid.getPolyglot().setLanguage(getPolyglot().getLanguage());
+			} catch (PolyglotException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 	}
 
 	public ScrollPane getGridPane() {

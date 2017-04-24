@@ -22,10 +22,10 @@ public class StrategyFactory {
 			return strategyMap.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
 		} catch (Exception e) {
 			try {
-				System.out.println(strategyMap);
-				System.out.println(strategyMap.get(categoryName));
-				System.out.println(strategyMap.get(categoryName).getConstructor());
-				System.out.println(strategyMap.get(categoryName).getConstructor().newInstance());
+//				System.out.println(strategyMap);
+//				System.out.println(strategyMap.get(categoryName));
+//				System.out.println(strategyMap.get(categoryName).getConstructor());
+//				System.out.println(strategyMap.get(categoryName).getConstructor().newInstance());
 				return strategyMap.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
 				throw new Error("Wizard not supported: " + categoryName, e1);

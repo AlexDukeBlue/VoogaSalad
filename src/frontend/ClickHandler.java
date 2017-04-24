@@ -55,6 +55,7 @@ public abstract class ClickHandler {
 		}
 		selectedComponent = null;
 		additionalInfo = null;
+		abilityPane.setContent(null);
 	}
 
 	private void showDetail(ClickableUIComponent clickedComponent) {
