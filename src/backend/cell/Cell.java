@@ -3,17 +3,26 @@ package backend.cell;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.*;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public interface Cell extends Serializable, HasTriggeredAbilities,HasLocation {
+public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, VoogaEntity {
+	Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Cell>> DISPATCH_MAP = new HashMap<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Cell>>() {{
+		put(ModifiableTerrain.class, (theTerrain, cell) -> ((ModifiableCell) cell).setTerrain((Terrain) theTerrain));
+		put(ModifiableUnit.class, ((unit, cell) -> cell.addOccupants((Unit) unit)));
+		put(Ability.class, ((ability, cell) -> cell.getTerrain().addAbility((Ability) ability)));
+	}};
+
 	ModifiableCell copy();
 
 	void startTurn(GameplayState gameState);
@@ -50,5 +59,8 @@ public interface Cell extends Serializable, HasTriggeredAbilities,HasLocation {
 
 	ModifiableCell removeOccupants(Unit... units);
 
-	void addVoogaEntity(VoogaEntity voogaEntity);
+	default Cell add(VoogaEntity voogaEntity) {
+		DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);
+		return this;
+	}
 }

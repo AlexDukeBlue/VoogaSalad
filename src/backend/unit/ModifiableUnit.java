@@ -32,6 +32,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
 			.addActiveAbilities(ActiveAbility.BOW);
 	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
+
 	private final ActiveAbilitySet activeAbilities;
 	private final TriggeredAbilitySet triggeredAbilities;
 	private final OffensiveModifierSet offensiveModifiers;
@@ -109,7 +110,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	@Override
 	public void takeDamage(double damage) {
 		getHitPoints().setCurrentValue(getHitPoints().getCurrentValue() - damage);
-		if (getHitPoints().isEmpty()){
+		if (getHitPoints().isEmpty()) {
 			getCurrentCell().removeOccupants(this);
 		}
 	}

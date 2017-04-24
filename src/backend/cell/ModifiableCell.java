@@ -8,7 +8,6 @@ import backend.unit.Unit;
 import backend.util.*;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 import static backend.util.ImmutableVoogaObject.getPredefined;
 
@@ -16,14 +15,6 @@ import static backend.util.ImmutableVoogaObject.getPredefined;
  * @author Created by th174 on 3/31/2017.
  */
 public class ModifiableCell implements Cell {
-	private static final Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, ModifiableCell>> actionOnClass = new HashMap<>();
-
-	static {
-		actionOnClass.put(ModifiableTerrain.class, (theTerrain, cell) -> cell.setTerrain((Terrain) theTerrain));
-		actionOnClass.put(ModifiableUnit.class, ((unit, cell) -> cell.addOccupants((Unit) unit)));
-		actionOnClass.put(Ability.class, ((ability, cell) -> cell.getTerrain().addAbility((Ability) ability)));
-	}
-
 	private final Map<String, Unit> occupants;
 	private Shape shape;
 	private Terrain terrain;
@@ -166,11 +157,6 @@ public class ModifiableCell implements Cell {
 	private void processTriggers(Event event, GameplayState gameState) {
 		occupants.values().forEach(unit -> getTerrain().getTriggeredAbilities().forEach(ability -> ability.affect(unit, event, gameState)));
 		getTerrain().removeTriggeredAbilitiesIf(TriggeredEffect::isExpired);
-	}
-
-	@Override
-	public void addVoogaEntity(VoogaEntity voogaEntity) {
-		actionOnClass.get(voogaEntity.getClass()).accept(voogaEntity, this);
 	}
 
 	@Override

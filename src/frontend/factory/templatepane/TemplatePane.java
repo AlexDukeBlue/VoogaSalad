@@ -42,7 +42,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	public TemplatePane(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		contents = new HashMap<>();
-		Stream.of("Units", "Terrains")
+		Stream.of("Units", "Terrains","ActiveAbilities")
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		update();

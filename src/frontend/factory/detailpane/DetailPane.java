@@ -119,11 +119,13 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
-			setActiveAbilititesContent((ModifiableUnit) sprite);
+			setAbilityPaneContent((ModifiableUnit) sprite);
 		} else if (sprite instanceof Cell) {
 			newSpriteInfo = new Label(setTerrainContent(((Cell) sprite).getTerrain()));
-		} else {
+		} else if (sprite instanceof ModifiableTerrain){
 			newSpriteInfo = new Label(setTerrainContent((ModifiableTerrain) sprite));
+		} else {
+			newSpriteInfo = new Label(content);
 		}
 		spriteInfo = newSpriteInfo;
 		setLabel();
@@ -137,7 +139,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		return content;
 	}
 
-	private void setActiveAbilititesContent(Unit unit) {
+	private void setAbilityPaneContent(Unit unit) {
 		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
 		Label AALabel = new Label(AAContent);
 		AAPane.getChildren().add(AALabel);
