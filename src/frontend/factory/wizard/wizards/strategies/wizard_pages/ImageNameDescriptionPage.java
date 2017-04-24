@@ -23,10 +23,6 @@ import java.io.File;
  * @author Andreas
  */
 public class ImageNameDescriptionPage extends BaseWizardPage {
-	//private static final String DEFAULT_TITLE = "Set Image, Name, and Description";
-	//private static final String DEFAULT_DESCRIPTION = "You must choose a file for the image and set the name. The description is optional.";
-	//private static final double DEFAULT_INSETS = 10;
-	//private static final double DEFAULT_SPACING = 10;
 
 	private HBox hbox;
 	private Button uploadButton;

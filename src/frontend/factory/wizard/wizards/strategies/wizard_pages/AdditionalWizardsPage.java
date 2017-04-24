@@ -79,11 +79,8 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 
 	private void notifyUser(Exception e) {
 		Alert alert = new Alert(AlertType.ERROR);
-		//alert.setTitle("Error");
 		alert.titleProperty().bind(getPolyglot().get("Error"));
-		//alert.setHeaderText("Could not instantiate proper wizards.");
 		alert.headerTextProperty().bind(getPolyglot().get("No_Instantiate_Wizard_Message"));
-		//alert.setContentText("Try entering a smaller number.");
 		alert.contentTextProperty().bind(getPolyglot().get("No_Instantiate_Wizard_Content"));
 		alert.showAndWait();
 	}

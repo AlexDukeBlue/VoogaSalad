@@ -11,9 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
 public class GridPatternPage extends BaseWizardPage{
-
-	//private static final String DEFAULT_TITLE = "Set GridPattern";
-	//private static final String DEFAULT_DESCRIPTION = "Choose the GridPattern for the Unit you are making.";
 	
 	private VBox vb;
 	private WizardGrid grid;
