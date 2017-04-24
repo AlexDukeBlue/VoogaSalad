@@ -1,5 +1,6 @@
 package frontend.factory.worldview;
 
+import backend.util.AuthoringGameState;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
