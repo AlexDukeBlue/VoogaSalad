@@ -172,7 +172,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			alert.headerTextProperty().bind(getPolyglot().get("CurrentGameWillNotSave"));
 			alert.contentTextProperty().bind(getPolyglot().get("TryAgain"));
 			Optional<ButtonType> result = alert.showAndWait();
-
 			if (result.get() == ButtonType.OK) {
 				save();
 			}

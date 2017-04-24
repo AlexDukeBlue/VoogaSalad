@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -40,7 +39,7 @@ public class CommunicationController implements Controller {
 	private final Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
-	private final String playerName;
+	private String playerName;
 	private final CountDownLatch waitForReady;
 
 	public CommunicationController(String username) {
@@ -59,16 +58,13 @@ public class CommunicationController implements Controller {
 			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
 			mClient.addListener(newGameState -> updateGameState());
 			executor.execute(mClient);
-			String playerName = this.playerName;
-			sendModifier((AuthoringGameState state) -> {
-				state.addPlayer(new Player(playerName, "Test player", ""));
-				return state;
-			});
+			addPlayer(this.playerName);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	@Override
 	public void startServer(ReadonlyGameplayState gameState, int port, Duration timeout) {
 		try {
 			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, XML, XML, timeout);
@@ -95,16 +91,6 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public String serialize(ReadonlyGameplayState state) {
-		return (String) XML.serialize(state);
-	}
-
-	@Override
-	public ReadonlyGameplayState unserialize(String xml) {
-		return XML.unserialize(xml);
-	}
-
-	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
@@ -125,6 +111,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public <U extends ReadonlyGameplayState> void setGameState(U gameState) {
 		getClient().addToOutbox(gameState);
+		addPlayer(this.playerName);
 	}
 
 	@Override
@@ -152,10 +139,6 @@ public class CommunicationController implements Controller {
 		return getGameState().getPlayerByName(name);
 	}
 
-	public Map<CoordinateTuple, Cell> getModifiableCells() {
-		return getGameState().getGrid().getCells();
-	}
-
 	@Override
 	public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
 		try {
@@ -164,8 +147,6 @@ public class CommunicationController implements Controller {
 			e.printStackTrace();
 		}
 		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
-		//lol this is so unsafe
-//		mGameState = modifier.modify((U) mGameState);
 	}
 
 	@Override
@@ -218,9 +199,9 @@ public class CommunicationController implements Controller {
 			state.setAuthoringMode(false);
 			return state;
 		});
-
 	}
 
+	@Override
 	public boolean isAuthoringMode() {
 		return getGameState().isAuthoringMode();
 	}
@@ -230,6 +211,16 @@ public class CommunicationController implements Controller {
 		return playerName;
 	}
 
+	@Override
+	public void addPlayer(String playerName) {
+		this.playerName = playerName;
+		sendModifier((AuthoringGameState state) -> {
+			state.addPlayer(new Player(playerName, "Test player", ""));
+			return state;
+		});
+	}
+
+	@Override
 	public void updateAll() {
 		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
 	}
