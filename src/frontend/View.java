@@ -32,6 +32,8 @@ import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Alert;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
@@ -53,7 +55,8 @@ public class View extends ClickableUIComponent<Region> {
 
 	private SplitPane outerSplitPane;
 	private SplitPane innerSplitPane;
-	SplitPane bottomPane;
+	private SplitPane bottomPane;
+	private SplitPane worldAndDetailPane;
 	private VoogaMenuBar menuBar;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
@@ -94,8 +97,8 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void toggleDetailsPane() {
-		if (!outerSplitPane.getItems().remove(bottomPane)) {
-			outerSplitPane.getItems().add(bottomPane);
+		if (!worldAndDetailPane.getItems().remove(bottomPane)) {
+			worldAndDetailPane.getItems().add(bottomPane);
 		}
 	}
 
@@ -129,10 +132,10 @@ public class View extends ClickableUIComponent<Region> {
 		bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
 		bottomPane.setDividerPositions(.8);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
-		SplitPane temp1 = new SplitPane(worldView.getGridPane(), bottomPane);
-		temp1.setDividerPositions(1);
-		temp1.setOrientation(Orientation.VERTICAL);
-		innerSplitPane = new SplitPane(conditionsPane.getObject(), temp1, rightPane);
+		worldAndDetailPane = new SplitPane(worldView.getGridPane(), bottomPane);
+		worldAndDetailPane.setDividerPositions(1);
+		worldAndDetailPane.setOrientation(Orientation.VERTICAL);
+		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldAndDetailPane, rightPane);
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
 		outerSplitPane = new SplitPane(menuBar.getObject(),innerSplitPane);
@@ -167,8 +170,9 @@ public class View extends ClickableUIComponent<Region> {
 				tempPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 			} catch (PolyglotException e) {
-				//TODO display dialog that we could not change language
-				e.printStackTrace();
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setContentText("Language Could Not Be Changed"); //TODO Resource bundle
+				alert.show();
 			}
 		});
 	}
