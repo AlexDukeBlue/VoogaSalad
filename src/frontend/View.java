@@ -200,12 +200,21 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	/**
-	 * Performs all necessary actions to convert the View into development mode.
-	 * If the View is already in development mode, then nothing visually
+	 * Performs all necessary actions to convert the View into authoring mode.
+	 * If the View is already in authoring mode, then nothing visually
 	 * changes.
 	 */
 	private void enterAuthorMode() {
-		// addSidePanes();
+		addSidePanes();
+	}
+
+	private void addSidePanes() {
+		if(!innerSplitPane.getItems().contains(conditionsPane.getObject())){
+			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
+		}
+		if(!innerSplitPane.getItems().contains(rightPane)){
+			innerSplitPane.getItems().add(rightPane);
+		}
 	}
 
 	/**
@@ -213,8 +222,12 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
+		removeSidePanes();
+	}
 
-		// removeSidePanes();
+	private void removeSidePanes() {
+		innerSplitPane.getItems().remove(conditionsPane.getObject());
+		innerSplitPane.getItems().remove(rightPane);
 	}
 
 	@Override
