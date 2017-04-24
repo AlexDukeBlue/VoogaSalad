@@ -3,14 +3,7 @@
  */
 package frontend.util;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.ResourceBundle;
-
 import com.sun.javafx.collections.UnmodifiableObservableMap;
-
 import controller.Controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,8 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import polyglot_extended.ObservablePolyglot;
 
+import java.util.*;
+
 /**
- * SlogoBaseUIManager is the base class for every front end class in the Slogo
+ *
+ * SlogoBaseUIManager (LOLWUT) is the base class for every front end class in the Slogo
  * program. It was designed to be powerful enough to add significant
  * functionality to all classes that extend it, while being flexible enough to
  * allow any UI class to extend it.
@@ -59,15 +55,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
-<<<<<<< HEAD
-	 * stylesheet to default. The default language is English.
-	 * Yo Dylan wrong project lmao
-	 *
-	 * @param clickHandler
-=======
 	 * stylesheet to default. The default language is English. Yo Dylan wrong
 	 * project lmao
->>>>>>> resourcebundlify-2
 	 */
 	public BaseUIManager() {
 		this(null);
@@ -146,7 +135,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 				e.printStackTrace();
 				polyglot = null;
 			}
-			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
+//			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
 		}
 		return polyglot;
 	}

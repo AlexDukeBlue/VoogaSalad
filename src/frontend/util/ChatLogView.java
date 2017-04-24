@@ -51,6 +51,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		pane.setMaxSize(1000, 600);
 		textArea = initTextArea();
 		pane.setBottom(initTextInputBox());
+		pane.setPickOnBounds(true);
 		mediaPlayer = new MediaPlayer(new Media(Paths.get(getResourceBundle().getString("steamMessageSoundPath")).toUri().toString()));
 		pane.getStylesheets().clear();
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));

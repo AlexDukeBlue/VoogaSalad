@@ -1,10 +1,5 @@
 package frontend.factory.worldview;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
 import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
@@ -18,8 +13,6 @@ import frontend.factory.worldview.layout.CellViewLayoutInterface;
 import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -30,6 +23,11 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import polyglot_extended.ObservablePolyglot;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 class SimpleCellView extends ClickableUIComponent<Group>
 		implements CellViewLayoutInterface, CellViewExternal, PolyglotDelegate {
@@ -165,13 +163,12 @@ class SimpleCellView extends ClickableUIComponent<Group>
 						yCenter - unitView.getObject().getHeight() / 2.0);
 			});
 			setContextMenu();
-			installToolTips();
 		}
-
+		installToolTips();
 	}
 
 	private void installToolTips() {
-		unitViews.stream().forEach(unitView -> toolTip(unitView));
+		unitViews.forEach(uv -> Tooltip.install(uv.getObject(), new Tooltip(getToolTipString(uv))));
 	}
 
 	private void setContextMenu() {
@@ -189,25 +186,7 @@ class SimpleCellView extends ClickableUIComponent<Group>
 		});
 	}
 
-	/**
-	 * creates a popup that gives information about the unit
-	 */
-	private void toolTip(UnitViewExternal uv) {
-		Tooltip toolTip = new Tooltip();
-		setToolTipString(uv, toolTip);
-		Tooltip.install(uv.getObject(), toolTip);
-		// String hp = "";
-		// UnitStat<Double> hitpoints = uv.getUnit().getHitPoints();
-		// if (Objects.nonNull(hitpoints)) {
-		// hp = String.format("\nHitpoints:%2.0f/%2.0f",
-		// hitpoints.getCurrentValue(), hitpoints.getMaxValue());
-		// }
-		// Tooltip.install(uv.getObject(), new Tooltip(
-		// String.format("Name:%s\nPosition: %s%s", uv.getUnitName(),
-		// uv.getUnit().getLocation().toString(), hp)));
-	}
-
-	private void setToolTipString(UnitViewExternal uv, Tooltip toolTip) {
+	private String getToolTipString(UnitViewExternal uv) {
 		String hp = "";
 		UnitStat<Double> hitpoints = uv.getUnit().getHitPoints();
 		if (Objects.nonNull(hitpoints)) {
@@ -216,7 +195,7 @@ class SimpleCellView extends ClickableUIComponent<Group>
 		}
 		String formatString = getPolyglot().get("Name").getValueSafe() + ": %s\n"
 				+ getPolyglot().get("Position").getValueSafe() + ": %s%s";
-		toolTip.setText(String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp));
+		return String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp);
 	}
 
 	private void mouseOver() {
