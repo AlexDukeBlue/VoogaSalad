@@ -29,7 +29,6 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region>{
 			}
 			
 		}, wizard);
-		//initialize(description,wizard);
 	}
 	
 	public AdditionalWizardRow(StringBinding description, Wizard<T> wizard){
