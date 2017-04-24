@@ -2,12 +2,12 @@ package backend.util;
 
 import backend.player.ImmutablePlayer;
 
+import java.io.Serializable;
 import java.util.function.BiConsumer;
 
-public class Actionable {
+public class Actionable extends ImmutableVoogaObject<Actionable> {
 
-	private BiConsumer<ImmutablePlayer, GameplayState> biCon;
-	private String nameOf;
+	private SerializableBiConsumer biCon;
 
 	/**
 	 * Pass a BiConsumer<ImmutablePlayer, GameplayState> with a name so that it can later be removed if necessary.
@@ -15,26 +15,28 @@ public class Actionable {
 	 * @param biconsumer
 	 * @param name
 	 */
-	public Actionable(BiConsumer<ImmutablePlayer, GameplayState> bi, String name) {
+	public Actionable(SerializableBiConsumer bi, String name, String description) {
+		this(bi, name, description, "");
+	}
+	
+	public Actionable(SerializableBiConsumer bi, String name, String description, String imgPath) {
+		super(name, description, imgPath);
 		biCon = bi;
-		nameOf = name;
 	}
 
 	/**
-	 * Returns the Actionable's BiConsumer.
+	 * Returns the Actionable's BiConsumer. //TODO make correct
 	 *
 	 * @return BiConsumer<ImmutablePlayer, GameplayState>
 	 */
-	public BiConsumer<ImmutablePlayer, GameplayState> getBiConsumer() {
-		return biCon;
+	public void accept(ImmutablePlayer player, ReadonlyGameplayState gameState) {
+		biCon.accept(player, gameState);
 	}
 
-	/**
-	 * Returns the name of the BiConsumer.
-	 *
-	 * @return String
-	 */
-	public String getNameOf() {
-		return nameOf;
+	@Override
+	public Actionable copy() {
+		return new Actionable(biCon, getName(), getDescription(), getImgPath());
 	}
+	
+	private interface SerializableBiConsumer extends BiConsumer<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
 }

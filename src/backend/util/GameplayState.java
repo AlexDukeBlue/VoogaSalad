@@ -27,6 +27,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private final Collection<Requirement> turnRequirements;
 	private int turnNumber;
 	private int currentPlayerNumber;
+	private boolean isAuthoringMode;
 	private volatile GameBoard grid;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
@@ -53,6 +54,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.turnRequirements = new HashSet<>(turnRequirements);
 		this.playerList = new HashMap<>();
 		this.playerNames = new ArrayList<>();
+		this.isAuthoringMode = false;
 	}
 	
 	private static Map<String, Team> getTeamMap(Collection<Team> teams) {
@@ -80,7 +82,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public boolean isAuthoringMode() {
-		return (this instanceof AuthoringGameState);
+		return isAuthoringMode;
+	}
+	
+	@Override
+	public void setAuthoringMode(boolean isAuthoringMode) {
+		this.isAuthoringMode = isAuthoringMode;
 	}
 
 	@Override
@@ -161,7 +168,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.getBiPredicate().test(getCurrentPlayer(), this));
+		return turnRequirements.stream().allMatch(e -> e.test(getCurrentPlayer(), this));
 	}
 
 	public GameplayState messageAll(String message, ImmutablePlayer sender) {
@@ -254,4 +261,5 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
+
 }

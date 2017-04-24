@@ -87,9 +87,15 @@ public class View extends ClickableUIComponent<Region> {
 	public void setEditable(boolean editable) {
 		if (editable) {
 			getController().enterAuthoringMode();
-			enterAuthorMode();
 		} else {
 			getController().enterGamePlayMode();
+		}
+	}
+	
+	private void setViewEditable(boolean editable){
+		if (editable) {
+			enterAuthorMode();
+		} else {
 			enterPlayMode();
 		}
 	}
@@ -252,6 +258,6 @@ public class View extends ClickableUIComponent<Region> {
 
 	@Override
 	public void update() {
-		this.setEditable(getController().isAuthoringMode());
+		this.setViewEditable(getController().isAuthoringMode());
 	}
 }
