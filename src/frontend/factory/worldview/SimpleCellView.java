@@ -189,7 +189,7 @@ class SimpleCellView extends ClickableUIComponent<Group>
 			item
 			.addEventHandler(
 					ActionEvent.ACTION,
-					event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
+					event -> unitViews.stream().filter(p -> p.getUnitName().equals(e.getName()))
 							.forEach(f -> f.handleClick(null)));
 		});
 	}
