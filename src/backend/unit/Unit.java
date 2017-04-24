@@ -13,6 +13,7 @@ import backend.unit.properties.Faction;
 import backend.unit.properties.InteractionModifier;
 import backend.unit.properties.UnitStat;
 import backend.util.*;
+import polyglot_extended.ObservablePolyglot;
 
 import java.util.*;
 import java.util.stream.Collectors;

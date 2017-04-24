@@ -6,8 +6,8 @@ import backend.util.GameplayState;
 import backend.util.HasLocation;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.util.GameBoardObjectView;
 import frontend.util.VoogaEntityButton;
 
