@@ -14,12 +14,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
-import polyglot.PolyglotException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal, PolyglotDelegate {
+class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal{
 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 	private final ScrollPane myScrollPane;
@@ -45,7 +44,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		cellViewObjects.setBackground(new Background(
 				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().stream().forEach(coordinate -> {
-			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), this);
+			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler());
 			cellViews.add(cl);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
 			cl.update();

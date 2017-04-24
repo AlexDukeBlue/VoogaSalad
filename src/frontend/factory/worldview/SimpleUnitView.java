@@ -25,14 +25,12 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	private final CoordinateTuple unitLocation;
 	private Rectangle healthBar;
 	private Rectangle remainingHealthBar;
-	private PolyglotDelegate delegate;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
 	 */
-	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ClickHandler clickHandler, PolyglotDelegate delegate) {
+	public SimpleUnitView(String unitName, CoordinateTuple unitLocation, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
-		this.delegate = delegate;
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
 		ImageView imageView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));

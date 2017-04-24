@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 public abstract class ClickHandler {
 	private static final Highlighter SELECTED_HIGHLIGHTER = new ShadowHighlighter();
-	private SelectableUIComponent selectedComponent;
+	private SelectableUIComponent<? extends Node> selectedComponent;
 	private Object additionalInfo;
 	private DetailPaneExternal detailPane;
 	private AbilityPane abilityPane;
@@ -52,6 +52,7 @@ public abstract class ClickHandler {
 	public final void cancel() {
 		if (selectedComponent != null) {
 			selectedComponent.deselect();
+			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getObject());
 		}
 		selectedComponent = null;
 		additionalInfo = null;

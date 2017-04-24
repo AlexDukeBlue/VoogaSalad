@@ -26,5 +26,4 @@ public interface Highlighter {
 	 * @param node Node from which to remove highlight effect.
 	 */
 	void removeHighlight(Node node);
-	
 }

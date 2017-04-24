@@ -46,6 +46,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_STYLE_KEY = "DefaultStyleSheet";
 	private static final String API_KEY = "AIzaSyB-TQZwz6yDEvQfHTK2JdWNXLa1LfLXQz8";
+	private static final Map<String, ObservablePolyglot> POLYGLOT_CACHE = new HashMap<>();
 
 	private final ObjectProperty<ResourceBundle> language;
 	private final ObjectProperty<String> styleSheet;
@@ -126,18 +127,19 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public void update() {
 	}
 
-	public ObservablePolyglot getPolyglot() {
-		if (polyglot == null) { // lazy instantiation to prevent excessive
-								// network access from classes that don't use
-								// the polyglot
+	public static ObservablePolyglot getPolyglot(String resourcePath){
+		if (!POLYGLOT_CACHE.containsKey(resourcePath)){
 			try {
-				polyglot = new ObservablePolyglot(API_KEY, resourcePath);
+				POLYGLOT_CACHE.put(resourcePath,new ObservablePolyglot(API_KEY, resourcePath));
 			} catch (PolyglotException e) {
 				throw new Error(e);
 			}
-//			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
 		}
-		return polyglot;
+		return POLYGLOT_CACHE.get(resourcePath);
+	}
+
+	public ObservablePolyglot getPolyglot() {
+		return getPolyglot(resourcePath);
 	}
 
 	/**

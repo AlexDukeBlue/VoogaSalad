@@ -1,9 +1,7 @@
 package frontend.factory.worldview;
 
 import backend.cell.Cell;
-import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
-import backend.unit.Unit;
 import backend.unit.properties.UnitStat;
 import controller.Controller;
 import frontend.ClickHandler;
@@ -24,44 +22,43 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-class SimpleCellView extends ClickableUIComponent<Group>
-		implements CellViewLayoutInterface, CellViewExternal, PolyglotDelegate {
-
+class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayoutInterface, CellViewExternal {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
 	private static final double UNIT_SCALE = 0.75;
-	private CoordinateTuple cellLocation;
+	private final CoordinateTuple cellLocation;
 	private Polygon polygon;
-	private Group group;
-	private ContextMenu contextMenu;
-	private ArrayList<SimpleUnitView> unitViews = new ArrayList<>();
+	private final Group group;
+	private final ContextMenu contextMenu;
+	private final List<SimpleUnitView> unitViews;
 
-	private Terrain terrainCache;
-	private Set<Unit> unitCache;
-	private PolyglotDelegate delegate;
+	private String terrainCache;
+	private int unitCount;
 
 	/**
 	 * Creates a new CellView instance. Sets all values to default.
 	 *
-	 * @param cellLocation
-	 *            The Cell object that this CellView will visually represent.
-	 * @param controller
-	 *            the controller object that this CellView will send information
+	 * @param cellLocation The Cell object that this CellView will visually represent.
+	 * @param controller   the controller object that this CellView will send information
 	 * @param clickHandler
 	 */
-	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler,
-			PolyglotDelegate delegate) {
+	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
-		this.delegate = delegate;
-		initialize(cellLocation);
+		this.unitViews = new ArrayList<>();
+		unitCount = -1;
+		this.polygon = new Polygon();
+		this.cellLocation = cellLocation;
+		contextMenu = new ContextMenu();
+		group = new Group();
+		setPolygon(new Polygon());
 		getPolyglot().addLanguageChangeHandler(change -> {
 			setContextMenu();
 			installToolTips();
 		});
+		update();
 	}
 
 	@Override
@@ -105,14 +102,16 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	/**
 	 * sets the group to contain a different polygon
 	 *
-	 * @param polygon
-	 *            Shape of cellview an instance of a cell
+	 * @param polygon Shape of cellview an instance of a cell
 	 */
 	@Override
 	public void setPolygon(Polygon polygon) {
 		group.getChildren().remove(polygon);
 		this.polygon = polygon;
+		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
+		polygon.setOnMouseEntered(event -> mouseOver());
 		polygon.setOnMouseClicked(event -> handleClick(null));
+		polygon.setStroke(CELL_OUTLINE);
 		update();
 	}
 
@@ -122,28 +121,16 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	 */
 	@Override
 	public void update() {
-		this.getPolygon().setOnMouseEntered(e -> mouseOver());
-		if (getController().getGrid().getImgPath().length() < 1) {
-			if (terrainCache == null || !terrainCache.getImgPath().equals(getCell().getTerrain().getImgPath())) {
+		if (!getCell().getTerrain().getImgPath().equals(terrainCache)) {
+			if (getController().getGrid().getImgPath().length() < 1) {
 				polygon.setFill(new ImagePattern(View.getImg(getCell().getTerrain().getImgPath())));
-			}
-		} else {
-			if (!polygon.getFill().equals(Color.TRANSPARENT)) {
+			} else {
 				polygon.setFill(Color.TRANSPARENT);
 			}
+			terrainCache = getCell().getTerrain().getImgPath();
 		}
-		if (polygon.getStrokeWidth() != CELL_STROKE) {
-			polygon.setStrokeWidth(CELL_STROKE);
-		}
-		if (polygon.getStroke() == null || !polygon.getStroke().equals(CELL_OUTLINE)) {
-			polygon.setStroke(CELL_OUTLINE);
-		}
-		if (!group.getChildren().contains(polygon)) {
-			group.getChildren().add(polygon);
-		}
-		if (!(getCell().getOccupants().containsAll(unitCache) && unitCache.containsAll(getCell().getOccupants()))) {
-			unitCache.clear();
-			unitCache.addAll(getCell().getOccupants());
+		if (unitCount != getCell().getOccupants().size()) {
+			unitCount = getCell().getOccupants().size();
 			unitViews.forEach(e -> getController().removeFromUpdated(e));
 			unitViews.clear();
 			double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
@@ -152,18 +139,18 @@ class SimpleCellView extends ClickableUIComponent<Group>
 			group.getChildren().clear();
 			group.getChildren().addAll(polygon);
 			getCell().getOccupants().forEach(unit -> {
-				SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController(),
-						getClickHandler(), this);
+				SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController(), getClickHandler());
 				unitViews.add(unitView);
 				unitView.setSize(size);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
-				unitView.getObject().relocate(xCenter - unitView.getObject().getWidth() / 2.0,
+				unitView.getObject().relocate(
+						xCenter - unitView.getObject().getWidth() / 2.0,
 						yCenter - unitView.getObject().getHeight() / 2.0);
 			});
 			setContextMenu();
-			polygon.toBack();
 		}
+		polygon.toBack();
 		installToolTips();
 	}
 
@@ -174,23 +161,10 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	private void setContextMenu() {
 		contextMenu.getItems().clear();
 		getCell().getOccupants().forEach(e -> {
-			MenuItem item = new MenuItem(getPolyglot()
-					.get("Select")
-					.getValueSafe() 
-					+ " " + 
-					e.getName());
-			// getPolyglot().get("Select").addListener(change -> {
-			// item.setText(getPolyglot().get("Select").getValueSafe() + " "
-			// + e.getName());
-			// });
-			contextMenu
-			.getItems()
-			.add(item);
-			item
-			.addEventHandler(
-					ActionEvent.ACTION,
-					event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
-							.forEach(f -> f.handleClick(null)));
+			MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+			contextMenu.getItems().add(item);
+			item.addEventHandler(ActionEvent.ACTION, event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
+					.forEach(f -> f.handleClick(null)));
 		});
 	}
 
@@ -225,22 +199,6 @@ class SimpleCellView extends ClickableUIComponent<Group>
 		}
 	}
 
-	private void pushUp() {
-
-	}
-
-	private void initialize(CoordinateTuple cellLocation) {
-		this.cellLocation = cellLocation;
-		unitCache = new HashSet<>();
-		polygon = new Polygon();
-		group = new Group();
-		contextMenu = new ContextMenu();
-		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED,
-				event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
-		polygon.setOnMouseClicked(event -> handleClick(null));
-		update();
-	}
-
 	@Override
 	public CoordinateTuple getLocation() {
 		return cellLocation;
@@ -255,6 +213,7 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		unitViews.forEach(e -> setClickHandler(clickHandler));
+		polygon.setStrokeWidth(CELL_STROKE);
 	}
 
 	@Override
