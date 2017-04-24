@@ -10,6 +10,7 @@ import frontend.View;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.layout.Region;
 
 /**
@@ -18,23 +19,39 @@ import javafx.scene.layout.Region;
  *
  */
 public class TerrainMovePointPage extends BaseWizardPage {
-	private static final String DEFAULT_TITLE = "Set Movement Points";
-	private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for the unit to cross each terrain type.";
+	//private static final String DEFAULT_TITLE = "Set Movement Points";
+	//private static final String DEFAULT_DESCRIPTION = "Enter the number of movement points it takes for the unit to cross each terrain type.";
 
 	private TableInputView table;
 	private Map<NumericInputRow, Terrain> rowToTerrain;
 	private NumericInputRow movePointInput;
 	
 	public TerrainMovePointPage(AuthoringGameState gameState){
-		this(DEFAULT_TITLE,gameState);
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		}, gameState);
 	}
 
-	public TerrainMovePointPage(String title, AuthoringGameState gameState){
-		this(title,DEFAULT_DESCRIPTION, gameState);
+	public TerrainMovePointPage(StringBinding title, AuthoringGameState gameState){
+		this(title, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		}, gameState);
 	}
 	
-	public TerrainMovePointPage(String title, String description, AuthoringGameState gameState) {
-		super(title, description);
+	public TerrainMovePointPage(StringBinding title, StringBinding description, AuthoringGameState gameState) {
+		super();
+		this.setTitle(title);
+		this.setDescription(description);
 		initialize(gameState);
 	}
 
@@ -45,10 +62,10 @@ public class TerrainMovePointPage extends BaseWizardPage {
 
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
-
+		System.out.println("this");
 		movePointInput = new NumericInputRow(null, "Enter the number of movement points for the unit: ", "move points");
 		table.getChildren().add(movePointInput);
-		
+		System.out.println("that");
 		rowToTerrain = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.TERRAIN).forEach(terrain -> {
 			NumericInputRow row = new NumericInputRow(View.getImg(terrain.getImgPath()), terrain.getName(), terrain.getDescription());

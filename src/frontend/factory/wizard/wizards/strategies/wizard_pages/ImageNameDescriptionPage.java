@@ -36,11 +36,25 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	private TextArea descriptionField;
 
 	public ImageNameDescriptionPage() {
-		this(null);
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
 	public ImageNameDescriptionPage(StringBinding title) {
-		this(title, null);
+		this(title, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
 	public ImageNameDescriptionPage(StringBinding title, StringBinding description) {

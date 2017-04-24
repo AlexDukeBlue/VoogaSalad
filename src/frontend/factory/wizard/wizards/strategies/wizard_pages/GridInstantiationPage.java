@@ -38,11 +38,25 @@ public class GridInstantiationPage extends BaseWizardPage {
 	private Map<String, Terrain> terrainMap = new HashMap<>();
 
 	public GridInstantiationPage() {
-		this(null);
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
 	public GridInstantiationPage(StringBinding title) {
-		this(title, null);
+		this(title, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
 	public GridInstantiationPage(StringBinding title, StringBinding description) {

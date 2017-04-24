@@ -20,11 +20,25 @@ public class GridPatternPage extends BaseWizardPage{
 	TextField textField;
 	
 	public GridPatternPage() {
-		this(null);
+		this(new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
 	public GridPatternPage(StringBinding title) {
-		this(title, null);
+		this(title, new StringBinding() {
+
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+			
+		});
 	}
 
 	public GridPatternPage(StringBinding title, StringBinding description) {

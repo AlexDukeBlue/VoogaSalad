@@ -44,8 +44,8 @@ public class SelectableInputRow extends BaseUIManager<Region> {
 	public void setImage(Image image) {
 		icon.setImage(image);
 		if (image != null){
-			icon.setFitWidth((Double)getResourceBundle().getObject("ICON_SIZE"));
-			icon.setFitHeight((Double)getResourceBundle().getObject("ICON_SIZE"));
+			icon.setFitWidth(Double.parseDouble(getResourceBundle().getString("ICON_SIZE")));
+			icon.setFitHeight(Double.parseDouble(getResourceBundle().getString("ICON_SIZE")));
 		}
 	}
 

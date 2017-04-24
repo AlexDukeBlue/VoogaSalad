@@ -76,8 +76,8 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		
 		ImageView imageView = new ImageView(image);
 		if (image != null){
-			imageView.setFitWidth((Double)getResourceBundle().getObject("IMAGE_SIZE"));
-			imageView.setFitHeight((Double)getResourceBundle().getObject("IMAGE_SIZE"));
+			imageView.setFitWidth(Double.parseDouble(getResourceBundle().getString("IMAGE_SIZE")));
+			imageView.setFitHeight(Double.parseDouble(getResourceBundle().getString("IMAGE_SIZE")));
 		}
 
 		myNumericInputRow.getChildren().addAll(imageView, myNameField, myNumericalInputField, myLabelField);
