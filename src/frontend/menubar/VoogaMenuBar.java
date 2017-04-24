@@ -29,7 +29,8 @@ import javafx.stage.Window;
 import polyglot.PolyglotException;
 
 /**
- * @author Stone Mathers Created 4/18/2017
+ * @author Stone Mathers 
+ * Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;

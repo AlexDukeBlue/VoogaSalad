@@ -13,7 +13,6 @@ public class StartupScreen {
 	private BorderPane primaryPane;
 	private double width, height;
 	private StartupSelectionScreen selectionScreen;
-	//private ObservableClient<ImmutableGameState> myClient;
 	private Stage stage;
 
 	public StartupScreen() {
@@ -28,8 +27,8 @@ public class StartupScreen {
 	}
 
 	private BorderPane initPrimaryPane() {
-		this.selectionScreen = new StartupSelectionScreen(stage, this);
-		BackgroundImage bi = new BackgroundImage(View.getImg("frontend/properties/Screen Shot 2017-04-07 at 3.22.00 PM.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(width, height, false, false, true, true));
+		this.selectionScreen = new StartupSelectionScreen(stage);
+		BackgroundImage bi = new BackgroundImage(View.getImg("frontend/properties/StartupBackground.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(width, height, false, false, true, true));
 		Background imgv = new Background(bi);
 		this.primaryPane = new BorderPane();
 		primaryPane.setMinSize(width, height);

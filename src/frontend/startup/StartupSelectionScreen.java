@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 /**
  * The intro screen containing a "create new game" button.
  *
- * @authors Sam, ncp14
+ * @authors Sam, ncp14, Stone Mathers
  */
 public class StartupSelectionScreen extends VBox {
 	private ResourceBundle SelectionProperties = ResourceBundle.getBundle("frontend/properties/SelectionProperties");
@@ -45,10 +45,9 @@ public class StartupSelectionScreen extends VBox {
 	private ObjectProperty<Color> color;
 	private final int TIMEOUT = 20; //Timeout for server. Store this in a resource file or something
 
-	public StartupSelectionScreen(Stage stage, StartupScreen ui) { //should have some sort of parameter that is passing the UI
+	public StartupSelectionScreen(Stage stage) { //should have some sort of parameter that is passing the UI
 		this.stage = stage;
 		this.setUpPane();
-		StartupScreen ui1 = ui;
 	}
 
 	public void setButtonAnimationColors() {
