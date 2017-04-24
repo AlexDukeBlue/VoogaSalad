@@ -191,6 +191,7 @@ public class StartupSelectionScreen extends VBox {
 	private void join(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
+		createGame();
 	}
 
 	private void load(int port) {

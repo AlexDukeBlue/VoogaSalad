@@ -69,7 +69,7 @@ public class CommunicationController implements Controller {
 		try {
 			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
-			System.out.println("Server started successfully...");
+			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
