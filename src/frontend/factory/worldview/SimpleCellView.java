@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import polyglot_extended.ObservablePolyglot;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -163,6 +162,7 @@ class SimpleCellView extends ClickableUIComponent<Group>
 						yCenter - unitView.getObject().getHeight() / 2.0);
 			});
 			setContextMenu();
+			polygon.toBack();
 		}
 		installToolTips();
 	}
@@ -252,10 +252,5 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	@Override
 	public String toString() {
 		return getCell().toString();
-	}
-
-	@Override
-	public ObservablePolyglot getPolyglot() {
-		return delegate != null ? delegate.getPolyglot() : null;
 	}
 }

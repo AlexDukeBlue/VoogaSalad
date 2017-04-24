@@ -1,7 +1,5 @@
 package frontend.factory.worldview;
 
-import java.util.Objects;
-
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.GameplayState;
@@ -18,7 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import polyglot_extended.ObservablePolyglot;
+
+import java.util.Objects;
 
 public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	private final Pane unitView;
@@ -123,10 +122,5 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo) {
 
-	}
-	
-	@Override
-	public ObservablePolyglot getPolyglot(){
-		return delegate.getPolyglot();
 	}
 }

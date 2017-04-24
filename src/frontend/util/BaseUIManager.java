@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import polyglot.PolyglotException;
 import polyglot_extended.ObservablePolyglot;
 
 import java.util.*;
@@ -131,9 +132,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 								// the polyglot
 			try {
 				polyglot = new ObservablePolyglot(API_KEY, resourcePath);
-			} catch (Exception e) {
-				e.printStackTrace();
-				polyglot = null;
+			} catch (PolyglotException e) {
+				throw new Error(e);
 			}
 //			System.out.println("Polyglot at BaseUIManager constructor: " + polyglot);
 		}
