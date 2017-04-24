@@ -38,11 +38,13 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
 		
-		hprow = new NumericInputRow(null, "Enter the HP for the unit: " , "HP");
+		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt") , getPolyglot().get("HP"));
+		System.out.println("Hi");
 		table.getChildren().add(hprow);
 		
 		rowToAbility = new HashMap<>();
 		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).forEach(ability -> {
+			System.out.println("Helo");
 			SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()), ability.getName(), ability.getDescription());
 			rowToAbility.put(row, (ActiveAbility<?>) ability);
 			table.getChildren().add(row);

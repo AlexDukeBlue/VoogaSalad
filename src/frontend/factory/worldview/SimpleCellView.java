@@ -56,8 +56,8 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler,
 			PolyglotDelegate delegate) {
 		super(controller, clickHandler);
-		initialize(cellLocation);
 		this.delegate = delegate;
+		initialize(cellLocation);
 		getPolyglot().addLanguageChangeHandler(change -> {
 			setContextMenu();
 			installToolTips();
@@ -174,13 +174,21 @@ class SimpleCellView extends ClickableUIComponent<Group>
 	private void setContextMenu() {
 		contextMenu.getItems().clear();
 		getCell().getOccupants().forEach(e -> {
-			MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+			MenuItem item = new MenuItem(getPolyglot()
+					.get("Select")
+					.getValueSafe() 
+					+ " " + 
+					e.getName());
 			// getPolyglot().get("Select").addListener(change -> {
 			// item.setText(getPolyglot().get("Select").getValueSafe() + " "
 			// + e.getName());
 			// });
-			contextMenu.getItems().add(item);
-			item.addEventHandler(ActionEvent.ACTION,
+			contextMenu
+			.getItems()
+			.add(item);
+			item
+			.addEventHandler(
+					ActionEvent.ACTION,
 					event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
 							.forEach(f -> f.handleClick(null)));
 		});

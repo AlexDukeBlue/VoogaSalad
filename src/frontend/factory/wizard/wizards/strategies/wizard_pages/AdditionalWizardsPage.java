@@ -48,14 +48,14 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 			});
 			checkCanNext();
 		});
-		numWizardRow = new NumericInputRow(null, "Number of Items", "Items");
+		numWizardRow = new NumericInputRow(null, getPolyglot().get("Number_of_Items"), getPolyglot().get("Items"));
 		numWizardRow.addObserver((observable, object) -> {
 			int numRows = (Integer) object;
 			try {
 				while (wizardRows.size() < numRows) {
 					Wizard<T> wizard = clazz.newInstance();
 					wizard.hide();
-					wizardRows.add(new AdditionalWizardRow<>("Description", wizard));
+					wizardRows.add(new AdditionalWizardRow<>( getPolyglot().get("Description") , wizard));
 				}
 			} catch (Exception e) {
 				notifyUser(e);
@@ -79,9 +79,12 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 
 	private void notifyUser(Exception e) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Could not instantiate proper wizards.");
-		alert.setContentText("Try entering a smaller number.");
+		//alert.setTitle("Error");
+		alert.titleProperty().bind(getPolyglot().get("Error"));
+		//alert.setHeaderText("Could not instantiate proper wizards.");
+		alert.headerTextProperty().bind(getPolyglot().get("No_Instantiate_Wizard_Message"));
+		//alert.setContentText("Try entering a smaller number.");
+		alert.contentTextProperty().bind(getPolyglot().get("No_Instantiate_Wizard_Content"));
 		alert.showAndWait();
 	}
 

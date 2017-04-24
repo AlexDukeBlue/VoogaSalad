@@ -2,12 +2,12 @@ package backend.util;
 
 import backend.player.ImmutablePlayer;
 
+import java.io.Serializable;
 import java.util.function.BiPredicate;
 
-public class Requirement {
+public class Requirement extends ImmutableVoogaObject<Requirement> implements Serializable {
 
-	private BiPredicate<ImmutablePlayer, GameplayState> biPred;
-	private String nameOf;
+	private SerializableBiPredicate biPred;
 
 	/**
 	 * Pass a BiPredicate<ImmutablePlayer, GameplayState> with a name so that it can later be removed if necessary.
@@ -15,9 +15,14 @@ public class Requirement {
 	 * @param bipredicate
 	 * @param name
 	 */
-	public Requirement(BiPredicate<ImmutablePlayer, GameplayState> bi, String name) {
+	public Requirement(SerializableBiPredicate bi, String name, String description) {
+		this(bi, name, description, "");
+		
+	}
+	
+	public Requirement(SerializableBiPredicate bi, String name, String description, String imgPath) {
+		super(name, description, imgPath);
 		biPred = bi;
-		nameOf = name;
 	}
 
 	/**
@@ -25,16 +30,14 @@ public class Requirement {
 	 *
 	 * @return BiPredicate
 	 */
-	public BiPredicate<ImmutablePlayer, GameplayState> getBiPredicate() {
-		return biPred;
+	public boolean test(ImmutablePlayer player, ReadonlyGameplayState gameState) {
+		return biPred.test(player, gameState);
 	}
 
-	/**
-	 * Returns the name of the BiPredicate.
-	 *
-	 * @return String
-	 */
-	public String getNameOf() {
-		return nameOf;
+	@Override
+	public Requirement copy() {
+		return new Requirement(biPred, getName(), getDescription(), getImgPath());
 	}
+	
+	private interface SerializableBiPredicate extends BiPredicate<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
 }
