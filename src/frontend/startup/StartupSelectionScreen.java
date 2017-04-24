@@ -97,25 +97,25 @@ public class StartupSelectionScreen extends VBox {
 				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color, endColor)));
 		create.setOnAction(event -> {
 			timeline.play();
-			try{
+			try {
 				create(getPortNumber());
-			} catch (Exception e){
+			} catch (Exception e) {
 				throwServerAlert();
 			}
 		});
 		join.setOnAction(event -> {
 			timeline.play();
-			try{
-				join(getPortNumber());
-			} catch (Exception e){
+			try {
+				join(getHost(), getPortNumber());
+			} catch (Exception e) {
 				throwServerAlert();
 			}
 		});
 		load.setOnAction(event -> {
 			timeline.play();
-			try{
+			try {
 				load(getPortNumber());
-			} catch (Exception e){
+			} catch (Exception e) {
 				throwServerAlert();
 			}
 		});
@@ -162,19 +162,32 @@ public class StartupSelectionScreen extends VBox {
 	}
 
 	private int getPortNumber() {
-		try{
-			TextInputDialog dialog = new TextInputDialog("Enter a number");
+		try {
+			TextInputDialog dialog = new TextInputDialog("Enter a number (1024 - 65535)");
 			dialog.setTitle("Creating server....");
 			dialog.setHeaderText("Enter a port number for your server");
 			dialog.setContentText("Port number:");
 			Optional<String> result = dialog.showAndWait();
-			if(isValidPort(Integer.parseInt(result.get()))){
+			if (isValidPort(Integer.parseInt(result.get()))) {
 				return Integer.parseInt(result.get());
 			} else {
 				throw new RuntimeException();
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	private String getHost() {
+		try {
+			TextInputDialog dialog = new TextInputDialog("Enter Host Address");
+			dialog.setTitle("Connecting to host");
+			dialog.setHeaderText("Please enter the hostname of the server you are trying to connect to.");
+			dialog.setContentText("Hostname/IP address");
+			Optional<String> result = dialog.showAndWait();
+			return result.orElseThrow(RuntimeException::new);
+		} catch (Exception e) {
+			return ObservableHost.LOCALHOST;
 		}
 	}
 
@@ -188,9 +201,9 @@ public class StartupSelectionScreen extends VBox {
 		});
 	}
 
-	private void join(int port) {
+	private void join(String host, int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
+		control.startClient(host, port, Duration.ofSeconds(30));
 		createGame();
 	}
 
@@ -216,12 +229,12 @@ public class StartupSelectionScreen extends VBox {
 		View view = new View(control, stage);
 		stage.setScene(new Scene(view.getObject()));
 	}
-	
-	private boolean isValidPort(int port){
+
+	private boolean isValidPort(int port) {
 		return (port > 1024 && port <= 65535);
 	}
-	
-	private void throwServerAlert(){
+
+	private void throwServerAlert() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setContentText("Invalid Port Number"); //TODO Resource bundle this jawn		
 		alert.show();
