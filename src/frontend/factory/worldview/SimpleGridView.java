@@ -34,16 +34,6 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		cellViews = new ArrayList<>();
 		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize();
-//		getPolyglot().addLanguageChangeHandler(change -> {
-//			cellViews.stream().forEach(cellView -> {
-//				try {
-//					cellView.getPolyglot().setLanguage(getPolyglot().getLanguage());
-//				} catch (PolyglotException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			});
-//		});
 	}
 
 	@Override
@@ -54,7 +44,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(
 				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
-		getController().getGrid().getCells().keySet().forEach(coordinate -> {
+		getController().getGrid().getCells().keySet().stream().forEach(coordinate -> {
 			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), this);
 			cellViews.add(cl);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);
