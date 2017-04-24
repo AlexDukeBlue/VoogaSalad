@@ -1,8 +1,9 @@
 package frontend.factory.worldview;
 
+import backend.grid.CoordinateTuple;
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
@@ -17,6 +18,7 @@ import javafx.scene.paint.ImagePattern;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal{
 
@@ -25,6 +27,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private final Pane cellViewObjects;
 	private final Collection<SimpleCellView> cellViews;
 	private final GridLayoutDelegate myLayoutManager;
+	private Set<CoordinateTuple> savedGridCoordinates;
 
 	public SimpleGridView(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
@@ -36,14 +39,23 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	@Override
+	public void update() {
+		if (!getController().getGrid().getCells().keySet().equals(savedGridCoordinates)){
+			cellViews.clear();
+			cellViewObjects.getChildren().clear();
+			populateCellViews();
+			savedGridCoordinates = getController().getGrid().getCells().keySet();
+		}
+	}
+
+	@Override
 	public ScrollPane getObject() {
 		return myScrollPane;
 	}
 
 	private void populateCellViews() {
-		cellViewObjects.setBackground(new Background(
-				new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
-		getController().getGrid().getCells().keySet().stream().forEach(coordinate -> {
+		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler());
 			cellViews.add(cl);
 			myLayoutManager.layoutCell(cl, SCALE, MIN, MAX);

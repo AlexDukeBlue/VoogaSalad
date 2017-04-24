@@ -5,20 +5,20 @@ import javafx.scene.shape.Polygon;
 
 public interface CellViewLayoutInterface {
 
-	public double getX();
+	double getX();
 
-	public void setX(double x);
+	void setX(double x);
 
-	public double getY();
+	double getY();
 
-	public void setY(double y);
+	void setY(double y);
 
 	/**
 	 * returns the polygon that serves as the shape of the cell
 	 *
 	 * @return polygon
 	 */
-	public Polygon getPolygon();
+	Polygon getPolygon();
 
 	/**
 	 * sets the group to contain a different polygon
@@ -26,8 +26,8 @@ public interface CellViewLayoutInterface {
 	 * @param polygon
 	 *            Shape of cellview an instance of a cell
 	 */
-	public void setPolygon(Polygon polygon);
+	void setPolygon(Polygon polygon);
 
-	public CoordinateTuple getLocation();
+	CoordinateTuple getLocation();
 
 }

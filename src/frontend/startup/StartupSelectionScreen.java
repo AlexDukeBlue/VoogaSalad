@@ -184,7 +184,6 @@ public class StartupSelectionScreen extends VBox {
 		control.startServer(loadFile(), port, Duration.ofSeconds(30));
 		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 		createGame();
-		control.updateAll();
 	}
 
 	private ReadonlyGameplayState loadFile() {

@@ -32,8 +32,6 @@ import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
@@ -91,8 +89,8 @@ public class View extends ClickableUIComponent<Region> {
 			getController().enterGamePlayMode();
 		}
 	}
-	
-	private void setViewEditable(boolean editable){
+
+	private void setViewEditable(boolean editable) {
 		if (editable) {
 			enterAuthorMode();
 		} else {
@@ -101,19 +99,19 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void toggleConditionsPane() {
-		if(!innerSplitPane.getItems().remove(conditionsPane.getObject())){
+		if (!innerSplitPane.getItems().remove(conditionsPane.getObject())) {
 			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
 		}
 	}
 
 	public void toggleTemplatePane() {
-		if(!innerSplitPane.getItems().remove(rightPane)){
+		if (!innerSplitPane.getItems().remove(rightPane)) {
 			innerSplitPane.getItems().add(rightPane);
 		}
 	}
 
 	public void toggleDetailsPane() {
-		if(!outerSplitPane.getItems().remove(bottomPane)){
+		if (!outerSplitPane.getItems().remove(bottomPane)) {
 			outerSplitPane.getItems().add(bottomPane);
 		}
 	}
@@ -143,31 +141,21 @@ public class View extends ClickableUIComponent<Region> {
 		getController().setGameState(newGameState);
 	}
 
-	/**
-	 * Displays an Alert to the user containing the given message.
-	 *
-	 * @param s String alert message
-	 */
-	public void sendAlert(String s) {
-		Alert myAlert;
-		myAlert = new Alert(AlertType.INFORMATION);
-		myAlert.titleProperty().bind(getPolyglot().get("informationdialog"));
-		myAlert.setHeaderText(null);
-		myAlert.setContentText(s);
-		myAlert.showAndWait();
-	}
-
 	private void placePanes() {
 		initPanes();
-		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldView.getObject(), rightPane);
+		bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
+		bottomPane.setDividerPositions(.8);
+		bottomPane.setOrientation(Orientation.HORIZONTAL);
+		SplitPane temp1 = new SplitPane(worldView.getGridPane(), bottomPane);
+		temp1.setDividerPositions(1);
+		temp1.setOrientation(Orientation.VERTICAL);
+		innerSplitPane = new SplitPane(conditionsPane.getObject(), temp1, rightPane);
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
-		bottomPane.setDividerPosition(0, .8);
-		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane, bottomPane);
-		outerSplitPane.setDividerPositions(0, 1);
+		outerSplitPane = new SplitPane(menuBar.getObject(),innerSplitPane);
+		outerSplitPane.setDividerPositions(0);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
-		SplitPane.setResizableWithParent(menuBar.getObject(), false);        
+		SplitPane.setResizableWithParent(menuBar.getObject(), false);
 		getClickHandler().setAbilityPane(abilityPane);
 		getClickHandler().setDetailPane(detailPane);
 	}
@@ -185,19 +173,16 @@ public class View extends ClickableUIComponent<Region> {
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
-		tempPane = TemplatePaneFactory.newTemplatePane(getController(),
-				getClickHandler());
+		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		rightPane = new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
-			System.out.println("Languagechange detcted in menu bar");
 			try {
 				worldView.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				detailPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				abilityPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				tempPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
-				System.out.println("Language change applied in view");
 			} catch (PolyglotException e) {
 				//TODO display dialog that we could not change language
 				e.printStackTrace();
@@ -215,10 +200,10 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	private void addSidePanes() {
-		if(!innerSplitPane.getItems().contains(conditionsPane.getObject())){
+		if (!innerSplitPane.getItems().contains(conditionsPane.getObject())) {
 			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
 		}
-		if(!innerSplitPane.getItems().contains(rightPane)){
+		if (!innerSplitPane.getItems().contains(rightPane)) {
 			innerSplitPane.getItems().add(rightPane);
 		}
 	}

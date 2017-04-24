@@ -48,7 +48,6 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.unitViews = new ArrayList<>();
-		unitCount = -1;
 		this.polygon = new Polygon();
 		this.cellLocation = cellLocation;
 		contextMenu = new ContextMenu();
@@ -59,6 +58,7 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 			installToolTips();
 		});
 		update();
+		this.unitCount = -1;
 	}
 
 	@Override
@@ -121,7 +121,7 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 	 */
 	@Override
 	public void update() {
-		if (!getCell().getTerrain().getImgPath().equals(terrainCache)) {
+		if (unitCount < 0 || !getCell().getTerrain().getImgPath().equals(terrainCache)) {
 			if (getController().getGrid().getImgPath().length() < 1) {
 				polygon.setFill(new ImagePattern(View.getImg(getCell().getTerrain().getImgPath())));
 			} else {
@@ -129,27 +129,27 @@ class SimpleCellView extends ClickableUIComponent<Group> implements CellViewLayo
 			}
 			terrainCache = getCell().getTerrain().getImgPath();
 		}
+		double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
+		double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
 		if (unitCount != getCell().getOccupants().size()) {
-			unitCount = getCell().getOccupants().size();
+			unitCount = unitCount < 0 ? getCell().getOccupants().size() : unitCount + 1;
 			unitViews.forEach(e -> getController().removeFromUpdated(e));
 			unitViews.clear();
-			double xCenter = (polygon.getBoundsInParent().getMinX() + polygon.getBoundsInParent().getMaxX()) / 2.0;
-			double yCenter = (polygon.getBoundsInParent().getMinY() + polygon.getBoundsInParent().getMaxY()) / 2.0;
-			double size = polygon.getBoundsInParent().getHeight() * UNIT_SCALE;
 			group.getChildren().clear();
 			group.getChildren().addAll(polygon);
 			getCell().getOccupants().forEach(unit -> {
 				SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), getController(), getClickHandler());
 				unitViews.add(unitView);
-				unitView.setSize(size);
+				unitView.setSize(polygon.getBoundsInParent().getHeight() * UNIT_SCALE);
 				group.getChildren().add(unitView.getObject());
 				unitView.getObject().toFront();
-				unitView.getObject().relocate(
-						xCenter - unitView.getObject().getWidth() / 2.0,
-						yCenter - unitView.getObject().getHeight() / 2.0);
 			});
 			setContextMenu();
+
 		}
+		unitViews.forEach(unitView -> unitView.getObject().relocate(
+				xCenter - unitView.getObject().getWidth() / 2.0,
+				yCenter - unitView.getObject().getHeight() / 2.0));
 		polygon.toBack();
 		installToolTips();
 	}

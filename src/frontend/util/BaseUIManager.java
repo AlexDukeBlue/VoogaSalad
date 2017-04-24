@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  *
- * SlogoBaseUIManager (LOLWUT) is the base class for every front end class in the Slogo
+ * SlogoBaseUIManager is the base class for every front end class in the Slogo
  * program. It was designed to be powerful enough to add significant
  * functionality to all classes that extend it, while being flexible enough to
  * allow any UI class to extend it.
@@ -48,16 +48,16 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private static final String API_KEY = "AIzaSyB-TQZwz6yDEvQfHTK2JdWNXLa1LfLXQz8";
 	private static final Map<String, ObservablePolyglot> POLYGLOT_CACHE = new HashMap<>();
 
-	private final ObjectProperty<ResourceBundle> language;
 	private final ObjectProperty<String> styleSheet;
 	private final Controller controller;
 	private final ResourceBundle resources;
-	private ObservablePolyglot polyglot;
 	private final String resourcePath;
 
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
-	 * stylesheet to default. The default language is English. Yo Dylan wrong
+	 * stylesheet to default. The default language is English.
+	 *
+	 * Yo Dylan wrong
 	 * project lmao
 	 */
 	public BaseUIManager() {
@@ -70,8 +70,6 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 			this.controller.removeFromUpdated(this);
 			this.controller.addToUpdated(this);
 		}
-		language = new SimpleObjectProperty<>();
-		// language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<>();
 		styleSheet.addListener((observable, oldValue, newValue) -> {
 			if (getObject() instanceof Parent) {
@@ -86,22 +84,6 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 
 	public Controller getController() {
 		return controller;
-	}
-
-	/**
-	 * Gets an ObjectProperty containing the ResourceBundle that this class uses
-	 * to populate any text that the user sees. The language bundle can be
-	 * changed in order to change the language in which text displays. This
-	 * method can be extended in subclasses to make the ObjectProperty that it
-	 * returns readonly, so that other classes can listen to but cannot change
-	 * the language.
-	 *
-	 * @return an ObjectProperty containing the ResourceBundle that this class
-	 *         uses to populate text that the user sees
-	 */
-	@Deprecated
-	public ObjectProperty<ResourceBundle> getLanguage() {
-		return language;
 	}
 
 	/**
