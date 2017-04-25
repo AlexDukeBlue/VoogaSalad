@@ -3,10 +3,7 @@ package backend.unit;
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
-import backend.grid.CoordinateTuple;
-import backend.grid.GameBoard;
-import backend.grid.GridPattern;
-import backend.grid.ModifiableGameBoard;
+import backend.grid.*;
 import backend.player.Player;
 import backend.player.Team;
 import backend.unit.properties.ActiveAbility;
@@ -198,5 +195,10 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 	default Unit add(VoogaEntity entity) {
 		DISPATCH_MAP.get(entity.getClass()).accept(entity, this);
 		return this;
+	}
+
+	@Override
+	default Shape getShape() {
+		return getMovePattern().getShape();
 	}
 }

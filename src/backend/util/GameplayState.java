@@ -258,5 +258,4 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
-
 }

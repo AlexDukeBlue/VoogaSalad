@@ -4,11 +4,12 @@ import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 
 /**
  * @author Created by th174 on 4/22/17.
  */
-public abstract class SelectableUIComponent<T extends Node> extends ClickableUIComponent<T> {
+public abstract class SelectableUIComponent<T extends Node> extends ClickableUIComponent<T> implements GameBoardObjectView{
 
 	public SelectableUIComponent(ClickHandler clickHandler) {
 		super(clickHandler);
@@ -22,9 +23,9 @@ public abstract class SelectableUIComponent<T extends Node> extends ClickableUIC
 		getClickHandler().setSelectedComponent(this);
 	}
 
-	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler);
+	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event);
 
-	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler);
+	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event);
 
 	public void select(ClickHandler clickHandler) {
 	}

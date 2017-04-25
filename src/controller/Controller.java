@@ -4,6 +4,7 @@ import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.Unit;
@@ -107,4 +108,6 @@ public interface Controller {
 	void addPlayer(String playerName);
 
 	void undo();
+
+	Shape getShape();
 }

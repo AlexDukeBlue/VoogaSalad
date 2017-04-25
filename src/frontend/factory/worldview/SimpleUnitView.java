@@ -15,6 +15,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -63,7 +64,6 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 			remainingHealthBar = null;
 		}
 		unitView.setCenter(imageView);
-		unitView.setOnMouseClicked(event -> handleClick(null));
 		boundsProperty.addListener((observable, oldValue, newValue) -> centerInBounds(newValue));
 		centerInBounds(boundsProperty.getValue());
 		update();
@@ -120,7 +120,6 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		return unitView;
 	}
 
-
 	@Override
 	public void select(ClickHandler clickHandler) {
 		clickHandler.getGridPane().highlightRange(getUnit().getLegalMoves(getController().getGrid()));
@@ -132,7 +131,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			CoordinateTuple unitLocation = getUnitLocation();
 			String unitName = getUnitName();
@@ -147,8 +146,13 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
-		//TODO Gameplay
-		actInAuthoringMode(target, additionalInfo, clickHandler);
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
+			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
+			if (getUnit().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
+				actInAuthoringMode(target, additionalInfo, clickHandler, event);
+			}
+		}
+		clickHandler.cancel();
 	}
 }

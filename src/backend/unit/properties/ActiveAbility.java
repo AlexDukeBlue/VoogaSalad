@@ -1,5 +1,6 @@
 package backend.unit.properties;
 
+import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GridPattern;
@@ -56,8 +57,9 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 
 	public Collection<CoordinateTuple> getLegalTargetCells(CoordinateTuple userLocation, ReadonlyGameplayState readonlyGameplayState) {
 		return getRange().parallelStream()
-				.map(e -> e.sum(userLocation))
-				.filter(e -> Objects.nonNull(readonlyGameplayState.getGrid().get(e)))
+				.map(e -> readonlyGameplayState.getGrid().get(e.sum(userLocation)))
+				.filter(Objects::nonNull)
+				.map(Cell::getLocation)
 				.collect(Collectors.toList());
 	}
 

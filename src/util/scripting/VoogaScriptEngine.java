@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * @author Created by th174 on 4/7/2017.
  */
-public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, Requirement.SerializableBiPredicate, Actionable.SerializableBiConsumer {
+public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, Requirement.SerializableBiPredicate, Actionable.SerializableBiConsumer, Serializable {
 	ResourceBundle RESOURCES = ResourceBundle.getBundle("resources/Scripting", Locale.US);
 
 	VoogaScriptEngine setScript(String script) throws VoogaScriptException;

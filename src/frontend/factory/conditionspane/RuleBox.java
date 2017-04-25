@@ -3,12 +3,14 @@
  */
 package frontend.factory.conditionspane;
 
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.SelectableUIComponent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
@@ -47,18 +49,23 @@ public class RuleBox extends SelectableUIComponent<Region> {
 			}
 		});
 		myBox.getChildren().add(cb);
-		myBox.setOnMouseClicked(event -> handleClick(null));
+		myBox.setOnMouseClicked(event -> handleClick(event, null));
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event) {
 		if (target instanceof AddRemoveButton) {
 			getController();//.removeRules(...)
 		}
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
 
+	}
+
+	@Override
+	public VoogaEntity getEntity() {
+		return null;
 	}
 }

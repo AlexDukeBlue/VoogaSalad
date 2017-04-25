@@ -3,6 +3,7 @@ package controller;
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.unit.Unit;
@@ -254,5 +255,10 @@ public class CommunicationController implements Controller {
 			setGameState(loadFile(saveHistory.pop()));
 		} catch (IOException ignored) {
 		}
+	}
+
+	@Override
+	public Shape getShape() {
+		return getGrid().getShape();
 	}
 }

@@ -31,7 +31,7 @@ public class AddRemoveButton extends ClickableUIComponent<HBox> {
 		addButton.setPadding(Insets.EMPTY);
 		removeButton.setBorder(Border.EMPTY);
 		removeButton.setPadding(Insets.EMPTY);
-		removeButton.setOnMouseClicked(event -> handleClick(ButtonClicked.REMOVE));
+		removeButton.setOnMouseClicked(event -> handleClick(event, ButtonClicked.REMOVE));
 		content = new HBox(addButton, removeButton);
 		content.setAlignment(Pos.TOP_RIGHT);
 		content.setSpacing(0);

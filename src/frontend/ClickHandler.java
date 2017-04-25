@@ -8,6 +8,7 @@ import frontend.util.SelectableUIComponent;
 import frontend.util.highlighter.Highlighter;
 import frontend.util.highlighter.ShadowHighlighter;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 
 import java.util.Objects;
 
@@ -30,13 +31,15 @@ public abstract class ClickHandler {
 		this.abilityPane = abilityPane;
 	}
 
-	public final void handleClick(ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
+	public final void handleClick(MouseEvent event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
 		if (Objects.isNull(selectedComponent) && clickedComponent instanceof SelectableUIComponent) {
 			setSelectedComponent((SelectableUIComponent<? extends Node>) clickedComponent);
 			this.additionalInfo = additionalInfo;
+			event.consume();
 		} else if (Objects.nonNull(selectedComponent)) {
-			triggerAction(selectedComponent, clickedComponent, this.additionalInfo);
+			triggerAction(selectedComponent, clickedComponent, this.additionalInfo, event);
 		} else {
+			event.consume();
 			cancel();
 			showDetail(clickedComponent);
 		}
@@ -50,7 +53,7 @@ public abstract class ClickHandler {
 		showDetail(selectedComponent);
 	}
 
-	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo);
+	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, MouseEvent event);
 
 	public final void cancel() {
 		if (selectedComponent != null) {
