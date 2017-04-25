@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class SimpleCellView extends ClickableUIComponent<Group> implements CellViewExternal {
+public class SimpleCellView extends ClickableUIComponent<Group> implements CellViewExternal {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
 	private final CoordinateTuple cellLocation;
