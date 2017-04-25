@@ -7,8 +7,8 @@ import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
 import frontend.util.highlighter.Highlighter;
 import frontend.util.highlighter.ShadowHighlighter;
+import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 
 import java.util.Objects;
 
@@ -31,7 +31,7 @@ public abstract class ClickHandler {
 		this.abilityPane = abilityPane;
 	}
 
-	public final void handleClick(MouseEvent event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
+	public final void handleClick(Event event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
 		if (Objects.isNull(selectedComponent) && clickedComponent instanceof SelectableUIComponent) {
 			setSelectedComponent((SelectableUIComponent<? extends Node>) clickedComponent);
 			this.additionalInfo = additionalInfo;
@@ -53,7 +53,7 @@ public abstract class ClickHandler {
 		showDetail(selectedComponent);
 	}
 
-	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, MouseEvent event);
+	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event);
 
 	public final void cancel() {
 		if (selectedComponent != null) {

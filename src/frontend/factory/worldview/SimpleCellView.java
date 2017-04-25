@@ -13,14 +13,13 @@ import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Effect;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +28,10 @@ import java.util.Objects;
 public class SimpleCellView extends ClickableUIComponent<Group> implements CellViewExternal {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
-	private static final Effect DARKEN = new ColorAdjust(0, -.3, -.5, 0);
 	private final CoordinateTuple cellLocation;
 	private final Polygon polygon;
-	private final Group group;
+	private final Polygon polygonMask;
+	private final Group updateGroup;
 	private final ContextMenu contextMenu;
 	private final Map<String, SimpleUnitView> unitViews;
 
@@ -52,11 +51,17 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		this.unitViews = new HashMap<>();
 		this.cellLocation = cellLocation;
 		contextMenu = new ContextMenu();
-		group = new Group();
+		updateGroup = new Group();
 		this.polygon = polygonCellView;
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 		polygon.setOnMouseClicked(event -> handleClick(event, null));
 		polygon.setStroke(CELL_OUTLINE);
+		polygon.setStrokeWidth(CELL_STROKE);
+		polygonMask = new Polygon(polygon.getPoints().stream().mapToDouble(e -> e).toArray());
+		polygonMask.setFill(Color.TRANSPARENT);
+		polygonMask.layoutXProperty().bind(polygon.layoutXProperty());
+		polygonMask.layoutYProperty().bind(polygon.layoutYProperty());
+		polygonMask.setMouseTransparent(true);
 		getPolyglot().addLanguageChangeHandler(change -> {
 			setContextMenu();
 			installToolTips();
@@ -70,7 +75,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	 */
 	@Override
 	public Group getObject() {
-		return group;
+		return new Group(polygon, polygonMask, updateGroup);
 	}
 
 	/**
@@ -92,27 +97,26 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 				unitCount = unitCount < 0 ? getCell().getOccupants().size() : unitCount + 1;
 				unitViews.values().forEach(e -> getController().removeListener(e));
 				unitViews.clear();
-				group.getChildren().clear();
-				group.getChildren().addAll(polygon);
+				updateGroup.getChildren().clear();
 				getCell().getOccupants().forEach(unit -> {
 					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), polygon.boundsInParentProperty(), getController(), getClickHandler());
 					unitViews.put(unit.getName(), unitView);
-					group.getChildren().add(unitView.getObject());
+					updateGroup.getChildren().add(unitView.getObject());
 				});
-//				if (getCell().getOccupants().size() <= 1) {
+				if (getCell().getOccupants().size() <= 1) {
 					unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> unitView.handleClick(event, null)));
-//				} else {
-//					unitViews.values().forEach(unitView -> unitView.getObject().setMouseTransparent(true));
-//					Text numOccupants = new Text(getCell().getOccupants().size() + "");
-//					numOccupants.setFont(new Font(15));
-//					numOccupants.setFill(Color.BLACK);
-//					numOccupants.setX(group.getBoundsInLocal().getWidth() - 10);
-//					numOccupants.setY(group.getBoundsInLocal().getHeight() - 10);
-//					group.getChildren().add(numOccupants);
-//				}
+				} else {
+					unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY())));
+					Text numOccupants = new Text(getCell().getOccupants().size() + "");
+					numOccupants.setFont(new Font(13));
+					numOccupants.setLayoutX(polygon.getBoundsInParent().getMaxX() - numOccupants.getLayoutBounds().getWidth() - 4);
+					numOccupants.setLayoutY(polygon.getBoundsInParent().getMaxY() - numOccupants.getLayoutBounds().getHeight() + 8);
+					updateGroup.getChildren().add(numOccupants);
+					numOccupants.toFront();
+				}
 				setContextMenu();
 			}
-			polygon.toBack();
+			updateGroup.toFront();
 			installToolTips();
 		} else {
 			getController().removeListener(this);
@@ -128,7 +132,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		getCell().getOccupants().forEach(e -> {
 			MenuItem item = new MenuItem(e.getName());
 			contextMenu.getItems().add(item);
-			item.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> unitViews.get(e.getName()).handleClick(event, null));
+			item.setOnAction(event -> unitViews.get(e.getName()).handleClick(event, null));
 		});
 	}
 
@@ -143,7 +147,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 				+ getPolyglot().get("Position").getValueSafe() + ": %s%s";
 		return String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp);
 	}
-	
+
 	@Override
 	public CoordinateTuple getLocation() {
 		return cellLocation;
@@ -158,7 +162,6 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		unitViews.values().forEach(e -> setClickHandler(clickHandler));
-		polygon.setStrokeWidth(CELL_STROKE);
 	}
 
 	@Override
@@ -168,11 +171,11 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 
 	@Override
 	public void darken() {
-		polygon.setEffect(DARKEN);
+		polygonMask.setFill(new Color(0, 0, 0, .7));
 	}
 
 	@Override
 	public void unDarken() {
-		polygon.setEffect(null);
+		polygonMask.setFill(Color.TRANSPARENT);
 	}
 }

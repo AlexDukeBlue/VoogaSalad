@@ -12,11 +12,11 @@ import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.event.Event;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -71,6 +71,11 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		boundsProperty.addListener((observable, oldValue, newValue) -> centerInBounds(newValue));
 		centerInBounds(boundsProperty.getValue());
 		update();
+	}
+
+	@Override
+	public void handleClick(Event event, Object o) {
+		super.handleClick(event, o);
 	}
 
 	@Override
@@ -135,7 +140,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			CoordinateTuple unitLocation = getUnitLocation();
 			String unitName = getUnitName();
@@ -150,7 +155,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			if (getUnit().getLegalMoves(getController().getGrid()).contains(targetLocation)) {

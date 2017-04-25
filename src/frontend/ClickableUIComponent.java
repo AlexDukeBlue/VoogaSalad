@@ -2,8 +2,8 @@ package frontend;
 
 import controller.Controller;
 import frontend.util.BaseUIManager;
+import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 
 /**
  * @author Created by th174 on 4/22/17.
@@ -28,7 +28,7 @@ public abstract class ClickableUIComponent<T extends Node> extends BaseUIManager
 		this.clickHandler = clickHandler;
 	}
 
-	public void handleClick(MouseEvent event, Object o) {
+	public void handleClick(Event event, Object o) {
 		clickHandler.handleClick(event, this, o);
 	}
 }

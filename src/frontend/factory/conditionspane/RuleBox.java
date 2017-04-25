@@ -9,8 +9,8 @@ import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.SelectableUIComponent;
+import javafx.event.Event;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
@@ -53,14 +53,14 @@ public class RuleBox extends SelectableUIComponent<Region> {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof AddRemoveButton) {
 			getController();//.removeRules(...)
 		}
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 
 	}
 

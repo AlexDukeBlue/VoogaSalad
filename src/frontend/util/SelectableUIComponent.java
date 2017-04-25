@@ -3,8 +3,8 @@ package frontend.util;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
+import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 
 /**
  * @author Created by th174 on 4/22/17.
@@ -23,9 +23,9 @@ public abstract class SelectableUIComponent<T extends Node> extends ClickableUIC
 		getClickHandler().setSelectedComponent(this);
 	}
 
-	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event);
+	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event);
 
-	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event);
+	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event);
 
 	public void select(ClickHandler clickHandler) {
 	}

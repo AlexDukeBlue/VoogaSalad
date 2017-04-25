@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
-	//TODO RESOURCE BUNDLE P
+	//TODO RESOURCE BUNDLE PLS
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
 
@@ -108,7 +108,7 @@ public class CommunicationController implements Controller {
 		return getGrid().get(tuple);
 	}
 
-	private synchronized <U extends ReadonlyGameplayState> void updateGameState() {
+	private synchronized void updateGameState() {
 		updateAll();
 		waitForReady.countDown();
 	}

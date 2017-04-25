@@ -11,7 +11,7 @@ import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.util.GameBoardObjectView;
 import frontend.util.VoogaEntityButton;
-import javafx.scene.input.MouseEvent;
+import javafx.event.Event;
 
 import java.util.Objects;
 
@@ -29,13 +29,13 @@ public class AbilityButton extends VoogaEntityButton {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		//TODO Disallow in authoring mode?
 		actInGameplayMode(target, additonalInfo, clickHandler, event);
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation && Objects.nonNull(unitLocation)) {
 			String abilityTargetName = ((GameBoardObjectView) target).getEntity().getName();
 			CoordinateTuple abilityTargetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();

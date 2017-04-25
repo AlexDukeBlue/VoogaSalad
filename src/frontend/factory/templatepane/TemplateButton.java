@@ -13,7 +13,7 @@ import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.GameBoardObjectView;
 import frontend.util.VoogaEntityButton;
-import javafx.scene.input.MouseEvent;
+import javafx.event.Event;
 
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		String clickedEntityName = getEntity().getName();
 		if (target instanceof AddRemoveButton) {
 			getController().removeTemplatesByCategory(templateCategory, getEntity().getName());
@@ -64,7 +64,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		actInAuthoringMode(target, null, clickHandler, event);
 	}
 

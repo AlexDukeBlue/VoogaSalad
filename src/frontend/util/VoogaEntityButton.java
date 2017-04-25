@@ -5,11 +5,11 @@ import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.View;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 
 /**
@@ -42,12 +42,12 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		setAsSelected();
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, MouseEvent event) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		actInAuthoringMode(target, additionalInfo, clickHandler, event);
 	}
 }
