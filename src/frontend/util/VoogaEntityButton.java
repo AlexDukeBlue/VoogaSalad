@@ -30,6 +30,10 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		entityButton.setTooltip(new Tooltip(entity.getFormattedName()));
 		entityButton.setPadding(Insets.EMPTY);
 		entityButton.setOnMouseClicked(event -> setAsSelected());
+		entityButton.setOnDragDetected(event -> {
+			getObject().startFullDrag();
+			setAsSelected();
+		});
 	}
 
 	@Override

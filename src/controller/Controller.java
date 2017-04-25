@@ -2,6 +2,8 @@ package controller;
 
 import backend.cell.Cell;
 import backend.cell.Terrain;
+import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.ResultQuadPredicate.Result;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
@@ -9,9 +11,12 @@ import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
+import backend.util.Event;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
 import backend.util.VoogaEntity;
+import backend.util.Actionable.SerializableBiConsumer;
+import backend.util.Requirement.SerializableBiPredicate;
 import frontend.util.UIComponentListener;
 import util.net.Modifier;
 
@@ -90,6 +95,30 @@ public interface Controller {
 	boolean isAuthoringMode();
 
 	String getPlayerName();
+	
+	void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate);
+	
+	void removeTurnRequirement(String name);
+	
+	void activateTurnRequirement(String name);
+	
+	void deactivateTurnRequirement(String name);
+	
+	void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer);
+	
+	void removeTurnAction(Event event, String name);
+	
+	void activateTurnAction(Event event, String name);
+	
+	void deactivateTurnAction(Event event, String name);
+	
+	void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate);
+	
+	void removeEndCondition(String name);
+	
+	void activateEndCondition(String name);
+	
+	void deactivateEndCondition(String name);
 
 	default Collection<? extends Team> getTeamTemplates() {
 		return (Collection<? extends Team>) getTemplatesByCategory("team");

@@ -207,11 +207,11 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return this;
 	}
 
-	GameplayState removeObjectives(ResultQuadPredicate... objectives) {
+	GameplayState removeObjectives(Resultant... objectives) {
 		return removeObjectives(Arrays.asList(objectives));
 	}
 
-	GameplayState removeObjectives(Collection<ResultQuadPredicate> objectives) {
+	GameplayState removeObjectives(Collection<Resultant> objectives) {
 		this.objectives.removeAll(objectives);
 		return this;
 	}
@@ -226,12 +226,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	//TODO: Doesn't work because there's no way to getByName a collection of BiConsumers you want to remove, same goes for all of these
-	GameplayState removeTurnActions(Event event, Collection<BiConsumer<ImmutablePlayer, GameplayState>> actions) {
+	GameplayState removeTurnActions(Event event, Collection<Actionable> actions) {
 		turnActions.get(event).removeIf(actions::contains);
 		return this;
 	}
 
-	GameplayState removeTurnActions(Event event, BiConsumer<ImmutablePlayer, GameplayState>... actions) {
+	GameplayState removeTurnActions(Event event, Actionable... actions) {
 		return removeTurnActions(event, Arrays.asList(actions));
 	}
 
@@ -244,12 +244,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return addTurnRequirements(Arrays.asList(turnRequirements));
 	}
 
-	GameplayState removeTurnRequirements(Collection<BiPredicate<ImmutablePlayer, GameplayState>> turnRequirements) {
+	GameplayState removeTurnRequirements(Collection<Requirement> turnRequirements) {
 		this.turnRequirements.removeAll(turnRequirements);
 		return this;
 	}
 
-	GameplayState removeTurnRequirements(BiPredicate<ImmutablePlayer, GameplayState>... turnRequirements) {
+	GameplayState removeTurnRequirements(Requirement... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
 }
