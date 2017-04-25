@@ -19,25 +19,25 @@ public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModi
 	public static final String DEFENSIVE = "defense";
 	public static final String OFFENSIVE = "offensive";
 	//TODO: ResourceBundlify all this shit
-	public transient static final InteractionModifier<?> DUMMY = new InteractionModifier<>("Dummy", (originalValue, agent, target, game) -> originalValue, "Dummy modifier that doesn't change anything", "Nothing.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> NO_EFFECT = new InteractionModifier<>("No effect", (originalValue, agent, target, game) -> 0.0, "Literally nothing", "The_abyss_stares_back.png", DEFENSIVE);
+	public transient static final InteractionModifier<?> DUMMY = new InteractionModifier<>("Dummy", (originalValue, agent, target, game) -> originalValue, "Dummy modifier that doesn't change anything", "resources/images/blackScreen.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> NO_EFFECT = new InteractionModifier<>("No effect", (originalValue, agent, target, game) -> 0.0, "Literally nothing", "resources/images/blackScreen.png", DEFENSIVE);
 	//Offensive modifiers, can go on units or attacks
-	public transient static final InteractionModifier<Double> CHAOTIC = new InteractionModifier<>("Chaotic", Modifier.CHAOTIC, "Attacks do more damage in nighttime, but less damage in daytime.", "Chaotic.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> LAWFUL = new InteractionModifier<>("Lawful", Modifier.LAWFUL, "Attacks do more damage in daytime, but less damage in nighttime", "Lawful.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> BLINDED = new InteractionModifier<>("Blinded", Modifier.BLINDED, "Attacks have a high chance to miss", "Helen_Keller.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> FIRST_BLOOD = new InteractionModifier<>("First Blood", Modifier.FIRST_BLOOD, "Attacks do extra damage to targets at full HP.", "First_blood.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> EXECUTIONER = new InteractionModifier<>("Executioner", Modifier.EXECUTIONER, "Attacks do extra damage to targets at low HP.", "Axe.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> CRITICAL_STRIKE = new InteractionModifier<>("Critical Strike", Modifier.CRITICAL_STRIKE, "Attacks have a chance to critical strike, hitting for extra damage.", "RNGesus.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> BRAVERY = new InteractionModifier<>("Weakened", Modifier.BRAVERY, "Attacks do extra damage if the defender has more HP than the attacker.", "David&Goliath.png", OFFENSIVE);
-	public transient static final InteractionModifier<Double> ASSASSIN = new InteractionModifier<>("Assassin", Modifier.ASSASSIN, "Attacks do extra damage to isolated units with no nearby allies", "Zabaniya.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> CHAOTIC = new InteractionModifier<>("Chaotic", Modifier.CHAOTIC, "Attacks do more damage in nighttime, but less damage in daytime.", "resources/images/undead.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> LAWFUL = new InteractionModifier<>("Lawful", Modifier.LAWFUL, "Attacks do more damage in daytime, but less damage in nighttime", "resources/images/sherrif.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> BLINDED = new InteractionModifier<>("Blinded", Modifier.BLINDED, "Attacks have a high chance to miss", "resources/images/blind.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> FIRST_BLOOD = new InteractionModifier<>("First Blood", Modifier.FIRST_BLOOD, "Attacks do extra damage to targets at full HP.", "resources/images/blood.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> EXECUTIONER = new InteractionModifier<>("Executioner", Modifier.EXECUTIONER, "Attacks do extra damage to targets at low HP.", "resources/images/guillotine.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> CRITICAL_STRIKE = new InteractionModifier<>("Critical Strike", Modifier.CRITICAL_STRIKE, "Attacks have a chance to critical strike, hitting for extra damage.", "resources/images/nuke.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> BRAVERY = new InteractionModifier<>("Weakened", Modifier.BRAVERY, "Attacks do extra damage if the defender has more HP than the attacker.", "resources/images/slingshot.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> ASSASSIN = new InteractionModifier<>("Assassin", Modifier.ASSASSIN, "Attacks do extra damage to isolated units with no nearby allies", "resources/images/assassin.png", OFFENSIVE);
 	//Defensive modifiers, can go on units only
-	public transient static final InteractionModifier<Double> INVULNERABILITY = new InteractionModifier<>("Invulnerability", Modifier.INVULNERABILITY, "This unit does not take damage.", "God.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> FORMATION = new InteractionModifier<>("Formation", Modifier.FORMATION, "This unit takes less damage when near an allied unit of the same type.", "Phalanx.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> EVASIVE = new InteractionModifier<>("Evasive", Modifier.EVASIVE, "This unit has a high chance to evade attacks, but it takes extra damage when hit", "Evasion.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> STALWART = new InteractionModifier<>("Stalwart", Modifier.STALWART, "This unit takes less damage if it does not move this turn.", "Siege_Engine.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> HARDENED_SHIELDS = new InteractionModifier<>("Hardened Shields", Modifier.HARDENED_SHIELDS, "Incoming attacks that would deal more than 5 damage have their damage reduced to 5", "Protoss_Immortal.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> FEARFUL = new InteractionModifier<>("Fearful", Modifier.FEARFUL, "This unit take extra damage in night time", "Scarecrow.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> THORNS = new InteractionModifier<>("Thorns", Modifier.THORNS, "This unit reflects half the damage it takes back to the attacker", "Blademail.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> INVULNERABILITY = new InteractionModifier<>("Invulnerability", Modifier.INVULNERABILITY, "This unit does not take damage.", "resources/images/god.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> FORMATION = new InteractionModifier<>("Formation", Modifier.FORMATION, "This unit takes less damage when near an allied unit of the same type.", "resources/images/allies.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> EVASIVE = new InteractionModifier<>("Evasive", Modifier.EVASIVE, "This unit has a high chance to evade attacks, but it takes extra damage when hit", "resources/images/evade.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> STALWART = new InteractionModifier<>("Stalwart", Modifier.STALWART, "This unit takes less damage if it does not move this turn.", "resources/images/blackScreen.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> HARDENED_SHIELDS = new InteractionModifier<>("Hardened Shields", Modifier.HARDENED_SHIELDS, "Incoming attacks that would deal more than 5 damage have their damage reduced to 5", "resources/images/shield.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> FEARFUL = new InteractionModifier<>("Fearful", Modifier.FEARFUL, "This unit take extra damage in night time", "resources/images/crow.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> THORNS = new InteractionModifier<>("Thorns", Modifier.THORNS, "This unit reflects half the damage it takes back to the attacker", "resources/images/resources.png", DEFENSIVE);
 
 	private final Modifier<T> modifier;
 	private String type;

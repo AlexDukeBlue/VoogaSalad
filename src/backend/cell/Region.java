@@ -11,7 +11,7 @@ public class Region extends ModifiableVoogaCollection<Terrain, Region> {
 	//TODO ResourceBundlify this
 	public transient static final Region DEFAULT_REGION = new Region("Default Region")
 			.setDescription("The default region contains all the pre-defined terrains")
-			.setImgPath("default_region.png")
+			.setImgPath("resources/images/blackScreen.png")
 			.addAll(Terrain.getPredefinedTerrain());
 
 	public Region(String name) {

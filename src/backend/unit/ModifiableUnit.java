@@ -19,7 +19,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
 			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
-			.setImgPath("resources/images/x.png")
+			.setImgPath("resources/images/skeletonWarrior.png")
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
 			.addActiveAbilities(ActiveAbility.SWORD)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
@@ -27,7 +27,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
 			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6))
 			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
-			.setImgPath("resources/images/o.png")
+			.setImgPath("resources/images/skeletonArcher.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
 			.addActiveAbilities(ActiveAbility.BOW);

@@ -15,23 +15,23 @@ public class ModifiableUnitStat<T extends Number & Comparable<T>> extends Modifi
 			.setMinValue(0.0)
 			.setMaxValue(50.0)
 			.setDescription("Units lose HP when taking damage. When a unit's hitpoints reach 0, the unit dies.")
-			.setImgPath("<3.png");
+			.setImgPath("resources/images/heart.png");
 	public transient static final ModifiableUnitStat<Integer> MOVEPOINTS = new ModifiableUnitStat<Integer>("Movepoints")
 			.setMinValue(0)
 			.setMaxValue(5)
 			.setDescription("Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.")
-			.setImgPath("Boot.png");
+			.setImgPath("resources/images/timbs.png");
 	public transient static final ModifiableUnitStat<Double> ENERGY = new ModifiableUnitStat<Double>("Energy")
 			.setMinValue(0.0)
 			.setMaxValue(100.0)
 			.setDescription("Energy points are required for and consumed by some powerful abilities.")
-			.setImgPath("NRG.png");
+			.setImgPath("resources/images/energy.png");
 	//For players
 	public transient static final ModifiableUnitStat<Double> GOLD = new ModifiableUnitStat<Double>("Gold")
 			.setMinValue(0.0)
 			.setMaxValue(Double.MAX_VALUE)
 			.setDescription("Players have a limited amount of gold to spend on their units.")
-			.setImgPath("SHINY~~~.png");
+			.setImgPath("resources/images/gold.png");
 
 	private T maxValue;
 	private T minValue;
