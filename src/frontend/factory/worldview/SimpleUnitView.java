@@ -14,6 +14,7 @@ import frontend.util.SelectableUIComponent;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -46,6 +47,9 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		imageView.setManaged(true);
 		imageView.setPickOnBounds(true);
 		imageView.setPreserveRatio(true);
+		DropShadow dropShadow= new DropShadow(15, Color.WHITE);
+		dropShadow.setSpread(.3);
+		imageView.setEffect(dropShadow);
 		unitView = new BorderPane();
 		unitView.setPickOnBounds(true);
 		if (Objects.nonNull(getUnit().getHitPoints())) {

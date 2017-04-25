@@ -24,7 +24,7 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		this.entity = entity;
 		ImageView sprite = new ImageView(View.getImg(entity.getImgPath()));
 		entityButton = new Button("", sprite);
-		entityButton.setPadding(new Insets(5, 5, 5, 5));
+		entityButton.setPadding(new Insets(10, 10, 10, 10));
 		sprite.setFitWidth(size);
 		sprite.setFitHeight(size);
 		entityButton.setTooltip(new Tooltip(entity.getFormattedName()));
