@@ -160,8 +160,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
-		edit.getItems().add(newTriggeredAbilityItem);
-		edit.getItems().add(newInteractionModifierItem);
+//		edit.getItems().add(newTriggeredAbilityItem);
+//		edit.getItems().add(newInteractionModifierItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
