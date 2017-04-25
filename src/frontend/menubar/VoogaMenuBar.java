@@ -13,6 +13,9 @@ import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -22,8 +25,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Optional;
 
@@ -121,21 +126,26 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
 			showBrowser("frontend/menubar/help.html");
-		}); 
+		});
 		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
 			showBrowser("frontend/menubar/about.html");
 		});
 	}
-	
+
 	private void showBrowser(String url) {
-		WebView browser = new WebView();
-		WebEngine webEngine = browser.getEngine();
-		Stage s = new Stage();
-		Scene scene = new Scene(browser);
-		url =  this.getClass().getClassLoader().getResource(url).toExternalForm();
-		webEngine.load(url);
-		s.setScene(scene);
-		s.show();
+		try {
+			Desktop.getDesktop().browse(getClass().getClassLoader().getResource(url).toURI());
+		} catch (URISyntaxException | IOException e) {
+			System.err.print("Invalid url: " + url);
+			WebView browser = new WebView();
+			WebEngine webEngine = browser.getEngine();
+			Stage s = new Stage();
+			Scene scene = new Scene(browser);
+			url = this.getClass().getClassLoader().getResource(url).toExternalForm();
+			webEngine.load(url);
+			s.setScene(scene);
+			s.show();
+		}
 	}
 
 	private void initMenus() {
