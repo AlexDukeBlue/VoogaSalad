@@ -3,9 +3,11 @@ package controller;
 import backend.cell.Cell;
 import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.Resultant;
+import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
+import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.unit.Unit;
@@ -28,10 +30,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -349,6 +348,59 @@ public class CommunicationController implements Controller {
 
 	public void endTurn() {
 		sendModifier(GameplayState::endTurn);
+	}
+
+	@Override
+	public void moveUnit(String unitName, CoordinateTuple unitLocation, CoordinateTuple targetLocation) {
+		sendModifier((GameplayState state) -> {
+			Unit unitToMove = state.getGrid().get(unitLocation).getOccupantByName(unitName);
+			unitToMove.moveTo(state.getGrid().get(targetLocation), state);
+			return state;
+		});
+	}
+
+	@Override
+	public void sendMessage(String messageContent, ChatMessage.AccessLevel accessLevel, String receiverName) {
+		sendModifier(accessLevel.getSendMessageModifier(messageContent, playerName, receiverName));
+	}
+
+	@Override
+	public void setBoundsHandler(String boundsHandlerName) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getGrid().setBoundsHandler((BoundsHandler) state.getTemplateByCategory("boundshandler").getByName(boundsHandlerName));
+			return state;
+		});
+	}
+
+	@Override
+	public void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName) {
+		sendModifier((AuthoringGameState gameState) -> {
+			try {
+				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
+				if (Objects.nonNull(targetUnit)) {
+					targetUnit.add(gameState.getTemplateByName(templateName).copy());
+				} else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				Cell targetCell = gameState.getGrid().get(gridLocation);
+				if (Objects.nonNull(targetCell)) {
+					targetCell.add(gameState.getTemplateByName(templateName).copy());
+				} else {
+					e.printStackTrace();
+				}
+			}
+			return gameState;
+		});
+	}
+
+	@Override
+	public void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation) {
+		sendModifier((GameplayState gameState) -> {
+			VoogaEntity abilityTarget = gameState.getGrid().get(targetLocation).getOccupantByName(targetName);
+			gameState.getGrid().get(targetLocation).getOccupantByName(targetName).useActiveAbility(abilityName, abilityTarget, gameState);
+			return gameState;
+		});
 	}
 
 	@Override

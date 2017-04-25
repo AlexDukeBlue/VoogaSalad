@@ -5,6 +5,8 @@ package frontend.menubar;
 
 import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.AuthoringClickHandler;
+import frontend.GameplayClickHandler;
 import frontend.View;
 import frontend.factory.wizard.WizardFactory;
 import frontend.startup.StartupScreen;
@@ -116,8 +118,14 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		templatePaneItem = factory.getMenuItem(getPolyglot().get("ShowHideTemplate"), e -> myView.toggleTemplatePane());
 		detailsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideDetails"), e -> myView.toggleDetailsPane());
 		statsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideStats"), e -> myView.toggleStatsPane());
-		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> getController().enterAuthoringMode());
-		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
+		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> {
+			myView.setClickHandler(new AuthoringClickHandler());
+			getController().enterAuthoringMode();
+		});
+		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
+			myView.setClickHandler(new GameplayClickHandler());
+			getController().enterGamePlayMode();
+		});
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
 			showBrowser("frontend/menubar/help.html");

@@ -31,11 +31,14 @@ import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -129,9 +132,17 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void placePanes() {
 		initPanes();
-		bottomPane = new SplitPane(new SplitPane(detailPane.getObject(), abilityPane.getObject()));
-		bottomPane.setDividerPositions(.8);
+		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
+		cancelImg.setFitWidth(50);
+		cancelImg.setFitHeight(50);
+		Button cancelButton = new Button("", cancelImg);
+		cancelButton.setCancelButton(true);
+		cancelButton.setPadding(Insets.EMPTY);
+		cancelButton.setOnMouseClicked(event -> getClickHandler().cancel());
+		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), cancelButton);
+		bottomPane.setDividerPositions(.6,1);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
+		cancelButton.prefHeightProperty().bind(bottomPane.heightProperty());
 		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
 		worldAndDetailPane.setDividerPositions(1);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);

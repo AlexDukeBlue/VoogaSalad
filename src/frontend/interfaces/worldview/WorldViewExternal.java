@@ -13,5 +13,4 @@ public interface WorldViewExternal {
 	Polyglot getPolyglot();
 
 	void setClickHandler(ClickHandler clickHandler);
-
 }

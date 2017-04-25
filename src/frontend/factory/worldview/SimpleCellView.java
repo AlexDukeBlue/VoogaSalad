@@ -176,7 +176,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	@Override
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
-		unitViews.values().forEach(e -> setClickHandler(clickHandler));
+		unitViews.values().forEach(e -> e.setClickHandler(clickHandler));
 	}
 
 	@Override

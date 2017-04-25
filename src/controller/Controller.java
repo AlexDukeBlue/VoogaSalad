@@ -3,19 +3,15 @@ package controller;
 import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.game_engine.ResultQuadPredicate;
-import backend.game_engine.ResultQuadPredicate.Result;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
+import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.Unit;
-import backend.util.AuthoringGameState;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.VoogaEntity;
 import backend.util.Actionable.SerializableBiConsumer;
+import backend.util.*;
 import backend.util.Requirement.SerializableBiPredicate;
 import frontend.util.UIComponentListener;
 import util.net.Modifier;
@@ -138,7 +134,15 @@ public interface Controller {
 
 	Shape getShape();
 
-	default void endTurn() {
-		getGameState().endTurn();
-	}
+	void endTurn();
+
+	void moveUnit(String unitName, CoordinateTuple unitLocation, CoordinateTuple targetLocation);
+
+	void sendMessage(String messageContent, ChatMessage.AccessLevel accessLevel, String receiverName);
+
+	void setBoundsHandler(String boundsHandlerName);
+
+	void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName);
+
+	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation);
 }
