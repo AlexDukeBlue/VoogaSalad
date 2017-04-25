@@ -45,8 +45,7 @@ public class AbilityButton extends VoogaEntityButton {
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
-		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation &&
-				abilityOwner instanceof Unit && getEntity() instanceof ActiveAbility &&
+		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation && getEntity() instanceof ActiveAbility &&
 				((ActiveAbility) getEntity()).getLegalTargetCells((Unit) abilityOwner, getController().getGameState()).contains(((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation())) {
 			actInAuthoringMode(target, additionalInfo, clickHandler, event);
 		}
