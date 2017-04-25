@@ -1,22 +1,5 @@
 package controller;
 
-import backend.cell.Cell;
-import backend.grid.CoordinateTuple;
-import backend.grid.GameBoard;
-import backend.player.ImmutablePlayer;
-import backend.player.Player;
-import backend.unit.Unit;
-import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.VoogaEntity;
-import backend.util.io.XMLSerializer;
-import frontend.util.UIComponentListener;
-import javafx.application.Platform;
-import util.net.Modifier;
-import util.net.ObservableClient;
-import util.net.ObservableServer;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,10 +12,32 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import backend.cell.Cell;
+import backend.cell.ModifiableTerrain;
+import backend.grid.CoordinateTuple;
+import backend.grid.GameBoard;
+import backend.player.ImmutablePlayer;
+import backend.player.Player;
+import backend.unit.ModifiableUnit;
+import backend.unit.Unit;
+import backend.unit.properties.ActiveAbility;
+import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
+import backend.util.ReadonlyGameplayState;
+import backend.util.VoogaEntity;
+import backend.util.io.XMLSerializer;
+import frontend.util.UIComponentListener;
+import javafx.application.Platform;
+import util.net.Modifier;
+import util.net.ObservableClient;
+import util.net.ObservableServer;
 
 /**
  * @author Created by ncp14, th174
@@ -44,6 +49,14 @@ public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
+	private static final Map<Class<?>,String> templateMap;
+	static {
+		Map<Class<?>,String> map = new HashMap<>();
+		map.put(ModifiableUnit.class, "unit");
+		map.put(ModifiableTerrain.class, "terrain");
+		map.put(ActiveAbility.class, "activeability");
+		templateMap = map;
+	}
 	private final Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
@@ -255,5 +268,12 @@ public class CommunicationController implements Controller {
 		} catch (IOException ignored) {
 			ignored.printStackTrace();
 		}
+	}
+
+	@Override
+	public void addTemplates(VoogaEntity... templates) {
+		System.out.println(templates[0].getClass());
+		templateMap.get(templates[0].getClass());
+		addTemplatesByCategory(templateMap.get(templates[0].getClass()), templates);
 	}
 }

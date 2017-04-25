@@ -60,9 +60,7 @@ public interface Controller {
 
 	void removeTemplatesByCategory(String category, String... templateNames);
 
-	default void addUnitTemplates(Unit... unitTemplates) {
-		addTemplatesByCategory("unit", unitTemplates);
-	}
+	void addTemplates(VoogaEntity... templates);
 
 	default void removeUnitTemplates(String... unitTemplates) {
 		removeTemplatesByCategory("unit", unitTemplates);
