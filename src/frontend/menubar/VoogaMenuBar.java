@@ -40,8 +40,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
-			newTriggeredAbilityItem, newInteractionModifierItem, conditionsPaneItem, templatePaneItem, detailsPaneItem,
-			statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
+			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -87,10 +86,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newTerrainItem = factory.getMenuItem(getPolyglot().get("CreateNewTerrain"), e -> create("terrain"));
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
-		newTriggeredAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewTriggeredAbility"),
-				e -> create("triggeredability"));
-		newInteractionModifierItem = factory.getMenuItem(getPolyglot().get("CreateNewInteractionModifier"),
-				e -> create("interactionmodifier"));
 
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
 		try {
@@ -160,8 +155,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
-		edit.getItems().add(newTriggeredAbilityItem);
-		edit.getItems().add(newInteractionModifierItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
