@@ -31,6 +31,8 @@ public interface Controller {
 
 	GameBoard getGrid();
 
+	void setGrid(GameBoard grid);
+
 	void startClient(String host, int port, Duration timeout);
 
 	void startServer(ReadonlyGameplayState gameState, int port, Duration timeout);

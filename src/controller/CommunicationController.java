@@ -104,6 +104,14 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
+	public void setGrid(GameBoard gameBoard) {
+		sendModifier((AuthoringGameState state) -> {
+			state.setGrid(gameBoard);
+			return state;
+		});
+	}
+
+	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
