@@ -32,7 +32,8 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		String clickedEntityName = getEntity().getName();
 		if (target instanceof AddRemoveButton) {
-			getController().removeTemplatesByCategory(templateCategory, getEntity().getName());
+			getController().removeTemplatesByCategory(templateCategory, getEntity().getFormattedName());
+			clickHandler.cancel();
 		} else if (getEntity() instanceof BoundsHandler) {
 			getController().sendModifier((AuthoringGameState state) -> {
 				state.getGrid().setBoundsHandler((BoundsHandler) state.getTemplateByName(clickedEntityName));
@@ -71,10 +72,5 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	@Override
 	public String toString() {
 		return getEntity().toString();
-	}
-
-	@Override
-	public VoogaEntity getEntity() {
-		return super.getEntity();
 	}
 }

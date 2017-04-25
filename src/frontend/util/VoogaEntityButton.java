@@ -17,7 +17,7 @@ import javafx.scene.image.ImageView;
  */
 public class VoogaEntityButton extends SelectableUIComponent<Button> {
 	private final Button entityButton;
-	private final VoogaEntity entity;
+	private VoogaEntity entity;
 
 	public VoogaEntityButton(VoogaEntity entity, int size, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
@@ -37,8 +37,12 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		return entityButton;
 	}
 
-	public VoogaEntity getEntity() {
+	public final VoogaEntity getEntity() {
 		return entity;
+	}
+
+	protected final void setEntity(VoogaEntity entity){
+		this.entity = entity;
 	}
 
 	@Override

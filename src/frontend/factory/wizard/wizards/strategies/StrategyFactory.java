@@ -28,6 +28,7 @@ public class StrategyFactory {
 //				System.out.println(strategyMap.get(categoryName).getConstructor().newInstance());
 				return strategyMap.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
+				e.printStackTrace();
 				throw new Error("Wizard not supported: " + categoryName, e1);
 			}
 		}

@@ -10,7 +10,7 @@
 package frontend.factory.worldview.layout;
 
 import backend.grid.CoordinateTuple;
-import controller.Controller;
+import backend.grid.GameBoard;
 import javafx.scene.shape.Polygon;
 
 class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
@@ -20,7 +20,7 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 	public static final double FULL_CIRCLE = Math.PI * 2;
 
 	@Override
-	public Polygon layoutCell(double scaleFactor, double minWidth, double maxWidth, CoordinateTuple location, Controller controller) {
+	public Polygon layoutCell(double scaleFactor, double minWidth, double maxWidth, CoordinateTuple location, GameBoard gameBoard) {
 		if (scaleFactor <= 0 || scaleFactor > 1 || minWidth <= 0) {
 			throw new RuntimeException();
 		}
@@ -28,8 +28,8 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 		hexagon.setPoints(scaleFactor, minWidth, maxWidth);
 		double width = minWidth + ((maxWidth - minWidth) * scaleFactor);
 		double radius = width / (Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
-		double xOffset = (controller.getGrid().getRows() - 1) / 2;
-		double yOffset = (controller.getGrid().getColumns() - 1) / 2;
+		double xOffset = (gameBoard.getRows() - 1) / 2;
+		double yOffset = (gameBoard.getColumns() - 1) / 2;
 		CoordinateTuple rectCoord = location.convertToRectangular();
 		if ((rectCoord.get(Y_INDEX) % 2) == 0) {
 			hexagon.setLayoutX((xOffset + rectCoord.get(X_INDEX) + .5) * width);

@@ -59,7 +59,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
-			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController()));
+			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController().getGrid()));
 			cellViews.put(coordinate, cl);
 			cellViewObjects.getChildren().add(cl.getObject());
 		});

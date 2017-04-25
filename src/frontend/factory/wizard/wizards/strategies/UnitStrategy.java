@@ -56,10 +56,8 @@ class UnitStrategy extends BaseStrategy<Unit> {
 
 				});
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
-		terrainMovePointPage = new TerrainMovePointPage(getPolyglot().get("Default_TerrainMovePoint_Title"),
-				getPolyglot().get("Default_TerrainMovePoint_Description"), gameState);
-		gridPatternPage = new GridPatternPage(getPolyglot().get("Default_MovePattern_Title"),
-				getPolyglot().get("Default_MovePattern_Description"), gameState);
+		terrainMovePointPage = new TerrainMovePointPage(getPolyglot().get("Default_TerrainMovePoint_Title"), getPolyglot().get("Default_TerrainMovePoint_Description"), gameState);
+		gridPatternPage = new GridPatternPage(getPolyglot().get("Default_MovePattern_Title"), getPolyglot().get("Default_MovePattern_Description"), gameState);
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
 	}
 

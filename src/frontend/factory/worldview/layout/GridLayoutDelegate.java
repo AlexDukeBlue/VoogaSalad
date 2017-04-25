@@ -15,7 +15,7 @@
 package frontend.factory.worldview.layout;
 
 import backend.grid.CoordinateTuple;
-import controller.Controller;
+import backend.grid.GameBoard;
 import javafx.scene.shape.Polygon;
 
 public interface GridLayoutDelegate {
@@ -31,7 +31,7 @@ public interface GridLayoutDelegate {
  *            Minimum size of a CellView
 	 * @param max
 	 * @param location
-	 * @param controller
+	 * @param gameBoard
 	 */
-	Polygon layoutCell(double scaleFactor, double min, double max, CoordinateTuple location, Controller controller);
+	Polygon layoutCell(double scaleFactor, double min, double max, CoordinateTuple location, GameBoard gameBoard);
 }

@@ -242,7 +242,13 @@ public class CommunicationController implements Controller {
 				e.printStackTrace();
 			}
 		});
-		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
+		thingsToUpdate.forEach(e -> Platform.runLater(() -> {
+			try {
+				e.update();
+			} catch (Exception e1) {
+				removeListener(e);
+			}
+		}));
 	}
 
 	public void endTurn() {
