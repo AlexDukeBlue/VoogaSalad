@@ -1,64 +1,51 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import java.util.Map;
-
+import backend.grid.GridPattern;
+import backend.util.AuthoringGameState;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.WizardGrid;
 import javafx.beans.binding.StringBinding;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 
-public class GridPatternPage extends BaseWizardPage{
-	
-	private VBox vb;
+public class GridPatternPage extends BaseWizardPage {
 	private WizardGrid grid;
-	TextField textField;
-	
-	public GridPatternPage() {
+
+	public GridPatternPage(AuthoringGameState gameState) {
 		this(new StringBinding() {
-
 			@Override
 			protected String computeValue() {
 				return "";
 			}
-			
-		});
+		}, gameState);
 	}
 
-	public GridPatternPage(StringBinding title) {
+	public GridPatternPage(StringBinding title, AuthoringGameState gameState) {
 		this(title, new StringBinding() {
-
 			@Override
 			protected String computeValue() {
 				return "";
 			}
-			
-		});
+		}, gameState);
 	}
 
-	public GridPatternPage(StringBinding title, StringBinding description) {
+	public GridPatternPage(StringBinding title, StringBinding description, AuthoringGameState gameState) {
 		super();
 		this.setTitle(title);
 		this.setDescription(description);
-		initialize();
+		initialize(gameState);
 	}
-	
-	private void initialize() {
-		vb = new VBox();
-		textField = new TextField();
-		textField.promptTextProperty().bind(getPolyglot().get("Grid_Pattern_Prompt"));;
-		Button submit = new Button();
-		submit.textProperty().bind(getPolyglot().get("Submit"));
-		submit.setOnMouseClicked(event -> {if(!textField.getText().equals(null)) grid = new WizardGrid(Integer.parseInt(textField.getText()), vb); vb.getChildren().add(grid.getPane());});
-		vb.getChildren().add(new HBox(textField, submit));
-		canNextWritable().setValue(true); //line change here
+
+	private void initialize(AuthoringGameState gameState) {
+		grid = new WizardGrid(gameState);
+		canNextWritable().setValue(true);
 	}
 
 	@Override
 	public Region getObject() {
-		return vb;
+		return grid.getObject();
+	}
+
+	public GridPattern getGridPattern() {
+		return grid.getGridPattern();
 	}
 
 }

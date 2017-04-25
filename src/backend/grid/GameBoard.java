@@ -94,4 +94,8 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 			return bounds.get(i).getValue();
 		}
 	}
+
+	int getRows();
+
+	int getColumns();
 }

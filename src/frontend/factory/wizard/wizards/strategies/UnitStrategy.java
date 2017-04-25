@@ -1,11 +1,8 @@
 package frontend.factory.wizard.wizards.strategies;
 
-import backend.grid.GridPattern;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
-import backend.unit.properties.UnitStat;
-import backend.unit.properties.UnitStats;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.AbilitiesAdderPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridPatternPage;
@@ -41,27 +38,28 @@ class UnitStrategy extends BaseStrategy<Unit> {
 				ModifiableUnitStat.HITPOINTS.setMinValue(0.0).setMaxValue(new Double(abilitiesAdderPage.getHP()))
 						.setCurrentValue(new Double(abilitiesAdderPage.getHP())));
 		unit.setTerrainMoveCosts(terrainMovePointPage.getTerrainMovePoints());
-		unit.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMinValue(0).setMaxValue(terrainMovePointPage.getUnitMovePoints())
-				.setCurrentValue(terrainMovePointPage.getUnitMovePoints()));
-		unit.setMovePattern(GridPattern.NONE);
+		unit.addUnitStats(
+				ModifiableUnitStat.MOVEPOINTS.setMinValue(0).setMaxValue(terrainMovePointPage.getUnitMovePoints())
+						.setCurrentValue(terrainMovePointPage.getUnitMovePoints()));
+		unit.setMovePattern(gridPatternPage.getGridPattern());
 		return unit;
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewUnit"), 
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewUnit"),
 				new StringBinding() {
 
 					@Override
 					protected String computeValue() {
 						return "";
 					}
-			
-		});
+
+				});
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
-		terrainMovePointPage = new TerrainMovePointPage(getPolyglot().get("Default_TerrainMovePoint_Title"), 
-				getPolyglot().get("Default_TerrainMovePoint_Description"), 
-				gameState);
-		gridPatternPage = new GridPatternPage();
+		terrainMovePointPage = new TerrainMovePointPage(getPolyglot().get("Default_TerrainMovePoint_Title"),
+				getPolyglot().get("Default_TerrainMovePoint_Description"), gameState);
+		gridPatternPage = new GridPatternPage(getPolyglot().get("Default_MovePattern_Title"),
+				getPolyglot().get("Default_MovePattern_Description"), gameState);
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
 	}
 
