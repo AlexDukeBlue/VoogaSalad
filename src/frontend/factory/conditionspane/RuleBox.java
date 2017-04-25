@@ -59,6 +59,6 @@ public class RuleBox extends SelectableUIComponent<Region> {
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
-
+		//Does nothing because this should not be accessible in GameplayMode
 	}
 }
