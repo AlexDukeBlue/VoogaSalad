@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import backend.grid.CoordinateTuple;
+import backend.grid.GameBoard;
 import backend.grid.GridPattern;
+import backend.grid.ModifiableGameBoard;
 import backend.util.AuthoringGameState;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
@@ -51,12 +53,12 @@ public class WizardGrid extends BaseUIManager<Region> {
 		polygons = new HashMap<>();
 		delegate = new GridLayoutDelegateFactory();
 		clickedPolygons = new ArrayList<>();
-		ArrayList<Integer> max = new ArrayList<>(gameState.getGrid().dimension());
-		for (int i = 0; i < gameState.getGrid().dimension(); i++) {
-			max.add(0);
-		}
-		// CoordinateTuple center = new CoordinateTuple(centerCoordinates);
-		gameState.getGrid().getCells().keySet().stream().forEach(coordinate -> {
+
+		GameBoard board = new ModifiableGameBoard(gameState.getGrid().getName(), gameState.getGrid().getTemplateCell(),
+				gameState.getGrid().getRows()*2, gameState.getGrid().getColumns()*2, gameState.getGrid().getBoundsHandler(),
+				gameState.getGrid().getDescription(), gameState.getGrid().getImgPath()).build();
+
+		board.getCells().keySet().stream().forEach(coordinate -> {
 			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate);
 			polygon.setStroke(BORDER);
 			polygon.setStrokeWidth(BORDER_WIDTH);
@@ -72,29 +74,13 @@ public class WizardGrid extends BaseUIManager<Region> {
 			});
 			polygons.put(polygon, coordinate);
 			group.getChildren().add(polygon);
-			if (coordinate.euclideanDistanceTo(CoordinateTuple.getOrigin(gameState.getGrid().dimension())) == 0) {
+			if (coordinate.euclideanDistanceTo(CoordinateTuple.getOrigin(board.dimension())) == 0) {
 				polygon.setOnMouseClicked(event -> {
 				});
 				polygon.setFill(Color.RED);
 			}
-			// for (int i = 0; i < max.size(); i++) {
-			// if (coordinate.get(i) > max.get(i)) {
-			// max.set(i, coordinate.get(i));
-			// }
-			// }
 			System.out.println(coordinate);
 		});
-		// for (int i = 0; i < max.size(); i++) {
-		// max.set(i, max.get(i) / 2);
-		// }
-		// CoordinateTuple center = new CoordinateTuple(max);
-		// polygons.keySet().stream().forEach(polygon -> {
-		// if (polygons.get(polygon).equals(center)) {
-		// polygon.setOnMouseClicked(event -> {
-		// });
-		// polygon.setFill(Color.RED);
-		// }
-		// });
 	}
 
 }
