@@ -2,6 +2,7 @@ package frontend.factory.wizard.wizards.strategies;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.scene.Node;
+import polyglot_extended.ObservablePolyglot;
 
 /**
  * WizardStrategy is an interface to be used in the Strategy design pattern. It
@@ -79,5 +80,7 @@ public interface WizardStrategy<T> {
 	 *         user to instantiate the object of type T.
 	 */
 	T finish();
+	
+	ObservablePolyglot getPolyglot();
 
 }
