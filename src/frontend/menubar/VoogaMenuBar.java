@@ -16,7 +16,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
 import java.io.File;
@@ -117,9 +120,22 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/help.html");
+		}); 
 		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/about.html");
+		});
+	}
+	
+	private void showBrowser(String url) {
+		WebView browser = new WebView();
+		WebEngine webEngine = browser.getEngine();
+		Stage s = new Stage();
+		Scene scene = new Scene(browser);
+		url =  this.getClass().getClassLoader().getResource(url).toExternalForm();
+		webEngine.load(url);
+		s.setScene(scene);
+		s.show();
 	}
 
 	private void initMenus() {
