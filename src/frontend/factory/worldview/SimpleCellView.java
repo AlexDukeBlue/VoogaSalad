@@ -14,6 +14,8 @@ import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -27,6 +29,7 @@ import java.util.Objects;
 public class SimpleCellView extends ClickableUIComponent<Group> implements CellViewExternal {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
+	private static final Effect DARKEN = new ColorAdjust(0, -.3, -.5, 0);
 	private final CoordinateTuple cellLocation;
 	private final Polygon polygon;
 	private final Group group;
@@ -52,7 +55,6 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		group = new Group();
 		this.polygon = polygonCellView;
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
-		polygon.setOnMouseEntered(event -> mouseOver());
 		polygon.setOnMouseClicked(event -> handleClick(null));
 		polygon.setStroke(CELL_OUTLINE);
 		getPolyglot().addLanguageChangeHandler(change -> {
@@ -133,25 +135,6 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		return String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp);
 	}
 
-	private void mouseOver() {
-		// System.out.println(unitViews.size());
-		// System.out.println("mousing over");
-		if (unitViews.size() != 0) {
-			for (int i = 0; i < unitViews.size(); i++) {
-				// unitViews.get(i).getObject().setLayoutY(unitViews.get(i).getObject().getLayoutY()
-				// - i * 30);;
-			}
-		}
-	}
-
-	private void mouseOut() {
-		if (unitViews.size() != 0) {
-			for (int i = 0; i < unitViews.size(); i++) {
-				unitViews.get(i).getObject().setTranslateY(i * 10);
-			}
-		}
-	}
-
 	@Override
 	public CoordinateTuple getLocation() {
 		return cellLocation;
@@ -172,5 +155,15 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	@Override
 	public String toString() {
 		return getCell().toString();
+	}
+
+	@Override
+	public void darken() {
+		polygon.setEffect(DARKEN);
+	}
+
+	@Override
+	public void unDarken() {
+		polygon.setEffect(null);
 	}
 }

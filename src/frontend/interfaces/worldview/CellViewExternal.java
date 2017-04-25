@@ -14,4 +14,8 @@ public interface CellViewExternal extends GameBoardObjectView {
 	default HasLocation getEntity() {
 		return getCell();
 	}
+
+	void darken();
+
+	void unDarken();
 }

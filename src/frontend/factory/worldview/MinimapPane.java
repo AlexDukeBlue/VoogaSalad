@@ -32,7 +32,7 @@ public class MinimapPane extends BaseUIManager<Pane> {
 		gridViewPortBounds.setStroke(Color.RED);
 		gridViewPortBounds.setStrokeWidth(2);
 		gridViewPortBounds.setStrokeType(StrokeType.INSIDE);
-		double ratio = scrollPane.getContent().getBoundsInLocal().getHeight() / scrollPane.getContent().getBoundsInLocal().getWidth();
+		double ratio = mapContent.getBoundsInLocal().getHeight() / mapContent.getBoundsInLocal().getWidth();
 		view.setMinWidth(150);
 		view.setMinHeight(150 * ratio);
 		view.minHeightProperty().bind(view.widthProperty().multiply(ratio));
@@ -42,13 +42,12 @@ public class MinimapPane extends BaseUIManager<Pane> {
 		minimapSnapshot.fitWidthProperty().bind(view.widthProperty());
 		minimapSnapshot.fitHeightProperty().bind(view.heightProperty());
 		minimapSnapshot.setPreserveRatio(true);
-		Node map = scrollPane.getContent();
-		view.getChildren().addAll(minimapSnapshot, map, gridViewPortBounds);
+		view.getChildren().addAll(minimapSnapshot, gridViewPortBounds);
 		ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
 			double viewPortWidth = scrollPane.getViewportBounds().getWidth();
 			double viewPortHeight = scrollPane.getViewportBounds().getHeight();
-			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
-			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
+			double contentWidth = mapContent.getBoundsInLocal().getWidth();
+			double contentHeight = mapContent.getBoundsInLocal().getHeight();
 			double minimapWidth = minimapSnapshot.getFitWidth();
 			double minimapHeight = minimapSnapshot.getFitHeight();
 			gridViewPortBounds.setWidth(Math.min(1, viewPortWidth / contentWidth) * minimapWidth);
@@ -58,14 +57,14 @@ public class MinimapPane extends BaseUIManager<Pane> {
 					calcMinimapOffset(scrollPane.getVvalue(), scrollPane.getVmin(), scrollPane.getVmax(), contentHeight, viewPortHeight, minimapHeight));
 		};
 		scrollPane.viewportBoundsProperty().addListener(changeListener);
-		scrollPane.getContent().boundsInLocalProperty().addListener(changeListener);
+		mapContent.boundsInLocalProperty().addListener(changeListener);
 		scrollPane.hvalueProperty().addListener(changeListener);
 		scrollPane.vvalueProperty().addListener(changeListener);
 		EventHandler<MouseEvent> mouseEvent = event -> {
 			double viewPortWidth = scrollPane.getViewportBounds().getWidth();
 			double viewPortHeight = scrollPane.getViewportBounds().getHeight();
-			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
-			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
+			double contentWidth = mapContent.getBoundsInLocal().getWidth();
+			double contentHeight = mapContent.getBoundsInLocal().getHeight();
 			double minimapWidth = minimapSnapshot.getFitWidth();
 			double minimapHeight = minimapSnapshot.getFitHeight();
 			double newX = Math.max(0, event.getX() - gridViewPortBounds.getWidth() / 2.0);

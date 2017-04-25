@@ -18,7 +18,7 @@ import static backend.util.ImmutableVoogaObject.getPredefined;
 public interface Terrain extends VoogaEntity, HasTriggeredAbilities {
 	int IMPASSABLE = Integer.MAX_VALUE;
 	Terrain EMPTY = new ModifiableTerrain("Empty")
-			.setDefaultMoveCost(IMPASSABLE)
+			.setDefaultMoveCost(0)
 			.setDescription("Literally nothing")
 			.setImgPath("resources/images/blackScreen.png");
 	Terrain FLAT = new ModifiableTerrain("Flat")

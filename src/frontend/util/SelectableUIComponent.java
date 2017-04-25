@@ -25,4 +25,10 @@ public abstract class SelectableUIComponent<T extends Node> extends ClickableUIC
 	public abstract void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler);
 
 	public abstract void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler);
+
+	public void select(ClickHandler clickHandler) {
+	}
+
+	public void deselect(ClickHandler clickHandler) {
+	}
 }

@@ -4,11 +4,6 @@
  */
 package frontend.factory.detailpane;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
@@ -27,6 +22,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * @author Faith Rodriguez
  *         <p>
@@ -59,7 +60,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 //			paneSetup();
 //			setLabel();
 //			clearContent();
-			if (currentSprite != null){
+			if (currentSprite != null) {
 				setContent(currentSprite);
 			}
 		});
@@ -123,7 +124,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 			setAbilityPaneContent((ModifiableUnit) sprite);
 		} else if (sprite instanceof Cell) {
 			newSpriteInfo = new Label(setTerrainContent(((Cell) sprite).getTerrain()));
-		} else if (sprite instanceof ModifiableTerrain){
+		} else if (sprite instanceof ModifiableTerrain) {
 			newSpriteInfo = new Label(setTerrainContent((ModifiableTerrain) sprite));
 		} else {
 			newSpriteInfo = new Label(content);
@@ -148,7 +149,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private String setTerrainContent(Terrain terrain) {
 		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());
-		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n"+terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^","\t"));
+		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
 		return content;
 	}
 
@@ -171,10 +172,10 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void addMoveCosts(Unit unit) {
-		content += getPolyglot().get("TerrainMoveCosts").getValueSafe()+": \n";
-		Map<Terrain, Integer> MC = unit.getTerrainMoveCosts();
-		for (VoogaEntity t : MC.keySet()) {
-			content = content + t.getName() + ": " + MC.get(t).toString() + "\n";
+		content += getPolyglot().get("TerrainMoveCosts").getValueSafe() + ": \n";
+		Map<String, Integer> MC = unit.getTerrainMoveCosts();
+		for (String t : MC.keySet()) {
+			content += t + ": " + MC.get(t).toString() + "\n";
 		}
 	}
 

@@ -2,6 +2,7 @@ package frontend;
 
 import frontend.factory.abilitypane.AbilityPane;
 import frontend.interfaces.detailpane.DetailPaneExternal;
+import frontend.interfaces.worldview.GridViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
 import frontend.util.highlighter.Highlighter;
@@ -19,6 +20,7 @@ public abstract class ClickHandler {
 	private Object additionalInfo;
 	private DetailPaneExternal detailPane;
 	private AbilityPane abilityPane;
+	private GridViewExternal gridPane;
 
 	public final void setDetailPane(DetailPaneExternal detailPane) {
 		this.detailPane = detailPane;
@@ -44,6 +46,7 @@ public abstract class ClickHandler {
 		cancel();
 		this.selectedComponent = selectedComponent;
 		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getObject());
+		selectedComponent.select(this);
 		showDetail(selectedComponent);
 	}
 
@@ -51,7 +54,7 @@ public abstract class ClickHandler {
 
 	public final void cancel() {
 		if (selectedComponent != null) {
-			selectedComponent.deselect();
+			selectedComponent.deselect(this);
 			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getObject());
 		}
 		selectedComponent = null;
@@ -64,5 +67,13 @@ public abstract class ClickHandler {
 			detailPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 			abilityPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 		}
+	}
+
+	public GridViewExternal getGridPane() {
+		return gridPane;
+	}
+
+	public void setGridPane(GridViewExternal gridPane) {
+		this.gridPane = gridPane;
 	}
 }

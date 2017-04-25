@@ -63,11 +63,13 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 
 	ActiveAbility<VoogaEntity> getActiveAbilityByName(String name);
 
-	default Collection<Cell> getLegalMoves(ModifiableGameBoard grid) {
+	default Collection<CoordinateTuple> getLegalMoves(GameBoard grid) {
 		return getMovePattern().getCoordinates().parallelStream()
 				.map(e -> grid.get(e.sum(this.getLocation())))
 				.filter(Objects::nonNull)
-				.filter(e -> getTerrainMoveCosts().get(e.getTerrain()) < getMovePoints().getCurrentValue()).collect(Collectors.toSet());
+				.filter(e -> getMoveCostByTerrain(e.getTerrain()) < getMovePoints().getCurrentValue())
+				.map(Cell::getLocation)
+				.collect(Collectors.toSet());
 	}
 
 	GridPattern getMovePattern();
@@ -83,7 +85,11 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 
 	Unit setCurrentCell(Cell currentCell);
 
-	Map<Terrain, Integer> getTerrainMoveCosts();
+	Map<String, Integer> getTerrainMoveCosts();
+
+	default int getMoveCostByTerrain(Terrain terrain) {
+		return getTerrainMoveCosts().getOrDefault(terrain.getName(), terrain.getDefaultMoveCost());
+	}
 
 	default Collection<Unit> getAllNeighboringUnits(GameBoard grid) {
 		return getNeighboringUnits(grid).values().parallelStream().flatMap(Collection::stream).parallel().collect(Collectors.toSet());
@@ -181,7 +187,7 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 
 	default Team getTeam() {
 		//TODO
-		return new Team("","","");
+		return new Team("", "", "");
 //		return getOwner().getTeam();
 	}
 

@@ -120,9 +120,15 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		return unitView;
 	}
 
+
 	@Override
-	public void deselect() {
-		super.deselect();
+	public void select(ClickHandler clickHandler) {
+		clickHandler.getGridPane().highlightRange(getUnit().getLegalMoves(getController().getGrid()));
+	}
+
+	@Override
+	public void deselect(ClickHandler clickHandler) {
+		clickHandler.getGridPane().resetHighlighting();
 	}
 
 	@Override

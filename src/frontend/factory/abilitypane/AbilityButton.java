@@ -1,6 +1,7 @@
 package frontend.factory.abilitypane;
 
 import backend.grid.CoordinateTuple;
+import backend.unit.properties.ActiveAbility;
 import backend.util.Ability;
 import backend.util.GameplayState;
 import backend.util.HasLocation;
@@ -47,5 +48,17 @@ public class AbilityButton extends VoogaEntityButton {
 			});
 		}
 		clickHandler.cancel();
+	}
+
+	@Override
+	public void select(ClickHandler clickHandler) {
+		if (getEntity() instanceof ActiveAbility && Objects.nonNull(unitLocation)) {
+			clickHandler.getGridPane().highlightRange(((ActiveAbility<?>) getEntity()).getLegalTargetCells(unitLocation,getController().getGameState()));
+		}
+	}
+
+	@Override
+	public void deselect(ClickHandler clickHandler) {
+		clickHandler.getGridPane().resetHighlighting();
 	}
 }

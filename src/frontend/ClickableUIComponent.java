@@ -30,7 +30,4 @@ public abstract class ClickableUIComponent<T extends Node> extends BaseUIManager
 	public void handleClick(Object o) {
 		clickHandler.handleClick(this, o);
 	}
-
-	public void deselect() {
-	}
 }
