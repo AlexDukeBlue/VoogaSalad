@@ -41,8 +41,8 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	}
 
 	private static Map<CoordinateTuple, Cell> generateGameBoard(Cell templateCell, int rows, int columns) {
-		return IntStream.range(-(rows + 1) / 2, rows / 2).boxed()
-				.flatMap(i -> IntStream.range(-(columns + 1) / 2, columns / 2).mapToObj(j -> new CoordinateTuple(i, j)))
+		return IntStream.range(-(rows - 1) / 2, rows / 2 + 1).boxed()
+				.flatMap(i -> IntStream.range(-(columns - 1) / 2, columns / 2 + 1).mapToObj(j -> new CoordinateTuple(i, j)))
 				.parallel().map(e -> e.convertToDimension(templateCell.dimension()))
 				.collect(Collectors.toMap(e -> e, e -> templateCell.copy().setLocation(e)));
 	}

@@ -58,8 +58,8 @@ public class WizardGrid extends BaseUIManager<Region> {
 				gameState.getGrid().getRows()*2, gameState.getGrid().getColumns()*2, gameState.getGrid().getBoundsHandler(),
 				gameState.getGrid().getDescription(), gameState.getGrid().getImgPath()).build();
 
-		board.getCells().keySet().stream().forEach(coordinate -> {
-			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate);
+		board.getCells().keySet().forEach(coordinate -> {
+			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate, getController());
 			polygon.setStroke(BORDER);
 			polygon.setStrokeWidth(BORDER_WIDTH);
 			polygon.setFill(UNCLICKED_FILL);

@@ -143,7 +143,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 				+ getPolyglot().get("Position").getValueSafe() + ": %s%s";
 		return String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp);
 	}
-
+	
 	@Override
 	public CoordinateTuple getLocation() {
 		return cellLocation;

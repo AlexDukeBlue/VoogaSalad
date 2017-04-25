@@ -1,15 +1,12 @@
 package controller;
 
 import backend.cell.Cell;
-import backend.cell.ModifiableTerrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.ReadonlyGameplayState;
@@ -29,7 +26,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
-	//TODO RESOURCE BUNDLE PLS
+	//TODO RESOURCE BUNDLE P
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
 
