@@ -14,6 +14,7 @@ import backend.util.VoogaEntity;
 import backend.util.io.XMLSerializer;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
+import util.io.Serializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
 import util.net.ObservableServer;
@@ -244,8 +245,10 @@ public class CommunicationController implements Controller {
 		executor.execute(() -> {
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveHistory.push(autoSavePath);
 				saveFile(autoSavePath);
+				saveHistory.push(autoSavePath);
+			} catch (Serializer.SerializationException e) {
+				System.err.println("You're going TOO FAST!!!!");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
