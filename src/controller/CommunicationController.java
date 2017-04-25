@@ -2,7 +2,6 @@ package controller;
 
 import backend.cell.Cell;
 import backend.game_engine.ResultQuadPredicate;
-import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
@@ -10,15 +9,9 @@ import backend.grid.Shape;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.unit.Unit;
-import backend.util.Actionable;
+import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
-import backend.util.AuthoringGameState;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.Requirement;
 import backend.util.Requirement.SerializableBiPredicate;
-import backend.util.VoogaEntity;
 import backend.util.io.XMLSerializer;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
@@ -248,87 +241,87 @@ public class CommunicationController implements Controller {
 			return state;
 		});
 	}
-	
-	public void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate){
+
+	public void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addAvailableTurnRequirements(new Requirement(biPredicate, name, description, imgPath));
 			return state;
 		});
 	}
-	
-	public void removeTurnRequirement(String name){
+
+	public void removeTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeAvailableTurnRequirements(req));
 			return state;
 		});
 	}
-	
-	public void activateTurnRequirement(String name){
+
+	public void activateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.addTurnRequirements(req));
 			return state;
 		});
 	}
-	
-	public void deactivateTurnRequirement(String name){
+
+	public void deactivateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeTurnRequirements(req));
 			return state;
 		});
 	}
-	
-	public void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer){
+
+	public void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addAvailableTurnActions(event, new Actionable(biConsumer, name, description, imgPath));
 			return state;
 		});
 	}
-	
-	public void removeTurnAction(Event event, String name){
+
+	public void removeTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(event, act));
 			return state;
 		});
 	}
-	
-	public void activateTurnAction(Event event, String name){
+
+	public void activateTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(event, act));
 			return state;
 		});
 	}
-	
-	public void deactivateTurnAction(Event event, String name){
+
+	public void deactivateTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(event, act));
 			return state;
 		});
 	}
-	
-	public void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate){
+
+	public void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addObjectives(new Resultant(resultQuadPredicate, name, description, imgPath));
 			return state;
 		});
 	}
-	
-	public void removeEndCondition(String name){
+
+	public void removeEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableObjectives().stream().filter(obj -> obj.getName().equals(name)).forEach(obj -> state.removeAvailableObjectives(obj));
+			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
 			return state;
 		});
 	}
-	
-	public void activateEndCondition(String name){
+
+	public void activateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableObjectives().stream().filter(obj -> obj.getName().equals(name)).forEach(obj -> state.addObjectives(obj));
+			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
 			return state;
 		});
 	}
-	
-	public void deactivateEndCondition(String name){
+
+	public void deactivateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableObjectives().stream().filter(obj -> obj.getName().equals(name)).forEach(obj -> state.removeObjectives(obj));
+			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
 			return state;
 		});
 	}
@@ -336,7 +329,7 @@ public class CommunicationController implements Controller {
 	private void updateAll() {
 		executor.execute(() -> {
 			try {
-				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
+				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
 				saveFile(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
