@@ -110,7 +110,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 					Text numOccupants = new Text(getCell().getOccupants().size() + "");
 					numOccupants.setFont(new Font(13));
 					numOccupants.setLayoutX(polygon.getBoundsInParent().getMaxX() - numOccupants.getLayoutBounds().getWidth() - 4);
-					numOccupants.setLayoutY(polygon.getBoundsInParent().getMaxY() - numOccupants.getLayoutBounds().getHeight() + 8);
+					numOccupants.setLayoutY(polygon.getBoundsInParent().getMaxY() - numOccupants.getLayoutBounds().getHeight() + 9);
 					updateGroup.getChildren().add(numOccupants);
 					numOccupants.toFront();
 				}
