@@ -1,9 +1,11 @@
 package backend.game_engine;
 
-public class Resultant {
+import backend.util.ImmutableVoogaObject;
+import backend.util.VoogaEntity;
+
+public class Resultant extends ImmutableVoogaObject<Resultant>{
 
 	private ResultQuadPredicate result;
-	private String nameOf;
 
 	/**
 	 * This constructor takes a ResultQuadPredicate which returns a Result(WIN, LOSE, TIE, NONE) and the name of the
@@ -12,9 +14,13 @@ public class Resultant {
 	 * @param resultQuad
 	 * @param name
 	 */
-	public Resultant(ResultQuadPredicate resultQuad, String name) {
+	public Resultant(ResultQuadPredicate resultQuad, String name, String description) {
+		this(resultQuad, name, description, "");
+	}
+	
+	public Resultant(ResultQuadPredicate resultQuad, String name, String description, String imgPath){
+		super(name, description, imgPath);
 		result = resultQuad;
-		nameOf = name;
 	}
 
 	/**
@@ -26,12 +32,8 @@ public class Resultant {
 		return result;
 	}
 
-	/**
-	 * Returns the name of the ResultQuadPredicate.
-	 *
-	 * @return String
-	 */
-	public String getNameOf() {
-		return nameOf;
+	@Override
+	public Resultant copy() {
+		return new Resultant(result, getName(), getDescription(), getImgPath());
 	}
 }

@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package frontend.factory.conditionspane;
 
@@ -8,27 +8,27 @@ import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.SelectableUIComponent;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
 /**
  * @author Stone Mathers
- *         Created 4/20/2017
+ * Created 4/25/2017
  */
-public class RuleBox extends SelectableUIComponent<Region> {
-
+public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	private String myName;
 	private HBox myBox = new HBox();
 
 	/**
-	 * @param ruleName
+	 * @param conditionName
 	 * @param controller
 	 * @param clickHandler
 	 */
-	public RuleBox(String ruleName, Controller controller, ClickHandler clickHandler) {
+	public ConditionBox(String conditionName, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
-		myName = ruleName;
+		myName = conditionName;
 		initBox();
 	}
 
@@ -36,18 +36,14 @@ public class RuleBox extends SelectableUIComponent<Region> {
 	public Region getObject() {
 		return myBox;
 	}
-
-	private void initBox() {
-		CheckBox cb = new CheckBox(myName);
-		cb.selectedProperty().addListener((o, oldVal, newVal) -> {
-			if (newVal) {
-				//getController().addActiveRule(myName);	//TODO
-			} else {
-				//getController().removeActiveRule(myName);	//TODO
-			}
-		});
-		myBox.getChildren().add(cb);
-		myBox.setOnMouseClicked(event -> handleClick(null));
+	
+	/**
+	 * Return name of condition held.
+	 * 
+	 * @return String name
+	 */
+	public String getName(){
+		return myName;
 	}
 
 	@Override
@@ -60,5 +56,14 @@ public class RuleBox extends SelectableUIComponent<Region> {
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
 		//Does nothing because this should not be accessible in GameplayMode
+	}
+	
+	protected abstract void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue);
+	
+	private void initBox() {
+		CheckBox cb = new CheckBox(myName);
+		cb.selectedProperty().addListener((o, oldVal, newVal) -> checkBoxAction(o, oldVal, newVal));
+		myBox.getChildren().add(cb);
+		myBox.setOnMouseClicked(event -> handleClick(null));
 	}
 }
