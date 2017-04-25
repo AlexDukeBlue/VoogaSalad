@@ -120,17 +120,22 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
-			WebView browser = new WebView();
-			WebEngine webEngine = browser.getEngine();
-			Stage s = new Stage();
-			Scene scene = new Scene(browser);
-			String url =  this.getClass().getClassLoader().getResource("frontend/menubar/help.html").toExternalForm();
-			webEngine.load(url);
-			s.setScene(scene);
-			s.show();
-		}); // TODO implement
+			showBrowser("frontend/menubar/help.html");
+		}); 
 		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/about.html");
+		});
+	}
+	
+	private void showBrowser(String url) {
+		WebView browser = new WebView();
+		WebEngine webEngine = browser.getEngine();
+		Stage s = new Stage();
+		Scene scene = new Scene(browser);
+		url =  this.getClass().getClassLoader().getResource(url).toExternalForm();
+		webEngine.load(url);
+		s.setScene(scene);
+		s.show();
 	}
 
 	private void initMenus() {
