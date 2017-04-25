@@ -60,7 +60,6 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		polygon.setOnMouseClicked(event -> handleClick(event, null));
 		polygon.setOnMouseDragReleased(event -> {
 			handleClick(event, null);
-			System.out.println("test");
 		});
 		polygon.setStroke(CELL_OUTLINE);
 		polygon.setStrokeWidth(CELL_STROKE);
