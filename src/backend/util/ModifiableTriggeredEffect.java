@@ -72,6 +72,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	private Effect effect;
 	private int duration;
 	private int turnsRemaining;
+	private String soundPath;
 
 	public ModifiableTriggeredEffect(String name) {
 		this(name, null, "", "");
@@ -135,7 +136,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 		if (getName().length() < 1 || Objects.isNull(getEffect()) || getActivationTriggers().isEmpty()) {
 			throw new IncompleteTriggeredEffectException();
 		}
-		return new ModifiableTriggeredEffect(getName(), getEffect(), getDuration(), getDescription(), getImgPath(), getActivationTriggers());
+		return new ModifiableTriggeredEffect(getName(), getEffect(), getDuration(), getDescription(), getImgPath(), getActivationTriggers()).setSoundPath(getSoundPath());
 	}
 
 	@Override
@@ -161,6 +162,17 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	@Override
 	public boolean isExpired() {
 		return getRemainingTurns() <= 0;
+	}
+
+	@Override
+	public ModifiableTriggeredEffect setSoundPath(String path){
+		this.soundPath = path;
+		return this;
+	}
+
+	@Override
+	public String getSoundPath() {
+		return soundPath;
 	}
 
 	private static class IncompleteTriggeredEffectException extends RuntimeException {
