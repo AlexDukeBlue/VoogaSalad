@@ -5,21 +5,17 @@ import backend.player.ImmutablePlayer;
 import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import backend.util.*;
 import util.io.Serializer;
 import util.io.Unserializer;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.BiPredicate;
 
 /**
  * @author Created by th174 on 4/7/2017.
  */
-public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, BiPredicate<ImmutablePlayer, GameplayState> {
+public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, Requirement.SerializableBiPredicate, Actionable.SerializableBiConsumer {
 	ResourceBundle RESOURCES = ResourceBundle.getBundle("resources/Scripting", Locale.US);
 
 	VoogaScriptEngine setScript(String script) throws VoogaScriptException;
@@ -77,7 +73,7 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	}
 
 	@Override
-	default boolean test(ImmutablePlayer player, GameplayState gameState) {
+	default boolean test(ImmutablePlayer player, ReadonlyGameplayState gameState) {
 		Object nonBooleanValue = eval(createBindings("player", player, "gameState", gameState));
 		if (nonBooleanValue instanceof String) {
 			return !nonBooleanValue.equals("");
@@ -86,6 +82,11 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 		} else {
 			return Objects.nonNull(nonBooleanValue);
 		}
+	}
+
+	@Override
+	default void accept(ImmutablePlayer player, ReadonlyGameplayState gameState) {
+		eval(createBindings("player", player, "gameState", gameState));
 	}
 
 	static HashMap<String, Object> createBindings(Object... params) {

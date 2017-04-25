@@ -39,5 +39,5 @@ public class Requirement extends ImmutableVoogaObject<Requirement> implements Se
 		return new Requirement(biPred, getName(), getDescription(), getImgPath());
 	}
 	
-	private interface SerializableBiPredicate extends BiPredicate<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
+	public interface SerializableBiPredicate extends BiPredicate<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
 }
