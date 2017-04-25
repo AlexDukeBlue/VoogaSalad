@@ -121,7 +121,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
-			setAbilityPaneContent((ModifiableUnit) sprite);
+			//setAbilityPaneContent((ModifiableUnit) sprite);
 		} else if (sprite instanceof Cell) {
 			newSpriteInfo = new Label(setTerrainContent(((Cell) sprite).getTerrain()));
 		} else if (sprite instanceof ModifiableTerrain) {
@@ -136,16 +136,16 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
-		unit.getUnitStats().forEach(e -> addString(e.getFormattedName(), e.toString()));
+		unit.getUnitStats().forEach(e -> addString(e.getFormattedName(), e.getCurrentValue().toString()));
 		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
 
-	private void setAbilityPaneContent(Unit unit) {
-		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
-		Label AALabel = new Label(AAContent);
-		AAPane.getChildren().add(AALabel);
-	}
+//	private void setAbilityPaneContent(Unit unit) {
+//		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
+//		Label AALabel = new Label(AAContent);
+//		AAPane.getChildren().add(AALabel);
+//	}
 
 	private String setTerrainContent(Terrain terrain) {
 		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());

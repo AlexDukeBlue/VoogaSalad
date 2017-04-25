@@ -24,11 +24,11 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 	public transient static final ActiveAbility<Unit> SUICIDE_SQUAD = new ActiveAbility<>("Suicide Squad, Attack!", (user, target, game) -> {
 		user.getAllNeighboringUnits(game.getGrid()).parallelStream().filter(e -> e.getTeam() != user.getTeam()).forEach(u -> u.takeDamage(30));
 		user.takeDamage(Integer.MAX_VALUE);
-	}, GridPattern.HEXAGONAL_ADJACENT, "The attacker sacrifices itself to deal massive damage to all neighboring enemy units.", "resources/images/allahu_akbar.png");
-	public transient static final ActiveAbility<Unit> FULL_HEAL = new ActiveAbility<>("Full Heal", (user, target, game) -> target.getHitPoints().resetValue(), GridPattern.HEXAGONAL_ADJACENT, "The attacker fully heals any neighboring unit", "Red_Cross.png");
-	public transient static final ActiveAbility<Unit> BLIND = new ActiveAbility<>("Blind", (user, target, game) -> target.addOffensiveModifiers(InteractionModifier.BLINDED), GridPattern.HEXAGONAL_ADJACENT, "The attacker gives any neighboring unit the Blinded modifier", "Helen_Keller.png");
-	public transient static final ActiveAbility<Unit> SILENCE = new ActiveAbility<>("Silence", (user, target, game) -> Stream.of(target.getOffensiveModifiers(), target.getDefensiveModifiers(), target.getTriggeredAbilities()).forEach(Collection::clear), GridPattern.HEXAGONAL_ADJACENT, "Removes all offensive, defensive, and passive modifiers from any neighboring unit", "Silencer.png");
-	public transient static final ActiveAbility<Terrain> DROP_MIXTAPE = new ActiveAbility<>("Set Fire to Cell", (user, target, game) -> target.addTriggeredAbilities(ModifiableTriggeredEffect.ON_FIRE), GridPattern.HEXAGONAL_SINGLE_CELL, "The attacker sets fire to the cell they are occupying.", "My_mixtape.png");
+	}, GridPattern.HEXAGONAL_ADJACENT, "The attacker sacrifices itself to deal massive damage to all neighboring enemy units.", "resources/images/explosion.png");
+	public transient static final ActiveAbility<Unit> FULL_HEAL = new ActiveAbility<>("Full Heal", (user, target, game) -> target.getHitPoints().resetValue(), GridPattern.HEXAGONAL_ADJACENT, "The attacker fully heals any neighboring unit", "resources/images/redCross.png");
+	public transient static final ActiveAbility<Unit> BLIND = new ActiveAbility<>("Blind", (user, target, game) -> target.addOffensiveModifiers(InteractionModifier.BLINDED), GridPattern.HEXAGONAL_ADJACENT, "The attacker gives any neighboring unit the Blinded modifier", "resources/images/blind.png");
+	public transient static final ActiveAbility<Unit> SILENCE = new ActiveAbility<>("Silence", (user, target, game) -> Stream.of(target.getOffensiveModifiers(), target.getDefensiveModifiers(), target.getTriggeredAbilities()).forEach(Collection::clear), GridPattern.HEXAGONAL_ADJACENT, "Removes all offensive, defensive, and passive modifiers from any neighboring unit", "resources/images/silence.png");
+	public transient static final ActiveAbility<Terrain> DROP_MIXTAPE = new ActiveAbility<>("Set Fire to Cell", (user, target, game) -> target.addTriggeredAbilities(ModifiableTriggeredEffect.ON_FIRE), GridPattern.HEXAGONAL_SINGLE_CELL, "The attacker sets fire to the cell they are occupying.", "resources/images/mixtape.png");
 
 	private final AbilityEffect<T> effect;
 	private final GridPattern range;
