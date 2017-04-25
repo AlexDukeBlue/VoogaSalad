@@ -3,7 +3,7 @@
  */
 package frontend.menubar;
 
-import backend.unit.Unit;
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.factory.wizard.WizardFactory;
@@ -25,8 +25,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 /**
- * @author Stone Mathers
- *         Created 4/18/2017
+ * @author Stone Mathers Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
@@ -187,7 +186,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
+			getController().setGameState(
+					getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -204,8 +204,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState())
-				.addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
+		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
 	}
 
 	@Override

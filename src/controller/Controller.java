@@ -61,10 +61,6 @@ public interface Controller {
 
 	void removeTemplatesByCategory(String category, String... templateNames);
 
-	default void addUnitTemplates(Unit... unitTemplates) {
-		addTemplatesByCategory("unit", unitTemplates);
-	}
-
 	default void removeUnitTemplates(String... unitTemplates) {
 		removeTemplatesByCategory("unit", unitTemplates);
 	}
