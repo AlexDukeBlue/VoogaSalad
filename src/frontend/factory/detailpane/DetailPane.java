@@ -79,6 +79,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private void setLabel() {
 		spriteInfo = new Label(content);
+		spriteInfo.setTranslateY(25);
 		infoPane.getChildren().add(spriteInfo);
 		spriteInfo.setWrapText(true);
 	}
@@ -105,12 +106,13 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void setImageContent(VoogaEntity sprite) {
-		Text name = new Text(sprite.getName() + "\n");
-		name.setFont(Font.font(20));
+		Label name = new Label(sprite.getName() + "\n");
+		name.setFont(Font.font(25));
+		name.setMinWidth(Region.USE_PREF_SIZE + 10);
 		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
 		spriteImage.setSmooth(true);
-		spriteImage.setFitHeight(50);
-		spriteImage.setFitWidth(50);
+		spriteImage.setFitHeight(80);
+		spriteImage.setFitWidth(80);
 		imagePane.getChildren().add(name);
 		imagePane.getChildren().add(spriteImage);
 	}
@@ -161,13 +163,13 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 				content += oIV;
 			}
 		}
-		content += "\n";
+		content += "\n" + "\n";
 		return content;
 	}
 
 	private void addString(String label, String value) {
 		content = checkForNull(label, content);
-		content += value + "\n";
+		content += value + "\n" + "\n";
 	}
 
 	private void addMoveCosts(Unit unit) {
@@ -176,6 +178,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		for (VoogaEntity t : MC.keySet()) {
 			content = content + t.getName() + ": " + MC.get(t).toString() + "\n";
 		}
+		content += "\n";
 	}
 
 	private void clearContent() {
