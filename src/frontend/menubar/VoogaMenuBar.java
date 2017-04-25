@@ -3,7 +3,12 @@
  */
 package frontend.menubar;
 
-import backend.unit.Unit;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.factory.wizard.WizardFactory;
@@ -11,22 +16,20 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import polyglot.PolyglotException;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 /**
- * @author Stone Mathers
- *         Created 4/18/2017
+ * @author Stone Mathers Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
@@ -187,7 +190,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
+			getController().setGameState(
+					getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -205,7 +209,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void create(String categoryName) {
 		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState())
-				.addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
+				.addObserver((wizard, template) -> getController().addTemplates((VoogaEntity)template));
 	}
 
 	@Override
