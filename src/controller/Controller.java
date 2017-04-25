@@ -80,16 +80,16 @@ public interface Controller {
 	void addListener(UIComponentListener objectToUpdate);
 
 	void removeListener(UIComponentListener objectToUpdate);
-	
+
 	void enterAuthoringMode();
-	
+
 	void enterGamePlayMode();
-	
+
 	boolean isAuthoringMode();
 
 	String getPlayerName();
 
-	default Collection<? extends Team> getTeamTemplates(){
+	default Collection<? extends Team> getTeamTemplates() {
 		return (Collection<? extends Team>) getTemplatesByCategory("team");
 	}
 
@@ -106,4 +106,8 @@ public interface Controller {
 	void undo();
 
 	Shape getShape();
+
+	default void endTurn() {
+		getGameState().endTurn();
+	}
 }

@@ -1,6 +1,7 @@
 package backend.grid;
 
 import backend.cell.Cell;
+import backend.util.GameplayState;
 import backend.util.ModifiableVoogaObject;
 
 import java.util.Collection;
@@ -61,6 +62,16 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	@Override
 	public BoundsHandler getBoundsHandler() {
 		return boundsHandler;
+	}
+
+	@Override
+	public void startTurn(GameplayState gameplayState) {
+		forEachCell(e -> e.startTurn(gameplayState));
+	}
+
+	@Override
+	public void endTurn(GameplayState gameplayState) {
+		forEachCell(e -> e.endTurn(gameplayState));
 	}
 
 	@Override

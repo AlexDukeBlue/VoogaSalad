@@ -2,6 +2,7 @@ package frontend.factory.worldview;
 
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
+import backend.unit.Unit;
 import backend.unit.properties.UnitStat;
 import controller.Controller;
 import frontend.ClickHandler;
@@ -14,6 +15,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -24,6 +26,7 @@ import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SimpleCellView extends ClickableUIComponent<Group> implements CellViewExternal {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
@@ -93,7 +96,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 				}
 				terrainCache = getCell().getTerrain().getImgPath();
 			}
-			if (unitCount != getCell().getOccupants().size()) {
+			if (unitCount != getCell().getOccupants().size() || !getCell().getOccupants().stream().map(Unit::getName).collect(Collectors.toSet()).equals(unitViews.keySet())) {
 				unitCount = unitCount < 0 ? getCell().getOccupants().size() : unitCount + 1;
 				unitViews.values().forEach(e -> getController().removeListener(e));
 				unitViews.clear();
@@ -103,10 +106,18 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 					unitViews.put(unit.getName(), unitView);
 					updateGroup.getChildren().add(unitView.getObject());
 				});
-				if (getCell().getOccupants().size() <= 1) {
-					unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> unitView.handleClick(event, null)));
-				} else {
-					unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY())));
+				unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> {
+					if (event.getButton().equals(MouseButton.PRIMARY)) {
+						if (getCell().getOccupants().size() <= 1) {
+							unitView.handleClick(event, null);
+						} else {
+							handleClick(event, null);
+						}
+					} else {
+						contextMenu.show(polygon, event.getScreenX(), event.getScreenY());
+					}
+				}));
+				if (getCell().getOccupants().size() > 1) {
 					Text numOccupants = new Text(getCell().getOccupants().size() + "");
 					numOccupants.setFont(new Font(13));
 					numOccupants.setLayoutX(polygon.getBoundsInParent().getMaxX() - numOccupants.getLayoutBounds().getWidth() - 4);
@@ -121,6 +132,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		} else {
 			getController().removeListener(this);
 		}
+
 	}
 
 	private void installToolTips() {

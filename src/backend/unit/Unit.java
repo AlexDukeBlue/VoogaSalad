@@ -6,10 +6,7 @@ import backend.cell.Terrain;
 import backend.grid.*;
 import backend.player.Player;
 import backend.player.Team;
-import backend.unit.properties.ActiveAbility;
-import backend.unit.properties.Faction;
-import backend.unit.properties.InteractionModifier;
-import backend.unit.properties.UnitStat;
+import backend.unit.properties.*;
 import backend.util.*;
 
 import java.util.*;
@@ -45,11 +42,19 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 	Collection<? extends UnitStat> getUnitStats();
 
 	default UnitStat<Integer> getMovePoints() {
-		return getUnitStat("Movepoints");
+		return getUnitStat(ModifiableUnitStat.MOVEPOINTS.getName());
 	}
 
 	default UnitStat<Double> getHitPoints() {
-		return getUnitStat("Hitpoints");
+		return getUnitStat(ModifiableUnitStat.HITPOINTS.getName());
+	}
+
+	default UnitStat<Double> getAbilityPoints() {
+		return getUnitStat(ModifiableUnitStat.ABILITYPOINTS.getName());
+	}
+
+	default UnitStat<Double> getEnergy() {
+		return getUnitStat(ModifiableUnitStat.ENERGY.getName());
 	}
 
 	default void useActiveAbility(String activeAbilityName, VoogaEntity target, GameplayState gameState) {

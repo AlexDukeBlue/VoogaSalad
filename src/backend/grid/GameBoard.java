@@ -3,6 +3,7 @@ package backend.grid;
 import backend.cell.Cell;
 import backend.player.Player;
 import backend.unit.Unit;
+import backend.util.GameplayState;
 import backend.util.HasShape;
 import backend.util.VoogaEntity;
 import javafx.util.Pair;
@@ -11,6 +12,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +25,10 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 	default int dimension() {
 		return getTemplateCell().dimension();
 	}
+
+	void startTurn(GameplayState gameplayState);
+
+	void endTurn(GameplayState gameplayState);
 
 	Cell getTemplateCell();
 
@@ -42,6 +48,10 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 
 	default void forEach(BiConsumer<CoordinateTuple, Cell> biConsumer) {
 		getCells().forEach(biConsumer);
+	}
+
+	default void forEachCell(Consumer<Cell> consumer) {
+		getCells().values().forEach(consumer);
 	}
 
 	default Map<CoordinateTuple, Cell> getNeighbors(CoordinateTuple coordinate) {
@@ -100,7 +110,7 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 
 	int getColumns();
 
-	default Shape getShape(){
+	default Shape getShape() {
 		return getTemplateCell().getShape();
 	}
 }

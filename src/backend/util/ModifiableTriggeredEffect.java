@@ -33,6 +33,21 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 			.setDescription("This unit is poisoned, and will lose 4 damage at the run and end of each turn, to a minimum of 1 HP. Lasts for 6 turns")
 			.setImgPath("resources/images/poison.png")
 			.addActivationTriggers(Event.TURN_START, Event.TURN_END);
+	public transient static final ModifiableTriggeredEffect RESET_MOVE_POINTS = new ModifiableTriggeredEffect("Reset Move Points")
+			.setEffect((unit, event, game) -> unit.getMovePoints().resetValue())
+			.setDescription("This unit regains full movepoints at the beginning of each turn.")
+			.setImgPath("resources/images/reset_movepoints.png")
+			.addActivationTriggers(Event.TURN_START);
+	public transient static final ModifiableTriggeredEffect RESET_ABILITY_POINTS = new ModifiableTriggeredEffect("Reset Ability Points")
+			.setEffect((unit, event, game) -> unit.getAbilityPoints().resetValue())
+			.setDescription("This unit regains full ability points at the beginning of each turn.")
+			.setImgPath("resources/images/reset_abilitypoints.png")
+			.addActivationTriggers(Event.TURN_START);
+	public transient static final ModifiableTriggeredEffect REGENERATE_ENERGY_POINTS = new ModifiableTriggeredEffect("Regenerate Energy Points")
+			.setEffect((unit, event, game) -> unit.getEnergy().setCurrentValue(Math.max(unit.getEnergy().getMaxValue(),unit.getEnergy().getCurrentValue() + 10)))
+			.setDescription("This unit regenerates some energy points at the beginning of each turn.")
+			.setImgPath("resources/images/blue_cross.png")
+			.addActivationTriggers(Event.TURN_START);
 	//Cell passive abilities
 	public transient static final ModifiableTriggeredEffect FULL_HEAL = new ModifiableTriggeredEffect("Full Heal")
 			.setEffect((occupant, event, game) -> occupant.getHitPoints().resetValue())

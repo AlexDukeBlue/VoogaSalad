@@ -22,6 +22,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setMovePattern(GridPattern.SQUARE_ADJACENT)
 			.setImgPath("resources/images/skeletonWarrior.png")
 			.addActiveAbilities(ActiveAbility.SWORD)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
@@ -30,6 +31,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setImgPath("resources/images/skeletonArcher.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
 			.addActiveAbilities(ActiveAbility.BOW);
 	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 
@@ -84,6 +86,9 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		if (Objects.isNull(getHitPoints()) || Objects.isNull(getMovePoints()) || Objects.isNull(getMovePattern()) || getName().length() < 1) {
 			throw new IncompleteUnitException();
 		}
+		if (Objects.isNull(getAbilityPoints())) {
+			addUnitStats(ModifiableUnitStat.ABILITYPOINTS);
+		}
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
 
@@ -104,7 +109,6 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	@Override
 	public void endTurn(GameplayState gameState) {
 		processTriggers(Event.TURN_END, gameState);
-		getMovePoints().resetValue();
 	}
 
 	@Override

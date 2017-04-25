@@ -1,5 +1,6 @@
 package frontend.util;
 
+import backend.unit.Unit;
 import backend.unit.properties.InteractionModifier;
 import backend.util.Ability;
 import backend.util.PassiveAbility;
