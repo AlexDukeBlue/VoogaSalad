@@ -9,6 +9,7 @@ import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.util.VoogaEntityButton;
+import frontend.util.VoogaEntityButtonFactory;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -62,7 +63,7 @@ public class AbilityPane extends ClickableUIComponent<ScrollPane> {
 	}
 
 	private Button[] createRow(VoogaEntity entity, Collection<? extends Ability> collection) {
-		return collection.parallelStream().map(e -> new AbilityButton(entity, e, 100, getController(), getClickHandler())).map(VoogaEntityButton::getObject).toArray(Button[]::new);
+		return collection.parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 100, getController(), getClickHandler())).map(VoogaEntityButton::getObject).toArray(Button[]::new);
 	}
 
 	@Override

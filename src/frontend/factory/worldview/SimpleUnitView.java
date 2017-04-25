@@ -12,8 +12,10 @@ import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.event.Event;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -45,6 +47,9 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		imageView.setManaged(true);
 		imageView.setPickOnBounds(true);
 		imageView.setPreserveRatio(true);
+		DropShadow dropShadow= new DropShadow(15, Color.WHITE);
+		dropShadow.setSpread(.3);
+		imageView.setEffect(dropShadow);
 		unitView = new BorderPane();
 		unitView.setPickOnBounds(true);
 		if (Objects.nonNull(getUnit().getHitPoints())) {
@@ -63,10 +68,14 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 			remainingHealthBar = null;
 		}
 		unitView.setCenter(imageView);
-		unitView.setOnMouseClicked(event -> handleClick(null));
 		boundsProperty.addListener((observable, oldValue, newValue) -> centerInBounds(newValue));
 		centerInBounds(boundsProperty.getValue());
 		update();
+	}
+
+	@Override
+	public void handleClick(Event event, Object o) {
+		super.handleClick(event, o);
 	}
 
 	@Override
@@ -121,12 +130,17 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	}
 
 	@Override
-	public void deselect() {
-		super.deselect();
+	public void select(ClickHandler clickHandler) {
+		clickHandler.getGridPane().highlightRange(getUnit().getLegalMoves(getController().getGrid()));
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
+	public void deselect(ClickHandler clickHandler) {
+		clickHandler.getGridPane().resetHighlighting();
+	}
+
+	@Override
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			CoordinateTuple unitLocation = getUnitLocation();
 			String unitName = getUnitName();
@@ -141,8 +155,13 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
-		//TODO Gameplay
-		actInAuthoringMode(target, additionalInfo, clickHandler);
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
+		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
+			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
+			if (getUnit().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
+				actInAuthoringMode(target, additionalInfo, clickHandler, event);
+			}
+		}
+		clickHandler.cancel();
 	}
 }

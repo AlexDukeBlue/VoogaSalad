@@ -1,6 +1,7 @@
 package frontend.factory.templatepane;
 
 import backend.cell.Cell;
+import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.AuthoringGameState;
@@ -12,6 +13,7 @@ import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.GameBoardObjectView;
 import frontend.util.VoogaEntityButton;
+import javafx.event.Event;
 
 import java.util.Objects;
 
@@ -27,11 +29,16 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
+		String clickedEntityName = getEntity().getName();
 		if (target instanceof AddRemoveButton) {
 			getController().removeTemplatesByCategory(templateCategory, getEntity().getName());
+		} else if (getEntity() instanceof BoundsHandler) {
+			getController().sendModifier((AuthoringGameState state) -> {
+				state.getGrid().setBoundsHandler((BoundsHandler) state.getTemplateByName(clickedEntityName));
+				return state;
+			});
 		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
-			String clickedEntityName = getEntity().getName();
 			CoordinateTuple location = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			String targetName = ((GameBoardObjectView) target).getEntity().getName();
 			getController().sendModifier((AuthoringGameState gameState) -> {
@@ -47,17 +54,18 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 					if (Objects.nonNull(targetCell)) {
 						targetCell.add(gameState.getTemplateByName(clickedEntityName).copy());
 					} else {
-						throw new Error(e);
+						e.printStackTrace();
 					}
 				}
 				return gameState;
 			});
 		}
+		super.actInAuthoringMode(target, additionalInfo, clickHandler, event);
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
-		actInAuthoringMode(target, null, clickHandler);
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
+		actInAuthoringMode(target, null, clickHandler, event);
 	}
 
 	@Override

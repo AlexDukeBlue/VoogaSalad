@@ -3,7 +3,7 @@
  */
 package frontend.menubar;
 
-import backend.unit.Unit;
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
 import frontend.factory.wizard.WizardFactory;
@@ -16,7 +16,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
 import java.io.File;
@@ -25,8 +28,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 /**
- * @author Stone Mathers
- *         Created 4/18/2017
+ * @author Stone Mathers Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
@@ -118,9 +120,22 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/help.html");
+		}); 
 		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/about.html");
+		});
+	}
+	
+	private void showBrowser(String url) {
+		WebView browser = new WebView();
+		WebEngine webEngine = browser.getEngine();
+		Stage s = new Stage();
+		Scene scene = new Scene(browser);
+		url =  this.getClass().getClassLoader().getResource(url).toExternalForm();
+		webEngine.load(url);
+		s.setScene(scene);
+		s.show();
 	}
 
 	private void initMenus() {
@@ -187,7 +202,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
+			getController().setGameState(
+					getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -204,8 +220,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState())
-				.addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
+		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
 	}
 
 	@Override

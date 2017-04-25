@@ -95,8 +95,10 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public GameplayState endTurn() {
+		getGrid().endTurn(this);
 		currentPlayerNumber = (currentPlayerNumber + 1) % playerNames.size();
 		turnNumber++;
+		getGrid().startTurn(this);
 		return this;
 	}
 
@@ -116,8 +118,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 			playerNames.add(newPlayer.getName());
 			playerList.put(newPlayer.getName(), newPlayer);
 		}
-		teams.putIfAbsent(newPlayer.getTeam().getName(),newPlayer.getTeam());
-		if (Objects.isNull(teams.get(newPlayer.getTeam().getName()).getByName(newPlayer.getName()))){
+		teams.putIfAbsent(newPlayer.getTeam().getName(), newPlayer.getTeam());
+		if (Objects.isNull(teams.get(newPlayer.getTeam().getName()).getByName(newPlayer.getName()))) {
 			teams.get(newPlayer.getTeam().getName()).addAll(newPlayer);
 		}
 		return this;
@@ -258,5 +260,4 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	GameplayState removeTurnRequirements(Requirement... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
-
 }

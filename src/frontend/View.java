@@ -32,8 +32,8 @@ import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
@@ -138,12 +138,10 @@ public class View extends ClickableUIComponent<Region> {
 		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldAndDetailPane, rightPane);
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(menuBar.getObject(),innerSplitPane);
+		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane);
 		outerSplitPane.setDividerPositions(0);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		SplitPane.setResizableWithParent(menuBar.getObject(), false);
-		getClickHandler().setAbilityPane(abilityPane);
-		getClickHandler().setDetailPane(detailPane);
 	}
 
 	/**
@@ -160,7 +158,7 @@ public class View extends ClickableUIComponent<Region> {
 		detailPane = DetailPaneFactory.newDetailPane(getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
-		rightPane = new VBox(new MinimapPane(worldView.getGridPane(), getController()).getObject(), tempPane.getObject());
+		rightPane = new VBox(new MinimapPane(worldView.getGridView().getObject(), getController()).getObject(), tempPane.getObject());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
@@ -175,6 +173,7 @@ public class View extends ClickableUIComponent<Region> {
 				alert.show();
 			}
 		});
+		setClickHandler(getClickHandler());
 	}
 
 	/**
@@ -212,8 +211,11 @@ public class View extends ClickableUIComponent<Region> {
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		abilityPane.setClickHandler(clickHandler);
+		clickHandler.setAbilityPane(abilityPane);
 		worldView.setClickHandler(clickHandler);
+		clickHandler.setGridPane(worldView.getGridView());
 		detailPane.setClickHandler(clickHandler);
+		clickHandler.setDetailPane(detailPane);
 	}
 
 	public static Image getImg(String imgPath) {

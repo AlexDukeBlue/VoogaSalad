@@ -42,12 +42,7 @@ public class VoogaJavaEngine implements VoogaScriptEngine {
 		className = String.format(RESOURCES.getString("JavaUserScriptName"), fileCount);
 		srcPath = String.format(RESOURCES.getString("JavaUserScriptPath"), className);
 		methodName = RESOURCES.getString("FunctionName");
-		this.fullSource = String.format(
-				RESOURCES.getString("JavaClassTemplate"),
-				className,
-				methodName,
-				"%s",
-				script.replaceAll("(?m)^", "\t\t"));
+		this.fullSource = String.format(RESOURCES.getString("JavaClassTemplate"), className, methodName, "%s", script.replaceAll("(?m)^", "\t\t"));
 		fileCount++;
 		return this;
 	}
@@ -58,9 +53,7 @@ public class VoogaJavaEngine implements VoogaScriptEngine {
 			if (!hasCompiled) {
 				compile(bindings);
 			}
-			return Class.forName("scripting." + className)
-					.getMethod(methodName, paramTypes)
-					.invoke(null, bindings.values().toArray());
+			return Class.forName("scripting." + className).getMethod(methodName, paramTypes).invoke(null, bindings.values().toArray());
 		} catch (Exception e) {
 			throw new Error(e);
 		}

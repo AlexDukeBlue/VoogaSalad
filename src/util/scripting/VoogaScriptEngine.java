@@ -5,24 +5,17 @@ import backend.player.ImmutablePlayer;
 import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
-import backend.util.Actionable.SerializableBiConsumer;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.Requirement.SerializableBiPredicate;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import backend.util.*;
 import util.io.Serializer;
 import util.io.Unserializer;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.BiPredicate;
 
 /**
  * @author Created by th174 on 4/7/2017.
  */
-public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, SerializableBiPredicate, SerializableBiConsumer {
+public interface VoogaScriptEngine extends Serializer, Unserializer, InteractionModifier.Modifier, TriggeredEffect.Effect, ActiveAbility.AbilityEffect, ResultQuadPredicate, Requirement.SerializableBiPredicate, Actionable.SerializableBiConsumer, Serializable {
 	ResourceBundle RESOURCES = ResourceBundle.getBundle("resources/Scripting", Locale.US);
 
 	VoogaScriptEngine setScript(String script) throws VoogaScriptException;
@@ -90,18 +83,10 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 			return Objects.nonNull(nonBooleanValue);
 		}
 	}
-	
+
 	@Override
 	default void accept(ImmutablePlayer player, ReadonlyGameplayState gameState) {
-//		Object nonBooleanValue = eval(createBindings("player", player, "gameState", gameState));
-//		if (nonBooleanValue instanceof String) {
-//			return !nonBooleanValue.equals("");
-//		} else if (nonBooleanValue instanceof Boolean) {
-//			return (Boolean) nonBooleanValue;
-//		} else {
-//			return Objects.nonNull(nonBooleanValue);
-//		}
-		//TODO Timmy will fix
+		eval(createBindings("player", player, "gameState", gameState));
 	}
 
 	static HashMap<String, Object> createBindings(Object... params) {

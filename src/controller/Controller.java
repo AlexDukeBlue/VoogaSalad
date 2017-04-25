@@ -6,6 +6,7 @@ import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.ResultQuadPredicate.Result;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.Unit;
@@ -65,10 +66,6 @@ public interface Controller {
 
 	void removeTemplatesByCategory(String category, String... templateNames);
 
-	default void addUnitTemplates(Unit... unitTemplates) {
-		addTemplatesByCategory("unit", unitTemplates);
-	}
-
 	default void removeUnitTemplates(String... unitTemplates) {
 		removeTemplatesByCategory("unit", unitTemplates);
 	}
@@ -88,11 +85,11 @@ public interface Controller {
 	void addListener(UIComponentListener objectToUpdate);
 
 	void removeListener(UIComponentListener objectToUpdate);
-	
+
 	void enterAuthoringMode();
-	
+
 	void enterGamePlayMode();
-	
+
 	boolean isAuthoringMode();
 
 	String getPlayerName();
@@ -121,7 +118,7 @@ public interface Controller {
 	
 	void deactivateEndCondition(String name);
 
-	default Collection<? extends Team> getTeamTemplates(){
+	default Collection<? extends Team> getTeamTemplates() {
 		return (Collection<? extends Team>) getTemplatesByCategory("team");
 	}
 
@@ -136,4 +133,10 @@ public interface Controller {
 	void addPlayer(String playerName);
 
 	void undo();
+
+	Shape getShape();
+
+	default void endTurn() {
+		getGameState().endTurn();
+	}
 }

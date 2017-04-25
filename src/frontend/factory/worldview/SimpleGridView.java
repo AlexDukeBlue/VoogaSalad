@@ -1,6 +1,7 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
+import backend.grid.ModifiableGameBoard;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
@@ -16,16 +17,17 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal{
+class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal {
 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
 	private final ScrollPane myScrollPane;
 	private final Pane cellViewObjects;
-	private final Collection<SimpleCellView> cellViews;
+	private final Map<CoordinateTuple, SimpleCellView> cellViews;
 	private final GridLayoutDelegate myLayoutManager;
 	private Set<CoordinateTuple> savedGridCoordinates;
 
@@ -33,15 +35,15 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		super(controller, clickHandler);
 		myScrollPane = new ScrollPane();
 		cellViewObjects = new Pane();
-		cellViews = new ArrayList<>();
+		cellViews = new HashMap<>();
 		myLayoutManager = new GridLayoutDelegateFactory();
 		initialize();
 	}
 
 	@Override
 	public void update() {
-		if (!getController().getGrid().getCells().keySet().equals(savedGridCoordinates)){
-			cellViews.forEach(e -> getController().removeListener(e));
+		if (!getController().getGrid().getCells().keySet().equals(savedGridCoordinates)) {
+			cellViews.values().forEach(e -> getController().removeListener(e));
 			cellViews.clear();
 			cellViewObjects.getChildren().clear();
 			populateCellViews();
@@ -57,8 +59,8 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
-			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate));
-			cellViews.add(cl);
+			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController()));
+			cellViews.put(coordinate, cl);
 			cellViewObjects.getChildren().add(cl.getObject());
 		});
 	}
@@ -87,6 +89,21 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	@Override
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
-		cellViews.forEach(e -> e.setClickHandler(clickHandler));
+		cellViews.values().forEach(e -> e.setClickHandler(clickHandler));
+	}
+
+	@Override
+	public void highlightRange(Collection<CoordinateTuple> highlightedCells) {
+		cellViews.entrySet().stream().filter(e -> !highlightedCells.contains(e.getKey())).forEach(e -> e.getValue().darken());
+	}
+
+	@Override
+	public void resetHighlighting() {
+		cellViews.values().forEach(SimpleCellView::unDarken);
+	}
+
+	@Override
+	public ModifiableGameBoard getEntity() {
+		return getController().getAuthoringGameState().getGrid();
 	}
 }

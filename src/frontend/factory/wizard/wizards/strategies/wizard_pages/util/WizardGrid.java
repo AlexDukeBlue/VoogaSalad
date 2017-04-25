@@ -1,11 +1,5 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.GridPattern;
@@ -20,6 +14,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WizardGrid extends BaseUIManager<Region> {
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
@@ -58,8 +58,8 @@ public class WizardGrid extends BaseUIManager<Region> {
 				gameState.getGrid().getRows()*2, gameState.getGrid().getColumns()*2, gameState.getGrid().getBoundsHandler(),
 				gameState.getGrid().getDescription(), gameState.getGrid().getImgPath()).build();
 
-		board.getCells().keySet().stream().forEach(coordinate -> {
-			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate);
+		board.getCells().keySet().forEach(coordinate -> {
+			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate, getController());
 			polygon.setStroke(BORDER);
 			polygon.setStrokeWidth(BORDER_WIDTH);
 			polygon.setFill(UNCLICKED_FILL);
@@ -79,7 +79,6 @@ public class WizardGrid extends BaseUIManager<Region> {
 				});
 				polygon.setFill(Color.RED);
 			}
-			System.out.println(coordinate);
 		});
 	}
 

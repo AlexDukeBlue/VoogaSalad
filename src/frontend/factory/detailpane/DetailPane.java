@@ -4,11 +4,6 @@
  */
 package frontend.factory.detailpane;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
@@ -27,6 +22,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * @author Faith Rodriguez
  *         <p>
@@ -59,7 +60,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 //			paneSetup();
 //			setLabel();
 //			clearContent();
-			if (currentSprite != null){
+			if (currentSprite != null) {
 				setContent(currentSprite);
 			}
 		});
@@ -79,6 +80,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private void setLabel() {
 		spriteInfo = new Label(content);
+		spriteInfo.setTranslateY(25);
 		infoPane.getChildren().add(spriteInfo);
 		spriteInfo.setWrapText(true);
 	}
@@ -105,12 +107,13 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void setImageContent(VoogaEntity sprite) {
-		Text name = new Text(sprite.getName() + "\n");
-		name.setFont(Font.font(20));
+		Label name = new Label(sprite.getName() + "\n");
+		name.setFont(Font.font(25));
+		name.setMinWidth(Region.USE_PREF_SIZE + 10);
 		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
 		spriteImage.setSmooth(true);
-		spriteImage.setFitHeight(50);
-		spriteImage.setFitWidth(50);
+		spriteImage.setFitHeight(80);
+		spriteImage.setFitWidth(80);
 		imagePane.getChildren().add(name);
 		imagePane.getChildren().add(spriteImage);
 	}
@@ -120,10 +123,10 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
-			setAbilityPaneContent((ModifiableUnit) sprite);
+			//setAbilityPaneContent((ModifiableUnit) sprite);
 		} else if (sprite instanceof Cell) {
 			newSpriteInfo = new Label(setTerrainContent(((Cell) sprite).getTerrain()));
-		} else if (sprite instanceof ModifiableTerrain){
+		} else if (sprite instanceof ModifiableTerrain) {
 			newSpriteInfo = new Label(setTerrainContent((ModifiableTerrain) sprite));
 		} else {
 			newSpriteInfo = new Label(content);
@@ -135,20 +138,20 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
 		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
-		unit.getUnitStats().forEach(e -> addString(e.getFormattedName(), e.toString()));
+		unit.getUnitStats().forEach(e -> addString(e.getName(), e.getCurrentValue().toString()));
 		addString("Move Pattern", unit.getMovePattern().toString());
 		return content;
 	}
 
-	private void setAbilityPaneContent(Unit unit) {
-		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
-		Label AALabel = new Label(AAContent);
-		AAPane.getChildren().add(AALabel);
-	}
+//	private void setAbilityPaneContent(Unit unit) {
+//		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
+//		Label AALabel = new Label(AAContent);
+//		AAPane.getChildren().add(AALabel);
+//	}
 
 	private String setTerrainContent(Terrain terrain) {
 		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());
-		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n"+terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^","\t"));
+		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
 		return content;
 	}
 
@@ -161,21 +164,22 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 				content += oIV;
 			}
 		}
-		content += "\n";
+		content += "\n" + "\n";
 		return content;
 	}
 
 	private void addString(String label, String value) {
 		content = checkForNull(label, content);
-		content += value + "\n";
+		content += value + "\n" + "\n";
 	}
 
 	private void addMoveCosts(Unit unit) {
-		content += getPolyglot().get("TerrainMoveCosts").getValueSafe()+": \n";
-		Map<Terrain, Integer> MC = unit.getTerrainMoveCosts();
-		for (VoogaEntity t : MC.keySet()) {
-			content = content + t.getName() + ": " + MC.get(t).toString() + "\n";
+		content += getPolyglot().get("TerrainMoveCosts").getValueSafe() + ": \n";
+		Map<String, Integer> MC = unit.getTerrainMoveCosts();
+		for (String t : MC.keySet()) {
+			content += t + ": " + MC.get(t).toString() + "\n";
 		}
+		content += "\n";
 	}
 
 	private void clearContent() {

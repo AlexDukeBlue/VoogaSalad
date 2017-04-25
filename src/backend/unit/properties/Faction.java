@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class Faction extends ModifiableVoogaCollection<Unit, Faction> {
 	public transient static final Faction UNDEAD = new Faction("Undead")
 			.setDescription("The reanimated corpses of the dead want no more than to slake their thirst with the fresh blood of the living")
-			.setImgPath("get_spooked.png")
+			.setImgPath("resources/images/undead.png")
 			.addAll(ModifiableUnit.SKELETON_ARCHER, ModifiableUnit.SKELETON_WARRIOR);
 
 	public Faction(String name) {

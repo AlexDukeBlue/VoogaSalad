@@ -19,17 +19,19 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
 			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
-			.setImgPath("resources/images/x.png")
-			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
+			.setMovePattern(GridPattern.SQUARE_ADJACENT)
+			.setImgPath("resources/images/skeletonWarrior.png")
 			.addActiveAbilities(ActiveAbility.SWORD)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
 			.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMaxValue(6))
-			.setMovePattern(GridPattern.HEXAGONAL_ADJACENT)
-			.setImgPath("resources/images/o.png")
+			.setMovePattern(GridPattern.SQUARE_ADJACENT)
+			.setImgPath("resources/images/skeletonArcher.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
 			.addActiveAbilities(ActiveAbility.BOW);
 	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 
@@ -37,7 +39,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	private final TriggeredAbilitySet triggeredAbilities;
 	private final OffensiveModifierSet offensiveModifiers;
 	private final DefensiveModifierSet defensiveModifiers;
-	private final Map<Terrain, Integer> terrainMoveCosts;
+	private final Map<String, Integer> terrainMoveCosts;
 	private final UnitStats stats;
 	private GridPattern movePattern;
 	private Faction faction;
@@ -49,7 +51,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		this(unitName, Collections.emptySet(), null, null, Collections.emptyMap(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), "", "");
 	}
 
-	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends Terrain, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
+	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends String, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
 		super(unitName, unitDescription, imgPath);
 		this.faction = faction;
 		this.terrainMoveCosts = new HashMap<>(moveCosts);
@@ -84,6 +86,9 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		if (Objects.isNull(getHitPoints()) || Objects.isNull(getMovePoints()) || Objects.isNull(getMovePattern()) || getName().length() < 1) {
 			throw new IncompleteUnitException();
 		}
+		if (Objects.isNull(getAbilityPoints())) {
+			addUnitStats(ModifiableUnitStat.ABILITYPOINTS);
+		}
 		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
 	}
 
@@ -91,7 +96,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public void moveTo(Cell destinationCell, GameplayState gameState) {
 		processTriggers(Event.UNIT_PRE_MOVEMENT, gameState);
 		currentCell.leave(this, gameState);
-		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getTerrainMoveCosts().getOrDefault(destinationCell.getTerrain(), destinationCell.getTerrain().getDefaultMoveCost()));
+		getMovePoints().setCurrentValue(getMovePoints().getCurrentValue() - getMoveCostByTerrain(destinationCell.getTerrain()));
 		destinationCell.arrive(this, gameState);
 		processTriggers(Event.UNIT_POST_MOVEMENT, gameState);
 	}
@@ -104,7 +109,6 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	@Override
 	public void endTurn(GameplayState gameState) {
 		processTriggers(Event.TURN_END, gameState);
-		getMovePoints().resetValue();
 	}
 
 	@Override
@@ -149,14 +153,13 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	@Override
-	public final Map<Terrain, Integer> getTerrainMoveCosts() {
+	public final Map<String, Integer> getTerrainMoveCosts() {
 		return Collections.unmodifiableMap(terrainMoveCosts);
 	}
 
 	public final ModifiableUnit setTerrainMoveCosts(Map<Terrain, Integer> terrainMoveCosts) {
 		this.terrainMoveCosts.clear();
-		terrainMoveCosts.keySet().stream()
-				.forEach(terrain -> this.terrainMoveCosts.put(terrain, terrainMoveCosts.get(terrain)));
+		terrainMoveCosts.keySet().forEach(terrain -> this.terrainMoveCosts.put(terrain.getName(), terrainMoveCosts.get(terrain)));
 		return this;
 	}
 

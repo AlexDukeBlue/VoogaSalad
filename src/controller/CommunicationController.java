@@ -6,6 +6,7 @@ import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.unit.Unit;
@@ -52,6 +53,7 @@ public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
+
 	private final Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
@@ -114,7 +116,7 @@ public class CommunicationController implements Controller {
 		return getGrid().get(tuple);
 	}
 
-	private synchronized <U extends ReadonlyGameplayState> void updateGameState() {
+	private synchronized void updateGameState() {
 		updateAll();
 		waitForReady.countDown();
 	}
@@ -345,7 +347,11 @@ public class CommunicationController implements Controller {
 			saveHistory.pop();
 			setGameState(loadFile(saveHistory.pop()));
 		} catch (IOException ignored) {
-			ignored.printStackTrace();
 		}
+	}
+
+	@Override
+	public Shape getShape() {
+		return getGrid().getShape();
 	}
 }

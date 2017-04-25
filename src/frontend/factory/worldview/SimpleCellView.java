@@ -2,6 +2,7 @@ package frontend.factory.worldview;
 
 import backend.cell.Cell;
 import backend.grid.CoordinateTuple;
+import backend.unit.Unit;
 import backend.unit.properties.UnitStat;
 import controller.Controller;
 import frontend.ClickHandler;
@@ -9,29 +10,33 @@ import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
-import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SimpleCellView extends ClickableUIComponent<Group> implements CellViewExternal {
 	private static final Paint CELL_OUTLINE = Color.BLACK;
 	private static final double CELL_STROKE = 2;
 	private final CoordinateTuple cellLocation;
 	private final Polygon polygon;
-	private final Group group;
+	private final Polygon polygonMask;
+	private final Group updateGroup;
 	private final ContextMenu contextMenu;
-	private final List<SimpleUnitView> unitViews;
+	private final Map<String, SimpleUnitView> unitViews;
 
 	private String terrainCache;
 	private int unitCount;
@@ -46,15 +51,20 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	 */
 	public SimpleCellView(CoordinateTuple cellLocation, Controller controller, ClickHandler clickHandler, Polygon polygonCellView) {
 		super(controller, clickHandler);
-		this.unitViews = new ArrayList<>();
+		this.unitViews = new HashMap<>();
 		this.cellLocation = cellLocation;
 		contextMenu = new ContextMenu();
-		group = new Group();
+		updateGroup = new Group();
 		this.polygon = polygonCellView;
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
-		polygon.setOnMouseEntered(event -> mouseOver());
-		polygon.setOnMouseClicked(event -> handleClick(null));
+		polygon.setOnMouseClicked(event -> handleClick(event, null));
 		polygon.setStroke(CELL_OUTLINE);
+		polygon.setStrokeWidth(CELL_STROKE);
+		polygonMask = new Polygon(polygon.getPoints().stream().mapToDouble(e -> e).toArray());
+		polygonMask.setFill(Color.TRANSPARENT);
+		polygonMask.layoutXProperty().bind(polygon.layoutXProperty());
+		polygonMask.layoutYProperty().bind(polygon.layoutYProperty());
+		polygonMask.setMouseTransparent(true);
 		getPolyglot().addLanguageChangeHandler(change -> {
 			setContextMenu();
 			installToolTips();
@@ -68,7 +78,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	 */
 	@Override
 	public Group getObject() {
-		return group;
+		return new Group(polygon, polygonMask, updateGroup);
 	}
 
 	/**
@@ -86,38 +96,55 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 				}
 				terrainCache = getCell().getTerrain().getImgPath();
 			}
-			if (unitCount != getCell().getOccupants().size()) {
+			if (unitCount != getCell().getOccupants().size() || !getCell().getOccupants().stream().map(Unit::getName).collect(Collectors.toSet()).equals(unitViews.keySet())) {
 				unitCount = unitCount < 0 ? getCell().getOccupants().size() : unitCount + 1;
-				unitViews.forEach(e -> getController().removeListener(e));
+				unitViews.values().forEach(e -> getController().removeListener(e));
 				unitViews.clear();
-				group.getChildren().clear();
-				group.getChildren().addAll(polygon);
+				updateGroup.getChildren().clear();
 				getCell().getOccupants().forEach(unit -> {
 					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), polygon.boundsInParentProperty(), getController(), getClickHandler());
-					unitViews.add(unitView);
-					group.getChildren().add(unitView.getObject());
-					unitView.getObject().toFront();
+					unitViews.put(unit.getName(), unitView);
+					updateGroup.getChildren().add(unitView.getObject());
 				});
+				unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> {
+					if (event.getButton().equals(MouseButton.PRIMARY)) {
+						if (getCell().getOccupants().size() <= 1) {
+							unitView.handleClick(event, null);
+						} else {
+							handleClick(event, null);
+						}
+					} else {
+						contextMenu.show(polygon, event.getScreenX(), event.getScreenY());
+					}
+				}));
+				if (getCell().getOccupants().size() > 1) {
+					Text numOccupants = new Text(getCell().getOccupants().size() + "");
+					numOccupants.setFont(new Font(13));
+					numOccupants.setLayoutX(polygon.getBoundsInParent().getMaxX() - numOccupants.getLayoutBounds().getWidth() - 4);
+					numOccupants.setLayoutY(polygon.getBoundsInParent().getMaxY() - numOccupants.getLayoutBounds().getHeight() + 9);
+					updateGroup.getChildren().add(numOccupants);
+					numOccupants.toFront();
+				}
 				setContextMenu();
 			}
-			polygon.toBack();
+			updateGroup.toFront();
 			installToolTips();
 		} else {
 			getController().removeListener(this);
 		}
+
 	}
 
 	private void installToolTips() {
-		unitViews.forEach(uv -> Tooltip.install(uv.getObject(), new Tooltip(getToolTipString(uv))));
+		unitViews.values().forEach(uv -> Tooltip.install(uv.getObject(), new Tooltip(getToolTipString(uv))));
 	}
 
 	private void setContextMenu() {
 		contextMenu.getItems().clear();
 		getCell().getOccupants().forEach(e -> {
-			MenuItem item = new MenuItem(getPolyglot().get("Select").getValueSafe() + " " + e.getName());
+			MenuItem item = new MenuItem(e.getName());
 			contextMenu.getItems().add(item);
-			item.addEventHandler(ActionEvent.ACTION, event -> unitViews.stream().filter(p -> p.getUnitName().equals(item.getText().substring(7)))
-					.forEach(f -> f.handleClick(null)));
+			item.setOnAction(event -> unitViews.get(e.getName()).handleClick(event, null));
 		});
 	}
 
@@ -133,25 +160,6 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		return String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp);
 	}
 
-	private void mouseOver() {
-		// System.out.println(unitViews.size());
-		// System.out.println("mousing over");
-		if (unitViews.size() != 0) {
-			for (int i = 0; i < unitViews.size(); i++) {
-				// unitViews.get(i).getObject().setLayoutY(unitViews.get(i).getObject().getLayoutY()
-				// - i * 30);;
-			}
-		}
-	}
-
-	private void mouseOut() {
-		if (unitViews.size() != 0) {
-			for (int i = 0; i < unitViews.size(); i++) {
-				unitViews.get(i).getObject().setTranslateY(i * 10);
-			}
-		}
-	}
-
 	@Override
 	public CoordinateTuple getLocation() {
 		return cellLocation;
@@ -165,12 +173,21 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	@Override
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
-		unitViews.forEach(e -> setClickHandler(clickHandler));
-		polygon.setStrokeWidth(CELL_STROKE);
+		unitViews.values().forEach(e -> setClickHandler(clickHandler));
 	}
 
 	@Override
 	public String toString() {
 		return getCell().toString();
+	}
+
+	@Override
+	public void darken() {
+		polygonMask.setFill(new Color(0, 0, 0, .7));
+	}
+
+	@Override
+	public void unDarken() {
+		polygonMask.setFill(Color.TRANSPARENT);
 	}
 }

@@ -3,12 +3,14 @@
  */
 package frontend.factory.conditionspane;
 
+import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.SelectableUIComponent;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -47,14 +49,14 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof AddRemoveButton) {
 			getController();//.removeRules(...)
 		}
 	}
 
 	@Override
-	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler) {
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		//Does nothing because this should not be accessible in GameplayMode
 	}
 	
@@ -64,6 +66,11 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 		CheckBox cb = new CheckBox(myName);
 		cb.selectedProperty().addListener((o, oldVal, newVal) -> checkBoxAction(o, oldVal, newVal));
 		myBox.getChildren().add(cb);
-		myBox.setOnMouseClicked(event -> handleClick(null));
+		myBox.setOnMouseClicked(event -> handleClick(event, null));
+	}
+
+	@Override
+	public VoogaEntity getEntity() {
+		return null;
 	}
 }

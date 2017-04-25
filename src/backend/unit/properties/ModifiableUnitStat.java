@@ -11,27 +11,32 @@ import java.util.Collection;
 public class ModifiableUnitStat<T extends Number & Comparable<T>> extends ModifiableVoogaObject<ModifiableUnitStat<T>> implements UnitStat<T>, Serializable {
 	//TODO ResourceBundlify
 	//For units
-	public transient static final ModifiableUnitStat<Double> HITPOINTS = new ModifiableUnitStat<Double>("Hitpoints")
+	public transient static final ModifiableUnitStat<Double> HITPOINTS = new ModifiableUnitStat<Double>("Hit Points")
 			.setMinValue(0.0)
 			.setMaxValue(50.0)
 			.setDescription("Units lose HP when taking damage. When a unit's hitpoints reach 0, the unit dies.")
-			.setImgPath("<3.png");
-	public transient static final ModifiableUnitStat<Integer> MOVEPOINTS = new ModifiableUnitStat<Integer>("Movepoints")
+			.setImgPath("resources/images/heart.png");
+	public transient static final ModifiableUnitStat<Integer> MOVEPOINTS = new ModifiableUnitStat<Integer>("Move Points")
 			.setMinValue(0)
 			.setMaxValue(5)
 			.setDescription("Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.")
-			.setImgPath("Boot.png");
-	public transient static final ModifiableUnitStat<Double> ENERGY = new ModifiableUnitStat<Double>("Energy")
+			.setImgPath("resources/images/timbs.png");
+	public transient static final ModifiableUnitStat<Double> ABILITYPOINTS = new ModifiableUnitStat<Double>("Ability Points")
+			.setMinValue(0.0)
+			.setMaxValue(1.0)
+			.setDescription("Most active abilities use ability points. They limit the number of actions a unit can do each turn.")
+			.setImgPath("resources/images/ability_points.png");
+	public transient static final ModifiableUnitStat<Double> ENERGY = new ModifiableUnitStat<Double>("ENERGY")
 			.setMinValue(0.0)
 			.setMaxValue(100.0)
 			.setDescription("Energy points are required for and consumed by some powerful abilities.")
-			.setImgPath("NRG.png");
+			.setImgPath("resources/images/energy.png");
 	//For players
 	public transient static final ModifiableUnitStat<Double> GOLD = new ModifiableUnitStat<Double>("Gold")
 			.setMinValue(0.0)
 			.setMaxValue(Double.MAX_VALUE)
 			.setDescription("Players have a limited amount of gold to spend on their units.")
-			.setImgPath("SHINY~~~.png");
+			.setImgPath("resources/images/gold.png");
 
 	private T maxValue;
 	private T minValue;

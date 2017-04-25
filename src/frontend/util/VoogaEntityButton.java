@@ -3,7 +3,9 @@ package frontend.util;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.View;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -13,7 +15,7 @@ import javafx.scene.image.ImageView;
 /**
  * @author Created by th174 on 4/21/17.
  */
-public abstract class VoogaEntityButton extends SelectableUIComponent<Button> {
+public class VoogaEntityButton extends SelectableUIComponent<Button> {
 	private final Button entityButton;
 	private final VoogaEntity entity;
 
@@ -22,7 +24,7 @@ public abstract class VoogaEntityButton extends SelectableUIComponent<Button> {
 		this.entity = entity;
 		ImageView sprite = new ImageView(View.getImg(entity.getImgPath()));
 		entityButton = new Button("", sprite);
-		entityButton.setPadding(new Insets(5, 5, 5, 5));
+		entityButton.setPadding(new Insets(10, 10, 10, 10));
 		sprite.setFitWidth(size);
 		sprite.setFitHeight(size);
 		entityButton.setTooltip(new Tooltip(entity.getFormattedName()));
@@ -35,7 +37,17 @@ public abstract class VoogaEntityButton extends SelectableUIComponent<Button> {
 		return entityButton;
 	}
 
-	protected VoogaEntity getEntity() {
+	public VoogaEntity getEntity() {
 		return entity;
+	}
+
+	@Override
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
+		setAsSelected();
+	}
+
+	@Override
+	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
+		actInAuthoringMode(target, additionalInfo, clickHandler, event);
 	}
 }

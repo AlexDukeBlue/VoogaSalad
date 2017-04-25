@@ -2,10 +2,12 @@ package frontend;
 
 import frontend.factory.abilitypane.AbilityPane;
 import frontend.interfaces.detailpane.DetailPaneExternal;
+import frontend.interfaces.worldview.GridViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
 import frontend.util.highlighter.Highlighter;
 import frontend.util.highlighter.ShadowHighlighter;
+import javafx.event.Event;
 import javafx.scene.Node;
 
 import java.util.Objects;
@@ -19,6 +21,7 @@ public abstract class ClickHandler {
 	private Object additionalInfo;
 	private DetailPaneExternal detailPane;
 	private AbilityPane abilityPane;
+	private GridViewExternal gridPane;
 
 	public final void setDetailPane(DetailPaneExternal detailPane) {
 		this.detailPane = detailPane;
@@ -28,13 +31,15 @@ public abstract class ClickHandler {
 		this.abilityPane = abilityPane;
 	}
 
-	public final void handleClick(ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
+	public final void handleClick(Event event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
 		if (Objects.isNull(selectedComponent) && clickedComponent instanceof SelectableUIComponent) {
 			setSelectedComponent((SelectableUIComponent<? extends Node>) clickedComponent);
 			this.additionalInfo = additionalInfo;
+			event.consume();
 		} else if (Objects.nonNull(selectedComponent)) {
-			triggerAction(selectedComponent, clickedComponent, this.additionalInfo);
+			triggerAction(selectedComponent, clickedComponent, this.additionalInfo, event);
 		} else {
+			event.consume();
 			cancel();
 			showDetail(clickedComponent);
 		}
@@ -44,14 +49,15 @@ public abstract class ClickHandler {
 		cancel();
 		this.selectedComponent = selectedComponent;
 		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getObject());
+		selectedComponent.select(this);
 		showDetail(selectedComponent);
 	}
 
-	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo);
+	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event);
 
 	public final void cancel() {
 		if (selectedComponent != null) {
-			selectedComponent.deselect();
+			selectedComponent.deselect(this);
 			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getObject());
 		}
 		selectedComponent = null;
@@ -64,5 +70,13 @@ public abstract class ClickHandler {
 			detailPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 			abilityPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 		}
+	}
+
+	public GridViewExternal getGridPane() {
+		return gridPane;
+	}
+
+	public void setGridPane(GridViewExternal gridPane) {
+		this.gridPane = gridPane;
 	}
 }

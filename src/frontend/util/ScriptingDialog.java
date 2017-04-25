@@ -1,17 +1,27 @@
 package frontend.util;
 
-import controller.Controller;
-import javafx.collections.FXCollections;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import util.scripting.VoogaScriptEngine;
-import util.scripting.VoogaScriptEngineManager;
-import util.scripting.VoogaScriptException;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import util.scripting.VoogaScriptEngine;
+import util.scripting.VoogaScriptEngineManager;
+import util.scripting.VoogaScriptException;
 
 /**
  * TODO: RESOUCE BUNDLE PLSSSS
@@ -23,9 +33,10 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private final TextArea scriptArea;
 	private final ComboBox<String> languagesMenu;
 	private VoogaScriptEngine scriptEngine;
+	private BooleanProperty hasCompiled;
 
-	public ScriptingDialog(Controller controller) {
-		super(controller);
+	public ScriptingDialog() {
+		hasCompiled = new SimpleBooleanProperty(false);
 		languagesMenu = new ComboBox<>(FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
 		pane = new BorderPane();
 		scriptArea = new TextArea();
@@ -34,6 +45,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		compileButton.setOnAction(evt -> {
 			try {
 				scriptEngine = VoogaScriptEngineManager.read(languagesMenu.getValue(), scriptArea.getText());
+				hasCompiled.setValue(true);
 			} catch (VoogaScriptException e) {
 				handleException(e);
 			}
@@ -48,6 +60,10 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		pane.setTop(topBox);
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);
+	}
+	
+	public ReadOnlyBooleanProperty hasCompiled(){
+		return hasCompiled;
 	}
 
 	private void handleException(Exception e) {
@@ -74,6 +90,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		expContent.add(textArea, 0, 1);
 		alert.getDialogPane().setExpandableContent(expContent);
 		alert.showAndWait();
+		hasCompiled.setValue(false);
 	}
 
 	@Override

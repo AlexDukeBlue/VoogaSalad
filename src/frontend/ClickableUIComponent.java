@@ -2,6 +2,7 @@ package frontend;
 
 import controller.Controller;
 import frontend.util.BaseUIManager;
+import javafx.event.Event;
 import javafx.scene.Node;
 
 /**
@@ -27,10 +28,7 @@ public abstract class ClickableUIComponent<T extends Node> extends BaseUIManager
 		this.clickHandler = clickHandler;
 	}
 
-	public void handleClick(Object o) {
-		clickHandler.handleClick(this, o);
-	}
-
-	public void deselect() {
+	public void handleClick(Event event, Object o) {
+		clickHandler.handleClick(event, this, o);
 	}
 }

@@ -21,11 +21,11 @@ public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> implement
 	public transient static final BoundsHandler TOROIDAL_BOUNDS = new BoundsHandler("Toroidal Bounds",
 			(input, grid) -> wrapToBound(input, grid.getBounds()),
 			"Wraps out of bounds coordinates to the opposite side of the grid",
-			"Torus.png");
+			"resources/images/toroid.png");
 	public transient static final BoundsHandler SQUARE_TOROIDAL_BOUNDS = new BoundsHandler("Square Toroidal Bounds",
 			(input, grid) -> wrapToBound(input.convertToRectangular(), grid.getRectangularBounds()).convertToDimension(input.dimension()),
 			"Wraps out of bounds coordinates to the opposite side of a square grid.",
-			"Torus.png");
+			"resources/images/toroid.png");
 
 	private final CoordinateMapper boundsGetter;
 
