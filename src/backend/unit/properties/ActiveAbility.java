@@ -3,6 +3,7 @@ package backend.unit.properties;
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GridPattern;
+import backend.grid.Shape;
 import backend.unit.Unit;
 import backend.util.*;
 
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
  *
  * @author Created by th174 on 3/29/2017.
  */
-public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable {
+public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable, HasShape {
 	//All hexagonal
 	public transient static final ActiveAbility<Unit> SWORD = new ActiveAbility<>("Sword", new Attack(5, 3), GridPattern.SQUARE_ADJACENT, "The attacker hits 3 times for 5 damage on any neighboring unit", "resources/images/sword.png");
 	public transient static final ActiveAbility<Unit> BOW = new ActiveAbility<>("Bow", new Attack(7, 2), GridPattern.SQUARE_RAYS, "The attacker hits 2 times for 7 dmage on any unit in a straight line away from the attacker", "resources/images/bow.png");
@@ -52,6 +53,7 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 		return range;
 	}
 
+
 	public Collection<CoordinateTuple> getLegalTargetCells(CoordinateTuple userLocation, ReadonlyGameplayState readonlyGameplayState) {
 		return getRange().parallelStream()
 				.map(e -> e.sum(userLocation))
@@ -66,6 +68,11 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 	@Override
 	public ActiveAbility<T> copy() {
 		return new ActiveAbility<>(getName(), getAbilityEffect(), getRange(), getDescription(), getImgPath());
+	}
+
+	@Override
+	public Shape getShape() {
+		return getRange().getShape();
 	}
 
 	@FunctionalInterface
