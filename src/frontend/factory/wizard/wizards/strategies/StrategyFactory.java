@@ -15,13 +15,14 @@ public class StrategyFactory {
 		strategyMap.put("terrain", TerrainStrategy.class);
 		strategyMap.put("unit", UnitStrategy.class);
 		strategyMap.put("activeability", ActiveAbilityStrategy.class);
-		strategyMap.put("unittriggeredeffects", TriggeredEffectStrategy.class);
-		strategyMap.put("celltriggeredeffects", TriggeredEffectStrategy.class);
-		strategyMap.put("offensivemodifiers", OffensiveModifierStrategy.class);
-		strategyMap.put("defensivemodifiers", DefensiveModifierStrategy.class);
-		strategyMap.put("requirement", TurnRequirementStrategy.class);
-		strategyMap.put("actionables", TurnActionStrategy.class);
-		strategyMap.put("resultant", EndConditionStrategy.class);
+		strategyMap.put("unittriggeredeffect", TriggeredEffectStrategy.class);
+		strategyMap.put("celltriggeredeffect", TriggeredEffectStrategy.class);
+		strategyMap.put("offensivemodifier", InteractionModifierStrategy.class);
+		strategyMap.put("defensivemodifier", InteractionModifierStrategy.class);
+		strategyMap.put("turnrequirement", TurnRequirementStrategy.class);
+		strategyMap.put("turnaction", TurnActionStrategy.class);
+		strategyMap.put("endcondition", EndConditionStrategy.class);
+		strategyMap.put("gridboundstype", GridBoundsStrategy.class);
 	}
 
 	public static WizardStrategy<?> newStrategy(String categoryName, AuthoringGameState gameState) {

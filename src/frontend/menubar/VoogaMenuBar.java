@@ -3,6 +3,14 @@
  */
 package frontend.menubar;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
+import backend.grid.GameBoard;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.View;
@@ -11,8 +19,9 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -25,13 +34,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 /**
  * @author Stone Mathers Created 4/18/2017
  */
@@ -40,7 +42,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
-			newTriggeredAbilityItem, newInteractionModifierItem, conditionsPaneItem, templatePaneItem, detailsPaneItem,
+			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem, conditionsPaneItem, templatePaneItem, detailsPaneItem,
 			statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
@@ -91,6 +93,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 				e -> create("triggeredability"));
 		newInteractionModifierItem = factory.getMenuItem(getPolyglot().get("CreateNewInteractionModifier"),
 				e -> create("interactionmodifier"));
+		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
+			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
+				getController().getAuthoringGameState().setGrid((GameBoard)object);
+			});
+		});
 
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
 		try {
@@ -162,6 +169,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newActiveAbilityItem);
 //		edit.getItems().add(newTriggeredAbilityItem);
 //		edit.getItems().add(newInteractionModifierItem);
+		edit.getItems().add(newGridItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
