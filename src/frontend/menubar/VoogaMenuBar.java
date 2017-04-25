@@ -3,26 +3,31 @@
  */
 package frontend.menubar;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 import backend.unit.Unit;
 import controller.Controller;
 import frontend.View;
+import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import polyglot.PolyglotException;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 /**
  * @author Stone Mathers
@@ -204,8 +209,19 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState())
-				.addObserver((wizard, unit) -> getController().addUnitTemplates((Unit) unit));
+		Wizard<?> wizard = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
+		try {
+			System.out.println(wizard);
+			System.out.println(wizard.getPolyglot());
+			System.out.println(wizard.getPolyglot().getLanguage());
+			System.out.println(getPolyglot());
+			System.out.println(getPolyglot().getLanguage());
+			wizard.getPolyglot().setLanguage(getPolyglot().getLanguage());
+		} catch (PolyglotException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				wizard.addObserver((thewizard, unit) -> getController().addUnitTemplates((Unit) unit));
 	}
 
 	@Override

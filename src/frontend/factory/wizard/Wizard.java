@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import polyglot.PolyglotException;
 
 /**
  * The Wizard class presents a basic API for allowing the user to create new
@@ -115,6 +116,15 @@ public class Wizard<T> extends BaseUIManager<Region> {
 
 		borderPane.setCenter(selectionStrategy.getObject());
 		borderPane.setBottom(buttonBar.getObject());
+		
+		getPolyglot().setOnLanguageChange(event -> {
+			try {
+				selectionStrategy.getPolyglot().setLanguage(getPolyglot().getLanguage());
+			} catch (PolyglotException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
 		stage.setScene(new Scene(borderPane));
 		show();

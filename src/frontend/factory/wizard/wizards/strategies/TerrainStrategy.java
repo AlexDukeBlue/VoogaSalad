@@ -5,6 +5,7 @@ import backend.cell.Terrain;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.UnitMovePointPage;
+import polyglot.PolyglotException;
 
 /**
  * Strategy that extends BaseStrategy to instantiate a new Terrain object.
@@ -26,6 +27,14 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewTerrain"));
 		unitMovePointPage = new UnitMovePointPage(gameState);
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
+		getPolyglot().setOnLanguageChange(event -> {
+			try {
+				imageNameDescriptionPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+			} catch (PolyglotException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@Override
