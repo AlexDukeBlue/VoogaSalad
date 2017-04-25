@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
 	public transient static final String BOUNDS_HANDLER = "boundshandler", TERRAIN = "terrain", OFFENSIVE_MODIFIER = "offensivemodifier", DEFENSIVE_MODIFIER = "defensivemodifier", CELL_TRIGGERED_EFFECT = "celltriggeredeffect", UNIT_TRIGGERED_EFFECT = "unittriggeredeffect", ACTIVE_ABILITY = "activeability", UNIT = "unit", UNIT_STAT = "unitstat", GRID_PATTERN = "gridpattern", GAMEBOARD = "gameboard";
@@ -178,7 +179,18 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	public VoogaEntity getTemplateByName(String name) {
-		return templates.values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
+		try {
+			return templates.values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
+		} catch (RuntimeException e) {
+			System.out.println(name);
+			System.out.println(templates.values().stream().flatMap(ImmutableVoogaCollection::stream).collect(Collectors.toList()));
+			throw e;
+		}
+	}
+
+	public AuthoringGameState removeTemplateByName(String name) {
+		templates.get(templates.entrySet().parallelStream().filter(e -> e.getValue().containsName(name)).map(Map.Entry::getKey).findAny().orElse("")).removeAll(name);
+		return this;
 	}
 
 }

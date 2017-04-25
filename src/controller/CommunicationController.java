@@ -253,7 +253,6 @@ public class CommunicationController implements Controller {
 			saveHistory.pop();
 			setGameState(loadFile(saveHistory.pop()));
 		} catch (IOException ignored) {
-			ignored.printStackTrace();
 		}
 	}
 }

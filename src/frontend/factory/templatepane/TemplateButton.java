@@ -53,6 +53,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 				return gameState;
 			});
 		}
+		setAsSelected();
 	}
 
 	@Override

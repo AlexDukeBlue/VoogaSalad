@@ -1,6 +1,7 @@
 package backend.util;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -13,6 +14,10 @@ public interface ImmutableVoogaCollection<T extends VoogaEntity> extends Iterabl
 
 	default Stream<? extends T> stream() {
 		return getAll().stream();
+	}
+
+	default boolean containsName(String name) {
+		return Objects.nonNull(getByName(name));
 	}
 
 	Collection<? extends T> getAll();

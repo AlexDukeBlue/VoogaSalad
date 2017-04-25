@@ -19,6 +19,7 @@ import javafx.util.Pair;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -36,13 +37,15 @@ import java.util.stream.Stream;
 
 class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneExternal {
 
+	private final Map<String, Collection<String>> templateNamesCache;
 	private VBox pane = new VBox();
 	private Map<String, VBox> contents;
 
 	public TemplatePane(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		contents = new HashMap<>();
-		Stream.of("Units", "Terrains","ActiveAbilities")
+		templateNamesCache = new HashMap<>();
+		Stream.of("Units", "Terrains", "ActiveAbilities")
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		update();
@@ -54,8 +57,9 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	@Override
 	public void update() {
 		contents.forEach((key, value) -> {
-			if (value.getChildren().size() != getController().getAuthoringGameState().getTemplateByCategory(key)
-					.size()) {
+			Collection<String> newTemplateNames = getController().getAuthoringGameState().getTemplateByCategory(key).getAll().stream().map(VoogaEntity::getName).collect(Collectors.toSet());
+			if (!newTemplateNames.equals(templateNamesCache.get(key))) {
+				templateNamesCache.put(key, newTemplateNames);
 				value.getChildren().clear();
 				getController().getAuthoringGameState().getTemplateByCategory(key).stream()
 						.map(entity -> new TemplateButton(entity, key, 50, getController(), getClickHandler()))
