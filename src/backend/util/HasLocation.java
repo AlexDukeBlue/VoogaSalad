@@ -11,6 +11,6 @@ public interface HasLocation extends VoogaEntity, HasShape {
 
 	@Override
 	default Shape getShape() {
-		return CoordinateTuple.DIMENSION_SHAPE_MAP.get(getLocation().dimension());
+		return Shape.fromDimension(getLocation().dimension());
 	}
 }
