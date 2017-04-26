@@ -77,6 +77,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void initMenuItems() {
 		saveItem = factory.getMenuItem(getPolyglot().get("Save"), e -> save());
+		saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 		loadItem = factory.getMenuItem(getPolyglot().get("Load"), e -> load());
 		homeScreenItem = factory.getMenuItem(getPolyglot().get("HomeScreen"), e -> {
 
@@ -85,7 +86,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
 
 		});
+		homeScreenItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN));
 		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
+		quitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
 		undoItem = factory.getMenuItem(getPolyglot().get("Undo"), e -> getController().undo());
 		undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 		newUnitItem = factory.getMenuItem(getPolyglot().get("CreateNewUnit"), e -> create("unit"));
@@ -135,10 +138,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.setClickHandler(new AuthoringClickHandler());
 			getController().enterAuthoringMode();
 		});
+		editModeItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
 			myView.setClickHandler(new GameplayClickHandler());
 			getController().enterGamePlayMode();
 		});
+		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
 			showBrowser("frontend/menubar/help.html");
@@ -200,9 +205,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		getObject().getMenus().add(file);
 		getObject().getMenus().add(edit);
+		getObject().getMenus().add(view);
 		getObject().getMenus().add(language);
 		getObject().getMenus().add(theme);
-		getObject().getMenus().add(view);
 		getObject().getMenus().add(help);
 	}
 
