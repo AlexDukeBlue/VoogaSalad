@@ -251,7 +251,22 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
+		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
+		try {
+//			System.out.println(wizard);
+//			System.out.println(wizard.getPolyglot());
+//			System.out.println(wizard.getPolyglot().getLanguage());
+//			System.out.println(getPolyglot());
+//			System.out.println(getPolyglot().getLanguage());
+			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
+		} catch (PolyglotException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	
+		}
+		
+		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
+		
 	}
 
 	@Override

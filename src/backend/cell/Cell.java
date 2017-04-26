@@ -55,9 +55,11 @@ public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, 
 
 	void arrive(Unit unit, GameplayState gamestate);
 
-	ModifiableCell addOccupants(Unit... units);
+	Cell addOccupants(Unit... units);
 
-	ModifiableCell removeOccupants(Unit... units);
+	Cell removeOccupants(Unit... units);
+
+	Cell removeOccupants(String... unitNames);
 
 	default Cell add(VoogaEntity voogaEntity) {
 		DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);

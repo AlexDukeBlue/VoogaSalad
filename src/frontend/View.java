@@ -135,12 +135,16 @@ public class View extends ClickableUIComponent<Region> {
 		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
 		cancelImg.setFitWidth(50);
 		cancelImg.setFitHeight(50);
+		cancelImg.setSmooth(true);
 		Button cancelButton = new Button("", cancelImg);
 		cancelButton.setCancelButton(true);
 		cancelButton.setPadding(Insets.EMPTY);
-		cancelButton.setOnMouseClicked(event -> getClickHandler().cancel());
+		cancelButton.setOnMouseClicked(event -> {
+			getClickHandler().showDetail(null);
+			getClickHandler().cancel();
+		});
 		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), cancelButton);
-		bottomPane.setDividerPositions(.6,1);
+		bottomPane.setDividerPositions(.6, 1);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
 		cancelButton.prefHeightProperty().bind(bottomPane.heightProperty());
 		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);

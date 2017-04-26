@@ -1,8 +1,8 @@
 package frontend.factory.ObserverViewTrial;
 
-import java.util.ArrayList;
-
 import javafx.scene.layout.BorderPane;
+
+import java.util.ArrayList;
 
 public class BorderViewComponent extends ViewComponent<BorderPane> {
 
@@ -24,11 +24,9 @@ public class BorderViewComponent extends ViewComponent<BorderPane> {
 			ArrayList<Double> coord = new ArrayList<>();
 			coord.add(x);
 			coord.add(y);
-			System.out.println(event.getButton().toString());
 			change();
 			setChanged();
 			this.notifyObservers(coord);
-			System.out.println(this.hasChanged());
 		});
 	}
 

@@ -36,17 +36,17 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	public transient static final ModifiableTriggeredEffect RESET_MOVE_POINTS = new ModifiableTriggeredEffect("Reset Move Points")
 			.setEffect((unit, event, game) -> unit.getMovePoints().resetValue())
 			.setDescription("This unit regains full movepoints at the beginning of each turn.")
-			.setImgPath("resources/images/reset_movepoints.png")
+			.setImgPath("resources/images/timbs.png")
 			.addActivationTriggers(Event.TURN_START);
 	public transient static final ModifiableTriggeredEffect RESET_ABILITY_POINTS = new ModifiableTriggeredEffect("Reset Ability Points")
 			.setEffect((unit, event, game) -> unit.getAbilityPoints().resetValue())
 			.setDescription("This unit regains full ability points at the beginning of each turn.")
-			.setImgPath("resources/images/reset_abilitypoints.png")
+			.setImgPath("resources/images/ability_points.png")
 			.addActivationTriggers(Event.TURN_START);
 	public transient static final ModifiableTriggeredEffect REGENERATE_ENERGY_POINTS = new ModifiableTriggeredEffect("Regenerate Energy Points")
 			.setEffect((unit, event, game) -> unit.getEnergy().setCurrentValue(Math.max(unit.getEnergy().getMaxValue(),unit.getEnergy().getCurrentValue() + 10)))
 			.setDescription("This unit regenerates some energy points at the beginning of each turn.")
-			.setImgPath("resources/images/blue_cross.png")
+			.setImgPath("resources/images/energy.png")
 			.addActivationTriggers(Event.TURN_START);
 	//Cell passive abilities
 	public transient static final ModifiableTriggeredEffect FULL_HEAL = new ModifiableTriggeredEffect("Full Heal")

@@ -27,8 +27,6 @@ public class StrategyFactory {
 
 	public static WizardStrategy<?> newStrategy(String categoryName, AuthoringGameState gameState) {
 		categoryName = categoryName.replaceAll(" ", "").toLowerCase().replaceAll("ies$", "y").replaceAll("s$", "");
-		System.out.println(categoryName);
-		System.out.println(strategyMap.get(categoryName));
 		try {
 			return strategyMap.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
 		} catch (Exception e) {
