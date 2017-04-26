@@ -15,7 +15,6 @@ import frontend.factory.wizard.wizards.strategies.wizard_pages.UnitMovePointPage
 class TerrainStrategy extends BaseStrategy<Terrain> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
-	// private AbilitiesAdderPage abilitiesAdderPage;
 	private UnitMovePointPage unitMovePointPage;
 
 	public TerrainStrategy(AuthoringGameState gameState) {
