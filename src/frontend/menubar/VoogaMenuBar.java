@@ -16,6 +16,7 @@ import controller.Controller;
 import frontend.AuthoringClickHandler;
 import frontend.GameplayClickHandler;
 import frontend.View;
+import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
