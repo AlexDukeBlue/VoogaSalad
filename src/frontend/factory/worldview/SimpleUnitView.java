@@ -18,13 +18,11 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-
 
 import java.util.Objects;
 
@@ -38,6 +36,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	private final CoordinateTuple unitLocation;
 	private final Rectangle healthBar;
 	private final Rectangle remainingHealthBar;
+	private final DropShadow dropShadow;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
@@ -50,7 +49,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		imageView.setManaged(true);
 		imageView.setPickOnBounds(true);
 		imageView.setPreserveRatio(true);
-		DropShadow dropShadow= new DropShadow(15, Color.WHITE);
+		dropShadow = new DropShadow(15, Color.WHITE);
 		dropShadow.setSpread(.3);
 		imageView.setEffect(dropShadow);
 		unitView = new BorderPane();
@@ -83,6 +82,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 
 	@Override
 	public void update() {
+		dropShadow.setColor(Color.web(getUnit().getTeam().getColorString()));
 		try {
 			double fractionRemaining = getUnit().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
@@ -145,8 +145,8 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
-			getController().moveUnit(getUnitName(),getUnitLocation(),((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
-		} else if(event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE) || ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))){
+			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
+		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE) || ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
 			getController().removeUnitFromGrid(getUnitName(), getUnitLocation());
 		}
 		clickHandler.cancel();

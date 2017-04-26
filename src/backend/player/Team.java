@@ -5,20 +5,23 @@ import backend.util.VoogaEntity;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/30/2017.
  */
 public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> implements VoogaEntity {
-	public static final String RED = "#ff0000";
-	public static final String GREEN = "#00ff00";
-	public static final String BLUE = "#0000ff";
-	public static final String YELLOW = "#ffff00";
-	public static final String CYAN = "#00ffff";
-	public static final String MAGENTA = "#ff00ff";
-	public static final String WHITE = "#ffffff";
-	public static final String BLACK = "#000000";
+	public transient static final String RED = "#ff0000";
+	public transient static final String GREEN = "#00ff00";
+	public transient static final String BLUE = "#0000ff";
+	public transient static final String YELLOW = "#ffff00";
+	public transient static final String CYAN = "#00ffff";
+	public transient static final String MAGENTA = "#ff00ff";
+	public transient static final String WHITE = "#ffffff";
+	public transient static final String BLACK = "#000000";
+	private transient static final List<String> COLORFUL = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA);
+	private transient static volatile int index = 0;
 	private String colorString;
 
 	public Team(String name, String description, String imgPath, Player... players) {
@@ -26,7 +29,7 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	}
 
 	public Team(String name, String description, String imgPath, Collection<? extends Player> players) {
-		this(name, description, "", imgPath, players);
+		this(name, description, COLORFUL.get((index = index / 2 + 41) % COLORFUL.size()), imgPath, players);
 	}
 
 	public Team(String name, String descripton, String colorString, String imgPath, Collection<? extends Player> players) {

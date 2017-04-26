@@ -7,7 +7,6 @@ package frontend.factory.detailpane;
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -23,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import java.util.Collection;
 import java.util.Map;
@@ -158,14 +156,15 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void createButton(VoogaEntity unit, String unitType) {
-		editBtn = new Button("Edit details");
-		infoPane.getChildren().add(editBtn);
-		editBtn.setOnMouseClicked(e -> {
-			DetailEdit edits = new DetailEdit(unit, unitType, getController());
+		if (!(unit instanceof Unit) || Objects.nonNull(((Unit) unit).getLocation())) {
+			editBtn = new Button("Edit details");
+			infoPane.getChildren().add(editBtn);
+			editBtn.setOnMouseClicked(e -> {
+				DetailEdit edits = new DetailEdit(unit, unitType, getController());
+			});
 		}
-		);
 	}
-	
+
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
 		content = checkForNull(label, content);
 		for (VoogaEntity o : collection) {
