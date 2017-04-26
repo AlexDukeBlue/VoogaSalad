@@ -26,7 +26,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	@Override
 	public ActiveAbility<?> finish() {
-		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(), (AbilityEffect<?>)(scriptingPage.getScriptEngine().get()),gridPage.getGridPattern(), namePage.getDescription(), namePage.getImagePath()) : null;
+		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(), (AbilityEffect<?>)(scriptingPage.getScriptEngine().get()),gridPage.getGridPattern(), namePage.getDescription().getValue(), namePage.getImagePath()) : null;
 	}
 	
 	private void initialize(AuthoringGameState gameState){
