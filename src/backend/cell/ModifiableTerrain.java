@@ -35,6 +35,7 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 	private final OffensiveModifierSet offensiveModifiers;
 	private final DefensiveModifierSet defensiveModifiers;
 	private int defaultMoveCost;
+	private String soundPath;
 
 	public ModifiableTerrain(String name) {
 		this(name, DEFAULT_DEFAULT_MOVE_COST, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), "", "");
@@ -132,12 +133,23 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 				getDefensiveModifiers().stream().map(InteractionModifier::copy).collect(Collectors.toList()),
 				getDescription(),
 				getImgPath()
-		);
+		).setSoundPath(getSoundPath());
+	}
+
+	@Override
+	public ModifiableTerrain setSoundPath(String path) {
+		this.soundPath = path;
+		return this;
 	}
 
 	@Override
 	public void addAbility(Ability ability) {
 		actionMap.get(ability.getClass()).accept(ability, this);
+	}
+
+	@Override
+	public String getSoundPath() {
+		return soundPath;
 	}
 
 	static class IncompleteTerrainException extends RuntimeException {

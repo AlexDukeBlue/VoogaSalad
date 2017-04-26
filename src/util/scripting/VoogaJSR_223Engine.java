@@ -7,8 +7,8 @@ import java.util.Map;
  * @author Created by th174 on 4/7/2017.
  */
 public abstract class VoogaJSR_223Engine implements VoogaScriptEngine {
-	private static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager();
-	private final ScriptEngine engine;
+	private transient static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager();
+	private transient final ScriptEngine engine;
 	private CompiledScript compiledScript;
 
 	protected VoogaJSR_223Engine() {

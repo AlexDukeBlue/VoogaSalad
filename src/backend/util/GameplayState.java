@@ -51,14 +51,6 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.isAuthoringMode = false;
 	}
 
-	private static Map<String, Team> getTeamMap(Collection<Team> teams) {
-		Map<String, Team> teamMap = new HashMap<String, Team>();
-		for (Team team : teams) {
-			teamMap.put(team.getName(), team);
-		}
-		return teamMap;
-	}
-
 	@Override
 	public ImmutablePlayer getCurrentPlayer() {
 		return playerList.get(playerNames.get(currentPlayerNumber));

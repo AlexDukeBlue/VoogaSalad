@@ -2,7 +2,6 @@ package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
-import backend.util.GameplayState;
 import backend.util.HasLocation;
 import controller.Controller;
 import frontend.ClickHandler;
@@ -142,14 +141,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
-			CoordinateTuple unitLocation = getUnitLocation();
-			String unitName = getUnitName();
-			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
-			getController().sendModifier((GameplayState gameState) -> {
-				Unit unitToMove = gameState.getGrid().get(unitLocation).getOccupantByName(unitName);
-				unitToMove.moveTo(gameState.getGrid().get(targetLocation), gameState);
-				return gameState;
-			});
+			getController().moveUnit(getUnitName(),getUnitLocation(),((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
 		}
 		clickHandler.cancel();
 	}

@@ -58,6 +58,9 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		this.polygon = polygonCellView;
 		polygon.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> contextMenu.show(polygon, event.getScreenX(), event.getScreenY()));
 		polygon.setOnMouseClicked(event -> handleClick(event, null));
+		polygon.setOnMouseDragReleased(event -> {
+			handleClick(event, null);
+		});
 		polygon.setStroke(CELL_OUTLINE);
 		polygon.setStrokeWidth(CELL_STROKE);
 		polygonMask = new Polygon(polygon.getPoints().stream().mapToDouble(e -> e).toArray());
@@ -173,7 +176,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	@Override
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
-		unitViews.values().forEach(e -> setClickHandler(clickHandler));
+		unitViews.values().forEach(e -> e.setClickHandler(clickHandler));
 	}
 
 	@Override

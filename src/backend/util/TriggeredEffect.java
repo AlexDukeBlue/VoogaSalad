@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * @author Created by th174 on 4/5/17.
  */
-public interface TriggeredEffect extends PassiveAbility {
+public interface TriggeredEffect extends PassiveAbility, HasSound {
 	@Override
 	TriggeredEffect copy();
 
@@ -24,4 +24,7 @@ public interface TriggeredEffect extends PassiveAbility {
 	interface Effect extends Serializable {
 		void affect(Unit unit, Event event, GameplayState game);
 	}
+
+	@Override
+	TriggeredEffect setSoundPath(String path);
 }

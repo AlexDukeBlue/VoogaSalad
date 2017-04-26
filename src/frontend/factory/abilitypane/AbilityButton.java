@@ -1,10 +1,8 @@
 package frontend.factory.abilitypane;
 
-import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.util.Ability;
-import backend.util.GameplayState;
 import backend.util.HasLocation;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -29,16 +27,7 @@ public class AbilityButton extends VoogaEntityButton {
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation && getEntity() instanceof ActiveAbility &&
 				((ActiveAbility) getEntity()).getLegalTargetCells((Unit) abilityOwner, getController().getGameState()).contains(((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation())) {
-			String abilityTargetName = ((GameBoardObjectView) target).getEntity().getName();
-			CoordinateTuple abilityTargetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
-			String abilityName = getEntity().getName();
-			String unitName = abilityOwner.getName();
-			CoordinateTuple unitLocation = ((Unit) abilityOwner).getLocation();
-			getController().sendModifier((GameplayState gameState) -> {
-				VoogaEntity abilityTarget = gameState.getGrid().get(abilityTargetLocation).getOccupantByName(abilityTargetName);
-				gameState.getGrid().get(unitLocation).getOccupantByName(unitName).useActiveAbility(abilityName, abilityTarget, gameState);
-				return gameState;
-			});
+			getController().useUnitActiveAbility(getEntity().getName(), abilityOwner.getName(), ((Unit) abilityOwner).getLocation(), ((GameBoardObjectView) target).getEntity().getName(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
 		}
 		clickHandler.cancel();
 	}

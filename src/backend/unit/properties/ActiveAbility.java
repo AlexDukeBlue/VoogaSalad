@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  *
  * @author Created by th174 on 3/29/2017.
  */
-public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable, HasShape {
+public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable, HasShape, HasSound {
 	public transient static final ActiveAbility<Unit> CONSUME = new ActiveAbility<>("Consume", (user, target, game) -> {
 		Cell targetCell = target.getCurrentCell();
 		double damage = user.applyAllOffensiveModifiers(10.0, user, game);
@@ -44,6 +44,7 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 	private final AbilityEffect<T> effect;
 	private final GridPattern range;
 	private final double cost;
+	private String soundPath;
 
 	public ActiveAbility(String name, AbilityEffect<T> effect, GridPattern range, String description, String imgPath) {
 		this(name, effect, DEFAULT_ABILITY_COST, range, description, imgPath);
@@ -86,12 +87,23 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 
 	@Override
 	public ActiveAbility<T> copy() {
-		return new ActiveAbility<>(getName(), getAbilityEffect(), getRange(), getDescription(), getImgPath());
+		return new ActiveAbility<>(getName(), getAbilityEffect(), getRange(), getDescription(), getImgPath()).setSoundPath(getSoundPath());
 	}
 
 	@Override
 	public Shape getShape() {
 		return getRange().getShape();
+	}
+
+	@Override
+	public String getSoundPath() {
+		return soundPath;
+	}
+
+	@Override
+	public ActiveAbility<T> setSoundPath(String path) {
+		this.soundPath = path;
+		return this;
 	}
 
 	@FunctionalInterface
