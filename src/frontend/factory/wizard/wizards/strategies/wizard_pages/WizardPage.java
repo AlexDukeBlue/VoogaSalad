@@ -10,11 +10,11 @@ public interface WizardPage {
 
 	void setTitle(StringBinding title);
 
-	String getTitle();
+	StringBinding getTitle();
 
 	void setDescription(StringBinding description);
 
-	String getDescription();
+	StringBinding getDescription();
 	
 	Node getObject();
 

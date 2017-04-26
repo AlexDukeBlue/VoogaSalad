@@ -1,6 +1,5 @@
 package frontend.factory.wizard.wizards.strategies;
 
-import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.ActiveAbility.AbilityEffect;
 import backend.util.AuthoringGameState;
@@ -27,7 +26,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	@Override
 	public ActiveAbility<?> finish() {
-		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(), (AbilityEffect<?>)(scriptingPage.getScriptEngine().get()),gridPage.getGridPattern(), namePage.getDescription(), namePage.getImagePath()) : null;
+		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(), (AbilityEffect<?>)(scriptingPage.getScriptEngine().get()),gridPage.getGridPattern(), namePage.getDescription().getValueSafe(), namePage.getImagePath()) : null;
 	}
 	
 	private void initialize(AuthoringGameState gameState){

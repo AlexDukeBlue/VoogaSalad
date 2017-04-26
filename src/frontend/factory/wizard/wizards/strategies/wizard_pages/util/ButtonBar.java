@@ -1,6 +1,7 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages.util;
 
 import frontend.util.BaseUIManager;
+import javafx.beans.binding.StringBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -21,13 +22,13 @@ import java.util.Map;
 public class ButtonBar extends BaseUIManager<Region> {
 
 	private HBox hbox;
-	private Map<String, Button> buttons;
+	private Map<StringBinding, Button> buttons;
 
-	public ButtonBar(Collection<String> buttonNames) {
+	public ButtonBar(Collection<StringBinding> buttonNames) {
 		initialize(buttonNames);
 	}
 	
-	public Button getButton(String buttonName){
+	public Button getButton(StringBinding buttonName){
 		return buttons.get(buttonName);
 	}
 
@@ -42,12 +43,13 @@ public class ButtonBar extends BaseUIManager<Region> {
 		return hbox;
 	}
 
-	private void initialize(Collection<String> buttonNames) {
+	private void initialize(Collection<StringBinding> buttonNames) {
 		hbox = new HBox();
 		hbox.setAlignment(Pos.BOTTOM_RIGHT);
 		buttons = new HashMap<>();
 		buttonNames.stream().forEachOrdered(buttonName -> {
-			Button button = new Button(buttonName);
+			Button button = new Button();
+			button.textProperty().bind(buttonName);
 			buttons.put(buttonName, button);
 			hbox.getChildren().add(button);
 		});

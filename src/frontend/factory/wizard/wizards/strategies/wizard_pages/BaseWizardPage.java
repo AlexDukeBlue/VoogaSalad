@@ -46,8 +46,8 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	@Override
-	public String getTitle() {
-		return title.getValue();
+	public StringBinding getTitle() {
+		return title;
 	}
 
 	@Override
@@ -56,8 +56,8 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	@Override
-	public String getDescription() {
-		return description.getValue();
+	public StringBinding getDescription() {
+		return description;
 	}
 
 	protected BooleanProperty canNextWritable() {

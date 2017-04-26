@@ -47,6 +47,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private static final String DEFAULT_STYLE_KEY = "DefaultStyleSheet";
 	private static final String API_KEY = "AIzaSyB-TQZwz6yDEvQfHTK2JdWNXLa1LfLXQz8";
 	private static final Map<String, ObservablePolyglot> POLYGLOT_CACHE = new HashMap<>();
+	private static final String DEFAULT_LANGUAGE = "English";
 
 	private final ObjectProperty<String> styleSheet;
 	private final Controller controller;
@@ -113,6 +114,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		if (!POLYGLOT_CACHE.containsKey(resourcePath)){
 			try {
 				POLYGLOT_CACHE.put(resourcePath,new ObservablePolyglot(API_KEY, resourcePath));
+				POLYGLOT_CACHE.get(resourcePath).setLanguage(DEFAULT_LANGUAGE);
 			} catch (PolyglotException e) {
 				throw new Error(e);
 			}
@@ -157,7 +159,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
-			map.put(getPolyglot().get(key).getValueSafe(), fileBundle.getString(key));
+			map.put(key, fileBundle.getString(key));
 		}
 		return (UnmodifiableObservableMap<String, String>) FXCollections
 				.unmodifiableObservableMap(FXCollections.observableMap(map));

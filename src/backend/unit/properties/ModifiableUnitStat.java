@@ -26,7 +26,7 @@ public class ModifiableUnitStat<T extends Number & Comparable<T>> extends Modifi
 			.setMaxValue(1.0)
 			.setDescription("Most active abilities use ability points. They limit the number of actions a unit can do each turn.")
 			.setImgPath("resources/images/ability_points.png");
-	public transient static final ModifiableUnitStat<Double> ENERGY = new ModifiableUnitStat<Double>("ENERGY")
+	public transient static final ModifiableUnitStat<Double> ENERGY = new ModifiableUnitStat<Double>("Energy")
 			.setMinValue(0.0)
 			.setMaxValue(100.0)
 			.setDescription("Energy points are required for and consumed by some powerful abilities.")

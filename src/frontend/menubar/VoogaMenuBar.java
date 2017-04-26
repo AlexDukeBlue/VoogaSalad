@@ -3,18 +3,29 @@
  */
 package frontend.menubar;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
+import backend.grid.GameBoard;
+import backend.player.Team;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.AuthoringClickHandler;
 import frontend.GameplayClickHandler;
 import frontend.View;
+import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -27,13 +38,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 /**
  * @author Stone Mathers Created 4/18/2017
  */
@@ -41,7 +45,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
-	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
+	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem, newGridItem, newTeamItem,
 			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
@@ -73,6 +77,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void initMenuItems() {
 		saveItem = factory.getMenuItem(getPolyglot().get("Save"), e -> save());
+		saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 		loadItem = factory.getMenuItem(getPolyglot().get("Load"), e -> load());
 		homeScreenItem = factory.getMenuItem(getPolyglot().get("HomeScreen"), e -> {
 
@@ -81,13 +86,25 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
 
 		});
+		homeScreenItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
 		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
+		quitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
 		undoItem = factory.getMenuItem(getPolyglot().get("Undo"), e -> getController().undo());
 		undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 		newUnitItem = factory.getMenuItem(getPolyglot().get("CreateNewUnit"), e -> create("unit"));
 		newTerrainItem = factory.getMenuItem(getPolyglot().get("CreateNewTerrain"), e -> create("terrain"));
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
+		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
+			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
+				getController().setGrid((GameBoard)object);
+			});
+		});
+		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
+			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer,object) -> {
+				getController().addTeamTemplates((Team)object);
+			});
+		});
 
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
 		try {
@@ -122,10 +139,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.setClickHandler(new AuthoringClickHandler());
 			getController().enterAuthoringMode();
 		});
+		editModeItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
 			myView.setClickHandler(new GameplayClickHandler());
 			getController().enterGamePlayMode();
 		});
+		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
 			showBrowser("frontend/menubar/help.html");
@@ -163,6 +182,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
+		edit.getItems().add(newGridItem);
+		edit.getItems().add(newTeamItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
@@ -184,9 +205,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		getObject().getMenus().add(file);
 		getObject().getMenus().add(edit);
+		getObject().getMenus().add(view);
 		getObject().getMenus().add(language);
 		getObject().getMenus().add(theme);
-		getObject().getMenus().add(view);
 		getObject().getMenus().add(help);
 	}
 
@@ -231,7 +252,22 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
+		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
+		try {
+//			System.out.println(wizard);
+//			System.out.println(wizard.getPolyglot());
+//			System.out.println(wizard.getPolyglot().getLanguage());
+//			System.out.println(getPolyglot());
+//			System.out.println(getPolyglot().getLanguage());
+			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
+		} catch (PolyglotException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	
+		}
+		
+		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
+		
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
 import backend.grid.ModifiableGameBoard;
+import backend.unit.Unit;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
@@ -11,6 +12,7 @@ import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
 import frontend.interfaces.worldview.GridViewExternal;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -71,6 +73,11 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
 			event.consume();
+		});
+		myScrollPane.setOnKeyPressed(event -> {
+			if(event.getCode().equals(KeyCode.DELETE) || event.getCode().equals(KeyCode.BACK_SPACE)){
+				handleClick(event, null);
+			}
 		});
 		cellViewObjects.addEventFilter(ScrollEvent.ANY, event -> {
 			if (event.isShortcutDown()) {

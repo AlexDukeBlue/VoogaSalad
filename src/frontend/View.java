@@ -76,7 +76,7 @@ public class View extends ClickableUIComponent<Region> {
 		super(controller, new AuthoringClickHandler());
 		myStage = stage;
 		placePanes();
-		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 	}
 
 	private void setViewEditable(boolean editable) {
@@ -135,12 +135,16 @@ public class View extends ClickableUIComponent<Region> {
 		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
 		cancelImg.setFitWidth(50);
 		cancelImg.setFitHeight(50);
+		cancelImg.setSmooth(true);
 		Button cancelButton = new Button("", cancelImg);
 		cancelButton.setCancelButton(true);
 		cancelButton.setPadding(Insets.EMPTY);
-		cancelButton.setOnMouseClicked(event -> getClickHandler().cancel());
+		cancelButton.setOnMouseClicked(event -> {
+			getClickHandler().showDetail(null);
+			getClickHandler().cancel();
+		});
 		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), cancelButton);
-		bottomPane.setDividerPositions(.6,1);
+		bottomPane.setDividerPositions(.6, 1);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
 		cancelButton.prefHeightProperty().bind(bottomPane.heightProperty());
 		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
@@ -180,7 +184,7 @@ public class View extends ClickableUIComponent<Region> {
 				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 			} catch (PolyglotException e) {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText("Language Could Not Be Changed"); //TODO Resource bundle
+				alert.setContentText(getPolyglot().get("LanguageError").getValue());
 				alert.show();
 			}
 		});

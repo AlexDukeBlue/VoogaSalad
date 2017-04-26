@@ -69,7 +69,7 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 		return getMovePattern().getCoordinates().parallelStream()
 				.map(e -> grid.get(e.sum(this.getLocation())))
 				.filter(Objects::nonNull)
-				.filter(e -> getMoveCostByTerrain(e.getTerrain()) < getMovePoints().getCurrentValue())
+				.filter(e -> getMoveCostByTerrain(e.getTerrain()) <= getMovePoints().getCurrentValue())
 				.map(Cell::getLocation)
 				.collect(Collectors.toSet());
 	}

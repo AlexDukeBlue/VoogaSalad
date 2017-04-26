@@ -1,7 +1,6 @@
 package backend.util;
 
 import backend.cell.Terrain;
-import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.GameBoard;
@@ -15,14 +14,7 @@ import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
 import backend.unit.properties.ModifiableUnitStat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,9 +31,9 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
 		this.setAuthoringMode(true);
-		availableTurnActions = new HashMap<Event, Collection<Actionable>>();
-		availableTurnRequirements = new ArrayList<Requirement>();
-		availableObjectives = new ArrayList<Resultant>();
+		availableTurnActions = new HashMap<>();
+		availableTurnRequirements = new ArrayList<>();
+		availableObjectives = new ArrayList<>();
 		templates = new HashMap<>();
 		templates.put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards()));
 		templates.put(TERRAIN, new ModifiableVoogaCollection<>("Terrain", "", "", Terrain.getPredefinedTerrain()));
