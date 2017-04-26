@@ -5,6 +5,7 @@ import backend.grid.ModifiableGameBoard;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
+import polyglot.PolyglotException;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the
@@ -29,14 +30,14 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	public AuthoringGameState finish() {
 		ModifiableGameBoard boardBuilder = new ModifiableGameBoard("");
 		boardBuilder.setName(boardNamePage.getName());
-		boardBuilder.setDescription(boardNamePage.getDescription());
+		boardBuilder.setDescription(boardNamePage.getDescription().getValue());
 		boardBuilder.setImgPath(boardNamePage.getImagePath());
 		boardBuilder.setRows(gridInstantiationPage.getRows());
 		boardBuilder.setColumns(gridInstantiationPage.getCols());
 		boardBuilder.setTemplateCell(gridInstantiationPage.getTemplateCell());
 		boardBuilder.setBoundsHandler(BoundsHandler.INFINITE_BOUNDS);
 		AuthoringGameState gameState = new AuthoringGameState(gameNamePage.getName());
-		gameState.setDescription(gameNamePage.getDescription());
+		gameState.setDescription(gameNamePage.getDescription().getValue());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
 		// gameState.setTeams(additionalTeamWizardsPage.getObjects());
@@ -50,18 +51,17 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 				getPolyglot().get("CreateNewBoardDesc"));
 		gridInstantiationPage = new GridInstantiationPage(getPolyglot().get("Default_GridInstantiation_Title"), 
 				getPolyglot().get("Default_GridInstantiation_Description"));
-		// additionalUnitWizardsPage = new AdditionalWizardsPage<>("Create
-		// Units",
-		// "Use the wizards below to create new units", UnitWizard.class);
-		// additionalTeamWizardsPage = new AdditionalWizardsPage<>("Create
-		// Teams",
-		// "Use the wizards below to create new teams", TeamWizard.class);
-		// additionalTerrainWizardsPage = new AdditionalWizardsPage<>("Create
-		// Terrains",
-		// "Use the wizards below to create new terrains", TerrainWizard.class);
-		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage
-		// ,additionalUnitWizardsPage, additionalTerrainWizardsPage,
-		// additionalTeamWizardsPage
-		);
+		getPolyglot().setOnLanguageChange(event -> {
+			try {
+				gameNamePage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				boardNamePage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				gridInstantiationPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+			} catch (PolyglotException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		
+		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
 	}
 }

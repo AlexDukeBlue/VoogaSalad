@@ -9,6 +9,7 @@ import frontend.factory.wizard.wizards.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.TerrainMovePointPage;
 import javafx.beans.binding.StringBinding;
+import polyglot.PolyglotException;
 
 /**
  * UnitStrategy implements the SelectionStrategy interface in order to allow the
@@ -30,7 +31,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	@Override
 	public Unit finish() {
 		ModifiableUnit unit = new ModifiableUnit(imageNameDescriptionPage.getName());
-		unit.setDescription(imageNameDescriptionPage.getDescription());
+		unit.setDescription(imageNameDescriptionPage.getDescription().getValue());
 		unit.setImgPath(imageNameDescriptionPage.getImagePath());
 		unit.removeActiveAbilities(unit.getActiveAbilities());
 		unit.addActiveAbilities(abilitiesAdderPage.getSelectedAbilities());
@@ -60,6 +61,18 @@ class UnitStrategy extends BaseStrategy<Unit> {
 				getPolyglot().get("Default_TerrainMovePoint_Description"), gameState);
 		gridPatternPage = new GridPatternPage(getPolyglot().get("Default_MovePattern_Title"),
 				getPolyglot().get("Default_MovePattern_Description"), gameState);
+		getPolyglot().setOnLanguageChange(event -> {
+			try {
+				imageNameDescriptionPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				abilitiesAdderPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				terrainMovePointPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				gridPatternPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+			} catch (PolyglotException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
 	}
 

@@ -29,7 +29,9 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
 		getPolyglot().setOnLanguageChange(event -> {
 			try {
+				//getPolyglot().setLanguage(getPolyglot().getLanguage());
 				imageNameDescriptionPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+				unitMovePointPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
 			} catch (PolyglotException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -40,7 +42,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	@Override
 	public Terrain finish() {
 		ModifiableTerrain terrain = new ModifiableTerrain(imageNameDescriptionPage.getName());
-		terrain.setDescription(imageNameDescriptionPage.getDescription());
+		terrain.setDescription(imageNameDescriptionPage.getDescription().getValue());
 		terrain.setImgPath(imageNameDescriptionPage.getImagePath());
 		terrain.setDefaultMoveCost(unitMovePointPage.getValue());
 		return terrain;
