@@ -16,11 +16,15 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+
 
 import java.util.Objects;
 
@@ -142,6 +146,8 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			getController().moveUnit(getUnitName(),getUnitLocation(),((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
+		} else if(event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE) || ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))){
+			getController().removeUnitFromGrid(getUnitName(), getUnitLocation());
 		}
 		clickHandler.cancel();
 	}

@@ -187,7 +187,7 @@ public class View extends ClickableUIComponent<Region> {
 			getObject().getStylesheets().add(newValue);
 		});
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
-		detailPane = DetailPaneFactory.newDetailPane(getClickHandler());
+		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		rightPane = new VBox(new MinimapPane(worldView.getGridView().getObject(), getController()).getObject(), tempPane.getObject());
@@ -201,7 +201,7 @@ public class View extends ClickableUIComponent<Region> {
 				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 			} catch (PolyglotException e) {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText("Language Could Not Be Changed"); //TODO Resource bundle
+				alert.setContentText(getPolyglot().get("LanguageError").getValue());
 				alert.show();
 			}
 		});
