@@ -18,6 +18,10 @@ public class ScriptingPage extends BaseWizardPage {
 	public Optional<VoogaScriptEngine> getScriptEngine() {
 		return dialog.getScriptEngine();
 	}
+	
+	public void setPrompt(String prompt){
+		dialog.setPrompt(prompt);
+	}
 
 	@Override
 	public Region getObject() {

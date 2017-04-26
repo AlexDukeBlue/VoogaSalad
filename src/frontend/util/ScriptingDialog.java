@@ -65,6 +65,10 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	public ReadOnlyBooleanProperty hasCompiled(){
 		return hasCompiled;
 	}
+	
+	public void setPrompt(String prompt){
+		scriptArea.setPromptText(prompt);
+	}
 
 	private void handleException(Exception e) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
