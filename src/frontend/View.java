@@ -170,7 +170,7 @@ public class View extends ClickableUIComponent<Region> {
 			getObject().getStylesheets().add(newValue);
 		});
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
-		detailPane = DetailPaneFactory.newDetailPane(getClickHandler());
+		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		rightPane = new VBox(new MinimapPane(worldView.getGridView().getObject(), getController()).getObject(), tempPane.getObject());
