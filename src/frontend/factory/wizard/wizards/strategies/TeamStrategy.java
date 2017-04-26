@@ -1,13 +1,16 @@
 package frontend.factory.wizard.wizards.strategies;
 
-import backend.player.Player;
+import java.util.ArrayList;
+
 import backend.player.Team;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.ColorPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import polyglot.PolyglotException;
 
 class TeamStrategy extends BaseStrategy<Team> {
 
 	private ImageNameDescriptionPage namePage;
+	private ColorPage colorPage;
 
 	public TeamStrategy() {
 		initialize();
@@ -15,12 +18,14 @@ class TeamStrategy extends BaseStrategy<Team> {
 
 	@Override
 	public Team finish() {
-		return new Team(namePage.getName(), namePage.getDescription().getValue(), namePage.getImagePath(), new Player[0]);
+//		return new Team(namePage.getName(), namePage.getDescription(), colorPage.getColorString(),
+//				namePage.getImagePath(),);
+		return new Team(namePage.getName(), namePage.getDescription().getValueSafe(), colorPage.getColorString(), namePage.getImagePath(), new ArrayList<>());
+		
 	}
 
 	private void initialize() {
 		namePage = new ImageNameDescriptionPage();
-		
 		getPolyglot().setOnLanguageChange(event -> {
 			try {
 				namePage.getPolyglot().setLanguage(getPolyglot().getLanguage());
@@ -29,7 +34,8 @@ class TeamStrategy extends BaseStrategy<Team> {
 				e.printStackTrace();
 			}
 		});
-		getPages().addAll(namePage);
+		colorPage = new ColorPage();
+		getPages().addAll(namePage, colorPage);
 	}
 
 }
