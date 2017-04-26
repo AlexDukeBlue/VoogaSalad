@@ -10,11 +10,13 @@ import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
+import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -26,6 +28,7 @@ import javafx.scene.text.Text;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
@@ -48,11 +51,14 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private String content = "";
 	private String AAContent = "";
 	private VoogaEntity currentSprite;
+	private ResourceBundle resources;
+	private Button editBtn;
 
 	private double PANE_WIDTH = 1000;
 
-	public DetailPane(ClickHandler clickHandler) {
-		super(clickHandler);
+	public DetailPane(ClickHandler clickHandler, Controller controller) {
+		super(controller, clickHandler);
+		resources = ResourceBundle.getBundle("frontend/factory/detailpane/resources");
 		paneSetup();
 		setLabel();
 		clearContent();
@@ -140,21 +146,26 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
 		unit.getUnitStats().forEach(e -> addString(e.getName(), e.getCurrentValue().toString()));
 		addString("Move Pattern", unit.getMovePattern().toString());
+		createButton(unit, resources.getString("Unit"));
 		return content;
 	}
-
-//	private void setAbilityPaneContent(Unit unit) {
-//		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
-//		Label AALabel = new Label(AAContent);
-//		AAPane.getChildren().add(AALabel);
-//	}
 
 	private String setTerrainContent(Terrain terrain) {
 		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());
 		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
+		createButton(terrain, "Terrain");
 		return content;
 	}
 
+	private void createButton(VoogaEntity unit, String unitType) {
+		editBtn = new Button("Edit details");
+		infoPane.getChildren().add(editBtn);
+		editBtn.setOnMouseClicked(e -> {
+			DetailEdit edits = new DetailEdit(unit, unitType, getController());
+		}
+		);
+	}
+	
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
 		content = checkForNull(label, content);
 		for (VoogaEntity o : collection) {
@@ -185,7 +196,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private void clearContent() {
 		content = "";
 		AAContent = "";
-		infoPane.getChildren().remove(spriteInfo);
+		infoPane.getChildren().removeAll(spriteInfo, editBtn);
 		AAPane.getChildren().clear();
 		imagePane.getChildren().clear();
 	}

@@ -62,6 +62,6 @@ public class GridPattern extends ModifiableVoogaObject<GridPattern> implements V
 
 	@Override
 	public Shape getShape() {
-		return Shape.fromDimension(relativeCoordinates.stream().findAny().orElse(null).dimension());
+		return Shape.fromDimension(relativeCoordinates.stream().findAny().orElse(CoordinateTuple.getOrigin(2)).dimension());
 	}
 }
