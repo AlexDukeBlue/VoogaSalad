@@ -65,5 +65,10 @@ public final class ChatMessage {
 		public Modifier<GameplayState> getSendMessageModifier(String message, String senderName, String recipientName) {
 			return gameplayModifierBuilder.buildFrom(message, senderName, recipientName);
 		}
+
+		@Override
+		public String toString() {
+			return super.toString();
+		}
 	}
 }

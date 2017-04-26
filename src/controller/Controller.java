@@ -144,5 +144,7 @@ public interface Controller {
 
 	void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName);
 
+	void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation);
+
 	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation);
 }

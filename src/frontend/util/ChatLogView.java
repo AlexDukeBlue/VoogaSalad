@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 
 public class ChatLogView extends BaseUIManager<BorderPane> {
-	private final String HEADER;
+	private final String header;
 	private final BorderPane pane;
 	private final TextArea textArea;
 	private final MediaPlayer mediaPlayer;
@@ -42,10 +42,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	public ChatLogView(Controller controller) {
 		super(controller);
 		String formatString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----" + getPolyglot().get("Joined").getValueSafe() + " [No place like 127.0.0.1]'s " + getPolyglot().get("chat room").getValueSafe() + "!----\n\n---%s----\n\n";
-		HEADER = String.format(
-				formatString,
-				Instant.now().atZone(ZoneId.systemDefault())
-						.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
+		header = String.format(formatString, Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
 		showHideArrow = new ImageView(View.getImg(getResourceBundle().getString("trianglePath")));
 		showHideArrow.setSmooth(true);
@@ -76,7 +73,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	private TextArea initTextArea() {
-		TextArea textArea = new TextArea(HEADER);
+		TextArea textArea = new TextArea(header);
 		textArea.setEditable(false);
 		textArea.setWrapText(true);
 		textArea.setMouseTransparent(true);
@@ -89,7 +86,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		List<ChatMessage> chatlog = getController().getPlayer(getController().getPlayerName()).getChatLog();
 		if (chatlog.size() > logLength) {
 			logLength = chatlog.size();
-			textArea.setText(HEADER + chatlog.stream().map(Object::toString).collect(Collectors.joining("\n\n")));
+			textArea.setText(header + chatlog.stream().map(Object::toString).collect(Collectors.joining("\n\n")));
 			textArea.positionCaret(textArea.getText().length());
 			mediaPlayer.seek(Duration.ZERO);
 			mediaPlayer.play();
@@ -105,26 +102,22 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		Label label1 = new Label(getPolyglot().get("To").getValueSafe() + ": ");
 		getPolyglot().setOnLanguageChange(event -> {
 			label1.setText(getPolyglot().get("To").getValueSafe() + ": ");
-			System.out.println("Language change detected in Chatlogview");
 		});
 		label1.setMinWidth(30);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
-		chatModeChooser.setOnAction(
-				event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
+		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setMinWidth(200);
 		textContentInputField.setPrefWidth(1000);
-		textContentInputField.setOnKeyPressed(
-				evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
+		textContentInputField.setOnKeyPressed(evt -> submitMessage(evt, chatModeChooser, textContentInputField, messageRecipientField));
 		textContentInputField.setOnMouseClicked(evt -> setExpandedState(true));
 		bottomBox.getChildren().addAll(chatModeChooser, textContentInputField, showHideArrow);
 		return bottomBox;
 	}
 
 	private ComboBox<ChatMessage.AccessLevel> initComboBox() {
-		ComboBox<ChatMessage.AccessLevel> chatModeChooser = new ComboBox<>(
-				FXCollections.observableArrayList(ChatMessage.AccessLevel.values()));
+		ComboBox<ChatMessage.AccessLevel> chatModeChooser = new ComboBox<>(FXCollections.observableArrayList(ChatMessage.AccessLevel.values()));
 		chatModeChooser.setMinWidth(110);
 		chatModeChooser.setValue(ChatMessage.AccessLevel.ALL);
 		return chatModeChooser;

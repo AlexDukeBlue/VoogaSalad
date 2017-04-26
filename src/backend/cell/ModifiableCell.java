@@ -55,6 +55,11 @@ public class ModifiableCell implements Cell {
 		return this;
 	}
 
+	public ModifiableCell removeOccupants(String... unitNames){
+		removeOccupants(Arrays.stream(unitNames).map(this::getOccupantByName).toArray(Unit[]::new));
+		return this;
+	}
+
 	@Override
 	public void startTurn(GameplayState gameState) {
 		processTriggers(Event.TURN_START, gameState);

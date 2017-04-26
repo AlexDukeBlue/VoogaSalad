@@ -65,7 +65,7 @@ public abstract class ClickHandler {
 		abilityPane.setContent(null);
 	}
 
-	private void showDetail(ClickableUIComponent clickedComponent) {
+	void showDetail(ClickableUIComponent clickedComponent) {
 		if (clickedComponent instanceof GameBoardObjectView) {
 			detailPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 			abilityPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());

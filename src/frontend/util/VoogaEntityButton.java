@@ -23,10 +23,13 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		super(controller, clickHandler);
 		this.entity = entity;
 		ImageView sprite = new ImageView(View.getImg(entity.getImgPath()));
+		sprite.setSmooth(true);
+		sprite.setPreserveRatio(true);
 		entityButton = new Button("", sprite);
 		entityButton.setPadding(new Insets(10, 10, 10, 10));
 		sprite.setFitWidth(size);
 		sprite.setFitHeight(size);
+		entityButton.setPrefSize(size,size);
 		entityButton.setTooltip(new Tooltip(entity.getFormattedName()));
 		entityButton.setPadding(Insets.EMPTY);
 		entityButton.setOnMouseClicked(event -> setAsSelected());
@@ -45,7 +48,7 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		return entity;
 	}
 
-	protected final void setEntity(VoogaEntity entity){
+	protected final void setEntity(VoogaEntity entity) {
 		this.entity = entity;
 	}
 

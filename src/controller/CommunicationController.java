@@ -395,6 +395,15 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
+	public void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation) {
+		sendModifier((AuthoringGameState gameState) -> {
+			gameState.getGrid().get(unitLocation).removeOccupants(unitName);
+			return gameState;
+		});
+
+	}
+g
+	@Override
 	public void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation) {
 		sendModifier((GameplayState gameState) -> {
 			VoogaEntity abilityTarget = gameState.getGrid().get(targetLocation).getOccupantByName(targetName);
