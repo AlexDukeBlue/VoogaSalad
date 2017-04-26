@@ -147,7 +147,7 @@ public final class SimpleUnitView extends SelectableUIComponent<Pane> implements
 		if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			getController().moveUnit(getUnitName(),getUnitLocation(),((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
 		} else if(event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE) || ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))){
-			getController(); //TODO
+			getController().removeUnitFromGrid(getUnitName(), getUnitLocation());
 		}
 		clickHandler.cancel();
 	}

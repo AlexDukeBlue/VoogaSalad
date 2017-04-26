@@ -75,7 +75,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 			event.consume();
 		});
 		myScrollPane.setOnKeyPressed(event -> {
-			if(event.getCode().equals(KeyCode.DELETE)){
+			if(event.getCode().equals(KeyCode.DELETE) || event.getCode().equals(KeyCode.BACK_SPACE)){
 				handleClick(event, null);
 			}
 		});
