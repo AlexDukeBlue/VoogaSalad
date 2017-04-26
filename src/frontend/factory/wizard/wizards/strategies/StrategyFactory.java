@@ -9,27 +9,34 @@ public class StrategyFactory {
 	private static final Map<String, Class<? extends WizardStrategy<?>>> strategyMap = new HashMap<>();
 
 	static {
-		strategyMap.put("activeability", ActiveAbilityStrategy.class);
 		strategyMap.put("gamestate", GameStrategy.class);
+		strategyMap.put("grid", GridStrategy.class);
 		strategyMap.put("team", TeamStrategy.class);
 		strategyMap.put("terrain", TerrainStrategy.class);
 		strategyMap.put("unit", UnitStrategy.class);
+		strategyMap.put("activeability", ActiveAbilityStrategy.class);
+		strategyMap.put("unittriggeredeffect", TriggeredEffectStrategy.class);
+		strategyMap.put("celltriggeredeffect", TriggeredEffectStrategy.class);
+		strategyMap.put("offensivemodifier", InteractionModifierStrategy.class);
+		strategyMap.put("defensivemodifier", InteractionModifierStrategy.class);
+		strategyMap.put("turnrequirement", TurnRequirementStrategy.class);
+		strategyMap.put("turnaction", TurnActionStrategy.class);
+		strategyMap.put("endcondition", EndConditionStrategy.class);
+		strategyMap.put("boundshandler", GridBoundsStrategy.class);
 	}
 
 	public static WizardStrategy<?> newStrategy(String categoryName, AuthoringGameState gameState) {
 		categoryName = categoryName.replaceAll(" ", "").toLowerCase().replaceAll("ies$", "y").replaceAll("s$", "");
+		System.out.println(categoryName);
+		System.out.println(strategyMap.get(categoryName));
 		try {
 			return strategyMap.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
 		} catch (Exception e) {
 			try {
-//				System.out.println(strategyMap);
-//				System.out.println(strategyMap.get(categoryName));
-//				System.out.println(strategyMap.get(categoryName).getConstructor());
-//				System.out.println(strategyMap.get(categoryName).getConstructor().newInstance());
 				return strategyMap.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
-				e.printStackTrace();
-				throw new Error("Wizard not supported: " + categoryName, e1);
+				e1.printStackTrace();
+				return new WizardUnsupportedStrategy();
 			}
 		}
 	}

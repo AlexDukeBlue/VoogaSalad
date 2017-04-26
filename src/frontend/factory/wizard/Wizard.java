@@ -32,7 +32,7 @@ import javafx.stage.Stage;
  */
 public class Wizard<T> extends BaseUIManager<Region> {
 	private static final Collection<String> buttonNames = new ArrayList<>(
-			Arrays.asList("Previous", "Cancel", "Next", "Finish"));
+			Arrays.asList("Cancel", "Previous", "Next", "Finish"));
 
 	private WizardStrategy<T> selectionStrategy;
 	private BorderPane borderPane;
@@ -115,7 +115,9 @@ public class Wizard<T> extends BaseUIManager<Region> {
 
 		borderPane.setCenter(selectionStrategy.getObject());
 		borderPane.setBottom(buttonBar.getObject());
-
+		borderPane.getStylesheets().clear();
+		borderPane.getStylesheets().add(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
+		
 		stage.setScene(new Scene(borderPane));
 		show();
 	}

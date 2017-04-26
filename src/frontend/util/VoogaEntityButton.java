@@ -1,12 +1,19 @@
 package frontend.util;
 
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.View;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -32,6 +39,7 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		entityButton.setOnMouseClicked(event -> setAsSelected());
 		entityButton.setOnDragDetected(event -> {
 			getObject().startFullDrag();
+			getObject().setCursor(new ImageCursor(sprite.snapshot(null, null)));
 			setAsSelected();
 		});
 	}

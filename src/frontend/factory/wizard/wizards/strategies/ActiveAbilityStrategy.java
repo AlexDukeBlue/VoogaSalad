@@ -1,6 +1,5 @@
 package frontend.factory.wizard.wizards.strategies;
 
-import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.ActiveAbility.AbilityEffect;
 import backend.util.AuthoringGameState;
