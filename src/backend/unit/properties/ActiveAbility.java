@@ -73,7 +73,7 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 
 	public Collection<CoordinateTuple> getLegalTargetCells(Unit user, ReadonlyGameplayState readonlyGameplayState) {
 		return getRange().parallelStream()
-				.filter(e -> Objects.nonNull(user.getLocation()) && user.getAbilityPoints().getCurrentValue() >= cost)
+				.filter(e -> Objects.nonNull(user.getLocation()))
 				.map(e -> readonlyGameplayState.getGrid().get(e.sum(user.getLocation())))
 				.filter(Objects::nonNull)
 				.map(Cell::getLocation)
