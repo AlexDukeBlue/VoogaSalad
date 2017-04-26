@@ -76,7 +76,7 @@ public class View extends ClickableUIComponent<Region> {
 		super(controller, new AuthoringClickHandler());
 		myStage = stage;
 		placePanes();
-		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("Default Theme"));
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 	}
 
 	private void setViewEditable(boolean editable) {

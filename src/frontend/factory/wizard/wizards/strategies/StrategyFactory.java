@@ -33,6 +33,7 @@ public class StrategyFactory {
 			try {
 				return strategyMap.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				return new WizardUnsupportedStrategy();
 			}
 		}
