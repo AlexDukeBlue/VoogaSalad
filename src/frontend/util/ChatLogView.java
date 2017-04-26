@@ -54,8 +54,6 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		pane.setBottom(initTextInputBox());
 		pane.setPickOnBounds(true);
 		mediaPlayer = new MediaPlayer(new Media(Paths.get(getResourceBundle().getString("steamMessageSoundPath")).toUri().toString()));
-		pane.getStylesheets().clear();
-		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("No Theme"));
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 
 	public void setExpandedState(boolean expandedState) {
 		pane.setCenter(expandedState ? textArea : null);
-		showHideArrow.setRotate(expandedState ? 180 : 0);
+		showHideArrow.setRotate(expandedState ? 270 : 0);
 	}
 
 	public boolean isExpanded() {

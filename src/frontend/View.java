@@ -39,6 +39,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -132,21 +133,37 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void placePanes() {
 		initPanes();
+		Button endTurnButton = new Button(getPolyglot().get("EndTurn").getValueSafe());
+		endTurnButton.setOnMouseClicked(e -> {
+			getClickHandler().cancel();
+			getController().endTurn();
+		});
+		endTurnButton.setMinWidth(70);
+		endTurnButton.setPadding(new Insets(5, 2, 5, 2));
+		endTurnButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
-		cancelImg.setFitWidth(50);
-		cancelImg.setFitHeight(50);
+		cancelImg.setPreserveRatio(true);
 		cancelImg.setSmooth(true);
+		cancelImg.setFitWidth(50);
 		Button cancelButton = new Button("", cancelImg);
 		cancelButton.setCancelButton(true);
 		cancelButton.setPadding(Insets.EMPTY);
+		cancelButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		cancelButton.setOnMouseClicked(event -> {
 			getClickHandler().showDetail(null);
 			getClickHandler().cancel();
 		});
-		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), cancelButton);
+		VBox box = new VBox(endTurnButton, cancelButton);
+		box.setPadding(Insets.EMPTY);
+		box.setSpacing(0);
+		box.setFillWidth(true);
+		VBox.setVgrow(endTurnButton, Priority.ALWAYS);
+		VBox.setVgrow(cancelButton, Priority.ALWAYS);
+		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), box);
 		bottomPane.setDividerPositions(.6, 1);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
-		cancelButton.prefHeightProperty().bind(bottomPane.heightProperty());
+		box.prefHeightProperty().bind(bottomPane.heightProperty());
+		box.prefWidthProperty().bind(box.widthProperty());
 		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
 		worldAndDetailPane.setDividerPositions(1);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);

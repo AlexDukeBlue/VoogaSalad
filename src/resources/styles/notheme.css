@@ -1,21 +1,20 @@
 .combo-box-base, .cell, .text-area, .text-field, .hbox, .label {
     -fx-font-size: 13px;
     -fx-font-family: Arial;
-    -fx-background-color: transparent;
     -fx-focus-color: transparent;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 7;
-    -fx-border-radius: 7;
+    -fx-border-radius: 0;
 }
 
 .combo-box-base, .cell {
-    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-text-fill: #ffffff;
     -fx-alignment: center;
 }
 
 .text-area {
-    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-font-size: 14px;
     -fx-text-fill: #ffffff;
     -fx-padding: 15px 30px 15px 30px;
@@ -23,7 +22,7 @@
 }
 
 .text-field {
-    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-text-fill: #ffffff;
 }
 
@@ -33,7 +32,6 @@
 
 .text-area .scroll-pane .viewport {
     -fx-background-color: transparent;
-    -fx-focus-color: rgba(0, 0, 0, 0.55)
 }
 
 .text-area .scroll-pane .content {
@@ -49,7 +47,7 @@
 
 .label {
     -fx-text-fill: #ffffff;
-    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-padding: 5;
 }
 
