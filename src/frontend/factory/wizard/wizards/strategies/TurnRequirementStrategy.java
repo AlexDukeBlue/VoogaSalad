@@ -7,7 +7,7 @@ public class TurnRequirementStrategy extends NameScriptBaseStrategy<Requirement>
 	public TurnRequirementStrategy() {
 		setTitle(getPolyglot().get("TurnRequirementStrategyTitle"));
 		setDescription(getPolyglot().get("TurnRequirementStrategyDescription"));
-		setScriptPrompt("this is a prompt");
+		setScriptPrompt("TurnRequirement_Example_");
 	}
 	
 	@Override

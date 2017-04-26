@@ -19,8 +19,12 @@ public class ScriptingPage extends BaseWizardPage {
 		return dialog.getScriptEngine();
 	}
 	
-	public void setPrompt(String prompt){
-		dialog.setPrompt(prompt);
+	public void setPrompt(String strat){
+		dialog.setPrompt(strat);
+	}
+	
+	public ScriptingDialog getDialog(){
+		return dialog;
 	}
 
 	@Override

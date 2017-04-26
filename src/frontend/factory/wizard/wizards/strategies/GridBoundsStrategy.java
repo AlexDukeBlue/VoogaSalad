@@ -8,7 +8,7 @@ public class GridBoundsStrategy extends NameScriptBaseStrategy<BoundsHandler>{
 	public GridBoundsStrategy() {
 		setTitle(getPolyglot().get("GridBoundsStrategyTitle"));
 		setDescription(getPolyglot().get("GridBoundsStrategyDescription"));
-		setScriptPrompt("this is a prompt");
+		setScriptPrompt("GridBounds_Example_");
 	}
 
 	@Override

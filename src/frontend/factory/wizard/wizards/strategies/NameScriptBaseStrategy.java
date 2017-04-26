@@ -34,12 +34,16 @@ public abstract class NameScriptBaseStrategy<T> extends BaseStrategy<T> {
 		return namePage.getImagePath();
 	}
 	
-	protected void setScriptPrompt(String prompt){
-		scriptingPage.setPrompt(prompt);
+	protected void setScriptPrompt(String strat){
+		scriptingPage.setPrompt(strat);
 	}
 
 	protected VoogaScriptEngine getScriptEngine() {
 		return scriptingPage.getScriptEngine().isPresent() ? scriptingPage.getScriptEngine().get() : null;
+	}
+	
+	public ScriptingPage getPage(){
+		return scriptingPage;
 	}
 
 	private void initialize() {
