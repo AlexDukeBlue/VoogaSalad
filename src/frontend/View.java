@@ -184,7 +184,7 @@ public class View extends ClickableUIComponent<Region> {
 				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 			} catch (PolyglotException e) {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText("Language Could Not Be Changed"); //TODO Resource bundle
+				alert.setContentText(getPolyglot().get("LanguageError").getValue());
 				alert.show();
 			}
 		});

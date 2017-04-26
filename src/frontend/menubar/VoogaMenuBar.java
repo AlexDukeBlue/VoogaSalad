@@ -45,8 +45,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
-	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
-			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem, newTeamItem,
+	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem, newGridItem, newTeamItem,
 			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
@@ -87,7 +86,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
 
 		});
-		homeScreenItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN));
+		homeScreenItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
 		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
 		quitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
 		undoItem = factory.getMenuItem(getPolyglot().get("Undo"), e -> getController().undo());
@@ -96,10 +95,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newTerrainItem = factory.getMenuItem(getPolyglot().get("CreateNewTerrain"), e -> create("terrain"));
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
-		newTriggeredAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewTriggeredAbility"),
-				e -> create("triggeredability"));
-		newInteractionModifierItem = factory.getMenuItem(getPolyglot().get("CreateNewInteractionModifier"),
-				e -> create("interactionmodifier"));
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
 			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
 				getController().setGrid((GameBoard)object);
@@ -187,8 +182,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
-//		edit.getItems().add(newTriggeredAbilityItem);
-//		edit.getItems().add(newInteractionModifierItem);
 		edit.getItems().add(newGridItem);
 		edit.getItems().add(newTeamItem);
 
