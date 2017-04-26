@@ -95,7 +95,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 				e -> create("interactionmodifier"));
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
 			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
-				getController().getAuthoringGameState().setGrid((GameBoard)object);
+				getController().setGrid((GameBoard)object);
 			});
 		});
 

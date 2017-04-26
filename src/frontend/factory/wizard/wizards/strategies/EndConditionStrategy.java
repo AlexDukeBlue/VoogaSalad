@@ -2,12 +2,11 @@ package frontend.factory.wizard.wizards.strategies;
 
 import backend.game_engine.Resultant;
 
-public class EndConditionStrategy extends BaseStrategy<Resultant>{
+public class EndConditionStrategy extends NameScriptBaseStrategy<Resultant>{
 
 	@Override
 	public Resultant finish() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Resultant(getScriptEngine(), getName(), getDescription(), getImgPath());
 	}
 
 }

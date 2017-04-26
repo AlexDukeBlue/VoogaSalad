@@ -2,12 +2,11 @@ package frontend.factory.wizard.wizards.strategies;
 
 import backend.unit.properties.InteractionModifier;
 
-public class InteractionModifierStrategy extends BaseStrategy<InteractionModifier<?>>{
+public class InteractionModifierStrategy extends NameScriptBaseStrategy<InteractionModifier<?>>{
 
 	@Override
 	public InteractionModifier<?> finish() {
-		// TODO Auto-generated method stub
-		return null;
+		return new InteractionModifier<>(getName(), (InteractionModifier.Modifier<?>)getScriptEngine(), getDescription(), getImgPath(), "");
 	}
 
 }
