@@ -115,7 +115,9 @@ public class Wizard<T> extends BaseUIManager<Region> {
 
 		borderPane.setCenter(selectionStrategy.getObject());
 		borderPane.setBottom(buttonBar.getObject());
-
+		borderPane.getStylesheets().clear();
+		borderPane.getStylesheets().add(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
+		
 		stage.setScene(new Scene(borderPane));
 		show();
 	}
