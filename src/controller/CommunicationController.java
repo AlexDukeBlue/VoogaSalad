@@ -398,7 +398,7 @@ public class CommunicationController implements Controller {
 	public void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation) {
 		sendModifier((GameplayState gameState) -> {
 			VoogaEntity abilityTarget = gameState.getGrid().get(targetLocation).getOccupantByName(targetName);
-			gameState.getGrid().get(targetLocation).getOccupantByName(targetName).useActiveAbility(abilityName, abilityTarget, gameState);
+			gameState.getGrid().get(userLocation).getOccupantByName(userName).useActiveAbility(abilityName, abilityTarget, gameState);
 			return gameState;
 		});
 	}

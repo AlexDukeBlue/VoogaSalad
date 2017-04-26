@@ -42,7 +42,7 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	@Override
 	default Object doUnserialize(Serializable serializableObject) throws VoogaScriptException {
 		try {
-			return eval(createBindings("serializable", serializableObject));
+			return eval(createBindings("serializedObject", serializableObject));
 		} catch (ClassCastException e) {
 			throw new VoogaScriptException(e);
 		}
