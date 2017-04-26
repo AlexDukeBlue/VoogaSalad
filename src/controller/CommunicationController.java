@@ -402,7 +402,7 @@ public class CommunicationController implements Controller {
 		});
 
 	}
-g
+
 	@Override
 	public void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation) {
 		sendModifier((GameplayState gameState) -> {
