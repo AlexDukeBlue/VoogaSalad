@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import backend.grid.GameBoard;
+import backend.player.Team;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.AuthoringClickHandler;
@@ -45,7 +46,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
-			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem,
+			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem, newTeamItem,
 			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
@@ -77,6 +78,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void initMenuItems() {
 		saveItem = factory.getMenuItem(getPolyglot().get("Save"), e -> save());
+		saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 		loadItem = factory.getMenuItem(getPolyglot().get("Load"), e -> load());
 		homeScreenItem = factory.getMenuItem(getPolyglot().get("HomeScreen"), e -> {
 
@@ -85,7 +87,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
 
 		});
+		homeScreenItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN));
 		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
+		quitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
 		undoItem = factory.getMenuItem(getPolyglot().get("Undo"), e -> getController().undo());
 		undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 		newUnitItem = factory.getMenuItem(getPolyglot().get("CreateNewUnit"), e -> create("unit"));
@@ -99,6 +103,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
 			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
 				getController().setGrid((GameBoard)object);
+			});
+		});
+		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
+			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer,object) -> {
+				getController().addTeamTemplates((Team)object);
 			});
 		});
 
@@ -135,10 +144,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			myView.setClickHandler(new AuthoringClickHandler());
 			getController().enterAuthoringMode();
 		});
+		editModeItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
 			myView.setClickHandler(new GameplayClickHandler());
 			getController().enterGamePlayMode();
 		});
+		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
 			showBrowser("frontend/menubar/help.html");
@@ -179,6 +190,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 //		edit.getItems().add(newTriggeredAbilityItem);
 //		edit.getItems().add(newInteractionModifierItem);
 		edit.getItems().add(newGridItem);
+		edit.getItems().add(newTeamItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
@@ -200,9 +212,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		getObject().getMenus().add(file);
 		getObject().getMenus().add(edit);
+		getObject().getMenus().add(view);
 		getObject().getMenus().add(language);
 		getObject().getMenus().add(theme);
-		getObject().getMenus().add(view);
 		getObject().getMenus().add(help);
 	}
 

@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
+import backend.cell.Terrain;
+import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
@@ -17,6 +19,7 @@ import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 
 
 /**
@@ -39,7 +42,9 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		entityButton.setOnMouseClicked(event -> setAsSelected());
 		entityButton.setOnDragDetected(event -> {
 			getObject().startFullDrag();
-			getObject().setCursor(new ImageCursor(sprite.snapshot(null, null)));
+			if(entity instanceof Unit || entity instanceof Terrain){
+				getObject().setCursor(new ImageCursor(sprite.snapshot(null, null)));
+			}
 			setAsSelected();
 		});
 	}

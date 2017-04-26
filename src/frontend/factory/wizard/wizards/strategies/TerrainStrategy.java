@@ -16,7 +16,6 @@ import polyglot.PolyglotException;
 class TerrainStrategy extends BaseStrategy<Terrain> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
-	// private AbilitiesAdderPage abilitiesAdderPage;
 	private UnitMovePointPage unitMovePointPage;
 
 	public TerrainStrategy(AuthoringGameState gameState) {
