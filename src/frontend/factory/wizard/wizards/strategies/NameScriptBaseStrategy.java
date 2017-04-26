@@ -27,7 +27,7 @@ public abstract class NameScriptBaseStrategy<T> extends BaseStrategy<T> {
 	}
 
 	protected String getDescription() {
-		return namePage.getDescription();
+		return namePage.getDescription().getValueSafe();
 	}
 
 	protected String getImgPath() {

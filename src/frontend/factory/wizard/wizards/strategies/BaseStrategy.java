@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import polyglot.PolyglotException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -110,8 +111,8 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		if (canGoToPage(newPageNum)) {
 			WizardPage page = pages.get(newPageNum);
 			scrollPane.setContent(page.getObject());
-			title.setText(page.getTitle());
-			description.setText(page.getDescription());
+			title.setText(page.getTitle().getValue());
+			description.setText(page.getDescription().getValue());
 
 			canPrevious.unbind();
 			canPrevious.setValue(newPageNum != 0);
@@ -159,6 +160,17 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 				}
 			}
 		});
+//		getPolyglot().setOnLanguageChange(event -> {
+//			try {
+//				//getPolyglot().setLanguage(getPolyglot().getLanguage());
+//				title.getPolyglot().setLanguage(getPolyglot().getLanguage());
+//				unitMovePointPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
+//			} catch (PolyglotException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		});
+		
 		this.pages.addAll(pages);
 	}
 
