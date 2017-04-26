@@ -28,7 +28,7 @@ public class ShadowHighlighter implements Highlighter {
 	@Override
 	public void highlight(Node node) {
 		DropShadow ds = new DropShadow(15, myShadowColor);
-		ds.setSpread(.3);
+		ds.setSpread(.5);
 		node.setEffect(ds);
 	}
 

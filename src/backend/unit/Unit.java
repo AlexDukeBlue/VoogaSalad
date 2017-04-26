@@ -3,16 +3,10 @@ package backend.unit;
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
-import backend.grid.CoordinateTuple;
-import backend.grid.GameBoard;
-import backend.grid.GridPattern;
-import backend.grid.ModifiableGameBoard;
+import backend.grid.*;
 import backend.player.Player;
 import backend.player.Team;
-import backend.unit.properties.ActiveAbility;
-import backend.unit.properties.Faction;
-import backend.unit.properties.InteractionModifier;
-import backend.unit.properties.UnitStat;
+import backend.unit.properties.*;
 import backend.util.*;
 
 import java.util.*;
@@ -48,11 +42,19 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 	Collection<? extends UnitStat> getUnitStats();
 
 	default UnitStat<Integer> getMovePoints() {
-		return getUnitStat("Movepoints");
+		return getUnitStat(ModifiableUnitStat.MOVEPOINTS.getName());
 	}
 
 	default UnitStat<Double> getHitPoints() {
-		return getUnitStat("Hitpoints");
+		return getUnitStat(ModifiableUnitStat.HITPOINTS.getName());
+	}
+
+	default UnitStat<Double> getAbilityPoints() {
+		return getUnitStat(ModifiableUnitStat.ABILITYPOINTS.getName());
+	}
+
+	default UnitStat<Double> getEnergy() {
+		return getUnitStat(ModifiableUnitStat.ENERGY.getName());
 	}
 
 	default void useActiveAbility(String activeAbilityName, VoogaEntity target, GameplayState gameState) {
@@ -67,7 +69,7 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 		return getMovePattern().getCoordinates().parallelStream()
 				.map(e -> grid.get(e.sum(this.getLocation())))
 				.filter(Objects::nonNull)
-				.filter(e -> getMoveCostByTerrain(e.getTerrain()) < getMovePoints().getCurrentValue())
+				.filter(e -> getMoveCostByTerrain(e.getTerrain()) <= getMovePoints().getCurrentValue())
 				.map(Cell::getLocation)
 				.collect(Collectors.toSet());
 	}
@@ -198,5 +200,10 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 	default Unit add(VoogaEntity entity) {
 		DISPATCH_MAP.get(entity.getClass()).accept(entity, this);
 		return this;
+	}
+
+	@Override
+	default Shape getShape() {
+		return getMovePattern().getShape();
 	}
 }

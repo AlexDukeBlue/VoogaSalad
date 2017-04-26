@@ -1,24 +1,24 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
+import backend.util.HasShape;
 import frontend.View;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.HorizontalTableInputView;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.scene.layout.Region;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * The WizardPage for letting users add abilities
- * @author Andreas
  *
+ * @author Andreas
  */
 public class AbilitiesAdderPage extends BaseWizardPage {
 
@@ -37,16 +37,18 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 
 	private void initialize(AuthoringGameState gameState) {
 		table = new VerticalTableInputView();
-		
-		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt") , getPolyglot().get("HP"));
+
+		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt"), getPolyglot().get("HP"));
 		table.getChildren().add(hprow);
-		
+
 		rowToAbility = new HashMap<>();
-		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).forEach(ability -> {
-			SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()), ability.getName(), ability.getDescription());
-			rowToAbility.put(row, (ActiveAbility<?>) ability);
-			table.getChildren().add(row);
-		});
+		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).stream()
+				.filter(e -> ((HasShape) e).getShape().equals(gameState.getGrid().getShape()))
+				.forEach(ability -> {
+					SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()), ability.getName(), ability.getDescription());
+					rowToAbility.put(row, (ActiveAbility<?>) ability);
+					table.getChildren().add(row);
+				});
 		canNextWritable().setValue(true);
 	}
 
@@ -54,8 +56,8 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 		return rowToAbility.keySet().stream().filter(SelectableInputRow::getSelected).map(row -> rowToAbility.get(row))
 				.collect(Collectors.toList());
 	}
-	
-	public Integer getHP(){
+
+	public Integer getHP() {
 		return hprow.getValue();
 	}
 

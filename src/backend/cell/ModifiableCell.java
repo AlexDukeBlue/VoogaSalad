@@ -5,7 +5,10 @@ import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.util.*;
+import backend.util.Event;
+import backend.util.GameplayState;
+import backend.util.ModifiableTriggeredEffect;
+import backend.util.TriggeredEffect;
 
 import java.util.*;
 
@@ -55,11 +58,13 @@ public class ModifiableCell implements Cell {
 	@Override
 	public void startTurn(GameplayState gameState) {
 		processTriggers(Event.TURN_START, gameState);
+		getOccupants().forEach(e -> e.startTurn(gameState));
 	}
 
 	@Override
 	public void endTurn(GameplayState gameState) {
 		processTriggers(Event.TURN_END, gameState);
+		getOccupants().forEach(e -> e.endTurn(gameState));
 	}
 
 	@Override

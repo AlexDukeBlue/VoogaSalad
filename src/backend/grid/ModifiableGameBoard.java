@@ -1,6 +1,7 @@
 package backend.grid;
 
 import backend.cell.Cell;
+import backend.util.GameplayState;
 import backend.util.ModifiableVoogaObject;
 
 import java.util.Collection;
@@ -13,8 +14,7 @@ import java.util.stream.IntStream;
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoard>
-		implements GameBoard, GameBoardBuilder {
+public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoard> implements GameBoard, GameBoardBuilder {
 	private volatile Map<CoordinateTuple, Cell> gameBoard;
 	private Cell templateCell;
 	private BoundsHandler boundsHandler;
@@ -27,14 +27,14 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	}
 
 	public ModifiableGameBoard(String name, Cell templateCell, int rows, int columns, BoundsHandler boundsHandler,
-			String description, String imgPath) {
+	                           String description, String imgPath) {
 		this(name, templateCell, generateGameBoard(templateCell, rows, columns), boundsHandler, description, imgPath);
 		this.rows = rows;
 		this.columns = columns;
 	}
 
 	private ModifiableGameBoard(String name, Cell templateCell, Map<CoordinateTuple, Cell> gameBoard,
-			BoundsHandler boundsHandler, String description, String imgPath) {
+	                            BoundsHandler boundsHandler, String description, String imgPath) {
 		super(name, description, imgPath);
 		this.boundsHandler = boundsHandler;
 		this.templateCell = templateCell;
@@ -42,8 +42,8 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	}
 
 	private static Map<CoordinateTuple, Cell> generateGameBoard(Cell templateCell, int rows, int columns) {
-		return IntStream.range(-rows / 2, rows / 2).boxed()
-				.flatMap(i -> IntStream.range(-columns / 2, columns / 2).mapToObj(j -> new CoordinateTuple(i, j)))
+		return IntStream.range(-(rows - 1) / 2, rows / 2 + 1).boxed()
+				.flatMap(i -> IntStream.range(-(columns - 1) / 2, columns / 2 + 1).mapToObj(j -> new CoordinateTuple(i, j)))
 				.parallel().map(e -> e.convertToDimension(templateCell.dimension()))
 				.collect(Collectors.toMap(e -> e, e -> templateCell.copy().setLocation(e)));
 	}
@@ -62,6 +62,16 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	@Override
 	public BoundsHandler getBoundsHandler() {
 		return boundsHandler;
+	}
+
+	@Override
+	public void startTurn(GameplayState gameplayState) {
+		forEachCell(e -> e.startTurn(gameplayState));
+	}
+
+	@Override
+	public void endTurn(GameplayState gameplayState) {
+		forEachCell(e -> e.endTurn(gameplayState));
 	}
 
 	@Override
@@ -103,9 +113,9 @@ public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoa
 	public int getRows() {
 		return rows;
 	}
-	
+
 	@Override
-	public int getColumns(){
+	public int getColumns() {
 		return columns;
 	}
 

@@ -37,7 +37,7 @@ public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModi
 	public transient static final InteractionModifier<Double> STALWART = new InteractionModifier<>("Stalwart", Modifier.STALWART, "This unit takes less damage if it does not move this turn.", "resources/images/blackScreen.png", DEFENSIVE);
 	public transient static final InteractionModifier<Double> HARDENED_SHIELDS = new InteractionModifier<>("Hardened Shields", Modifier.HARDENED_SHIELDS, "Incoming attacks that would deal more than 5 damage have their damage reduced to 5", "resources/images/shield.png", DEFENSIVE);
 	public transient static final InteractionModifier<Double> FEARFUL = new InteractionModifier<>("Fearful", Modifier.FEARFUL, "This unit take extra damage in night time", "resources/images/crow.png", DEFENSIVE);
-	public transient static final InteractionModifier<Double> THORNS = new InteractionModifier<>("Thorns", Modifier.THORNS, "This unit reflects half the damage it takes back to the attacker", "resources/images/resources.png", DEFENSIVE);
+	public transient static final InteractionModifier<Double> THORNS = new InteractionModifier<>("Thorns", Modifier.THORNS, "This unit reflects half the damage it takes back to the attacker", "resources/images/thorns.png", DEFENSIVE);
 
 	private final Modifier<T> modifier;
 	private String type;

@@ -1,5 +1,6 @@
 package backend.grid;
 
+import backend.util.HasShape;
 import backend.util.ModifiableVoogaObject;
 import backend.util.VoogaEntity;
 
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * @author Created by th174 on 3/30/2017.
  */
-public class GridPattern extends ModifiableVoogaObject<GridPattern> implements VoogaEntity {
+public class GridPattern extends ModifiableVoogaObject<GridPattern> implements VoogaEntity, HasShape {
 	//TODO ResourceBundlify
 	public transient static final GridPattern NONE = new GridPattern("None", "This pattern contains no coordinates", "resources/images/blackScreen.png");
 	public transient static final GridPattern HEXAGONAL_SINGLE_CELL = new GridPattern("Hexagonal Single Cell", "This pattern contains single hexagonal cell at the origin", "resources/images/hexSingle.png", CoordinateTuple.getOrigin(3));
@@ -57,5 +58,10 @@ public class GridPattern extends ModifiableVoogaObject<GridPattern> implements V
 	@Override
 	public GridPattern copy() {
 		return new GridPattern(getName(), getDescription(), getImgPath(), getCoordinates());
+	}
+
+	@Override
+	public Shape getShape() {
+		return Shape.fromDimension(relativeCoordinates.stream().findAny().orElse(null).dimension());
 	}
 }

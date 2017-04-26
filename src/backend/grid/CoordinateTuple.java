@@ -11,7 +11,6 @@ import java.util.stream.Stream;
  */
 public final class CoordinateTuple implements Iterable<Integer>, Serializable {
 	public transient static final CoordinateTuple EMPTY = new CoordinateTuple();
-	private static final Map<Integer, Shape> shapeDimensions = new HashMap<>();
 
 	private final List<Integer> coordinates;
 
@@ -28,10 +27,7 @@ public final class CoordinateTuple implements Iterable<Integer>, Serializable {
 	}
 
 	public Collection<CoordinateTuple> getNeighbors() {
-		if (shapeDimensions.isEmpty()) {
-			Arrays.stream(Shape.values()).forEach(shape -> shapeDimensions.put(shape.getDimension(), shape));
-		}
-		return shapeDimensions.get(dimension()).getNeighborPattern().getCoordinates().stream().map(this::sum).collect(Collectors.toList());
+		return Shape.fromDimension(dimension()).getNeighborPattern().getCoordinates().stream().map(this::sum).collect(Collectors.toList());
 	}
 
 	public Collection<CoordinateTuple> getRays(int minRadius, int maxRadius) {

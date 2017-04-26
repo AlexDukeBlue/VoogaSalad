@@ -38,5 +38,5 @@ public class Actionable extends ImmutableVoogaObject<Actionable> {
 		return new Actionable(biCon, getName(), getDescription(), getImgPath());
 	}
 	
-	private interface SerializableBiConsumer extends BiConsumer<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
+	public interface SerializableBiConsumer extends BiConsumer<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
 }

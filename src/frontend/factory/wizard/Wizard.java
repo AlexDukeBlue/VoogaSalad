@@ -35,7 +35,7 @@ import polyglot.PolyglotException;
  *            The object type that the wizard will return after instantiation.
  */
 public class Wizard<T> extends BaseUIManager<Region> {
-	private static final ArrayList<String> buttonNames = new ArrayList<>(
+	private static final Collection<String> buttonNames = new ArrayList<>(
 			Arrays.asList("Cancel", "Previous", "Next", "Finish"));
 
 	private WizardStrategy<T> selectionStrategy;

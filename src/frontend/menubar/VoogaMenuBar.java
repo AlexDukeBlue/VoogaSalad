@@ -3,13 +3,18 @@
  */
 package frontend.menubar;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import backend.unit.Unit;
+import backend.grid.GameBoard;
+import backend.util.VoogaEntity;
 import controller.Controller;
+import frontend.AuthoringClickHandler;
+import frontend.GameplayClickHandler;
 import frontend.View;
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
@@ -26,20 +31,22 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
 /**
- * @author Stone Mathers
- *         Created 4/18/2017
+ * @author Stone Mathers Created 4/18/2017
  */
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
-			newTriggeredAbilityItem, newInteractionModifierItem, conditionsPaneItem, templatePaneItem, detailsPaneItem,
-			statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
+			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem,
+			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -89,6 +96,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 				e -> create("triggeredability"));
 		newInteractionModifierItem = factory.getMenuItem(getPolyglot().get("CreateNewInteractionModifier"),
 				e -> create("interactionmodifier"));
+		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
+			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
+				getController().setGrid((GameBoard)object);
+			});
+		});
 
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
 		try {
@@ -119,13 +131,37 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		templatePaneItem = factory.getMenuItem(getPolyglot().get("ShowHideTemplate"), e -> myView.toggleTemplatePane());
 		detailsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideDetails"), e -> myView.toggleDetailsPane());
 		statsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideStats"), e -> myView.toggleStatsPane());
-		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> getController().enterAuthoringMode());
-		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
+		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> {
+			myView.setClickHandler(new AuthoringClickHandler());
+			getController().enterAuthoringMode();
+		});
+		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
+			myView.setClickHandler(new GameplayClickHandler());
+			getController().enterGamePlayMode();
+		});
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/help.html");
+		});
 		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
-		}); // TODO implement
+			showBrowser("frontend/menubar/about.html");
+		});
+	}
+
+	private void showBrowser(String url) {
+		try {
+			Desktop.getDesktop().browse(getClass().getClassLoader().getResource(url).toURI());
+		} catch (URISyntaxException | IOException e) {
+			System.err.print("Invalid url: " + url);
+			WebView browser = new WebView();
+			WebEngine webEngine = browser.getEngine();
+			Stage s = new Stage();
+			Scene scene = new Scene(browser);
+			url = this.getClass().getClassLoader().getResource(url).toExternalForm();
+			webEngine.load(url);
+			s.setScene(scene);
+			s.show();
+		}
 	}
 
 	private void initMenus() {
@@ -140,8 +176,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newUnitItem);
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
-		edit.getItems().add(newTriggeredAbilityItem);
-		edit.getItems().add(newInteractionModifierItem);
+//		edit.getItems().add(newTriggeredAbilityItem);
+//		edit.getItems().add(newInteractionModifierItem);
+		edit.getItems().add(newGridItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
@@ -192,7 +229,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
+			getController().setGameState(
+					getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -209,19 +247,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		Wizard<?> wizard = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
-		try {
-			System.out.println(wizard);
-			System.out.println(wizard.getPolyglot());
-			System.out.println(wizard.getPolyglot().getLanguage());
-			System.out.println(getPolyglot());
-			System.out.println(getPolyglot().getLanguage());
-			wizard.getPolyglot().setLanguage(getPolyglot().getLanguage());
-		} catch (PolyglotException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-				wizard.addObserver((thewizard, unit) -> getController().addUnitTemplates((Unit) unit));
+		WizardFactory.newWizard(categoryName, getController().getAuthoringGameState()).addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package backend.grid;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Created by th174 on 3/28/2017.
  */
@@ -19,6 +23,12 @@ public enum Shape {
 			new CoordinateTuple(1, -1, 0),
 			new CoordinateTuple(-1, 1, 0));
 
+	private static final Map<Integer, Shape> DIMENSION_SHAPE_MAP = new HashMap<>();
+
+	static {
+		Arrays.stream(Shape.values()).forEach(shape -> DIMENSION_SHAPE_MAP.put(shape.getDimension(), shape));
+	}
+
 	private final int dimension;
 	private final GridPattern neighborsPattern;
 	private final String name;
@@ -35,6 +45,10 @@ public enum Shape {
 
 	public int getDimension() {
 		return dimension;
+	}
+
+	public static Shape fromDimension(int dimension) {
+		return DIMENSION_SHAPE_MAP.get(dimension);
 	}
 
 	public String getName() {

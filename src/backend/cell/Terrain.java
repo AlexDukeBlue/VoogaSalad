@@ -1,10 +1,7 @@
 package backend.cell;
 
 import backend.unit.properties.InteractionModifier;
-import backend.util.Ability;
-import backend.util.HasTriggeredAbilities;
-import backend.util.TriggeredEffect;
-import backend.util.VoogaEntity;
+import backend.util.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +12,7 @@ import static backend.util.ImmutableVoogaObject.getPredefined;
 /**
  * @author Created by th174 on 4/12/2017.
  */
-public interface Terrain extends VoogaEntity, HasTriggeredAbilities {
+public interface Terrain extends VoogaEntity, HasTriggeredAbilities, HasSound {
 	int IMPASSABLE = Integer.MAX_VALUE;
 	Terrain EMPTY = new ModifiableTerrain("Empty")
 			.setDefaultMoveCost(0)
@@ -78,4 +75,7 @@ public interface Terrain extends VoogaEntity, HasTriggeredAbilities {
 
 	@Override
 	ModifiableTerrain copy();
+
+	@Override
+	Terrain setSoundPath(String path);
 }

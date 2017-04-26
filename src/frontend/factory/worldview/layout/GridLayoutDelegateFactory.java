@@ -1,6 +1,7 @@
 package frontend.factory.worldview.layout;
 
 import backend.grid.CoordinateTuple;
+import backend.grid.GameBoard;
 import javafx.scene.shape.Polygon;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class GridLayoutDelegateFactory implements GridLayoutDelegate {
 	}
 
 	@Override
-	public Polygon layoutCell(double scaleFactor, double min, double max, CoordinateTuple location) {
-		return DIMENSION_LAYOUT_MANAGER_MAP.get(location.dimension()).layoutCell(scaleFactor, min, max, location);
+	public Polygon layoutCell(double scaleFactor, double min, double max, CoordinateTuple location, GameBoard gameBoard) {
+		return DIMENSION_LAYOUT_MANAGER_MAP.get(location.dimension()).layoutCell(scaleFactor, min, max, location, gameBoard);
 	}
 }

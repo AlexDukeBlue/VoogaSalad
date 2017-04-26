@@ -1,18 +1,23 @@
 package controller;
 
 import backend.cell.Cell;
+import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.Resultant;
+import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
+import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
 import backend.unit.Unit;
-import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
-import backend.util.VoogaEntity;
+import backend.util.*;
+import backend.util.Actionable.SerializableBiConsumer;
+import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
+import util.io.Serializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
 import util.net.ObservableServer;
@@ -25,10 +30,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -44,6 +46,7 @@ public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
 	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
+
 	private final Executor executor;
 	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
@@ -102,11 +105,19 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
+	public void setGrid(GameBoard gameBoard) {
+		sendModifier((AuthoringGameState state) -> {
+			state.setGrid(gameBoard);
+			return state;
+		});
+	}
+
+	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
 
-	private synchronized <U extends ReadonlyGameplayState> void updateGameState() {
+	private synchronized void updateGameState() {
 		updateAll();
 		waitForReady.countDown();
 	}
@@ -230,21 +241,166 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	public void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate) {
+		sendModifier((AuthoringGameState state) -> {
+			state.addAvailableTurnRequirements(new Requirement(biPredicate, name, description, imgPath));
+			return state;
+		});
+	}
+
+	public void removeTurnRequirement(String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeAvailableTurnRequirements(req));
+			return state;
+		});
+	}
+
+	public void activateTurnRequirement(String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.addTurnRequirements(req));
+			return state;
+		});
+	}
+
+	public void deactivateTurnRequirement(String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeTurnRequirements(req));
+			return state;
+		});
+	}
+
+	public void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
+		sendModifier((AuthoringGameState state) -> {
+			state.addAvailableTurnActions(event, new Actionable(biConsumer, name, description, imgPath));
+			return state;
+		});
+	}
+
+	public void removeTurnAction(Event event, String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(event, act));
+			return state;
+		});
+	}
+
+	public void activateTurnAction(Event event, String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(event, act));
+			return state;
+		});
+	}
+
+	public void deactivateTurnAction(Event event, String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(event, act));
+			return state;
+		});
+	}
+
+	public void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate) {
+		sendModifier((AuthoringGameState state) -> {
+			state.addObjectives(new Resultant(resultQuadPredicate, name, description, imgPath));
+			return state;
+		});
+	}
+
+	public void removeEndCondition(String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
+			return state;
+		});
+	}
+
+	public void activateEndCondition(String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
+			return state;
+		});
+	}
+
+	public void deactivateEndCondition(String name) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
+			return state;
+		});
+	}
+
 	private void updateAll() {
 		executor.execute(() -> {
 			try {
-				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveHistory.push(autoSavePath);
+				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
 				saveFile(autoSavePath);
+				saveHistory.push(autoSavePath);
+			} catch (Serializer.SerializationException e) {
+				System.err.println("You're going TOO FAST!!!!");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		thingsToUpdate.forEach(e -> Platform.runLater(e::update));
+		thingsToUpdate.forEach(e -> Platform.runLater(() -> {
+			try {
+				e.update();
+			} catch (Exception e1) {
+				removeListener(e);
+			}
+		}));
 	}
 
 	public void endTurn() {
 		sendModifier(GameplayState::endTurn);
+	}
+
+	@Override
+	public void moveUnit(String unitName, CoordinateTuple unitLocation, CoordinateTuple targetLocation) {
+		sendModifier((GameplayState state) -> {
+			Unit unitToMove = state.getGrid().get(unitLocation).getOccupantByName(unitName);
+			unitToMove.moveTo(state.getGrid().get(targetLocation), state);
+			return state;
+		});
+	}
+
+	@Override
+	public void sendMessage(String messageContent, ChatMessage.AccessLevel accessLevel, String receiverName) {
+		sendModifier(accessLevel.getSendMessageModifier(messageContent, playerName, receiverName));
+	}
+
+	@Override
+	public void setBoundsHandler(String boundsHandlerName) {
+		sendModifier((AuthoringGameState state) -> {
+			state.getGrid().setBoundsHandler((BoundsHandler) state.getTemplateByCategory("boundshandler").getByName(boundsHandlerName));
+			return state;
+		});
+	}
+
+	@Override
+	public void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName) {
+		sendModifier((AuthoringGameState gameState) -> {
+			try {
+				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
+				if (Objects.nonNull(targetUnit)) {
+					targetUnit.add(gameState.getTemplateByName(templateName).copy());
+				} else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				Cell targetCell = gameState.getGrid().get(gridLocation);
+				if (Objects.nonNull(targetCell)) {
+					targetCell.add(gameState.getTemplateByName(templateName).copy());
+				} else {
+					e.printStackTrace();
+				}
+			}
+			return gameState;
+		});
+	}
+
+	@Override
+	public void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation) {
+		sendModifier((GameplayState gameState) -> {
+			VoogaEntity abilityTarget = gameState.getGrid().get(targetLocation).getOccupantByName(targetName);
+			gameState.getGrid().get(userLocation).getOccupantByName(userName).useActiveAbility(abilityName, abilityTarget, gameState);
+			return gameState;
+		});
 	}
 
 	@Override
@@ -253,7 +409,11 @@ public class CommunicationController implements Controller {
 			saveHistory.pop();
 			setGameState(loadFile(saveHistory.pop()));
 		} catch (IOException ignored) {
-			ignored.printStackTrace();
 		}
+	}
+
+	@Override
+	public Shape getShape() {
+		return getGrid().getShape();
 	}
 }

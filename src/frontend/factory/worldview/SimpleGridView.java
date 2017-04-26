@@ -1,6 +1,7 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
+import backend.grid.ModifiableGameBoard;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
@@ -58,7 +59,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	private void populateCellViews() {
 		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
-			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate));
+			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController().getGrid()));
 			cellViews.put(coordinate, cl);
 			cellViewObjects.getChildren().add(cl.getObject());
 		});
@@ -99,5 +100,10 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	@Override
 	public void resetHighlighting() {
 		cellViews.values().forEach(SimpleCellView::unDarken);
+	}
+
+	@Override
+	public ModifiableGameBoard getEntity() {
+		return getController().getAuthoringGameState().getGrid();
 	}
 }
