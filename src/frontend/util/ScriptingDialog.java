@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
+import org.python.google.common.io.Resources;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,6 +36,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private final ComboBox<String> languagesMenu;
 	private VoogaScriptEngine scriptEngine;
 	private BooleanProperty hasCompiled;
+	private String strategy;
 
 	public ScriptingDialog() {
 		hasCompiled = new SimpleBooleanProperty(false);
@@ -57,6 +60,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		topBox.setAlignment(Pos.CENTER);
 		HBox bottomBox = new HBox(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
+		languagesMenu.setOnAction(event -> scriptArea.setPromptText(getResourceBundle().getString(strategy + languagesMenu.getValue())));
 		pane.setTop(topBox);
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);
@@ -64,6 +68,11 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	
 	public ReadOnlyBooleanProperty hasCompiled(){
 		return hasCompiled;
+	}
+	
+	public void setPrompt(String strat){
+		scriptArea.setPromptText(getResourceBundle().getString(strat + languagesMenu.getValue()));
+		strategy = strat;
 	}
 
 	private void handleException(Exception e) {
@@ -100,6 +109,10 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	@Override
 	public Region getObject() {
 		return pane;
+	}
+	
+	public String getLanguage(){
+		return languagesMenu.getValue();
 	}
 
 	public Optional<VoogaScriptEngine> getScriptEngine() {
