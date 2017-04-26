@@ -17,7 +17,7 @@ public class GridStrategy extends BaseStrategy<ModifiableGameBoard> {
 	@Override
 	public ModifiableGameBoard finish() {
 		return (ModifiableGameBoard) new ModifiableGameBoard("").setName(boardNamePage.getName())
-				.setDescription(boardNamePage.getDescription()).setImgPath(boardNamePage.getImagePath())
+				.setDescription(boardNamePage.getDescription().getValueSafe()).setImgPath(boardNamePage.getImagePath())
 				.setRows(gridInstantiationPage.getRows()).setColumns(gridInstantiationPage.getCols())
 				.setTemplateCell(gridInstantiationPage.getTemplateCell())
 				.setBoundsHandler(BoundsHandler.INFINITE_BOUNDS).build();

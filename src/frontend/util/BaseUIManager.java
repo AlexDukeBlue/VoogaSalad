@@ -159,7 +159,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
-			map.put(getPolyglot().get(key).getValueSafe(), fileBundle.getString(key));
+			map.put(key, fileBundle.getString(key));
 		}
 		return (UnmodifiableObservableMap<String, String>) FXCollections
 				.unmodifiableObservableMap(FXCollections.observableMap(map));

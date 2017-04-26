@@ -136,7 +136,8 @@ public class Wizard<T> extends BaseUIManager<Region> {
 				e.printStackTrace();
 			}
 		});
-
+		borderPane.getStylesheets().clear();
+		borderPane.getStylesheets().add(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 		stage.setScene(new Scene(borderPane));
 		show();
 	}

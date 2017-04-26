@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import backend.grid.GameBoard;
+import backend.player.Team;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.AuthoringClickHandler;
@@ -45,7 +46,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
-			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem,
+			newTriggeredAbilityItem, newInteractionModifierItem, newGridItem, newTeamItem,
 			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
@@ -102,6 +103,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
 			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
 				getController().setGrid((GameBoard)object);
+			});
+		});
+		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
+			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer,object) -> {
+				getController().addTeamTemplates((Team)object);
 			});
 		});
 
@@ -184,6 +190,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 //		edit.getItems().add(newTriggeredAbilityItem);
 //		edit.getItems().add(newInteractionModifierItem);
 		edit.getItems().add(newGridItem);
+		edit.getItems().add(newTeamItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
