@@ -36,6 +36,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private final ComboBox<String> languagesMenu;
 	private VoogaScriptEngine scriptEngine;
 	private BooleanProperty hasCompiled;
+	private String strategy;
 
 	public ScriptingDialog() {
 		hasCompiled = new SimpleBooleanProperty(false);
@@ -59,6 +60,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		topBox.setAlignment(Pos.CENTER);
 		HBox bottomBox = new HBox(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
+		languagesMenu.setOnAction(event -> scriptArea.setPromptText(getResourceBundle().getString(strategy + languagesMenu.getValue())));
 		pane.setTop(topBox);
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);
@@ -68,8 +70,9 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		return hasCompiled;
 	}
 	
-	public void setPrompt(String prompt){
-		scriptArea.setPromptText(prompt);
+	public void setPrompt(String strat){
+		scriptArea.setPromptText(getResourceBundle().getString(strat + languagesMenu.getValue()));
+		strategy = strat;
 	}
 
 	private void handleException(Exception e) {
@@ -106,6 +109,10 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	@Override
 	public Region getObject() {
 		return pane;
+	}
+	
+	public String getLanguage(){
+		return languagesMenu.getValue();
 	}
 
 	public Optional<VoogaScriptEngine> getScriptEngine() {
