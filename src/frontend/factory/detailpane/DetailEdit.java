@@ -45,9 +45,10 @@ public class DetailEdit extends BaseUIManager {
 	Terrain terrain;
 	VBox sceneView;
 	Map<Terrain, TextField> moveCosts;
-	TextField[] unitStats;
+	Map<String, TextField> unitStats;
 	String movePattern;
 	Stage myStage;
+	
 	
 	public DetailEdit(VoogaEntity sprite, String spriteType, Controller controller) {
 		super(controller);
@@ -76,12 +77,12 @@ public class DetailEdit extends BaseUIManager {
 			TextField feature = createUserInput(t.getFormattedName(), ((Integer) unit.getMoveCostByTerrain(t)).toString());
 			moveCosts.put(t, feature);
 		}
-		unitStats = new TextField[unit.getUnitStats().size()];
+		unitStats = new HashMap();
 		
 		Collection<? extends UnitStat> stats = unit.getUnitStats(); 
 		for (int i=0; i<stats.size(); i++) {
 			UnitStat stat = Iterables.get(stats, i);
-			unitStats[i] = createUserInput(stat.getName(),(stat).getCurrentValue().toString());
+			unitStats.put(stat.getName(), createUserInput(stat.getName(),(stat).getCurrentValue().toString()));
 			
 		}
 		
@@ -156,10 +157,9 @@ public class DetailEdit extends BaseUIManager {
 			//}
 			CoordinateTuple unitLocation = unit.getLocation();
 			String unitName = unit.getName();
-			System.out.println(unitStats[0].getText());
-			double maxAbility = Double.parseDouble(unitStats[0].getText());
-			double maxHit = Double.parseDouble(unitStats[1].getText());
-			int maxMove = Integer.parseInt(unitStats[2].getText());
+			double maxAbility = Double.parseDouble(unitStats.get("Ability Points").getText());
+			double maxHit = Double.parseDouble(unitStats.get("Hit Points").getText());
+			int maxMove = Integer.parseInt(unitStats.get("Move Points").getText());
 			String moveP = movePattern;
 			
 			getController().sendModifier((AuthoringGameState state) -> {
