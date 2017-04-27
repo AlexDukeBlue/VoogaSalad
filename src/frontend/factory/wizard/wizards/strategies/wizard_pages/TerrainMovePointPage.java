@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import backend.cell.Terrain;
 import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
 import frontend.View;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
@@ -63,7 +64,7 @@ public class TerrainMovePointPage extends BaseWizardPage {
 		movePointInput = new NumericInputRow(null, getPolyglot().get("TerrainMovePoint_RowPrompt"), getPolyglot().get("Move_Points"));
 		table.getChildren().add(movePointInput);
 		rowToTerrain = new HashMap<>();
-		gameState.getTemplateByCategory(AuthoringGameState.TERRAIN).forEach(terrain -> {
+		gameState.getTemplateByCategory(GameplayState.TERRAIN).forEach(terrain -> {
 			NumericInputRow row = new NumericInputRow(View.getImg(terrain.getImgPath()), terrain.getName(), terrain.getDescription());
 			rowToTerrain.put(row, (Terrain)terrain);
 			table.getChildren().add(row);

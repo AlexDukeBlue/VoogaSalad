@@ -1,7 +1,7 @@
 package frontend.interfaces.worldview;
 
 import backend.grid.CoordinateTuple;
-import backend.grid.ModifiableGameBoard;
+import backend.grid.GameBoard;
 import frontend.ClickHandler;
 import frontend.util.GameBoardObjectView;
 import javafx.scene.control.ScrollPane;
@@ -21,5 +21,5 @@ public interface GridViewExternal extends GameBoardObjectView {
 	void resetHighlighting();
 
 	@Override
-	ModifiableGameBoard getEntity();
+	GameBoard getEntity();
 }

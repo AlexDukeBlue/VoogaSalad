@@ -1,7 +1,7 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
-import backend.grid.ModifiableGameBoard;
+import backend.grid.GameBoard;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
@@ -109,7 +109,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	@Override
-	public ModifiableGameBoard getEntity() {
-		return getController().getAuthoringGameState().getGrid();
+	public GameBoard getEntity() {
+		return getController().getReadOnlyGameState().getGrid();
 	}
 }

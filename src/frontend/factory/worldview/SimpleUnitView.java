@@ -32,6 +32,7 @@ import java.util.Objects;
  */
 public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	private static final double UNIT_SCALE = 0.75;
+	private static final String DEFAULT_COLOR = "#ffffff";
 	private final BorderPane unitView;
 	private final String unitName;
 	private final CoordinateTuple unitLocation;
@@ -83,7 +84,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 
 	@Override
 	public void update() {
-		dropShadow.setColor(Color.web(getEntity().getTeam().getColorString()));
+		dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 		try {
 			double fractionRemaining = getEntity().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
@@ -135,9 +136,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 
 	@Override
 	public void select(ClickHandler clickHandler) {
-		clickHandler.highlightRange(
-				getController().isMyPlayerTurn() && getEntity().getTeam().equals(getController().getActivePlayer().getTeam()) ?
-						getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
+		clickHandler.highlightRange(canMove() ? getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
 	}
 
 	@Override
@@ -159,14 +158,19 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		if (isValidMove(target)) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
-			if (getEntity().getTeam().equals(getController().getActivePlayer().getTeam()) && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
+			if (canMove() && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
 				actInAuthoringMode(target, additionalInfo, clickHandler, event);
 			}
 		}
 		clickHandler.cancel();
 	}
 
+	private boolean canMove() {
+		return getController().isMyPlayerTurn() && getEntity().getOwner().isPresent() && getEntity().getOwner().get().equals(getController().getActivePlayer()) || !getEntity().getOwner().isPresent();
+	}
+
 	private boolean isValidMove(ClickableUIComponent target) {
 		return target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation;
 	}
+
 }

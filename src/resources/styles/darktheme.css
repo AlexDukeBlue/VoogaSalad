@@ -18,7 +18,6 @@
 }
 
 .button, .combo-box, .menu-bar, .menu, .menu-item {
-    -fx-background-color: #555555;
     -fx-border-color: #323232;
     -fx-background-radius: 7;
     -fx-border-radius: 7;
@@ -28,24 +27,52 @@
     -fx-background-color: #888888;
 }
 
-.pane {
-    -fx-background-color: transparent;
-}
-
-.text-area, .text-field {
+.choice-box, .text-area, .text-field, .hbox, .choice-box .label {
     -fx-font-size: 13px;
     -fx-font-family: Arial;
+    -fx-background-color: transparent;
     -fx-focus-color: transparent;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 7;
     -fx-border-radius: 0;
-    -fx-background-color: rgba(0, 0, 0, 0.4);
-    -fx-background: transparent;
 }
 
-.text-area .scroll-pane .viewport, .text-area.scroll-pane, .text-area.scroll-pane.content,.hbox {
+.choice-box {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-text-fill: #ffffff;
+    -fx-alignment: center;
+}
+
+.text-area {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-font-size: 14px;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 15px 30px 15px 30px;
+    -fx-background-insets: 10px;
+}
+
+.text-field {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-text-fill: #ffffff;
+}
+
+.text-area .scroll-pane {
     -fx-background-color: transparent;
-    -fx-background: transparent;
+}
+
+.text-area .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+}
+
+.hbox {
+    -fx-background-color: transparent;
+    -fx-spacing: 5px;
+    -fx-padding: 0px 10px 0px 10px;
 }
 
 .text-area.scroll-bar {
@@ -61,8 +88,6 @@
     -fx-hbar-policy: never;
 }
 
-.label {
-    -fx-text-fill: #ffffff;
+.choice-box .context-menu {
     -fx-background-color: rgba(0, 0, 0, 0.5);
-    -fx-padding: 5;
 }

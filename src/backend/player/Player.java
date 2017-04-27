@@ -1,10 +1,12 @@
 package backend.player;
 
+import backend.cell.Cell;
+import backend.grid.ModifiableGameBoard;
+import backend.unit.Unit;
 import backend.util.ModifiableVoogaObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/28/2017.
@@ -13,7 +15,7 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	private Team team;
 	private final List<ChatMessage> chatLog;
 
-	public Player(String name, Team team, String description, String imgPath) {
+	public Player(String name, String description, String imgPath) {
 		super(name, description, imgPath);
 		chatLog = new ArrayList<>();
 		setTeam(team);
@@ -21,12 +23,12 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 
 	@Override
 	public Player copy() {
-		return new Player(getName(), getTeam(), getDescription(), getImgPath());
+		throw new RuntimeException("Can't copy players because that causes all sorts of problems.");
 	}
 
 	@Override
-	public Team getTeam() {
-		return team;
+	public Optional<Team> getTeam() {
+		return Optional.ofNullable(team);
 	}
 
 	@Override
@@ -39,6 +41,21 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 			team.addAll(this);
 		}
 		return this;
+	}
+
+	@Override
+	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
+		return grid.getUnits().parallelStream().filter(e -> e.getOwner().equals(this)).collect(Collectors.toSet());
+	}
+
+	@Override
+	public Collection<Cell> getVisibleCells() {
+		throw new RuntimeException("Not yet implemented");
+	}
+
+	@Override
+	public Collection<Cell> getExploredCells() {
+		throw new RuntimeException("Not yet implemented");
 	}
 
 	@Override

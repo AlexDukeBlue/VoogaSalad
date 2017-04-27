@@ -9,6 +9,7 @@ import backend.util.VoogaEntity;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +24,7 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	public transient static final String MAGENTA = "#ff00ff";
 	public transient static final String BLACK = "#000000";
 	public transient static final List<String> COLORS = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, BLACK);
+	private static final String NO_TEAM_ASSIGNED = "NO_TEAM_ASSIGNED";
 	private final String colorString;
 
 	public Team(String name, String description, String colorString, String imgPath, Player... players) {
@@ -37,27 +39,27 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	@Override
 	public Team addAll(Collection<? extends ImmutablePlayer> players) {
 		super.addAll(players);
-		players.stream().filter(e -> !e.getTeam().equals(this)).forEach(e -> e.setTeam(this));
+		players.stream().filter(e -> e.getTeam().isPresent() && !e.getTeam().get().equals(this)).forEach(e -> e.setTeam(this));
 		return this;
 	}
 
 	@Override
 	public Team removeAll(Collection<? extends ImmutablePlayer> players) {
 		super.removeAll(players);
-		players.stream().filter(e -> e.getTeam().equals(this)).forEach(e -> e.setTeam(null));
+		players.stream().filter(e -> e.getTeam().isPresent() && e.getTeam().get().equals(this)).forEach(e -> e.setTeam(null));
 		return this;
 	}
 
 	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
-		return grid.getUnits().parallelStream().filter(e -> e.getTeam().equals(this)).collect(Collectors.toSet());
+		return getAll().parallelStream().map(e -> e.getOwnedUnits(grid)).flatMap(Collection::stream).collect(Collectors.toSet());
 	}
 
 	public Collection<Cell> getVisibleCells() {
-		throw new RuntimeException("Not yet implemented");
+		return getAll().parallelStream().map(ImmutablePlayer::getVisibleCells).flatMap(Collection::stream).collect(Collectors.toSet());
 	}
 
 	public Collection<Cell> getExploredCells() {
-		throw new RuntimeException("Not yet implemented");
+		return getAll().parallelStream().map(ImmutablePlayer::getExploredCells).flatMap(Collection::stream).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -67,5 +69,10 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 
 	public String getColorString() {
 		return colorString;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return Objects.isNull(obj) || obj instanceof Team && ((Team) obj).getName().equals(getName());
 	}
 }

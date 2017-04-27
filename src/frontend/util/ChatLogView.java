@@ -5,8 +5,7 @@ import controller.Controller;
 import frontend.View;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -96,15 +95,17 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		HBox bottomBox = new HBox();
 		bottomBox.getStyleClass().add("hbox");
 		bottomBox.setAlignment(Pos.CENTER);
-		ComboBox<ChatMessage.AccessLevel> chatModeChooser = initComboBox();
-		Label label1 = new Label(getPolyglot().get("To").getValueSafe() + ": ");
+		ChoiceBox<ChatMessage.AccessLevel> chatModeChooser = initChoiceBox();
+		TextField to = new TextField(getPolyglot().get("To").getValueSafe() + ": ");
 		getPolyglot().setOnLanguageChange(event -> {
-			label1.setText(getPolyglot().get("To").getValueSafe() + ": ");
+			to.setText(getPolyglot().get("To").getValueSafe() + ": ");
 		});
-		label1.setMinWidth(30);
+		to.setMinWidth(35);
+		to.setEditable(false);
+		to.setMouseTransparent(true);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
-		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, label1, messageRecipientField));
+		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, to, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setMinWidth(200);
 		textContentInputField.setPrefWidth(1000);
@@ -114,15 +115,15 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		return bottomBox;
 	}
 
-	private ComboBox<ChatMessage.AccessLevel> initComboBox() {
-		ComboBox<ChatMessage.AccessLevel> chatModeChooser = new ComboBox<>(FXCollections.observableArrayList(ChatMessage.AccessLevel.values()));
+	private ChoiceBox<ChatMessage.AccessLevel> initChoiceBox() {
+		ChoiceBox<ChatMessage.AccessLevel> chatModeChooser = new ChoiceBox<>(FXCollections.observableArrayList(ChatMessage.AccessLevel.values()));
 		chatModeChooser.setMinWidth(110);
 		chatModeChooser.setValue(ChatMessage.AccessLevel.ALL);
 		return chatModeChooser;
 	}
 
-	private void showOrHideRecipientField(HBox bottomBox, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
-	                                      Label toLabel, TextField messageRecipientField) {
+	private void showOrHideRecipientField(HBox bottomBox, ChoiceBox<ChatMessage.AccessLevel> chatModeChooser,
+	                                      TextField toLabel, TextField messageRecipientField) {
 		if (chatModeChooser.getValue().equals(ChatMessage.AccessLevel.WHISPER)) {
 			bottomBox.getChildren().add(1, messageRecipientField);
 			bottomBox.getChildren().add(1, toLabel);
@@ -133,7 +134,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		}
 	}
 
-	private void submitMessage(KeyEvent evt, ComboBox<ChatMessage.AccessLevel> chatModeChooser,
+	private void submitMessage(KeyEvent evt, ChoiceBox<ChatMessage.AccessLevel> chatModeChooser,
 	                           TextField textContentInputField, TextField messageRecipientField) {
 		if (evt.getCode() == KeyCode.ENTER && textContentInputField.getText().length() > 0) {
 			getController().sendMessage(textContentInputField.getText(), chatModeChooser.getValue(), messageRecipientField.getText());

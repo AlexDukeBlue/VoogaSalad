@@ -33,6 +33,8 @@ public interface Controller {
 
 	GameBoard getGrid();
 
+	void setGrid(GameBoard grid);
+
 	String getActivePlayerName();
 
 	String getMyPlayerName();
@@ -41,11 +43,13 @@ public interface Controller {
 		return getMyPlayerName().equals(getActivePlayerName());
 	}
 
-	default ImmutablePlayer getActivePlayer(){
+	default ImmutablePlayer getActivePlayer() {
 		return getPlayer(getActivePlayerName());
 	}
 
-	void setGrid(GameBoard grid);
+	default ImmutablePlayer getMyPlayer() {
+		return getPlayer(getMyPlayerName());
+	}
 
 	void startClient(String host, int port, Duration timeout);
 
@@ -57,7 +61,7 @@ public interface Controller {
 
 	AuthoringGameState getAuthoringGameState();
 
-	GameplayState getGameState();
+	GameplayState getGameplayState();
 
 	ImmutablePlayer getPlayer(String name);
 
@@ -131,11 +135,11 @@ public interface Controller {
 		return (Collection<? extends Team>) getTemplatesByCategory("team");
 	}
 
-	default void addTeamTemplates(Team... teamTemplates) {
+	default void addTeams(Team... teamTemplates) {
 		addTemplatesByCategory("team", teamTemplates);
 	}
 
-	default void removeTeamTemplates(String... teamTemplates) {
+	default void removeTeams(String... teamTemplates) {
 		removeTemplatesByCategory("team", teamTemplates);
 	}
 
@@ -160,4 +164,6 @@ public interface Controller {
 	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation);
 
 	void updateAll();
+
+	void joinTeam(String teamName);
 }

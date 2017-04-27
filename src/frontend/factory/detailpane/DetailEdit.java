@@ -34,10 +34,10 @@ public class DetailEdit extends BaseUIManager {
 	private GridPane sceneView;
 	private Map<Terrain, TextField> moveCosts;
 	private Map<String, List<TextField>> unitStats;
-	private String movePattern;
+	private ComboBox<String> movePatternBox;
+	private ComboBox<String> playerNameBox;
 	private Stage myStage;
 	private int rows = 0;
-
 
 	public DetailEdit(VoogaEntity sprite, String spriteType, Controller controller) {
 		super(controller);
@@ -69,15 +69,15 @@ public class DetailEdit extends BaseUIManager {
 		for (UnitStat stat : unit.getUnitStats()) {
 			unitStats.put(stat.getName(), createUserInput(stat.getName(), stat.getMinValue(), stat.getCurrentValue(), stat.getMaxValue()));
 		}
-		ObservableList<String> options = FXCollections.observableArrayList(getController()
+		ObservableList<String> options = FXCollections.observableList(getController()
 				.getAuthoringGameState()
 				.getTemplateByCategory("Grid Pattern").getAll().stream()
 				.map(GridPattern.class::cast)
 				.filter(e -> e.getShape().equals(getController().getShape()))
 				.map(VoogaEntity::getName)
 				.collect(Collectors.toList()));
-
-		createDropDown("Move Pattern", options);
+		movePatternBox = createDropDown("Move Pattern", options, unit.getMovePattern().getName());
+		playerNameBox = createDropDown("Player", FXCollections.observableList(getController().getReadOnlyGameState().getOrderedPlayerNames()), unit.getOwner().isPresent() ? unit.getOwner().get().getName() : "");
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
 	}
@@ -92,14 +92,10 @@ public class DetailEdit extends BaseUIManager {
 		return featureValues;
 	}
 
-	@SuppressWarnings("unchecked")
-	private ComboBox createDropDown(String feature, ObservableList<String> choices) {
-//		HBox featureInfo = new HBox();
-//		featureInfo.setPadding(new Insets(5, 5, 5, 5));
+	private ComboBox<String> createDropDown(String feature, ObservableList<String> choices, String defaultValue) {
 		Label label = addText(feature);
-		ComboBox options = new ComboBox(choices);
-		options.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> movePattern = (String) newValue);
-//		featureInfo.getChildren().addAll(label, options);
+		ComboBox<String> options = new ComboBox<>(choices);
+		options.setValue(defaultValue);
 		sceneView.addRow(rows++, label, options);
 		return options;
 	}
@@ -141,8 +137,9 @@ public class DetailEdit extends BaseUIManager {
 
 			CoordinateTuple unitLocation = unit.getLocation();
 			String unitName = unit.getName();
-			;
-			String moveP = movePattern;
+
+			String movePatternName = movePatternBox.getValue();
+			String playerName = playerNameBox.getValue();
 			getController().sendModifier((AuthoringGameState state) -> {
 				ModifiableUnit newUnit = (ModifiableUnit) state.getGrid().get(unitLocation).getOccupantByName(unitName);
 				newUnit.setTerrainMoveCosts(finalCosts);
@@ -151,11 +148,10 @@ public class DetailEdit extends BaseUIManager {
 						.setMinValue(values.get(0))
 						.setCurrentValue(values.get(1))
 						.setMaxValue(values.get(2)));
-				if (moveP != null) {
-					newUnit.setMovePattern((GridPattern) state
-							.getTemplateByCategory("Grid Pattern")
-							.getByName(moveP));
-				}
+				newUnit.setMovePattern((GridPattern) state
+						.getTemplateByCategory("Grid Pattern")
+						.getByName(movePatternName));
+				newUnit.setOwner(state.getPlayerByName(playerName));
 				return state;
 			});
 

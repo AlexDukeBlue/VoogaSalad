@@ -86,8 +86,12 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 	}
 
 	public void affect(Unit user, T target, GameplayState game) {
-		user.getAbilityPoints().setCurrentValue(user.getAbilityPoints().getCurrentValue() - cost);
-		effect.useAbility(user, target, game);
+		try {
+			effect.useAbility(user, target, game);
+			user.getAbilityPoints().setCurrentValue(user.getAbilityPoints().getCurrentValue() - cost);
+		} catch (Exception e) {
+			System.out.println("Illegal Move Ignored: " + e);
+		}
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.grid.*;
+import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.properties.*;
 import backend.util.*;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * @author Created by th174 on 3/27/2017.
  */
-public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbilities {
+public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation {
 	Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Unit>> DISPATCH_MAP = new HashMap<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Unit>>() {{
 		put(ModifiableTerrain.class, (theTerrain, thisUnit) -> thisUnit.getCurrentCell().add(theTerrain));
 		put(ModifiableUnit.class, (newUnit, thisUnit) -> thisUnit.getCurrentCell().add(newUnit));
@@ -182,16 +183,19 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 
 	void setVisible(boolean isVisible);
 
-	Team getTeam();
+	default Optional<Team> getTeam() {
+		return getOwner().isPresent() ? getOwner().get().getTeam() : Optional.empty();
+	}
 
-	Unit setTeam(Team team);
+	Unit setOwner(ImmutablePlayer player);
+
+	Optional<ImmutablePlayer> getOwner();
 
 	default Unit add(VoogaEntity entity) {
 		DISPATCH_MAP.get(entity.getClass()).accept(entity, this);
 		return this;
 	}
 
-	@Override
 	default Shape getShape() {
 		return getMovePattern().getShape();
 	}

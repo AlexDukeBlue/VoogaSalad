@@ -1,13 +1,14 @@
-.combo-box-base, .cell, .text-area, .text-field, .hbox, .label {
+.choice-box, .text-area, .text-field, .hbox, .choice-box .label {
     -fx-font-size: 13px;
     -fx-font-family: Arial;
+    -fx-background-color: transparent;
     -fx-focus-color: transparent;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 7;
     -fx-border-radius: 0;
 }
 
-.combo-box-base, .cell {
+.choice-box {
     -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-text-fill: #ffffff;
     -fx-alignment: center;
@@ -45,12 +46,6 @@
     -fx-padding: 0px 10px 0px 10px;
 }
 
-.label {
-    -fx-text-fill: #ffffff;
-    -fx-background-color: rgba(0, 0, 0, 0.5);
-    -fx-padding: 5;
-}
-
 .text-area.scroll-bar {
     -fx-background-color: transparent;
 }
@@ -62,4 +57,8 @@
 .text-area > .scroll-pane {
     -fx-vbar-policy: never;
     -fx-hbar-policy: never;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
 }

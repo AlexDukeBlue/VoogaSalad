@@ -18,6 +18,7 @@
  */
 package frontend;
 
+import backend.player.Team;
 import backend.util.GameplayState;
 import controller.Controller;
 import frontend.factory.abilitypane.AbilityPane;
@@ -36,9 +37,11 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -166,7 +169,7 @@ public class View extends ClickableUIComponent<Region> {
 		box.prefHeightProperty().bind(bottomPane.heightProperty());
 		box.prefWidthProperty().bind(box.widthProperty());
 		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
-		worldAndDetailPane.setDividerPositions(1);
+		worldAndDetailPane.setDividerPositions(.7);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);
 		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldAndDetailPane, rightPane);
 		innerSplitPane.setDividerPositions(0, 1);
@@ -174,6 +177,12 @@ public class View extends ClickableUIComponent<Region> {
 		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane);
 		outerSplitPane.setDividerPositions(0);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
+		outerSplitPane.setOnKeyPressed(event -> {
+			if (event.getCode().equals(KeyCode.ESCAPE)) {
+				getClickHandler().showDetail(null);
+				getClickHandler().cancel();
+			}
+		});
 		SplitPane.setResizableWithParent(menuBar.getObject(), false);
 	}
 
@@ -232,12 +241,24 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
+		if (!getController().getMyPlayer().getTeam().isPresent()) {
+			joinTeam();
+		}
+		//TODO Don't remove the minimap!
 		removeSidePanes();
 	}
 
 	private void removeSidePanes() {
 		innerSplitPane.getItems().remove(conditionsPane.getObject());
 		innerSplitPane.getItems().remove(rightPane);
+	}
+
+	public void joinTeam() {
+		//TODO POLYGLOT ResourceBundlify
+		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null), getController().getReadOnlyGameState().getTeams());
+		teams.setHeaderText("Join a team to start playing:");
+		teams.setTitle("Join a team");
+		teams.showAndWait().ifPresent(team -> getController().joinTeam(team.getName()));
 	}
 
 	@Override

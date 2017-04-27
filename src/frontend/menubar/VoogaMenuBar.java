@@ -45,7 +45,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem, newGridItem, newTeamItem,
-			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
+			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem, joinTeam;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -101,10 +101,10 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		});
 		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
 			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer, object) -> {
-				getController().addTeamTemplates((Team) object);
+				getController().addTeams((Team) object);
 			});
 		});
-
+		joinTeam = factory.getMenuItem(getPolyglot().get("JoinTeam"), e -> myView.joinTeam());
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
 		try {
 			getPolyglot().languages().stream().forEach(languageName -> {
@@ -121,14 +121,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		} catch (PolyglotException e1) {
 			setLanguageItem.setVisible(false);
 		}
-
 		setThemeItem = factory.getMenu(getPolyglot().get("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
 			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
 			setThemeItem.getItems().add(menuItem);
 		});
-
 		conditionsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideConditions"),
 				e -> myView.toggleConditionsPane());
 		templatePaneItem = factory.getMenuItem(getPolyglot().get("ShowHideTemplate"), e -> myView.toggleTemplatePane());
@@ -151,6 +149,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
 			showBrowser("frontend/menubar/about.html");
 		});
+
 	}
 
 	private void showBrowser(String url) {
@@ -195,19 +194,14 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		view.getItems().add(templatePaneItem);
 		view.getItems().add(detailsPaneItem);
 		view.getItems().add(statsPaneItem);
-		view.getItems().add(editModeItem);
-		view.getItems().add(playModeItem);
-
+		Menu play = factory.getMenu(getPolyglot().get("Play"));
+		play.getItems().add(joinTeam);
+		play.getItems().add(editModeItem);
+		play.getItems().add(playModeItem);
 		help = factory.getMenu(getPolyglot().get("Help"));
 		help.getItems().add(helpItem);
 		help.getItems().add(aboutItem);
-
-		getObject().getMenus().add(file);
-		getObject().getMenus().add(edit);
-		getObject().getMenus().add(view);
-		getObject().getMenus().add(language);
-		getObject().getMenus().add(theme);
-		getObject().getMenus().add(help);
+		getObject().getMenus().addAll(file, edit, view, play, language, theme, help);
 	}
 
 	private void save() {

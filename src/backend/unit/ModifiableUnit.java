@@ -3,7 +3,7 @@ package backend.unit;
 import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.GridPattern;
-import backend.player.Team;
+import backend.player.ImmutablePlayer;
 import backend.unit.properties.*;
 import backend.util.*;
 
@@ -43,7 +43,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	private final UnitStats stats;
 	private GridPattern movePattern;
 	private Faction faction;
-	private Team team;
+	private ImmutablePlayer owner;
 	private Cell currentCell;
 	private boolean isVisible;
 
@@ -302,14 +302,14 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	@Override
-	public Team getTeam() {
-		return team;
+	public ModifiableUnit setOwner(ImmutablePlayer owner) {
+		this.owner = owner;
+		return this;
 	}
 
 	@Override
-	public ModifiableUnit setTeam(Team team) {
-		this.team = team;
-		return this;
+	public Optional<ImmutablePlayer> getOwner() {
+		return Optional.ofNullable(owner);
 	}
 
 	@Override

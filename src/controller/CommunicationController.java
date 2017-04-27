@@ -48,12 +48,11 @@ public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
 	private static final XMLSerializer XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
-
 	private final Executor executor;
-	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
-	private String playerName;
 	private final CountDownLatch waitForReady;
+	private ObservableClient<ReadonlyGameplayState> mClient;
+	private String playerName;
 	private Deque<Path> saveHistory;
 
 	public CommunicationController(String username) {
@@ -68,7 +67,6 @@ public class CommunicationController implements Controller {
 		this.saveHistory = new ArrayDeque<>();
 	}
 
-	@Override
 	public void startClient(String host, int port, Duration timeout) {
 		try {
 			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
@@ -107,7 +105,15 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public GameBoard getGrid() {
-		return getGameState().getGrid();
+		return getGameplayState().getGrid();
+	}
+
+	@Override
+	public void setGrid(GameBoard gameBoard) {
+		sendModifier((AuthoringGameState state) -> {
+			state.setGrid(gameBoard);
+			return state;
+		});
 	}
 
 	@Override
@@ -121,29 +127,16 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void setGrid(GameBoard gameBoard) {
-		sendModifier((AuthoringGameState state) -> {
-			state.setGrid(gameBoard);
-			return state;
-		});
-	}
-
-	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
 
-	private synchronized void updateGameState() {
-		updateAll();
-		waitForReady.countDown();
+	public ObservableClient<ReadonlyGameplayState> getClient() {
+		return mClient;
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
 		this.mClient = client;
-	}
-
-	public ObservableClient<ReadonlyGameplayState> getClient() {
-		return mClient;
 	}
 
 	@Override
@@ -167,13 +160,13 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public GameplayState getGameState() {
+	public GameplayState getGameplayState() {
 		return (GameplayState) getClient().getState();
 	}
 
 	@Override
 	public ImmutablePlayer getPlayer(String name) {
-		return getGameState().getPlayerByName(name);
+		return getGameplayState().getPlayerByName(name);
 	}
 
 	@Override
@@ -188,7 +181,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public Collection<? extends Unit> getUnits() {
-		return getGameState().getGrid().getUnits();
+		return getGameplayState().getGrid().getUnits();
 	}
 
 	@Override
@@ -240,13 +233,14 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public boolean isAuthoringMode() {
-		return getGameState().isAuthoringMode();
+		return getGameplayState().isAuthoringMode();
 	}
 
 	@Override
 	public void setPlayer(String name, String description, String imgPath) {
 		this.playerName = name;
-		Player me = new Player(name, new Team(name + "'s Team", "Temporary team for " + name, Team.COLORS.get((int) (Math.random() * Team.COLORS.size())), imgPath), description, imgPath);
+		Team temp = new Team(name + "'s Team", "Temporary team for " + name, Team.COLORS.get((int) (Math.random() * Team.COLORS.size())), imgPath);
+		Player me = new Player(name, description, imgPath);
 		sendModifier((AuthoringGameState state) -> {
 			state.addPlayer(me);
 			return state;
@@ -337,7 +331,6 @@ public class CommunicationController implements Controller {
 		});
 	}
 
-	@Override
 	public void updateAll() {
 		executor.execute(() -> {
 			try {
@@ -357,6 +350,12 @@ public class CommunicationController implements Controller {
 				removeListener(e);
 			}
 		}));
+	}
+
+	@Override
+	public void joinTeam(String teamName) {
+		String playerName = this.playerName;
+		sendModifier((GameplayState state) -> state.joinTeam(playerName, teamName));
 	}
 
 	public void endTurn() {
@@ -390,7 +389,7 @@ public class CommunicationController implements Controller {
 		String templateName = template.getName();
 		String targetUnitName = destination.getName();
 		CoordinateTuple gridLocation = destination.getLocation();
-		String teamName = getPlayer(getMyPlayerName()).getTeam().getName();
+		String playerName = getMyPlayerName();
 		sendModifier((AuthoringGameState gameState) -> {
 			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
 			try {
@@ -405,7 +404,7 @@ public class CommunicationController implements Controller {
 				if (Objects.nonNull(targetCell)) {
 					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
 					if (templateCopy instanceof Unit) {
-						((Unit) templateCopy).setTeam(gameState.getTeamByName(teamName));
+						((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName));
 					}
 					targetCell.add(templateCopy);
 				} else {
@@ -446,5 +445,10 @@ public class CommunicationController implements Controller {
 	@Override
 	public Shape getShape() {
 		return getGrid().getShape();
+	}
+
+	private synchronized void updateGameState() {
+		updateAll();
+		waitForReady.countDown();
 	}
 }
