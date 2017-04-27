@@ -17,6 +17,7 @@ import frontend.util.UIComponentListener;
 import util.net.Modifier;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collection;
@@ -26,11 +27,19 @@ import java.util.Collection;
  */
 public interface Controller {
 
-	ReadonlyGameplayState loadFile(Path path) throws IOException;
+	<T extends Serializable> T load(Path path) throws IOException;
 
-	void saveFile(Path path) throws IOException;
+	void saveState(Path path) throws IOException;
 
 	GameBoard getGrid();
+
+	String getActivePlayerName();
+
+	String getMyPlayerName();
+
+	default boolean isMyPlayerTurn() {
+		return getMyPlayerName().equals(getActivePlayerName());
+	}
 
 	void setGrid(GameBoard grid);
 
@@ -90,30 +99,28 @@ public interface Controller {
 
 	boolean isAuthoringMode();
 
-	String getPlayerName();
-	
 	void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate);
-	
+
 	void removeTurnRequirement(String name);
-	
+
 	void activateTurnRequirement(String name);
-	
+
 	void deactivateTurnRequirement(String name);
-	
+
 	void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer);
-	
+
 	void removeTurnAction(Event event, String name);
-	
+
 	void activateTurnAction(Event event, String name);
-	
+
 	void deactivateTurnAction(Event event, String name);
-	
+
 	void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate);
-	
+
 	void removeEndCondition(String name);
-	
+
 	void activateEndCondition(String name);
-	
+
 	void deactivateEndCondition(String name);
 
 	default Collection<? extends Team> getTeamTemplates() {

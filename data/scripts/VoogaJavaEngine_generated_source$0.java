@@ -13,8 +13,8 @@ import java.util.regex.*;
  * @author th174
  */
 public class VoogaJavaEngine_generated_source$0 {
-public static Object voogaFunction(java.lang.String a, java.lang.String b) {
+	public static Object voogaFunction(java.lang.String a, java.lang.String b) {
 //		System.out.print(a+b);
 		return a+b;
-}
+	}
 }

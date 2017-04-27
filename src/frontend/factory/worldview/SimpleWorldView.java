@@ -41,10 +41,6 @@ class SimpleWorldView extends ClickableUIComponent<Region> implements WorldViewE
 		initialize();
 	}
 
-	public GridViewExternal getGridPane() {
-		return myGrid;
-	}
-
 	private void initialize() {
 		borderPane = new BorderPane();
 		myGrid = new SimpleGridView(getController(), getClickHandler());
@@ -58,7 +54,10 @@ class SimpleWorldView extends ClickableUIComponent<Region> implements WorldViewE
 		AnchorPane.setBottomAnchor(chatLogView.getObject(), 5.0);
 		AnchorPane.setLeftAnchor(chatLogView.getObject(), 30.0);
 		AnchorPane.setRightAnchor(chatLogView.getObject(), 30.0);
-		centerAnchorPane.getChildren().addAll(chatLogView.getObject());
+		PlayersView playersView = new PlayersView(getController());
+		AnchorPane.setRightAnchor(playersView.getObject(), 5.0);
+		AnchorPane.setTopAnchor(playersView.getObject(), 5.0);
+		centerAnchorPane.getChildren().addAll(chatLogView.getObject(), playersView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
 		StackPane centerStackPane = new StackPane();
 		centerStackPane.getChildren().add(myGrid.getObject());

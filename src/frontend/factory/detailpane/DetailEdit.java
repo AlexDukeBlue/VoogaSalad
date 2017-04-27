@@ -30,7 +30,7 @@ public class DetailEdit extends BaseUIManager {
 
 	private Pane pane;
 	private Unit unit;
-	Terrain terrain;
+	private Terrain terrain;
 	private GridPane sceneView;
 	private Map<Terrain, TextField> moveCosts;
 	private Map<String, List<TextField>> unitStats;

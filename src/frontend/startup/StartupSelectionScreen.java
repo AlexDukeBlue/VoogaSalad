@@ -218,7 +218,7 @@ public class StartupSelectionScreen extends VBox {
 		try {
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			return control.loadFile(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()));
+			return control.load(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()));
 		} catch (Exception e) {
 			Platform.exit();
 			return null;

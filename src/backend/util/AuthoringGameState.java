@@ -54,13 +54,8 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public Player getCurrentPlayer() {
-		return (Player) super.getCurrentPlayer();
-	}
-
-	@Override
-	public List<Player> getAllPlayers() {
-		return (List<Player>) super.getAllPlayers();
+	public Player getActivePlayer() {
+		return (Player) super.getActivePlayer();
 	}
 
 	@Override

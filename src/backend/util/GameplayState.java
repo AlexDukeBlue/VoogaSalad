@@ -1,6 +1,5 @@
 package backend.util;
 
-import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.Resultant;
 import backend.grid.GameBoard;
 import backend.player.ChatMessage;
@@ -8,8 +7,6 @@ import backend.player.ImmutablePlayer;
 import backend.player.Team;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,15 +15,14 @@ import java.util.stream.Stream;
  */
 public class GameplayState extends ImmutableVoogaObject implements ReadonlyGameplayState {
 	private final Random random;
-	private final List<String> playerNames;
-	private final Map<String, ImmutablePlayer> playerList;
+	private final Queue<String> playerOrder;
+	private final Map<String, ImmutablePlayer> players;
 	private final Map<String, Team> teams;
 	private final Collection<Resultant> objectives;
 	private final Map<Event, Collection<Actionable>> turnActions;
 	private final Collection<Requirement> turnRequirements;
-	private int turnNumber;
-	private int currentPlayerNumber;
 	private boolean isAuthoringMode;
+	private volatile int turnNumber;
 	private volatile GameBoard grid;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
@@ -46,24 +42,24 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.turnActions = new HashMap<>(turnActions);
 		this.objectives = new HashSet<>(objectives);
 		this.turnRequirements = new HashSet<>(turnRequirements);
-		this.playerList = new HashMap<>();
-		this.playerNames = new ArrayList<>();
+		this.players = new HashMap<>();
+		this.playerOrder = new ArrayDeque<>();
 		this.isAuthoringMode = false;
 	}
 
 	@Override
-	public ImmutablePlayer getCurrentPlayer() {
-		return playerList.get(playerNames.get(currentPlayerNumber));
+	public ImmutablePlayer getActivePlayer() {
+		return getPlayerByName(playerOrder.element());
 	}
 
 	@Override
 	public ImmutablePlayer getPlayerByName(String name) {
-		return playerList.get(name);
+		return players.get(name);
 	}
 
 	@Override
-	public List<? extends ImmutablePlayer> getAllPlayers() {
-		return Collections.unmodifiableList(playerNames.stream().map(playerList::get).collect(Collectors.toList()));
+	public List<String> getOrderedPlayerNames() {
+		return new ArrayList<>(playerOrder);
 	}
 
 	@Override
@@ -88,7 +84,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	public GameplayState endTurn() {
 		getGrid().endTurn(this);
-		currentPlayerNumber = (currentPlayerNumber + 1) % playerNames.size();
+		playerOrder.add(playerOrder.remove());
 		turnNumber++;
 		getGrid().startTurn(this);
 		return this;
@@ -104,11 +100,11 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public GameplayState addPlayer(ImmutablePlayer newPlayer, Team team) {
-		if (playerNames.contains(newPlayer.getName())) {
-			playerList.get(newPlayer.getName()).setTeam(newPlayer.getTeam());
+		if (playerOrder.contains(newPlayer.getName())) {
+			players.get(newPlayer.getName()).setTeam(newPlayer.getTeam());
 		} else {
-			playerNames.add(newPlayer.getName());
-			playerList.put(newPlayer.getName(), newPlayer);
+			playerOrder.add(newPlayer.getName());
+			players.put(newPlayer.getName(), newPlayer);
 		}
 		teams.putIfAbsent(newPlayer.getTeam().getName(), newPlayer.getTeam());
 		if (Objects.isNull(teams.get(newPlayer.getTeam().getName()).getByName(newPlayer.getName()))) {
@@ -118,8 +114,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public GameplayState removePlayer(String playerName) {
-		playerList.remove(playerName);
-		playerNames.remove(playerName);
+		players.remove(playerName);
+		playerOrder.remove(playerName);
 		return this;
 	}
 
@@ -159,12 +155,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.test(getCurrentPlayer(), this));
+		return turnRequirements.stream().allMatch(e -> e.test(getActivePlayer(), this));
 	}
 
 	public GameplayState messageAll(String message, ImmutablePlayer sender) {
 		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.ALL, sender, message);
-		getAllPlayers().forEach(player -> player.receiveMessage(chatMessage));
+		players.values().forEach(player -> player.receiveMessage(chatMessage));
 		return this;
 	}
 

@@ -1,8 +1,7 @@
 package backend.cell;
 
-import backend.unit.properties.DefensiveModifierSet;
 import backend.unit.properties.InteractionModifier;
-import backend.unit.properties.OffensiveModifierSet;
+import backend.unit.properties.ModifierSet;
 import backend.unit.properties.TriggeredAbilitySet;
 import backend.util.Ability;
 import backend.util.ModifiableVoogaObject;
@@ -32,8 +31,8 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 	}
 
 	private final TriggeredAbilitySet triggeredAbilities;
-	private final OffensiveModifierSet offensiveModifiers;
-	private final DefensiveModifierSet defensiveModifiers;
+	private final ModifierSet offensiveModifiers;
+	private final ModifierSet defensiveModifiers;
 	private int defaultMoveCost;
 	private String soundPath;
 
@@ -45,8 +44,8 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 		super(name, description, imgPath);
 		this.defaultMoveCost = defaultMoveCost;
 		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
-		this.offensiveModifiers = new OffensiveModifierSet(offensiveModifiers);
-		this.defensiveModifiers = new DefensiveModifierSet(defensiveModifiers);
+		this.offensiveModifiers = new ModifierSet("Offensive Modifiers", "Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain", "" ,offensiveModifiers);
+		this.defensiveModifiers = new ModifierSet("Defensive Modifiers", "Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain", "" , defensiveModifiers);
 	}
 
 	@Override

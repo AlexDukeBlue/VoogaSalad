@@ -23,6 +23,7 @@ import util.net.ObservableClient;
 import util.net.ObservableServer;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,7 +45,7 @@ import java.util.concurrent.Executors;
  */
 public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
-	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
+	private static final XMLSerializer XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
 
 	private final Executor executor;
@@ -89,19 +90,32 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public ReadonlyGameplayState loadFile(Path path) throws IOException {
-		return XML.unserialize(new String(Files.readAllBytes(path)));
+	public void saveState(Path path) throws IOException {
+		save(getAuthoringGameState(), path);
 	}
 
-	@Override
-	public void saveFile(Path path) throws IOException {
+	public void save(Serializable obj, Path path) throws IOException {
 		Files.createDirectories(path.getParent());
-		Files.write(path, ((String) XML.serialize(getAuthoringGameState())).getBytes());
+		Files.write(path, ((String) XML.serialize(obj)).getBytes());
+	}
+
+	public <T extends Serializable> T load(Path path) throws IOException {
+		return (T) XML.unserialize(new String(Files.readAllBytes(path)));
 	}
 
 	@Override
 	public GameBoard getGrid() {
 		return getGameState().getGrid();
+	}
+
+	@Override
+	public String getActivePlayerName() {
+		return getAuthoringGameState().getActivePlayer().getName();
+	}
+
+	@Override
+	public String getMyPlayerName() {
+		return playerName;
 	}
 
 	@Override
@@ -228,11 +242,6 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public String getPlayerName() {
-		return playerName;
-	}
-
-	@Override
 	public void addPlayer(String playerName) {
 		this.playerName = playerName;
 		sendModifier((AuthoringGameState state) -> {
@@ -329,7 +338,7 @@ public class CommunicationController implements Controller {
 		executor.execute(() -> {
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveFile(autoSavePath);
+				saveState(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
 				System.err.println("You're going TOO FAST!!!!");
@@ -416,7 +425,7 @@ public class CommunicationController implements Controller {
 	public void undo() {
 		try {
 			saveHistory.pop();
-			setGameState(loadFile(saveHistory.pop()));
+			setGameState(this.load(saveHistory.pop()));
 		} catch (IOException ignored) {
 		}
 	}

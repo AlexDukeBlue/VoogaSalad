@@ -81,7 +81,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 
 	@Override
 	public void update() {
-		List<ChatMessage> chatlog = getController().getPlayer(getController().getPlayerName()).getChatLog();
+		List<ChatMessage> chatlog = getController().getPlayer(getController().getMyPlayerName()).getChatLog();
 		if (chatlog.size() > logLength) {
 			logLength = chatlog.size();
 			textArea.setText(header + chatlog.stream().map(Object::toString).collect(Collectors.joining("\n\n")));

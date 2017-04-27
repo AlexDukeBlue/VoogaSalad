@@ -90,28 +90,28 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	 */
 	@Override
 	public void update() {
-		if (Objects.nonNull(getCell())) {
-			if (unitCount < 0 || !getCell().getTerrain().getImgPath().equals(terrainCache)) {
+		if (Objects.nonNull(getEntity())) {
+			if (unitCount < 0 || !getEntity().getTerrain().getImgPath().equals(terrainCache)) {
 				if (getController().getGrid().getImgPath().length() < 1) {
-					polygon.setFill(new ImagePattern(View.getImg(getCell().getTerrain().getImgPath())));
+					polygon.setFill(new ImagePattern(View.getImg(getEntity().getTerrain().getImgPath())));
 				} else {
 					polygon.setFill(Color.TRANSPARENT);
 				}
-				terrainCache = getCell().getTerrain().getImgPath();
+				terrainCache = getEntity().getTerrain().getImgPath();
 			}
-			if (unitCount != getCell().getOccupants().size() || !getCell().getOccupants().stream().map(Unit::getName).collect(Collectors.toSet()).equals(unitViews.keySet())) {
-				unitCount = unitCount < 0 ? getCell().getOccupants().size() : unitCount + 1;
+			if (unitCount != getEntity().getOccupants().size() || !getEntity().getOccupants().stream().map(Unit::getName).collect(Collectors.toSet()).equals(unitViews.keySet())) {
+				unitCount = unitCount < 0 ? getEntity().getOccupants().size() : unitCount + 1;
 				unitViews.values().forEach(e -> getController().removeListener(e));
 				unitViews.clear();
 				updateGroup.getChildren().clear();
-				getCell().getOccupants().forEach(unit -> {
+				getEntity().getOccupants().forEach(unit -> {
 					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), polygon.boundsInParentProperty(), getController(), getClickHandler());
 					unitViews.put(unit.getName(), unitView);
 					updateGroup.getChildren().add(unitView.getObject());
 				});
 				unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> {
 					if (event.getButton().equals(MouseButton.PRIMARY)) {
-						if (getCell().getOccupants().size() <= 1) {
+						if (getEntity().getOccupants().size() <= 1) {
 							unitView.handleClick(event, null);
 						} else {
 							handleClick(event, null);
@@ -120,8 +120,8 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 						contextMenu.show(polygon, event.getScreenX(), event.getScreenY());
 					}
 				}));
-				if (getCell().getOccupants().size() > 1) {
-					Text numOccupants = new Text(getCell().getOccupants().size() + "");
+				if (getEntity().getOccupants().size() > 1) {
+					Text numOccupants = new Text(getEntity().getOccupants().size() + "");
 					numOccupants.setFont(new Font(13));
 					numOccupants.setLayoutX(polygon.getBoundsInParent().getMaxX() - numOccupants.getLayoutBounds().getWidth() - 4);
 					numOccupants.setLayoutY(polygon.getBoundsInParent().getMaxY() - numOccupants.getLayoutBounds().getHeight() + 9);
@@ -144,7 +144,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 
 	private void setContextMenu() {
 		contextMenu.getItems().clear();
-		getCell().getOccupants().forEach(e -> {
+		getEntity().getOccupants().forEach(e -> {
 			MenuItem item = new MenuItem(e.getName());
 			contextMenu.getItems().add(item);
 			item.setOnAction(event -> unitViews.get(e.getName()).handleClick(event, null));
@@ -153,14 +153,14 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 
 	private String getToolTipString(UnitViewExternal uv) {
 		String hp = "";
-		UnitStat<Double> hitpoints = uv.getUnit().getHitPoints();
+		UnitStat<Double> hitpoints = uv.getEntity().getHitPoints();
 		if (Objects.nonNull(hitpoints)) {
 			String formatString = "\n" + getPolyglot().get("Hitpoints").getValueSafe() + ": %2.0f/%2.0f";
 			hp = String.format(formatString, hitpoints.getCurrentValue(), hitpoints.getMaxValue());
 		}
 		String formatString = getPolyglot().get("Name").getValueSafe() + ": %s\n"
 				+ getPolyglot().get("Position").getValueSafe() + ": %s%s";
-		return String.format(formatString, uv.getUnitName(), uv.getUnit().getLocation().toString(), hp);
+		return String.format(formatString, uv.getUnitName(), uv.getEntity().getLocation().toString(), hp);
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	}
 
 	@Override
-	public Cell getCell() {
+	public Cell getEntity() {
 		return getController().getCell(cellLocation);
 	}
 
@@ -181,7 +181,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 
 	@Override
 	public String toString() {
-		return getCell().toString();
+		return getEntity().toString();
 	}
 
 	@Override

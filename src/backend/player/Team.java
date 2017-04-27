@@ -29,7 +29,7 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	}
 
 	public Team(String name, String description, String imgPath, Collection<? extends Player> players) {
-		this(name, description, COLORFUL.get((index = index / 2 + 41) % COLORFUL.size()), imgPath, players);
+		this(name, description, COLORFUL.get((index += 41) % COLORFUL.size()), imgPath, players);
 	}
 
 	public Team(String name, String descripton, String colorString, String imgPath, Collection<? extends Player> players) {

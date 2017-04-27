@@ -2,7 +2,6 @@ package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
 import backend.grid.ModifiableGameBoard;
-import backend.unit.Unit;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
@@ -68,17 +67,12 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	private void initialize() {
-		Group zoomGroup = new Group(cellViewObjects);
 		myScrollPane.setOnZoom(event -> {
 			cellViewObjects.setScaleX(cellViewObjects.getScaleX() * event.getZoomFactor());
 			cellViewObjects.setScaleY(cellViewObjects.getScaleY() * event.getZoomFactor());
 			event.consume();
 		});
-		myScrollPane.setOnKeyPressed(event -> {
-			if(event.getCode().equals(KeyCode.DELETE) || event.getCode().equals(KeyCode.BACK_SPACE)){
-				handleClick(event, null);
-			}
-		});
+
 		cellViewObjects.addEventFilter(ScrollEvent.ANY, event -> {
 			if (event.isShortcutDown()) {
 				cellViewObjects.setScaleX(cellViewObjects.getScaleX() + event.getDeltaY() / 700);
@@ -90,7 +84,12 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		myScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		myScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		myScrollPane.setPannable(true);
-		myScrollPane.setContent(zoomGroup);
+		myScrollPane.setContent(new Group(cellViewObjects));
+		myScrollPane.setOnKeyPressed(event -> {
+			if(event.getCode().equals(KeyCode.DELETE) || event.getCode().equals(KeyCode.BACK_SPACE)){
+				handleClick(event, null);
+			}
+		});
 	}
 
 	@Override

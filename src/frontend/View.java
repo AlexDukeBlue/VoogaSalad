@@ -61,6 +61,7 @@ public class View extends ClickableUIComponent<Region> {
 	private SplitPane innerSplitPane;
 	private SplitPane bottomPane;
 	private SplitPane worldAndDetailPane;
+	private Button endTurnButton;
 	private VoogaMenuBar menuBar;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
@@ -133,7 +134,7 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void placePanes() {
 		initPanes();
-		Button endTurnButton = new Button(getPolyglot().get("EndTurn").getValueSafe());
+		endTurnButton = new Button(getPolyglot().get("EndTurn").getValueSafe());
 		endTurnButton.setOnMouseClicked(e -> {
 			getClickHandler().cancel();
 			getController().endTurn();
@@ -265,5 +266,6 @@ public class View extends ClickableUIComponent<Region> {
 	@Override
 	public void update() {
 		this.setViewEditable(getController().isAuthoringMode());
+		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
 	}
 }

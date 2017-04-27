@@ -22,7 +22,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setMovePattern(GridPattern.SQUARE_ADJACENT)
 			.setImgPath("resources/images/skeletonWarrior.png")
 			.addActiveAbilities(ActiveAbility.SWORD)
-			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_MOVE_POINTS, ModifiableTriggeredEffect.RESET_ABILITY_POINTS)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
@@ -31,14 +31,14 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setImgPath("resources/images/skeletonArcher.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
-			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_MOVE_POINTS, ModifiableTriggeredEffect.RESET_ABILITY_POINTS)
 			.addActiveAbilities(ActiveAbility.BOW);
 	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 
 	private final ActiveAbilitySet activeAbilities;
 	private final TriggeredAbilitySet triggeredAbilities;
-	private final OffensiveModifierSet offensiveModifiers;
-	private final DefensiveModifierSet defensiveModifiers;
+	private final ModifierSet offensiveModifiers;
+	private final ModifierSet defensiveModifiers;
 	private final Map<String, Integer> terrainMoveCosts;
 	private final UnitStats stats;
 	private GridPattern movePattern;
@@ -59,8 +59,8 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		this.movePattern = movePattern;
 		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
 		this.activeAbilities = new ActiveAbilitySet(activeAbilities);
-		this.offensiveModifiers = new OffensiveModifierSet(offensiveModifiers);
-		this.defensiveModifiers = new DefensiveModifierSet(defensiveModifiers);
+		this.offensiveModifiers = new ModifierSet("Offensive Modifiers", "Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.", "", offensiveModifiers);
+		this.defensiveModifiers = new ModifierSet("Defensive modifiers", "Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.", "", defensiveModifiers);
 	}
 
 	@Deprecated
