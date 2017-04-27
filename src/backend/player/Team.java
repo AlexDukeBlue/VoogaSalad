@@ -1,5 +1,8 @@
 package backend.player;
 
+import backend.cell.Cell;
+import backend.grid.ModifiableGameBoard;
+import backend.unit.Unit;
 import backend.util.ModifiableVoogaCollection;
 import backend.util.VoogaEntity;
 
@@ -20,16 +23,11 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	public transient static final String MAGENTA = "#ff00ff";
 	public transient static final String WHITE = "#ffffff";
 	public transient static final String BLACK = "#000000";
-	private transient static final List<String> COLORFUL = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA);
-	private transient static volatile int index = 0;
-	private String colorString;
+	public transient static final List<String> COLORS = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, WHITE, BLACK);
+	private final String colorString;
 
-	public Team(String name, String description, String imgPath, Player... players) {
-		this(name, description, imgPath, Arrays.asList(players));
-	}
-
-	public Team(String name, String description, String imgPath, Collection<? extends Player> players) {
-		this(name, description, COLORFUL.get((index += 41) % COLORFUL.size()), imgPath, players);
+	public Team(String name, String description, String colorString, String imgPath, Player... players) {
+		this(name, description, colorString, imgPath, Arrays.asList(players));
 	}
 
 	public Team(String name, String descripton, String colorString, String imgPath, Collection<? extends Player> players) {
@@ -39,26 +37,36 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 
 	@Override
 	public Team addAll(Collection<? extends ImmutablePlayer> players) {
-		players.forEach(e -> e.setTeam(this));
-		return super.addAll(players);
+		super.addAll(players);
+		players.stream().filter(e -> !e.getTeam().equals(this)).forEach(e -> e.setTeam(this));
+		return this;
 	}
 
 	@Override
 	public Team removeAll(Collection<? extends ImmutablePlayer> players) {
-		players.forEach(e -> e.setTeam(null));
-		return super.removeAll(players);
+		super.removeAll(players);
+		players.stream().filter(e -> e.getTeam().equals(this)).forEach(e -> e.setTeam(null));
+		return this;
+	}
+
+	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
+		return grid.getUnits().parallelStream().filter(e -> e.getTeam().equals(this)).collect(Collectors.toSet());
+	}
+
+	public Collection<Cell> getVisibleCells() {
+		throw new RuntimeException("Not yet implemented");
+	}
+
+	public Collection<Cell> getExploredCells() {
+		throw new RuntimeException("Not yet implemented");
 	}
 
 	@Override
 	public Team copy() {
-		return new Team(getName(), getDescription(), getImgPath(), getAll().stream().map(ImmutablePlayer::copy).map(Player.class::cast).collect(Collectors.toList()));
+		return new Team(getName(), getDescription(), getColorString(), getImgPath(), getAll().stream().map(ImmutablePlayer::copy).map(Player.class::cast).collect(Collectors.toList()));
 	}
 
 	public String getColorString() {
 		return colorString;
-	}
-
-	public void setColorString(String color) {
-		colorString = color;
 	}
 }

@@ -135,12 +135,14 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 
 	@Override
 	public void select(ClickHandler clickHandler) {
-		clickHandler.getGridPane().highlightRange(getController().isMyPlayerTurn() ? getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
+		clickHandler.highlightRange(
+				getController().isMyPlayerTurn() && getEntity().getTeam().equals(getController().getActivePlayer().getTeam()) ?
+						getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
 	}
 
 	@Override
 	public void deselect(ClickHandler clickHandler) {
-		clickHandler.getGridPane().resetHighlighting();
+		clickHandler.resetHighlighting();
 	}
 
 	@Override

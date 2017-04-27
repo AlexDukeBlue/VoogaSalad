@@ -30,14 +30,16 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 		} else if (getEntity() instanceof BoundsHandler) {
 			getController().setBoundsHandler(getEntity().getName());
 		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
-			getController().copyTemplateToGrid(getEntity().getName(),((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation(),((GameBoardObjectView) target).getEntity().getName());
+			getController().copyTemplateToGrid(getEntity(), (HasLocation) ((GameBoardObjectView) target).getEntity());
 		}
 		super.actInAuthoringMode(target, additionalInfo, clickHandler, event);
 	}
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
-		actInAuthoringMode(target, null, clickHandler, event);
+		if (getController().isMyPlayerTurn()) {
+			actInAuthoringMode(target, null, clickHandler, event);
+		}
 	}
 
 	@Override

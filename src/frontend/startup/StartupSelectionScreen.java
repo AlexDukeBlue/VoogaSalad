@@ -194,7 +194,6 @@ public class StartupSelectionScreen extends VBox {
 	private void create(int port) {
 		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
 		WizardFactory.newWizard("gamestate", null).addObserver((o, arg) -> {
-			//GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
 			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 			createGame();
@@ -228,6 +227,7 @@ public class StartupSelectionScreen extends VBox {
 	private void createGame() {
 		View view = new View(control, stage);
 		stage.setScene(new Scene(view.getObject()));
+		control.updateAll();
 	}
 
 	private boolean isValidPort(int port) {

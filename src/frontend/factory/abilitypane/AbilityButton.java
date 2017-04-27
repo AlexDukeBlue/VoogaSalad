@@ -44,13 +44,13 @@ public class AbilityButton extends VoogaEntityButton {
 	@Override
 	public void select(ClickHandler clickHandler) {
 		if (getEntity() instanceof ActiveAbility) {
-			clickHandler.getGridPane().highlightRange(getController().isMyPlayerTurn() ? ((ActiveAbility<?>) getEntity()).getLegalTargetCells((Unit) abilityOwner, getController().getGameState()) : Collections.emptyList());
+			clickHandler.highlightRange(getController().isMyPlayerTurn() ? ((ActiveAbility<?>) getEntity()).getLegalTargetCells((Unit) abilityOwner, getController().getGameState()) : Collections.emptyList());
 		}
 	}
 
 	@Override
 	public void deselect(ClickHandler clickHandler) {
-		clickHandler.getGridPane().resetHighlighting();
+		clickHandler.resetHighlighting();
 	}
 
 	private boolean isThisUsableActiveAbility(ClickableUIComponent target) {

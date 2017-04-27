@@ -55,8 +55,8 @@ class SimpleWorldView extends ClickableUIComponent<Region> implements WorldViewE
 		AnchorPane.setLeftAnchor(chatLogView.getObject(), 30.0);
 		AnchorPane.setRightAnchor(chatLogView.getObject(), 30.0);
 		PlayersView playersView = new PlayersView(getController());
-		AnchorPane.setRightAnchor(playersView.getObject(), 5.0);
-		AnchorPane.setTopAnchor(playersView.getObject(), 5.0);
+		AnchorPane.setRightAnchor(playersView.getObject(), 2.0);
+		AnchorPane.setTopAnchor(playersView.getObject(), 2.0);
 		centerAnchorPane.getChildren().addAll(chatLogView.getObject(), playersView.getObject());
 		centerAnchorPane.setPickOnBounds(false);
 		StackPane centerStackPane = new StackPane();

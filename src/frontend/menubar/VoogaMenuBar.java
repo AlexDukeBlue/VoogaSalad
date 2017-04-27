@@ -3,13 +3,6 @@
  */
 package frontend.menubar;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 import backend.grid.GameBoard;
 import backend.player.Team;
 import backend.util.VoogaEntity;
@@ -23,9 +16,8 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -37,6 +29,13 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * @author Stone Mathers Created 4/18/2017
@@ -96,13 +95,13 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
-			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
-				getController().setGrid((GameBoard)object);
+			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer, object) -> {
+				getController().setGrid((GameBoard) object);
 			});
 		});
 		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
-			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer,object) -> {
-				getController().addTeamTemplates((Team)object);
+			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer, object) -> {
+				getController().addTeamTemplates((Team) object);
 			});
 		});
 
@@ -263,11 +262,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		} catch (PolyglotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-	
+
 		}
-		
+
 		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
-		
+
 	}
 
 	@Override

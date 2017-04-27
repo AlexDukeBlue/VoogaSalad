@@ -10,6 +10,7 @@ import backend.grid.Shape;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
+import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
@@ -67,12 +68,13 @@ public class CommunicationController implements Controller {
 		this.saveHistory = new ArrayDeque<>();
 	}
 
+	@Override
 	public void startClient(String host, int port, Duration timeout) {
 		try {
 			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
 			mClient.addListener(newGameState -> updateGameState());
 			executor.execute(mClient);
-			addPlayer(this.playerName);
+			setPlayer(this.playerName, "", "");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -242,10 +244,11 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void addPlayer(String playerName) {
-		this.playerName = playerName;
+	public void setPlayer(String name, String description, String imgPath) {
+		this.playerName = name;
+		Player me = new Player(name, new Team(name + "'s Team", "Temporary team for " + name, Team.COLORS.get((int) (Math.random() * Team.COLORS.size())), imgPath), description, imgPath);
 		sendModifier((AuthoringGameState state) -> {
-			state.addPlayer(new Player(playerName, "Test player", ""));
+			state.addPlayer(me);
 			return state;
 		});
 	}
@@ -334,7 +337,8 @@ public class CommunicationController implements Controller {
 		});
 	}
 
-	private void updateAll() {
+	@Override
+	public void updateAll() {
 		executor.execute(() -> {
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
@@ -382,19 +386,28 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName) {
+	public void copyTemplateToGrid(VoogaEntity template, HasLocation destination) {
+		String templateName = template.getName();
+		String targetUnitName = destination.getName();
+		CoordinateTuple gridLocation = destination.getLocation();
+		String teamName = getPlayer(getMyPlayerName()).getTeam().getName();
 		sendModifier((AuthoringGameState gameState) -> {
+			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
 			try {
 				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
 				if (Objects.nonNull(targetUnit)) {
-					targetUnit.add(gameState.getTemplateByName(templateName).copy());
+					targetUnit.add(templateCopy);
 				} else {
 					throw new Exception();
 				}
 			} catch (Exception e) {
 				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
-					targetCell.add(gameState.getTemplateByName(templateName).copy());
+					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
+					if (templateCopy instanceof Unit) {
+						((Unit) templateCopy).setTeam(gameState.getTeamByName(teamName));
+					}
+					targetCell.add(templateCopy);
 				} else {
 					e.printStackTrace();
 				}

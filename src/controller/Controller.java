@@ -41,6 +41,10 @@ public interface Controller {
 		return getMyPlayerName().equals(getActivePlayerName());
 	}
 
+	default ImmutablePlayer getActivePlayer(){
+		return getPlayer(getActivePlayerName());
+	}
+
 	void setGrid(GameBoard grid);
 
 	void startClient(String host, int port, Duration timeout);
@@ -135,7 +139,7 @@ public interface Controller {
 		removeTemplatesByCategory("team", teamTemplates);
 	}
 
-	void addPlayer(String playerName);
+	void setPlayer(String name, String description, String imgPath);
 
 	void undo();
 
@@ -149,9 +153,11 @@ public interface Controller {
 
 	void setBoundsHandler(String boundsHandlerName);
 
-	void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName);
+	void copyTemplateToGrid(VoogaEntity template, HasLocation destination);
 
 	void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation);
 
 	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation);
+
+	void updateAll();
 }

@@ -143,7 +143,7 @@
 //				.build();
 //		AuthoringGameState authoringGameState = new AuthoringGameState("test").setGrid(DEFAULT_GAME_BOARD)
 //				.setDescription("This is just a test gamestate").setImgPath("").addTeam(new Team("Team 1", "Test team 1", ""))
-//				.addPlayer(new Player("Player 1", "Test player 1", ""));
+//				.setPlayer(new Player("Player 1", "Test player 1", ""));
 //		XMLSerializer<AuthoringGameState> serializer = new XMLSerializer<>();
 //		try {
 //			Files.write(Paths.get("data/saved_game_data/test_base_gamestate.xml"), ((String) serializer.serialize(authoringGameState)).getBytes());

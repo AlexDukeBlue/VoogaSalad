@@ -1,31 +1,22 @@
 package backend.player;
 
-import backend.cell.Cell;
-import backend.grid.ModifiableGameBoard;
-import backend.unit.Unit;
 import backend.util.ModifiableVoogaObject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
 public class Player extends ModifiableVoogaObject<Player> implements ImmutablePlayer {
 	private Team team;
-	private ObservableList<ChatMessage> chatLog;
-
-	public Player(String name, String description, String imgPath) {
-		this(name, new Team(name + "'s Team", "", imgPath), description, imgPath);
-		getTeam().addAll(this);
-	}
+	private final List<ChatMessage> chatLog;
 
 	public Player(String name, Team team, String description, String imgPath) {
 		super(name, description, imgPath);
-		chatLog = FXCollections.observableArrayList();
-		this.team = team;
+		chatLog = new ArrayList<>();
+		setTeam(team);
 	}
 
 	@Override
@@ -38,24 +29,16 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 		return team;
 	}
 
+	@Override
 	public Player setTeam(Team team) {
+		if (Objects.nonNull(this.team) && this.team.containsName(getName())) {
+			this.team.removeAll(this);
+		}
 		this.team = team;
+		if (Objects.nonNull(team) && !team.containsName(getName())) {
+			team.addAll(this);
+		}
 		return this;
-	}
-
-	@Override
-	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
-		return grid.getUnits().parallelStream().filter(e -> e.getOwner().equals(this)).collect(Collectors.toSet());
-	}
-
-	@Override
-	public Collection<Cell> getVisibleCells() {
-		return null;
-	}
-
-	@Override
-	public Collection<Cell> getExploredCells() {
-		return null;
 	}
 
 	@Override
@@ -64,7 +47,7 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	}
 
 	@Override
-	public ObservableList<ChatMessage> getChatLog() {
+	public List<ChatMessage> getChatLog() {
 		return chatLog;
 	}
 }

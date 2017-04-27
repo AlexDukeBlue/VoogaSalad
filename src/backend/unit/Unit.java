@@ -4,7 +4,6 @@ import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.grid.*;
-import backend.player.Player;
 import backend.player.Team;
 import backend.unit.properties.*;
 import backend.util.*;
@@ -183,19 +182,9 @@ public interface Unit extends VoogaEntity, HasActiveAbilities, HasTriggeredAbili
 
 	void setVisible(boolean isVisible);
 
-	default int movePointsTo(CoordinateTuple other) {
-		throw new RuntimeException("Not Implemented Yet");
-	}
+	Team getTeam();
 
-	default Team getTeam() {
-		//TODO
-		return new Team("", "", "");
-//		return getOwner().getTeam();
-	}
-
-	Player getOwner();
-
-	Unit setOwner(Player owner);
+	Unit setTeam(Team team);
 
 	default Unit add(VoogaEntity entity) {
 		DISPATCH_MAP.get(entity.getClass()).accept(entity, this);

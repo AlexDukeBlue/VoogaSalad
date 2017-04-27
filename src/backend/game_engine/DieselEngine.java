@@ -50,7 +50,7 @@ public class DieselEngine implements GameEngine {
 	@Override
 	public void save(GameplayState gameState) {
 		try {
-			new XMLSerializer<GameplayState>().doSerialize(gameState);
+			new XMLSerializer<>().doSerialize(gameState);
 		} catch (Exception e) {
 			//Something here.
 		}
@@ -60,7 +60,7 @@ public class DieselEngine implements GameEngine {
 	public AuthoringGameState load(File gameStateFile) {
 		AuthoringGameState newGameState;
 		try {
-			newGameState = new XMLSerializer<AuthoringGameState>().unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
+			newGameState = (AuthoringGameState) new XMLSerializer<>().unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
 			//Something here.
 			newGameState = null;

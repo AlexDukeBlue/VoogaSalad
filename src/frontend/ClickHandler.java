@@ -1,5 +1,6 @@
 package frontend;
 
+import backend.grid.CoordinateTuple;
 import frontend.factory.abilitypane.AbilityPane;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.worldview.GridViewExternal;
@@ -10,6 +11,7 @@ import frontend.util.highlighter.ShadowHighlighter;
 import javafx.event.Event;
 import javafx.scene.Node;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -72,8 +74,12 @@ public abstract class ClickHandler {
 		}
 	}
 
-	public GridViewExternal getGridPane() {
-		return gridPane;
+	public void highlightRange(Collection<CoordinateTuple> coordinates) {
+		gridPane.highlightRange(coordinates);
+	}
+
+	public void resetHighlighting() {
+		gridPane.resetHighlighting();
 	}
 
 	public void setGridPane(GridViewExternal gridPane) {
