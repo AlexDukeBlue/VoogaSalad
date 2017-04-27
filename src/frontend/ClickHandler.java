@@ -17,20 +17,20 @@ import java.util.Objects;
 /**
  * @author Created by th174 on 4/22/17.
  */
-public abstract class ClickHandler {
+public class ClickHandler {
 	private static final Highlighter SELECTED_HIGHLIGHTER = new ShadowHighlighter();
 	private SelectableUIComponent<? extends Node> selectedComponent;
 	private Object additionalInfo;
-	private DetailPaneExternal detailPane;
-	private AbilityPane abilityPane;
-	private GridViewExternal gridPane;
+	private final DetailPaneExternal detailPane;
+	private final AbilityPane abilityPane;
+	private final GridViewExternal gridPane;
+	private Mode currentMode;
 
-	public final void setDetailPane(DetailPaneExternal detailPane) {
+	public ClickHandler(DetailPaneExternal detailPane, AbilityPane abilityPane, GridViewExternal gridPane, Mode currentMode) {
 		this.detailPane = detailPane;
-	}
-
-	public final void setAbilityPane(AbilityPane abilityPane) {
 		this.abilityPane = abilityPane;
+		this.gridPane = gridPane;
+		this.currentMode = currentMode;
 	}
 
 	public final void handleClick(Event event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
@@ -47,6 +47,10 @@ public abstract class ClickHandler {
 		}
 	}
 
+	public final void setMode(Mode currentMode) {
+		this.currentMode = currentMode;
+	}
+
 	public final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
 		cancel();
 		this.selectedComponent = selectedComponent;
@@ -55,7 +59,13 @@ public abstract class ClickHandler {
 		showDetail(selectedComponent);
 	}
 
-	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event);
+	protected void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event) {
+		if (currentMode.equals(Mode.AUTHORING)) {
+			selectedComponent.actInAuthoringMode(actionTarget, additionalInfo, this, event);
+		} else if (currentMode.equals(Mode.GAMEPLAY)) {
+			selectedComponent.actInGameplayMode(actionTarget, additionalInfo, this, event);
+		}
+	}
 
 	public final void cancel() {
 		if (selectedComponent != null) {
@@ -82,7 +92,7 @@ public abstract class ClickHandler {
 		gridPane.resetHighlighting();
 	}
 
-	public void setGridPane(GridViewExternal gridPane) {
-		this.gridPane = gridPane;
+	public enum Mode {
+		AUTHORING, GAMEPLAY
 	}
 }

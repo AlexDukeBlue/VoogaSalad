@@ -39,7 +39,7 @@ public class PlayersView extends BaseUIManager<GridPane> {
 		gridPane.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5), new CornerRadii(10), null)));
 		gridPane.setAlignment(Pos.TOP_RIGHT);
 		gridPane.setMouseTransparent(true);
-		gridPane.setPadding(new Insets(4,4,4,4));
+		gridPane.setPadding(new Insets(4, 4, 4, 4));
 		gridPane.setHgap(10);
 	}
 
@@ -47,22 +47,24 @@ public class PlayersView extends BaseUIManager<GridPane> {
 	public void update() {
 		gridPane.getChildren().clear();
 		gridPane.add(playersHeader, 1, 0);
+		if (!getController().isAuthoringMode()) {
+			gridPane.add(teamsHeader, 2, 0);
+		}
 		for (int i = 0; i < getController().getReadOnlyGameState().getOrderedPlayerNames().size(); i++) {
-			String e = getController().getReadOnlyGameState().getOrderedPlayerNames().get(i);
-			Label playerLabel = new Label(getController().getMyPlayerName().equals(e) ? "(You) " + e : "" + e);
+			String playerName = getController().getReadOnlyGameState().getOrderedPlayerNames().get(i);
+			Label playerLabel = new Label(getController().getMyPlayerName().equals(playerName) ? "(You) " + playerName : "" + playerName);
 			playerLabel.setPadding(Insets.EMPTY);
 			GridPane.setHalignment(playerLabel, HPos.RIGHT);
 			playerLabel.textFillProperty().bind(DEFAULT_COLOR);
 			gridPane.add(playerLabel, 1, i + 1);
-			if (getController().getActivePlayer().getName().equals(e)) {
+			if (getController().getActivePlayer().getName().equals(playerName) && !getController().isAuthoringMode()) {
 				gridPane.add(currentTurnLabel, 0, i + 1);
 			}
 			int row = i;
-			getController().getPlayer(e).getTeam().ifPresent(team -> {
+			getController().getPlayer(playerName).getTeam().ifPresent(team -> {
 				playerLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 				if (!getController().isAuthoringMode()) {
-					gridPane.add(teamsHeader, 2, 0);
-					Label teamLabel = new Label(String.format("%16s", team.getName()));
+					Label teamLabel = new Label(team.getName());
 					teamLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 					GridPane.setHalignment(teamLabel, HPos.RIGHT);
 					teamLabel.setPadding(Insets.EMPTY);

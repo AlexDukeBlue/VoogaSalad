@@ -78,7 +78,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public View(Controller controller, Stage stage) {
-		super(controller, new AuthoringClickHandler());
+		super(controller, null);
 		myStage = stage;
 		placePanes();
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
@@ -87,7 +87,7 @@ public class View extends ClickableUIComponent<Region> {
 	private void setViewEditable(boolean editable) {
 		if (editable) {
 			enterAuthorMode();
-		} else {
+		} else if (!editable) {
 			enterPlayMode();
 		}
 	}
@@ -199,6 +199,7 @@ public class View extends ClickableUIComponent<Region> {
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
+		setClickHandler(new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		rightPane = new VBox(new MinimapPane(worldView.getGridView().getObject(), getController()).getObject(), tempPane.getObject());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
@@ -215,7 +216,6 @@ public class View extends ClickableUIComponent<Region> {
 				alert.show();
 			}
 		});
-		setClickHandler(getClickHandler());
 	}
 
 	/**
@@ -225,6 +225,8 @@ public class View extends ClickableUIComponent<Region> {
 	 */
 	private void enterAuthorMode() {
 		addSidePanes();
+		getClickHandler().setMode(ClickHandler.Mode.AUTHORING);
+		getClickHandler().cancel();
 	}
 
 	private void addSidePanes() {
@@ -241,11 +243,10 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		if (!getController().getMyPlayer().getTeam().isPresent()) {
-			joinTeam();
-		}
 		//TODO Don't remove the minimap!
 		removeSidePanes();
+		getClickHandler().cancel();
+		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
 	}
 
 	private void removeSidePanes() {
@@ -265,11 +266,8 @@ public class View extends ClickableUIComponent<Region> {
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		abilityPane.setClickHandler(clickHandler);
-		clickHandler.setAbilityPane(abilityPane);
 		worldView.setClickHandler(clickHandler);
-		clickHandler.setGridPane(worldView.getGridView());
 		detailPane.setClickHandler(clickHandler);
-		clickHandler.setDetailPane(detailPane);
 	}
 
 	public static Image getImg(String imgPath) {
@@ -288,5 +286,8 @@ public class View extends ClickableUIComponent<Region> {
 	public void update() {
 		this.setViewEditable(getController().isAuthoringMode());
 		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
+		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
+			joinTeam();
+		}
 	}
 }

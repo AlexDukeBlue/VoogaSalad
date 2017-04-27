@@ -33,7 +33,6 @@ public class ActiveAbilityButton extends AbilityButton {
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (isThisUsableActiveAbility(target)) {
-			System.out.println("used");
 			HasLocation abilityTarget = (HasLocation) ((GameBoardObjectView) target).getEntity();
 			getController().useUnitActiveAbility(getEntity().getName(), getAbilityOwner().getName(), getAbilityOwner().getLocation(), abilityTarget.getName(), abilityTarget.getLocation());
 		}
@@ -45,11 +44,11 @@ public class ActiveAbilityButton extends AbilityButton {
 		if (isThisLegalActiveAbility(target)) {
 			actInAuthoringMode(target, additionalInfo, clickHandler, event);
 		}
+		clickHandler.cancel();
 	}
 
 	@Override
 	public void select(ClickHandler clickHandler) {
-		System.out.println("Selected");
 		clickHandler.highlightRange(canUseAbility() ? getEntity().getLegalTargetCells(getAbilityOwner(), getController().getReadOnlyGameState()) : Collections.emptyList());
 	}
 
@@ -63,10 +62,7 @@ public class ActiveAbilityButton extends AbilityButton {
 	}
 
 	private boolean canUseAbility() {
-		return !getAbilityOwner().getOwner().isPresent()
-				|| !getController().getActivePlayer().getTeam().isPresent()
-				|| !getAbilityOwner().getTeam().isPresent()
-				|| getController().isMyPlayerTurn() && getController().getActivePlayer().getTeam().equals((getAbilityOwner()).getTeam());
+		return getController().isMyPlayerTurn() && getController().getActivePlayer().getTeam().equals((getAbilityOwner()).getTeam());
 	}
 
 	private boolean isThisLegalActiveAbility(ClickableUIComponent target) {

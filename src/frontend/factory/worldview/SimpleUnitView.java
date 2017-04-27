@@ -166,7 +166,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	}
 
 	private boolean canMove() {
-		return getController().isMyPlayerTurn() && getEntity().getOwner().isPresent() && getEntity().getOwner().get().equals(getController().getActivePlayer()) || !getEntity().getOwner().isPresent();
+		return getController().isMyPlayerTurn() && getEntity().getOwner().isPresent() && getEntity().getOwner().get().equals(getController().getActivePlayer());
 	}
 
 	private boolean isValidMove(ClickableUIComponent target) {

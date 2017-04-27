@@ -7,8 +7,6 @@ import backend.grid.GameBoard;
 import backend.player.Team;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.AuthoringClickHandler;
-import frontend.GameplayClickHandler;
 import frontend.View;
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
@@ -132,23 +130,13 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		templatePaneItem = factory.getMenuItem(getPolyglot().get("ShowHideTemplate"), e -> myView.toggleTemplatePane());
 		detailsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideDetails"), e -> myView.toggleDetailsPane());
 		statsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideStats"), e -> myView.toggleStatsPane());
-		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> {
-			myView.setClickHandler(new AuthoringClickHandler());
-			getController().enterAuthoringMode();
-		});
+		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> getController().enterAuthoringMode());
 		editModeItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
-		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
-			myView.setClickHandler(new GameplayClickHandler());
-			getController().enterGamePlayMode();
-		});
+		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
 		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
-		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
-			showBrowser("frontend/menubar/help.html");
-		});
-		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
-			showBrowser("frontend/menubar/about.html");
-		});
+		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser("frontend/menubar/help.html"));
+		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> showBrowser("frontend/menubar/about.html"));
 
 	}
 

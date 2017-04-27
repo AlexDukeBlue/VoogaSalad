@@ -64,8 +64,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	}
 
 	private void createButtons(Collection<? extends VoogaEntity> voogaEntities, String entityType, Collection<Node> parent) {
-		voogaEntities.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, entityType, 70, getController(), getClickHandler()))
-				.map(VoogaEntityButton::getObject).forEach(parent::add);
+		voogaEntities.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, entityType, 70, getController(), getClickHandler())).map(VoogaEntityButton::getObject).forEach(parent::add);
 	}
 
 	@Override
