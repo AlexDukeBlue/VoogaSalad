@@ -18,12 +18,11 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	public transient static final String RED = "#ff0000";
 	public transient static final String GREEN = "#00ff00";
 	public transient static final String BLUE = "#0000ff";
-	public transient static final String YELLOW = "#ffff00";
+	public transient static final String YELLOW = "#aaaa00";
 	public transient static final String CYAN = "#00ffff";
 	public transient static final String MAGENTA = "#ff00ff";
-	public transient static final String WHITE = "#ffffff";
 	public transient static final String BLACK = "#000000";
-	public transient static final List<String> COLORS = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, WHITE, BLACK);
+	public transient static final List<String> COLORS = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, BLACK);
 	private final String colorString;
 
 	public Team(String name, String description, String colorString, String imgPath, Player... players) {

@@ -34,8 +34,6 @@ public class AbilityPane extends ClickableUIComponent<ScrollPane> {
 
 	public void setContent(VoogaEntity entity) {
 		content.getChildren().clear();
-		content.addRow(0);
-		content.addRow(1);
 		if (entity instanceof HasActiveAbilities) {
 			content.addRow(0, createRow(entity, ((HasActiveAbilities) entity).getActiveAbilities()));
 		}

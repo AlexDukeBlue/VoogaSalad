@@ -64,8 +64,8 @@ public class WizardGrid extends BaseUIManager<Region> {
 		});
 		gridView.addEventFilter(ScrollEvent.ANY, event -> {
 			if (event.isShortcutDown()) {
-				gridView.setScaleX(gridView.getScaleX() + event.getDeltaY() / 600);
-				gridView.setScaleY(gridView.getScaleY() + event.getDeltaY() / 600);
+				gridView.setScaleX(gridView.getScaleX() - event.getDeltaY() / 700);
+				gridView.setScaleY(gridView.getScaleY() - event.getDeltaY() / 700);
 				event.consume();
 			}
 		});

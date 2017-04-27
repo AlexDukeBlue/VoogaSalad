@@ -159,7 +159,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		if (isValidMove(target)) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
-			if (getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
+			if (getEntity().getTeam().equals(getController().getActivePlayer().getTeam()) && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
 				actInAuthoringMode(target, additionalInfo, clickHandler, event);
 			}
 		}

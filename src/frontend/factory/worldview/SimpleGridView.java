@@ -73,10 +73,10 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 			event.consume();
 		});
 
-		cellViewObjects.addEventFilter(ScrollEvent.ANY, event -> {
+		myScrollPane.addEventFilter(ScrollEvent.ANY, event -> {
 			if (event.isShortcutDown()) {
-				cellViewObjects.setScaleX(cellViewObjects.getScaleX() + event.getDeltaY() / 700);
-				cellViewObjects.setScaleY(cellViewObjects.getScaleY() + event.getDeltaY() / 700);
+				cellViewObjects.setScaleX(cellViewObjects.getScaleX() - event.getDeltaY() / 700);
+				cellViewObjects.setScaleY(cellViewObjects.getScaleY() - event.getDeltaY() / 700);
 				event.consume();
 			}
 		});
