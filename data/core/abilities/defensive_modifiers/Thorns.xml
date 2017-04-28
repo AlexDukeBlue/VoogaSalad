@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Thorns</name>
-  <description>This unit reflects half the damage it takes back to the attacker</description>
-  <imgPath>Blademail.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

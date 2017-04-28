@@ -27,7 +27,9 @@ import java.util.Collection;
  */
 public interface Controller {
 
-	<T extends Serializable> T load(Path path) throws IOException;
+	void save(Serializable obj, Path path) throws IOException;
+
+	abstract <T extends Serializable> T load(Path path) throws IOException;
 
 	void saveState(Path path) throws IOException;
 

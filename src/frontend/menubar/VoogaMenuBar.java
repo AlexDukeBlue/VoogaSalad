@@ -211,6 +211,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+			chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 			File file = chooser.showSaveDialog(null);
 			getController().saveState(Paths.get(file.getPath()));
 		} catch (Exception i) {

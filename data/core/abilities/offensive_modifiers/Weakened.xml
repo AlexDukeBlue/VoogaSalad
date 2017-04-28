@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Weakened</name>
-  <description>Attacks do extra damage if the defender has more HP than the attacker.</description>
-  <imgPath>David&amp;Goliath.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

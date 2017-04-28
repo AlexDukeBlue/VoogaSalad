@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Fearful</name>
-  <description>This unit take extra damage in night time</description>
-  <imgPath>Scarecrow.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

@@ -24,7 +24,7 @@ public class ModifiableVoogaCollection<T extends VoogaEntity, U extends Modifiab
 	}
 
 	public U addAll(Collection<? extends T> elements) {
-		gameObjects.putAll(elements.parallelStream().collect(Collectors.toMap(T::getName, e -> e)));
+		gameObjects.putAll(elements.parallelStream().collect(Collectors.toMap(T::getFormattedName, e -> e)));
 		return (U) this;
 	}
 

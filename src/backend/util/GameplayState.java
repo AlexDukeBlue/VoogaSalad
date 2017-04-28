@@ -24,18 +24,19 @@ import java.util.stream.Stream;
 public class GameplayState extends ImmutableVoogaObject implements ReadonlyGameplayState {
 	private static final long serialVersionUID = 1L;
 
-	public transient static final String CELL_TRIGGERED_EFFECT = "celltriggeredeffect";
-	public transient static final String UNIT_TRIGGERED_EFFECT = "unittriggeredeffect";
-	public transient static final String ACTIVE_ABILITY = "activeability";
-	public transient static final String UNIT = "unit";
-	public transient static final String UNIT_STAT = "unitstat";
-	public transient static final String GRID_PATTERN = "gridpattern";
-	public transient static final String GAMEBOARD = "gameboard";
-	public transient static final String TEAM = "team";
-	public transient static final String BOUNDS_HANDLER = "boundshandler";
-	public transient static final String TERRAIN = "terrain";
-	public transient static final String OFFENSIVE_MODIFIER = "offensivemodifier";
-	public transient static final String DEFENSIVE_MODIFIER = "defensivemodifier";
+	public transient static final String
+			CELL_TRIGGERED_EFFECT = "celltriggeredeffect",
+			UNIT_TRIGGERED_EFFECT = "unittriggeredeffect",
+			ACTIVE_ABILITY = "activeability",
+			UNIT = "unit",
+			UNIT_STAT = "unitstat",
+			GRID_PATTERN = "gridpattern",
+			GAMEBOARD = "gameboard",
+			TEAM = "team",
+			BOUNDS_HANDLER = "boundshandler",
+			TERRAIN = "terrain",
+			OFFENSIVE_MODIFIER = "offensivemodifier",
+			DEFENSIVE_MODIFIER = "defensivemodifier";
 	private final Random random;
 	private final List<String> playerOrder;
 	private final Map<String, ImmutablePlayer> players;

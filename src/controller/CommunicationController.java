@@ -94,11 +94,13 @@ public class CommunicationController implements Controller {
 		save(getAuthoringGameState(), path);
 	}
 
+	@Override
 	public void save(Serializable obj, Path path) throws IOException {
 		Files.createDirectories(path.getParent());
 		Files.write(path, ((String) XML.serialize(obj)).getBytes());
 	}
 
+	@Override
 	public <T extends Serializable> T load(Path path) throws IOException {
 		return (T) XML.unserialize(new String(Files.readAllBytes(path)));
 	}

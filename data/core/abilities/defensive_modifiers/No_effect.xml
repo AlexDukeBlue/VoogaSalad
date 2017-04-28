@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>No effect</name>
-  <description>Literally nothing</description>
-  <imgPath>The_abyss_stares_back.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

@@ -55,7 +55,7 @@ import java.util.Optional;
 public class View extends ClickableUIComponent<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private static final int CONDITIONS_PANE_POS = 0;
-	private Stage myStage;
+	private final Stage myStage;
 
 	static {
 		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
@@ -88,7 +88,7 @@ public class View extends ClickableUIComponent<Region> {
 	private void setViewEditable(boolean editable) {
 		if (editable) {
 			enterAuthorMode();
-		} else if (!editable) {
+		} else {
 			enterPlayMode();
 		}
 	}

@@ -4,12 +4,6 @@
  */
 package frontend.factory.detailpane;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
@@ -21,6 +15,7 @@ import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -29,6 +24,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * @author Faith Rodriguez
@@ -52,6 +57,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private ResourceBundle resources;
 	private Button editBtn;
 	private ScrollPane scrollPane;
+	private Button exportButton;
 	private boolean authorMode;
 
 	private double PANE_WIDTH = 1000;
@@ -95,8 +101,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
 	 *
-	 * @param sprite     A sprite that has just been clicked on in the TemplatePane
-	 * @param spriteType A string revealing whether the sprite is a unit or terrain
+	 * @param sprite A sprite that has just been clicked on in the TemplatePane
 	 */
 	public void setContent(VoogaEntity sprite) {
 		currentSprite = sprite;
@@ -118,8 +123,8 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		name.setMinWidth(Region.USE_PREF_SIZE + 10);
 		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
 		spriteImage.setSmooth(true);
-		spriteImage.setFitHeight(80);
-		spriteImage.setFitWidth(80);
+		spriteImage.setPreserveRatio(true);
+		spriteImage.setFitWidth(120);
 		imagePane.getChildren().add(name);
 		imagePane.getChildren().add(spriteImage);
 	}
@@ -137,6 +142,24 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		} else {
 			newSpriteInfo = new Label(content);
 		}
+		//TODO ResourceBundle and polyglot and shit
+		exportButton = new Button("Export");
+		exportButton.setOnAction(e -> {
+			try {
+				FileChooser chooser = new FileChooser();
+				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+				chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+				chooser.setInitialFileName(sprite.getFormattedName() + ".xml");
+				File file = chooser.showSaveDialog(null);
+				getController().save(sprite, Paths.get(file.getPath()));
+			} catch (NullPointerException | IOException e1) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
+				alert.contentTextProperty().bind(getPolyglot().get("TryAgain"));
+				alert.show();
+			}
+		});
+		infoPane.getChildren().add(exportButton);
 		spriteInfo = newSpriteInfo;
 		setLabel();
 	}
@@ -158,7 +181,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void createButton(VoogaEntity unit, String unitType) {
-		if (!(unit instanceof Unit) || Objects.nonNull(((Unit) unit).getLocation())) {
+		if (!(unit instanceof Unit)) {
 			editBtn = new Button("Edit details");
 			infoPane.getChildren().add(editBtn);
 			editBtn.setOnMouseClicked(e -> {
@@ -196,7 +219,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private void clearContent() {
 		content = "";
-		infoPane.getChildren().removeAll(spriteInfo, editBtn);
+		infoPane.getChildren().removeAll(exportButton, spriteInfo, editBtn);
 		AAPane.getChildren().clear();
 		imagePane.getChildren().clear();
 	}
