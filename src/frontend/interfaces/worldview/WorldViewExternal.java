@@ -8,7 +8,7 @@ public interface WorldViewExternal {
 
 	GridViewExternal getGridView();
 
-	Region getObject();
+	Region getNode();
 
 	Polyglot getPolyglot();
 

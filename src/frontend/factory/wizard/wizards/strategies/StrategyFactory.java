@@ -6,32 +6,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StrategyFactory {
-	private static final Map<String, Class<? extends WizardStrategy<?>>> strategyMap = new HashMap<>();
+	private static final Map<String, Class<? extends WizardStrategy<?>>> STRATEGY_MAP = new HashMap<>();
 
 	static {
-		strategyMap.put("gamestate", GameStrategy.class);
-		strategyMap.put("grid", GridStrategy.class);
-		strategyMap.put("team", TeamStrategy.class);
-		strategyMap.put("terrain", TerrainStrategy.class);
-		strategyMap.put("unit", UnitStrategy.class);
-		strategyMap.put("activeability", ActiveAbilityStrategy.class);
-		strategyMap.put("unittriggeredeffect", TriggeredEffectStrategy.class);
-		strategyMap.put("celltriggeredeffect", TriggeredEffectStrategy.class);
-		strategyMap.put("offensivemodifier", InteractionModifierStrategy.class);
-		strategyMap.put("defensivemodifier", InteractionModifierStrategy.class);
-		strategyMap.put("turnrequirement", TurnRequirementStrategy.class);
-		strategyMap.put("turnaction", TurnActionStrategy.class);
-		strategyMap.put("endcondition", EndConditionStrategy.class);
-		strategyMap.put("boundshandler", GridBoundsStrategy.class);
+		STRATEGY_MAP.put("gamestate", GameStrategy.class);
+		STRATEGY_MAP.put("grid", GridStrategy.class);
+		STRATEGY_MAP.put("team", TeamStrategy.class);
+		STRATEGY_MAP.put("terrain", TerrainStrategy.class);
+		STRATEGY_MAP.put("unit", UnitStrategy.class);
+		STRATEGY_MAP.put("activeability", ActiveAbilityStrategy.class);
+		STRATEGY_MAP.put("unittriggeredeffect", TriggeredEffectStrategy.class);
+		STRATEGY_MAP.put("celltriggeredeffect", TriggeredEffectStrategy.class);
+		STRATEGY_MAP.put("offensivemodifier", InteractionModifierStrategy.class);
+		STRATEGY_MAP.put("defensivemodifier", InteractionModifierStrategy.class);
+		STRATEGY_MAP.put("turnrequirement", TurnRequirementStrategy.class);
+		STRATEGY_MAP.put("turnaction", TurnActionStrategy.class);
+		STRATEGY_MAP.put("endcondition", EndConditionStrategy.class);
+		STRATEGY_MAP.put("boundshandler", GridBoundsStrategy.class);
 	}
 
 	public static WizardStrategy<?> newStrategy(String categoryName, AuthoringGameState gameState) {
 		categoryName = categoryName.replaceAll(" ", "").toLowerCase().replaceAll("ies$", "y").replaceAll("s$", "");
 		try {
-			return strategyMap.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
+			return STRATEGY_MAP.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
 		} catch (Exception e) {
 			try {
-				return strategyMap.get(categoryName).getConstructor().newInstance();
+				return STRATEGY_MAP.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return new WizardUnsupportedStrategy();

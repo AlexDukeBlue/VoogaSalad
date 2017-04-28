@@ -2,6 +2,7 @@ package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
 import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
 import backend.util.HasShape;
 import frontend.View;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
@@ -31,8 +32,8 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
-		return table.getObject();
+	public Region getNode() {
+		return table.getNode();
 	}
 
 	private void initialize(AuthoringGameState gameState) {
@@ -42,7 +43,7 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 		table.getChildren().add(hprow);
 
 		rowToAbility = new HashMap<>();
-		gameState.getTemplateByCategory(AuthoringGameState.ACTIVE_ABILITY).stream()
+		gameState.getTemplateByCategory(GameplayState.ACTIVE_ABILITY).stream()
 				.filter(e -> ((HasShape) e).getShape().equals(gameState.getGrid().getShape()))
 				.forEach(ability -> {
 					SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()), ability.getName(), ability.getDescription());

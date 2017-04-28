@@ -29,10 +29,10 @@ public class VerticalTableInputView extends TableInputView {
 					javafx.collections.ListChangeListener.Change<? extends BaseUIManager<? extends Parent>> change) {
 				if (change.next()) {
 					if (change.wasAdded()) {
-						change.getAddedSubList().stream().forEach(child -> vbox.getChildren().add(child.getObject()));
+						change.getAddedSubList().stream().forEach(child -> vbox.getChildren().add(child.getNode()));
 					} else if (change.wasRemoved()) {
 						change.getAddedSubList().stream()
-								.forEach(child -> vbox.getChildren().remove(child.getObject()));
+								.forEach(child -> vbox.getChildren().remove(child.getNode()));
 					}
 				}
 			}

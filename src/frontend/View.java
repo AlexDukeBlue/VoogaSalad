@@ -18,6 +18,7 @@
  */
 package frontend;
 
+import backend.player.Team;
 import backend.util.GameplayState;
 import controller.Controller;
 import frontend.factory.abilitypane.AbilityPane;
@@ -36,9 +37,12 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -46,11 +50,12 @@ import polyglot.PolyglotException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class View extends ClickableUIComponent<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private static final int CONDITIONS_PANE_POS = 0;
-	private Stage myStage;
+	private final Stage myStage;
 
 	static {
 		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
@@ -60,6 +65,7 @@ public class View extends ClickableUIComponent<Region> {
 	private SplitPane innerSplitPane;
 	private SplitPane bottomPane;
 	private SplitPane worldAndDetailPane;
+	private Button endTurnButton;
 	private VoogaMenuBar menuBar;
 	private WorldViewExternal worldView;
 	private DetailPaneExternal detailPane;
@@ -73,7 +79,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public View(Controller controller, Stage stage) {
-		super(controller, new AuthoringClickHandler());
+		super(controller, null);
 		myStage = stage;
 		placePanes();
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
@@ -88,8 +94,8 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void toggleConditionsPane() {
-		if (!innerSplitPane.getItems().remove(conditionsPane.getObject())) {
-			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
+		if (!innerSplitPane.getItems().remove(conditionsPane.getNode())) {
+			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
 	}
 
@@ -106,11 +112,11 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void toggleStatsPane() {
-		//TODO
+		// TODO
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return outerSplitPane;
 	}
 
@@ -124,7 +130,8 @@ public class View extends ClickableUIComponent<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState GameplayState that the View will now access its data from
+	 * @param newGameState
+	 *            GameplayState that the View will now access its data from
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
@@ -132,31 +139,64 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void placePanes() {
 		initPanes();
+		endTurnButton = new Button(getPolyglot().get("EndTurn").getValueSafe());
+		endTurnButton.setOnMouseClicked(e -> {
+			getClickHandler().cancel();
+			getController().endTurn();
+		});
+		endTurnButton.setMinWidth(70);
+		endTurnButton.setPadding(new Insets(5, 2, 5, 2));
+		endTurnButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
-		cancelImg.setFitWidth(50);
-		cancelImg.setFitHeight(50);
+		cancelImg.setPreserveRatio(true);
 		cancelImg.setSmooth(true);
+		cancelImg.setFitWidth(50);
 		Button cancelButton = new Button("", cancelImg);
 		cancelButton.setCancelButton(true);
 		cancelButton.setPadding(Insets.EMPTY);
+		cancelButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		cancelButton.setOnMouseClicked(event -> {
 			getClickHandler().showDetail(null);
 			getClickHandler().cancel();
 		});
-		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), cancelButton);
-		bottomPane.setDividerPositions(.6, 1);
+		VBox box = new VBox(endTurnButton, cancelButton);
+		box.setPadding(Insets.EMPTY);
+		box.setSpacing(0);
+		box.setFillWidth(true);
+		VBox.setVgrow(endTurnButton, Priority.ALWAYS);
+		VBox.setVgrow(cancelButton, Priority.ALWAYS);
+		bottomPane = new SplitPane(detailPane.getNode(), abilityPane.getNode(), box);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
-		cancelButton.prefHeightProperty().bind(bottomPane.heightProperty());
-		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
-		worldAndDetailPane.setDividerPositions(1);
+		box.prefHeightProperty().bind(bottomPane.heightProperty());
+		box.prefWidthProperty().bind(box.widthProperty());
+		worldAndDetailPane = new SplitPane(worldView.getNode(), bottomPane);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);
-		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldAndDetailPane, rightPane);
-		innerSplitPane.setDividerPositions(0, 1);
+		innerSplitPane = new SplitPane(conditionsPane.getNode(), worldAndDetailPane, rightPane);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane);
-		outerSplitPane.setDividerPositions(0);
+		outerSplitPane = new SplitPane(menuBar.getNode(), innerSplitPane);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
-		SplitPane.setResizableWithParent(menuBar.getObject(), false);
+		outerSplitPane.setOnKeyPressed(event -> {
+			if (event.getCode().equals(KeyCode.ESCAPE)) {
+				getClickHandler().showDetail(null);
+				getClickHandler().cancel();
+			}
+		});
+		setDividerPositions();
+		SplitPane.setResizableWithParent(menuBar.getNode(), false);
+
+	}
+
+	private void setDividerPositions() {
+		bottomPane.setDividerPositions(getDoubleFromResourceBundle("BottomPaneDividerPosition1"),
+				getDoubleFromResourceBundle("BottomPaneDividerPosition2"));
+		worldAndDetailPane.setDividerPositions(getDoubleFromResourceBundle("WorldAndDetailPaneDividerPosition1"));
+		innerSplitPane.setDividerPositions(getDoubleFromResourceBundle("innerSplitPaneDividerPosition1"),
+				getDoubleFromResourceBundle("innerSplitPaneDividerPosition2"));
+		outerSplitPane.setDividerPositions(getDoubleFromResourceBundle("outerSplitPaneDividerPosition1"));
+	}
+
+	private double getDoubleFromResourceBundle(String key) {
+		return Double.parseDouble(getResourceBundle().getString(key));
 	}
 
 	/**
@@ -166,14 +206,17 @@ public class View extends ClickableUIComponent<Region> {
 	private void initPanes() {
 		menuBar = new VoogaMenuBar(this, getController(), getController().isAuthoringMode());
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
-			getObject().getStylesheets().clear();
-			getObject().getStylesheets().add(newValue);
+			getNode().getStylesheets().clear();
+			getNode().getStylesheets().add(newValue);
 		});
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
+		setClickHandler(
+				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
-		rightPane = new VBox(new MinimapPane(worldView.getGridView().getObject(), getController()).getObject(), tempPane.getObject());
+		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(),
+				tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
@@ -188,21 +231,22 @@ public class View extends ClickableUIComponent<Region> {
 				alert.show();
 			}
 		});
-		setClickHandler(getClickHandler());
 	}
 
 	/**
 	 * Performs all necessary actions to convert the View into authoring mode.
-	 * If the View is already in authoring mode, then nothing visually
-	 * changes.
+	 * If the View is already in authoring mode, then nothing visually changes.
 	 */
 	private void enterAuthorMode() {
 		addSidePanes();
+		getClickHandler().setMode(ClickHandler.Mode.AUTHORING);
+		detailPane.setAuthorMode();
+		setDividerPositions();
 	}
 
 	private void addSidePanes() {
-		if (!innerSplitPane.getItems().contains(conditionsPane.getObject())) {
-			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
+		if (!innerSplitPane.getItems().contains(conditionsPane.getNode())) {
+			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
 		if (!innerSplitPane.getItems().contains(rightPane)) {
 			innerSplitPane.getItems().add(rightPane);
@@ -214,23 +258,45 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
+		// TODO Don't remove the minimap!
 		removeSidePanes();
+		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
+		detailPane.setPlayMode();
+		setDividerPositions();
 	}
 
 	private void removeSidePanes() {
-		innerSplitPane.getItems().remove(conditionsPane.getObject());
+		innerSplitPane.getItems().remove(conditionsPane.getNode());
 		innerSplitPane.getItems().remove(rightPane);
+	}
+
+	public void joinTeam() {
+		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
+				getController().getReadOnlyGameState().getTeams());
+		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
+		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
+		Optional<Team> chosenTeam = teams.showAndWait();
+		try{
+			getController().joinTeam(chosenTeam.get().getName());
+		} catch (Exception e) {
+			if(!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
+				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
+				alert.showAndWait();
+				getController().enterAuthoringMode();
+			} else {
+				//Do nothing
+			}
+		}
 	}
 
 	@Override
 	public void setClickHandler(ClickHandler clickHandler) {
 		super.setClickHandler(clickHandler);
 		abilityPane.setClickHandler(clickHandler);
-		clickHandler.setAbilityPane(abilityPane);
 		worldView.setClickHandler(clickHandler);
-		clickHandler.setGridPane(worldView.getGridView());
 		detailPane.setClickHandler(clickHandler);
-		clickHandler.setDetailPane(detailPane);
 	}
 
 	public static Image getImg(String imgPath) {
@@ -248,5 +314,9 @@ public class View extends ClickableUIComponent<Region> {
 	@Override
 	public void update() {
 		this.setViewEditable(getController().isAuthoringMode());
+		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
+		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
+			joinTeam();
+		}
 	}
 }

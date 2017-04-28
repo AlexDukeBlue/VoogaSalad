@@ -1,7 +1,0 @@
-<backend.unit.properties.ModifiableUnitStat>
-  <name>Hitpoints</name>
-  <description>Units lose HP when taking damage. When a unit&apos;s hitpoints reach 0, the unit dies.</description>
-  <imgPath>&lt;3.png</imgPath>
-  <maxValue class="double">50.0</maxValue>
-  <minValue class="double">0.0</minValue>
-</backend.unit.properties.ModifiableUnitStat>

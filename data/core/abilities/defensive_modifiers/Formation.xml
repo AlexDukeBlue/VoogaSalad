@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Formation</name>
-  <description>This unit takes less damage when near an allied unit of the same type.</description>
-  <imgPath>Phalanx.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

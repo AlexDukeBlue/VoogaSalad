@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Chaotic</name>
-  <description>Attacks do more damage in nighttime, but less damage in daytime.</description>
-  <imgPath>Chaotic.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

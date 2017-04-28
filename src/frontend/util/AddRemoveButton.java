@@ -40,7 +40,7 @@ public class AddRemoveButton extends ClickableUIComponent<HBox> {
 	}
 
 	@Override
-	public HBox getObject() {
+	public HBox getNode() {
 		return content;
 	}
 

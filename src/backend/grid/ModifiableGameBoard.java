@@ -15,6 +15,8 @@ import java.util.stream.IntStream;
  * @author Created by th174 on 3/28/2017.
  */
 public class ModifiableGameBoard extends ModifiableVoogaObject<ModifiableGameBoard> implements GameBoard, GameBoardBuilder {
+	private static final long serialVersionUID = 1L;
+
 	private volatile Map<CoordinateTuple, Cell> gameBoard;
 	private Cell templateCell;
 	private BoundsHandler boundsHandler;

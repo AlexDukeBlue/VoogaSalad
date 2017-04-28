@@ -4,42 +4,44 @@ import backend.cell.Cell;
 import backend.grid.ModifiableGameBoard;
 import backend.unit.Unit;
 import backend.util.ModifiableVoogaObject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
 public class Player extends ModifiableVoogaObject<Player> implements ImmutablePlayer {
+	private static final long serialVersionUID = 1L;
+
 	private Team team;
-	private ObservableList<ChatMessage> chatLog;
+	private final List<ChatMessage> chatLog;
 
 	public Player(String name, String description, String imgPath) {
-		this(name, new Team(name + "'s Team", "", imgPath), description, imgPath);
-		getTeam().addAll(this);
-	}
-
-	public Player(String name, Team team, String description, String imgPath) {
 		super(name, description, imgPath);
-		chatLog = FXCollections.observableArrayList();
-		this.team = team;
+		chatLog = new ArrayList<>();
+		setTeam(team);
 	}
 
 	@Override
 	public Player copy() {
-		return new Player(getName(), getTeam(), getDescription(), getImgPath());
+		throw new RuntimeException("Can't copy players because that causes all sorts of problems.");
 	}
 
 	@Override
-	public Team getTeam() {
-		return team;
+	public Optional<Team> getTeam() {
+		return Optional.ofNullable(team);
 	}
 
+	@Override
 	public Player setTeam(Team team) {
+		if (Objects.nonNull(this.team) && this.team.containsName(getName())) {
+			this.team.removeAll(this);
+		}
 		this.team = team;
+		if (Objects.nonNull(team) && !team.containsName(getName())) {
+			team.addAll(this);
+		}
 		return this;
 	}
 
@@ -50,12 +52,12 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 
 	@Override
 	public Collection<Cell> getVisibleCells() {
-		return null;
+		throw new RuntimeException("Not yet implemented");
 	}
 
 	@Override
 	public Collection<Cell> getExploredCells() {
-		return null;
+		throw new RuntimeException("Not yet implemented");
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	}
 
 	@Override
-	public ObservableList<ChatMessage> getChatLog() {
+	public List<ChatMessage> getChatLog() {
 		return chatLog;
 	}
 }

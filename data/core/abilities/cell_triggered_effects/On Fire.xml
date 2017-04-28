@@ -1,0 +1,22 @@
+<backend.util.ModifiableTriggeredEffect>
+  <name>On Fire</name>
+  <description>For the next two turns, units that move through this cell at the start of their turn take 8 damage.</description>
+  <imgPath>resources/images/mixtape.png</imgPath>
+  <activationTriggers class="set">
+    <backend.util.Event>UNIT_POST_MOVEMENT</backend.util.Event>
+  </activationTriggers>
+  <effect resolves-to="serialized-lambda">
+    <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+    <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+    <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+    <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+    <implMethodName>lambda$static$ec0fa50d$1</implMethodName>
+    <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+    <capturedArgs/>
+  </effect>
+  <duration>2</duration>
+  <turnsRemaining>2147483647</turnsRemaining>
+</backend.util.ModifiableTriggeredEffect>

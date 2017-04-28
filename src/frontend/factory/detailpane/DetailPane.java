@@ -7,7 +7,6 @@ package frontend.factory.detailpane;
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -16,15 +15,20 @@ import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -49,10 +53,12 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private VBox imagePane = new VBox();
 	private Label spriteInfo;
 	private String content = "";
-	private String AAContent = "";
 	private VoogaEntity currentSprite;
 	private ResourceBundle resources;
 	private Button editBtn;
+	private ScrollPane scrollPane;
+	private Button exportButton;
+	private boolean authorMode;
 
 	private double PANE_WIDTH = 1000;
 
@@ -63,13 +69,13 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		setLabel();
 		clearContent();
 		getPolyglot().setOnLanguageChange(change -> {
-//			paneSetup();
-//			setLabel();
-//			clearContent();
 			if (currentSprite != null) {
 				setContent(currentSprite);
 			}
 		});
+		setAuthorMode();
+		scrollPane = new ScrollPane();
+		scrollPane.setContent(fullPane);
 	}
 
 	private void paneSetup() {
@@ -95,8 +101,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
 	 *
-	 * @param sprite     A sprite that has just been clicked on in the TemplatePane
-	 * @param spriteType A string revealing whether the sprite is a unit or terrain
+	 * @param sprite A sprite that has just been clicked on in the TemplatePane
 	 */
 	public void setContent(VoogaEntity sprite) {
 		currentSprite = sprite;
@@ -108,8 +113,8 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	@Override
-	public Region getObject() {
-		return fullPane;
+	public Region getNode() {
+		return scrollPane;
 	}
 
 	private void setImageContent(VoogaEntity sprite) {
@@ -118,8 +123,18 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		name.setMinWidth(Region.USE_PREF_SIZE + 10);
 		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
 		spriteImage.setSmooth(true);
-		spriteImage.setFitHeight(80);
-		spriteImage.setFitWidth(80);
+		spriteImage.setPreserveRatio(true);
+		spriteImage.setFitWidth(120);
+		Tooltip.install(spriteImage, new Tooltip(sprite.getImgPath()));
+		imagePane.setOnMouseClicked(event -> {
+			Stage expandImageWindow = new Stage();
+			ImageView expandedImage = new ImageView(View.getImg(sprite.getImgPath()));
+			expandedImage.setSmooth(true);
+			expandedImage.setPreserveRatio(true);
+			expandImageWindow.setTitle(sprite.getImgPath());
+			expandImageWindow.setScene(new Scene(new Group(expandedImage)));
+			expandImageWindow.show();
+		});
 		imagePane.getChildren().add(name);
 		imagePane.getChildren().add(spriteImage);
 	}
@@ -137,6 +152,24 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		} else {
 			newSpriteInfo = new Label(content);
 		}
+		//TODO ResourceBundle and polyglot and shit
+		exportButton = new Button("Export");
+		exportButton.setOnAction(e -> {
+			try {
+				FileChooser chooser = new FileChooser();
+				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+				chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+				chooser.setInitialFileName(sprite.getFormattedName() + ".xml");
+				File file = chooser.showSaveDialog(null);
+				getController().save(sprite, Paths.get(file.getPath()));
+			} catch (NullPointerException | IOException e1) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
+				alert.contentTextProperty().bind(getPolyglot().get("TryAgain"));
+				alert.show();
+			}
+		});
+		infoPane.getChildren().add(exportButton);
 		spriteInfo = newSpriteInfo;
 		setLabel();
 	}
@@ -146,26 +179,27 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
 		unit.getUnitStats().forEach(e -> addString(e.getName(), e.getCurrentValue().toString()));
 		addString("Move Pattern", unit.getMovePattern().toString());
-		createButton(unit, resources.getString("Unit"));
+		if (authorMode) createButton(unit, resources.getString("Unit"));
 		return content;
 	}
 
 	private String setTerrainContent(Terrain terrain) {
 		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());
 		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
-		createButton(terrain, "Terrain");
+		if (authorMode) createButton(terrain, "Terrain");
 		return content;
 	}
 
 	private void createButton(VoogaEntity unit, String unitType) {
-		editBtn = new Button("Edit details");
-		infoPane.getChildren().add(editBtn);
-		editBtn.setOnMouseClicked(e -> {
-			DetailEdit edits = new DetailEdit(unit, unitType, getController());
+		if (!(unit instanceof Unit)) {
+			editBtn = new Button("Edit details");
+			infoPane.getChildren().add(editBtn);
+			editBtn.setOnMouseClicked(e -> {
+				new DetailEdit(unit, unitType, getController());
+			});
 		}
-		);
 	}
-	
+
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
 		content = checkForNull(label, content);
 		for (VoogaEntity o : collection) {
@@ -195,8 +229,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private void clearContent() {
 		content = "";
-		AAContent = "";
-		infoPane.getChildren().removeAll(spriteInfo, editBtn);
+		infoPane.getChildren().removeAll(exportButton, spriteInfo, editBtn);
 		AAPane.getChildren().clear();
 		imagePane.getChildren().clear();
 	}
@@ -206,5 +239,15 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 			content += label + ": ";
 		}
 		return content;
+	}
+
+	@Override
+	public void setAuthorMode() {
+		authorMode = true;
+	}
+
+	@Override
+	public void setPlayMode() {
+		authorMode = false;
 	}
 }

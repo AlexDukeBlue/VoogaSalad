@@ -42,11 +42,10 @@ public final class Attack implements ActiveAbility.AbilityEffect<Unit>, Serializ
 	@Override
 	public void useAbility(Unit user, Unit target, GameplayState game) {
 		Optional<? extends Attack> retaliationAttack = target.getActiveAbilities().stream()
-				.filter(e -> e.getLegalTargetCells(target, game).contains(user.getCurrentCell().getLocation()))
+				.filter(e -> e.getTargetCellsFrom(target.getLocation(), game).contains(user.getCurrentCell().getLocation()))
 				.map(ActiveAbility::getAbilityEffect)
 				.filter(Attack.class::isInstance)
-				.map(Attack.class::cast)
-				.findAny();
+				.map(Attack.class::cast).findAny();
 		int numHits = getNumHits();
 		if (retaliationAttack.isPresent()) {
 			numHits = Math.max(getNumHits(), retaliationAttack.get().getNumHits());

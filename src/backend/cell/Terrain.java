@@ -12,7 +12,7 @@ import static backend.util.ImmutableVoogaObject.getPredefined;
 /**
  * @author Created by th174 on 4/12/2017.
  */
-public interface Terrain extends VoogaEntity, HasTriggeredAbilities, HasSound {
+public interface Terrain extends VoogaEntity, HasTriggeredAbilities, HasSound, HasPassiveModifiers {
 	int IMPASSABLE = Integer.MAX_VALUE;
 	Terrain EMPTY = new ModifiableTerrain("Empty")
 			.setDefaultMoveCost(0)
@@ -20,27 +20,27 @@ public interface Terrain extends VoogaEntity, HasTriggeredAbilities, HasSound {
 			.setImgPath("resources/images/blackScreen.png");
 	Terrain FLAT = new ModifiableTerrain("Flat")
 			.setDefaultMoveCost(1)
-			.addDefensiveModifiers(new InteractionModifier<>("Default Flat Terrain Defense", (originalValue, agent, target, game) -> game.random() < .7 ? originalValue : 0, "Units have 30% evasion on Flat terrain by default."))
+			.addDefensiveModifiers(InteractionModifier.DEFAULT_FLAT_TERRAIN_DEFENSE)
 			.setDescription("Open, flat, land that offers little defensive cover, but allows for easy movement.")
 			.setImgPath("resources/images/kansas.png");
 	Terrain FOREST = new ModifiableTerrain("Forest")
 			.setDefaultMoveCost(2)
-			.addDefensiveModifiers(new InteractionModifier<>("Default Forest Terrain Defense", (originalValue, agent, target, game) -> game.random() < .4 ? originalValue : 0, "Units have 60% evasion on Forest terrain by default."))
+			.addDefensiveModifiers(InteractionModifier.DEFAULT_FOREST_TERRAIN_DEFENSE)
 			.setDescription("Thick forest that offers plenty of cover, but makes navigating difficult.")
 			.setImgPath("resources/images/forest.png");
 	Terrain WATER = new ModifiableTerrain("Water")
 			.setDefaultMoveCost(3)
-			.addDefensiveModifiers(new InteractionModifier<>("Default Water Terrain Defense", (originalValue, agent, target, game) -> game.random() < .8 ? originalValue : 0, "Units have 20% evasion on Water terrain by default."))
+			.addDefensiveModifiers(InteractionModifier.DEFAULT_WATER_TERRAIN_DEFENSE)
 			.setDescription("Water that impedes movement for non-aquatic units")
 			.setImgPath("resources/images/water.png");
 	Terrain MOUNTAIN = new ModifiableTerrain("Mountain")
 			.setDefaultMoveCost(2)
-			.addDefensiveModifiers(new InteractionModifier<>("Default Mountain Terrain Defense", (originalValue, agent, target, game) -> game.random() < .5 ? originalValue : 0, "Units have 50% evasion on Mountain terrain by default."))
+			.addDefensiveModifiers(InteractionModifier.DEFAULT_MOUNTAIN_TERRAIN_DEFENSE)
 			.setDescription("Rugged mountains that are difficult to navigate through")
 			.setImgPath("resources/images/mountain.png");
 	Terrain FORTIFIED = new ModifiableTerrain("Fortified")
 			.setDefaultMoveCost(1)
-			.addDefensiveModifiers(new InteractionModifier<>("Default Fortified Terrain Defense", (originalValue, agent, target, game) -> game.random() < .3 ? originalValue : 0, "Units have 70% evasion on Fortified terrain by default."))
+			.addDefensiveModifiers(InteractionModifier.DEFAULT_FORTIFIED_TERRAIN_DEFENSE)
 			.setDescription("A fortified defensive position")
 			.setImgPath("resources/images/castle.png");
 

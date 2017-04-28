@@ -1,6 +1,7 @@
 package frontend.util;
 
 import backend.unit.Unit;
+import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
 import backend.util.Ability;
 import backend.util.PassiveAbility;
@@ -8,6 +9,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.factory.abilitypane.AbilityButton;
+import frontend.factory.abilitypane.ActiveAbilityButton;
 import frontend.factory.templatepane.TemplateButton;
 
 import java.util.Arrays;
@@ -32,5 +34,9 @@ public class VoogaEntityButtonFactory {
 
 	public static VoogaEntityButton createVoogaEntityButton(VoogaEntity unit, Ability entity, int size, Controller controller, ClickHandler clickHandlerr) {
 		return new AbilityButton(unit, entity, size, controller, clickHandlerr);
+	}
+
+	public static VoogaEntityButton createVoogaEntityButton(Unit unit, ActiveAbility entity, int size, Controller controller, ClickHandler clickHandler) {
+		return new ActiveAbilityButton(unit, entity, size, controller, clickHandler);
 	}
 }

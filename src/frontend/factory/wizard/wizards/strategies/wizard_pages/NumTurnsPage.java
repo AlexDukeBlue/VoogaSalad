@@ -15,8 +15,8 @@ public class NumTurnsPage extends BaseWizardPage{
 	}
 
 	@Override
-	public Region getObject() {
-		return table.getObject();
+	public Region getNode() {
+		return table.getNode();
 	}
 	
 	public int getNumTurns(){

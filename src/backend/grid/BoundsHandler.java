@@ -11,13 +11,17 @@ import java.util.stream.IntStream;
  * @author Created by th174 on 3/28/2017.
  */
 public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	//TODO ResourceBundlify this
 	public transient static final BoundsHandler INFINITE_BOUNDS = new BoundsHandler("Infinite Bounds", (input, grid) -> input, "Allows grid to expand to accommodate out of bounds coordinates.");
 	public transient static final BoundsHandler FINITE_BOUNDS = new BoundsHandler("Finite Bounds",
 			(input, grid) -> fitToBound(input, grid.getBounds()),
-			"Converts out of bounds coordinates to the closest inbounds coordinate on the grid.");
+			"Converts out of bounds coordinates to the closest inbounds coordinate on the grid.",
+			"resources/images/blackScreen.png");
 	public transient static final BoundsHandler SQUARE_FINITE_BOUNDS = new BoundsHandler("Square Finite Bounds",
-			(input, grid) -> fitToBound(input.convertToRectangular(), grid.getRectangularBounds()).convertToDimension(input.dimension()), "Converts out of bounds coordinates to the closest inbounds coordinate on a square grid.");
+			(input, grid) -> fitToBound(input.convertToRectangular(), grid.getRectangularBounds()).convertToDimension(input.dimension()), "Converts out of bounds coordinates to the closest inbounds coordinate on a square grid.",
+			"resources/images/blackScreen.png");
 	public transient static final BoundsHandler TOROIDAL_BOUNDS = new BoundsHandler("Toroidal Bounds",
 			(input, grid) -> wrapToBound(input, grid.getBounds()),
 			"Wraps out of bounds coordinates to the opposite side of the grid",

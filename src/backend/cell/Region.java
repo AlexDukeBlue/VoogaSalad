@@ -8,6 +8,8 @@ import java.util.Collection;
  * @author Created by th174 on 3/30/2017.
  */
 public class Region extends ModifiableVoogaCollection<Terrain, Region> {
+	private static final long serialVersionUID = 1L;
+
 	//TODO ResourceBundlify this
 	public transient static final Region DEFAULT_REGION = new Region("Default Region")
 			.setDescription("The default region contains all the pre-defined terrains")

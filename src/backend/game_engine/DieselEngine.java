@@ -50,7 +50,7 @@ public class DieselEngine implements GameEngine {
 	@Override
 	public void save(GameplayState gameState) {
 		try {
-			new XMLSerializer<GameplayState>().doSerialize(gameState);
+			new XMLSerializer<>().doSerialize(gameState);
 		} catch (Exception e) {
 			//Something here.
 		}
@@ -60,7 +60,7 @@ public class DieselEngine implements GameEngine {
 	public AuthoringGameState load(File gameStateFile) {
 		AuthoringGameState newGameState;
 		try {
-			newGameState = new XMLSerializer<AuthoringGameState>().unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
+			newGameState = (AuthoringGameState) new XMLSerializer<>().unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
 			//Something here.
 			newGameState = null;
@@ -76,7 +76,7 @@ public class DieselEngine implements GameEngine {
 	 */
 	private void checkTurnRules(GameplayState state) {
 		if (!state.getTurnRequirements().parallelStream()
-				.allMatch(e -> e.test(state.getCurrentPlayer(), state)) && state.turnRequirementsSatisfied())
+				.allMatch(e -> e.test(state.getActivePlayer(), state)) && state.turnRequirementsSatisfied())
 			state.endTurn();
 	}
 
@@ -87,7 +87,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getCurrentPlayer(), state)));
+		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getActivePlayer(), state)));
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class DieselEngine implements GameEngine {
 	 */
 	private void checkObjectives(GameplayState state) {
 		state.getObjectives().parallelStream().forEach(e -> {
-			Result result = e.getResultQuad().determine(state.getCurrentPlayer(), state);
-			result.accept(state.getCurrentPlayer(), this);
+			Result result = e.getResultQuad().determine(state.getActivePlayer(), state);
+			result.accept(state.getActivePlayer(), this);
 		});
 	}
 

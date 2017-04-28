@@ -57,8 +57,8 @@ public class UnitMovePointPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
-		return numericInputRow.getObject();
+	public Region getNode() {
+		return numericInputRow.getNode();
 	}
 
 	public Integer getValue() {

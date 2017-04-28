@@ -32,13 +32,13 @@ import java.util.*;
  * this can extend the getLanguage or getStyleSheet methods to make them return
  * readonly properties to prevent other classes from modifying them.
  * <p>
- * This class implements the ObjectManager interface, with the object being
+ * This class implements the NodeManager interface, with the object being
  * managed being a Parent. This allows any class that extends this to have its
  * object be used by client code to be the root of a Scene.
  *
  * @author Dylan Peters
  */
-public abstract class BaseUIManager<T extends Node> extends Observable implements ObjectManager<T>, UIComponentListener {
+public abstract class BaseUIManager<T extends Node> extends Observable implements NodeManager<T>, UIComponentListener {
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -73,9 +73,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		}
 		styleSheet = new SimpleObjectProperty<>();
 		styleSheet.addListener((observable, oldValue, newValue) -> {
-			if (getObject() instanceof Parent) {
-				((Parent) getObject()).getStylesheets().clear();
-				((Parent) getObject()).getStylesheets().add(newValue);
+			if (getNode() instanceof Parent) {
+				((Parent) getNode()).getStylesheets().clear();
+				((Parent) getNode()).getStylesheets().add(newValue);
 			}
 		});
 		resourcePath = getClass().getName().replace(".", "/").substring(0,

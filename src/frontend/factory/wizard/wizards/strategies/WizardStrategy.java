@@ -52,7 +52,7 @@ public interface WizardStrategy<T> {
 	 * @return the object that displays to the user to allow the user to input
 	 *         settings.
 	 */
-	Node getObject();
+	Node getNode();
 
 	/**
 	 * Called to make the strategy go to the previous page to allow the user to

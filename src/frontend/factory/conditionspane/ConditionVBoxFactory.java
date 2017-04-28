@@ -43,7 +43,7 @@ public class ConditionVBoxFactory {
 	private VBox createTurnRequirementsVBox() {
 		VBox box = new VBox();	
 		for(Requirement req: myController.getAuthoringGameState().getAvailableTurnRequirements()){
-			box.getChildren().add((new TurnRequirementBox(req.getName(), myController, myClickHandler)).getObject());
+			box.getChildren().add((new TurnRequirementBox(req.getName(), myController, myClickHandler)).getNode());
 		}		
 		return box;
 	}
@@ -53,7 +53,7 @@ public class ConditionVBoxFactory {
 		
 		for(Event event: myController.getAuthoringGameState().getAvailableTurnActions().keySet()){
 			for(Actionable act: myController.getAuthoringGameState().getAvailableTurnActions().get(event)){
-				box.getChildren().add((new TurnActionBox(act.getName(), myController, myClickHandler, event)).getObject());
+				box.getChildren().add((new TurnActionBox(act.getName(), myController, myClickHandler, event)).getNode());
 			}
 		}
 		
@@ -63,7 +63,7 @@ public class ConditionVBoxFactory {
 	private VBox createEndConditionsVBox() {
 		VBox box = new VBox();		
 		for(Resultant res: myController.getAuthoringGameState().getAvailableObjectives()){
-			box.getChildren().add((new EndConditionBox(res.getName(), myController, myClickHandler)).getObject());
+			box.getChildren().add((new EndConditionBox(res.getName(), myController, myClickHandler)).getNode());
 		}	
 		return box;
 	}

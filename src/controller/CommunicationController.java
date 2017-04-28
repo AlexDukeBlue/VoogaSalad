@@ -10,6 +10,7 @@ import backend.grid.Shape;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
+import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
@@ -23,6 +24,7 @@ import util.net.ObservableClient;
 import util.net.ObservableServer;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,14 +46,13 @@ import java.util.concurrent.Executors;
  */
 public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
-	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
+	private static final XMLSerializer XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
-
 	private final Executor executor;
-	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
-	private String playerName;
 	private final CountDownLatch waitForReady;
+	private ObservableClient<ReadonlyGameplayState> mClient;
+	private String playerName;
 	private Deque<Path> saveHistory;
 
 	public CommunicationController(String username) {
@@ -71,7 +72,7 @@ public class CommunicationController implements Controller {
 			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
 			mClient.addListener(newGameState -> updateGameState());
 			executor.execute(mClient);
-			addPlayer(this.playerName);
+			setPlayer(this.playerName, "", "");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -89,19 +90,24 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public ReadonlyGameplayState loadFile(Path path) throws IOException {
-		return XML.unserialize(new String(Files.readAllBytes(path)));
+	public void saveState(Path path) throws IOException {
+		save(getAuthoringGameState(), path);
 	}
 
 	@Override
-	public void saveFile(Path path) throws IOException {
+	public void save(Serializable obj, Path path) throws IOException {
 		Files.createDirectories(path.getParent());
-		Files.write(path, ((String) XML.serialize(getAuthoringGameState())).getBytes());
+		Files.write(path, ((String) XML.serialize(obj)).getBytes());
+	}
+
+	@Override
+	public <T extends Serializable> T load(Path path) throws IOException {
+		return (T) XML.unserialize(new String(Files.readAllBytes(path)));
 	}
 
 	@Override
 	public GameBoard getGrid() {
-		return getGameState().getGrid();
+		return getGameplayState().getGrid();
 	}
 
 	@Override
@@ -113,21 +119,26 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
+	public String getActivePlayerName() {
+		return getAuthoringGameState().getActivePlayer().getName();
+	}
+
+	@Override
+	public String getMyPlayerName() {
+		return playerName;
+	}
+
+	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
 
-	private synchronized void updateGameState() {
-		updateAll();
-		waitForReady.countDown();
+	public ObservableClient<ReadonlyGameplayState> getClient() {
+		return mClient;
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
 		this.mClient = client;
-	}
-
-	public ObservableClient<ReadonlyGameplayState> getClient() {
-		return mClient;
 	}
 
 	@Override
@@ -151,13 +162,13 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public GameplayState getGameState() {
+	public GameplayState getGameplayState() {
 		return (GameplayState) getClient().getState();
 	}
 
 	@Override
 	public ImmutablePlayer getPlayer(String name) {
-		return getGameState().getPlayerByName(name);
+		return getGameplayState().getPlayerByName(name);
 	}
 
 	@Override
@@ -172,7 +183,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public Collection<? extends Unit> getUnits() {
-		return getGameState().getGrid().getUnits();
+		return getGameplayState().getGrid().getUnits();
 	}
 
 	@Override
@@ -224,19 +235,16 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public boolean isAuthoringMode() {
-		return getGameState().isAuthoringMode();
+		return getGameplayState().isAuthoringMode();
 	}
 
 	@Override
-	public String getPlayerName() {
-		return playerName;
-	}
-
-	@Override
-	public void addPlayer(String playerName) {
-		this.playerName = playerName;
+	public void setPlayer(String name, String description, String imgPath) {
+		this.playerName = name;
+		Team temp = new Team(name + "'s Team", "Temporary team for " + name, Team.COLORS.get((int) (Math.random() * Team.COLORS.size())), imgPath);
+		Player me = new Player(name, description, imgPath);
 		sendModifier((AuthoringGameState state) -> {
-			state.addPlayer(new Player(playerName, "Test player", ""));
+			state.addPlayer(me);
 			return state;
 		});
 	}
@@ -325,11 +333,11 @@ public class CommunicationController implements Controller {
 		});
 	}
 
-	private void updateAll() {
+	public void updateAll() {
 		executor.execute(() -> {
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveFile(autoSavePath);
+				saveState(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
 				System.err.println("You're going TOO FAST!!!!");
@@ -344,6 +352,12 @@ public class CommunicationController implements Controller {
 				removeListener(e);
 			}
 		}));
+	}
+
+	@Override
+	public void joinTeam(String teamName) {
+		String playerName = this.playerName;
+		sendModifier((GameplayState state) -> state.joinTeam(playerName, teamName));
 	}
 
 	public void endTurn() {
@@ -373,19 +387,28 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName) {
+	public void copyTemplateToGrid(VoogaEntity template, HasLocation destination) {
+		String templateName = template.getName();
+		String targetUnitName = destination.getName();
+		CoordinateTuple gridLocation = destination.getLocation();
+		String playerName = getMyPlayerName();
 		sendModifier((AuthoringGameState gameState) -> {
+			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
 			try {
 				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
 				if (Objects.nonNull(targetUnit)) {
-					targetUnit.add(gameState.getTemplateByName(templateName).copy());
+					targetUnit.add(templateCopy);
 				} else {
 					throw new Exception();
 				}
 			} catch (Exception e) {
 				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
-					targetCell.add(gameState.getTemplateByName(templateName).copy());
+					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
+					if (templateCopy instanceof Unit) {
+						((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName));
+					}
+					targetCell.add(templateCopy);
 				} else {
 					e.printStackTrace();
 				}
@@ -416,7 +439,7 @@ public class CommunicationController implements Controller {
 	public void undo() {
 		try {
 			saveHistory.pop();
-			setGameState(loadFile(saveHistory.pop()));
+			setGameState(this.load(saveHistory.pop()));
 		} catch (IOException ignored) {
 		}
 	}
@@ -424,5 +447,10 @@ public class CommunicationController implements Controller {
 	@Override
 	public Shape getShape() {
 		return getGrid().getShape();
+	}
+
+	private synchronized void updateGameState() {
+		updateAll();
+		waitForReady.countDown();
 	}
 }

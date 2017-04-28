@@ -1,21 +1,24 @@
 import backend.grid.GridPattern;
-import util.scripting.VoogaScriptEngine;
-import util.scripting.VoogaScriptEngineManager;
+import backend.util.io.XMLSerializer;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * @author Created by th174 on 4/9/2017.
  */
 public class Test {
-	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
-		String script = "return 5 + 5";
-		long start = System.currentTimeMillis();
-		VoogaScriptEngine engine = VoogaScriptEngineManager.read("lua", script);
-		System.out.println("Compile time: " + (System.currentTimeMillis() - start) / 1000.0);
-		for (int i = 0; i < 100; i++) {
-			System.out.println(engine.modify(10, null, null, null));
-		}
-		System.out.println("Run time: " + (System.currentTimeMillis() - start) / 1000.0);
+	public static void main(String[] args) throws IOException {
+		XMLSerializer xml = new XMLSerializer();
+		String path = System.getProperty("user.dir") + "/data/core/grid_patterns/";
+		Files.createDirectories(Paths.get(path));
+		GridPattern.getPredefinedGridPatterns().forEach(obj -> {
+			try {
+				Files.write(Paths.get(path + obj.getFormattedName()+".xml"), ((String) xml.serialize(obj)).getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }

@@ -40,8 +40,8 @@ public class GridPatternPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
-		return grid.getObject();
+	public Region getNode() {
+		return grid.getNode();
 	}
 
 	public GridPattern getGridPattern() {

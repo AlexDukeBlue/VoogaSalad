@@ -3,19 +3,10 @@
  */
 package frontend.menubar;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 import backend.grid.GameBoard;
 import backend.player.Team;
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.AuthoringClickHandler;
-import frontend.GameplayClickHandler;
 import frontend.View;
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
@@ -23,9 +14,8 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -38,6 +28,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 /**
  * @author Stone Mathers Created 4/18/2017
  */
@@ -46,7 +43,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem, newGridItem, newTeamItem,
-			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem;
+			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem, joinTeam;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -70,6 +67,21 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		editModeItem.setDisable(editable);
 	}
 
+	@Override
+	public MenuBar getNode() {
+		return menuBar;
+	}
+
+	public View getView() {
+		return myView;
+
+	}
+
+	@Override
+	public void update() {
+		setEditable(getController().isAuthoringMode());
+	}
+	
 	protected void populateMenuBar() {
 		initMenuItems();
 		initMenus();
@@ -96,16 +108,16 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
-			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer,object) -> {
-				getController().setGrid((GameBoard)object);
+			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer, object) -> {
+				getController().setGrid((GameBoard) object);
 			});
 		});
 		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
-			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer,object) -> {
-				getController().addTeamTemplates((Team)object);
+			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer, object) -> {
+				getController().addTeams((Team) object);
 			});
 		});
-
+		joinTeam = factory.getMenuItem(getPolyglot().get("JoinTeam"), e -> myView.joinTeam());
 		setLanguageItem = factory.getMenu(getPolyglot().get("SetLanguage"));
 		try {
 			getPolyglot().languages().stream().forEach(languageName -> {
@@ -122,36 +134,25 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		} catch (PolyglotException e1) {
 			setLanguageItem.setVisible(false);
 		}
-
 		setThemeItem = factory.getMenu(getPolyglot().get("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
 			MenuItem menuItem = new MenuItem(name);
 			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
 			setThemeItem.getItems().add(menuItem);
 		});
-
 		conditionsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideConditions"),
 				e -> myView.toggleConditionsPane());
 		templatePaneItem = factory.getMenuItem(getPolyglot().get("ShowHideTemplate"), e -> myView.toggleTemplatePane());
 		detailsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideDetails"), e -> myView.toggleDetailsPane());
 		statsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideStats"), e -> myView.toggleStatsPane());
-		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> {
-			myView.setClickHandler(new AuthoringClickHandler());
-			getController().enterAuthoringMode();
-		});
+		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> getController().enterAuthoringMode());
 		editModeItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
-		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> {
-			myView.setClickHandler(new GameplayClickHandler());
-			getController().enterGamePlayMode();
-		});
+		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> enterGamePlayMode());
 		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
-		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> {
-			showBrowser("frontend/menubar/help.html");
-		});
-		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> {
-			showBrowser("frontend/menubar/about.html");
-		});
+		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser("frontend/menubar/help.html"));
+		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> showBrowser("frontend/menubar/about.html"));
+
 	}
 
 	private void showBrowser(String url) {
@@ -196,27 +197,23 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		view.getItems().add(templatePaneItem);
 		view.getItems().add(detailsPaneItem);
 		view.getItems().add(statsPaneItem);
-		view.getItems().add(editModeItem);
-		view.getItems().add(playModeItem);
-
+		Menu play = factory.getMenu(getPolyglot().get("Play"));
+		play.getItems().add(joinTeam);
+		play.getItems().add(editModeItem);
+		play.getItems().add(playModeItem);
 		help = factory.getMenu(getPolyglot().get("Help"));
 		help.getItems().add(helpItem);
 		help.getItems().add(aboutItem);
-
-		getObject().getMenus().add(file);
-		getObject().getMenus().add(edit);
-		getObject().getMenus().add(view);
-		getObject().getMenus().add(language);
-		getObject().getMenus().add(theme);
-		getObject().getMenus().add(help);
+		getNode().getMenus().addAll(file, edit, view, play, language, theme, help);
 	}
 
 	private void save() {
 		try {
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+			chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 			File file = chooser.showSaveDialog(null);
-			getController().saveFile(Paths.get(file.getPath()));
+			getController().saveState(Paths.get(file.getPath()));
 		} catch (Exception i) {
 			i.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -235,7 +232,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 			getController().setGameState(
-					getController().loadFile(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
+					getController().load(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -254,35 +251,28 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private void create(String categoryName) {
 		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
 		try {
-//			System.out.println(wizard);
-//			System.out.println(wizard.getPolyglot());
-//			System.out.println(wizard.getPolyglot().getLanguage());
-//			System.out.println(getPolyglot());
-//			System.out.println(getPolyglot().getLanguage());
 			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
 		} catch (PolyglotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-	
+
 		}
-		
 		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
-		
 	}
-
-	@Override
-	public MenuBar getObject() {
-		return menuBar;
-	}
-
-	public View getView() {
-		return myView;
-
-	}
-
-	@Override
-	public void update() {
-		setEditable(getController().isAuthoringMode());
+	
+	private void enterGamePlayMode() {
+		if(getController().getTeamTemplates().size() == 0){
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.titleProperty().bind(getPolyglot().get("NoTeamsTitle"));
+			alert.headerTextProperty().bind(getPolyglot().get("NoTeamsHeader"));
+			alert.contentTextProperty().bind(getPolyglot().get("NoTeamsContent"));
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				newTeamItem.fire();
+			}
+		} else {
+			getController().enterGamePlayMode();
+		}
 	}
 
 }

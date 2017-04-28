@@ -1,23 +1,22 @@
 <backend.unit.properties.ActiveAbility>
   <name>Sword</name>
   <description>The attacker hits 3 times for 5 damage on any neighboring unit</description>
-  <imgPath>Sword.png</imgPath>
+  <imgPath>resources/images/sword.png</imgPath>
   <effect class="backend.unit.properties.Attack">
     <damage>5.0</damage>
     <numHits>3</numHits>
     <damageModifiers/>
   </effect>
   <range>
-    <name>Hexagonal Adjacent</name>
-    <description>This pattern of hexagonal coordinates is composed of all hexagonal coordinates adjacent to the origin.</description>
-    <imgPath>7Hexagons.png</imgPath>
+    <name>Square Adjacent</name>
+    <description>This pattern of square coordinates is composed of all square coordinates adjacent to the origin.</description>
+    <imgPath>resources/images/squareAdjacent.png</imgPath>
     <relativeCoordinates class="set">
       <backend.grid.CoordinateTuple>
         <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
           <c class="list">
             <int>1</int>
             <int>0</int>
-            <int>1</int>
           </c>
           <list reference="../c"/>
         </coordinates>
@@ -25,7 +24,6 @@
       <backend.grid.CoordinateTuple>
         <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
           <c class="list">
-            <int>-1</int>
             <int>0</int>
             <int>-1</int>
           </c>
@@ -37,7 +35,6 @@
           <c class="list">
             <int>0</int>
             <int>1</int>
-            <int>1</int>
           </c>
           <list reference="../c"/>
         </coordinates>
@@ -45,27 +42,6 @@
       <backend.grid.CoordinateTuple>
         <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
           <c class="list">
-            <int>0</int>
-            <int>-1</int>
-            <int>-1</int>
-          </c>
-          <list reference="../c"/>
-        </coordinates>
-      </backend.grid.CoordinateTuple>
-      <backend.grid.CoordinateTuple>
-        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-          <c class="list">
-            <int>1</int>
-            <int>1</int>
-            <int>0</int>
-          </c>
-          <list reference="../c"/>
-        </coordinates>
-      </backend.grid.CoordinateTuple>
-      <backend.grid.CoordinateTuple>
-        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
-          <c class="list">
-            <int>-1</int>
             <int>-1</int>
             <int>0</int>
           </c>
@@ -74,4 +50,5 @@
       </backend.grid.CoordinateTuple>
     </relativeCoordinates>
   </range>
+  <cost>1.0</cost>
 </backend.unit.properties.ActiveAbility>

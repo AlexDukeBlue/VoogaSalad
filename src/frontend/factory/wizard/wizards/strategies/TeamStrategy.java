@@ -1,6 +1,6 @@
 package frontend.factory.wizard.wizards.strategies;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 import backend.player.Team;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ColorPage;
@@ -18,14 +18,11 @@ class TeamStrategy extends BaseStrategy<Team> {
 
 	@Override
 	public Team finish() {
-//		return new Team(namePage.getName(), namePage.getDescription(), colorPage.getColorString(),
-//				namePage.getImagePath(),);
-		return new Team(namePage.getName(), namePage.getDescription().getValueSafe(), colorPage.getColorString(), namePage.getImagePath(), new ArrayList<>());
-		
+		return new Team(namePage.getName(), namePage.getDescription().getValueSafe(), colorPage.getColorString(), namePage.getImagePath(), Collections.emptyList());
 	}
 
 	private void initialize() {
-		namePage = new ImageNameDescriptionPage();
+		namePage = new ImageNameDescriptionPage(getPolyglot().get("NewTeamPrompt"),getPolyglot().get("NewTeamDescription"));
 		getPolyglot().setOnLanguageChange(event -> {
 			try {
 				namePage.getPolyglot().setLanguage(getPolyglot().getLanguage());
@@ -34,7 +31,7 @@ class TeamStrategy extends BaseStrategy<Team> {
 				e.printStackTrace();
 			}
 		});
-		colorPage = new ColorPage();
+		colorPage = new ColorPage(getPolyglot().get("NewTeamPrompt"),getPolyglot().get("NewTeamColorDescription"));
 		getPages().addAll(namePage, colorPage);
 	}
 

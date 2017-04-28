@@ -3,7 +3,7 @@ package backend.unit;
 import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.GridPattern;
-import backend.player.Player;
+import backend.player.ImmutablePlayer;
 import backend.unit.properties.*;
 import backend.util.*;
 
@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
  * @author Created by th174 on 3/30/2017.
  */
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
+	private static final long serialVersionUID = 1L;
+
 	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
@@ -22,7 +24,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setMovePattern(GridPattern.SQUARE_ADJACENT)
 			.setImgPath("resources/images/skeletonWarrior.png")
 			.addActiveAbilities(ActiveAbility.SWORD)
-			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_MOVE_POINTS, ModifiableTriggeredEffect.RESET_ABILITY_POINTS)
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC);
 	public transient static final Unit SKELETON_ARCHER = new ModifiableUnit("Skeleton Archer")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(34.0))
@@ -31,19 +33,19 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 			.setImgPath("resources/images/skeletonArcher.png")
 			.setDescription("The skeletal corpse of an impoverished serf left to starve, reanimated by necromancy. Now, bow and arrow in hand, he pursues his revenge on the living.")
 			.addOffensiveModifiers(InteractionModifier.CHAOTIC)
-			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_ABILITY_POINTS,ModifiableTriggeredEffect.RESET_MOVE_POINTS)
+			.addTriggeredAbilities(ModifiableTriggeredEffect.RESET_MOVE_POINTS, ModifiableTriggeredEffect.RESET_ABILITY_POINTS)
 			.addActiveAbilities(ActiveAbility.BOW);
 	private transient static final Pattern MAGIC = Pattern.compile("_(\\d{2,})$");
 
 	private final ActiveAbilitySet activeAbilities;
 	private final TriggeredAbilitySet triggeredAbilities;
-	private final OffensiveModifierSet offensiveModifiers;
-	private final DefensiveModifierSet defensiveModifiers;
+	private final ModifierSet offensiveModifiers;
+	private final ModifierSet defensiveModifiers;
 	private final Map<String, Integer> terrainMoveCosts;
 	private final UnitStats stats;
 	private GridPattern movePattern;
 	private Faction faction;
-	private Player ownerPlayer;
+	private ImmutablePlayer owner;
 	private Cell currentCell;
 	private boolean isVisible;
 
@@ -59,8 +61,8 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		this.movePattern = movePattern;
 		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
 		this.activeAbilities = new ActiveAbilitySet(activeAbilities);
-		this.offensiveModifiers = new OffensiveModifierSet(offensiveModifiers);
-		this.defensiveModifiers = new DefensiveModifierSet(defensiveModifiers);
+		this.offensiveModifiers = new ModifierSet("Offensive Modifiers", "Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.", "", offensiveModifiers);
+		this.defensiveModifiers = new ModifierSet("Defensive modifiers", "Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.", "", defensiveModifiers);
 	}
 
 	@Deprecated
@@ -89,7 +91,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		if (Objects.isNull(getAbilityPoints())) {
 			addUnitStats(ModifiableUnitStat.ABILITYPOINTS);
 		}
-		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
+		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), offensiveModifiers.getAll(), defensiveModifiers.getAll(), getDescription(), getImgPath());
 	}
 
 	@Override
@@ -103,12 +105,16 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public void startTurn(GameplayState gameState) {
-		processTriggers(Event.TURN_START, gameState);
+		if (!getOwner().isPresent() || gameState.getActivePlayer().equals(getOwner().get())) {
+			processTriggers(Event.TURN_START, gameState);
+		}
 	}
 
 	@Override
 	public void endTurn(GameplayState gameState) {
-		processTriggers(Event.TURN_END, gameState);
+		if (!getOwner().isPresent() || gameState.getActivePlayer().equals(getOwner().get())) {
+			processTriggers(Event.TURN_END, gameState);
+		}
 	}
 
 	@Override
@@ -189,7 +195,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public final List<InteractionModifier<Double>> getOffensiveModifiers() {
-		return Collections.unmodifiableList(offensiveModifiers.getAll());
+		List<InteractionModifier<Double>> modifiers = new ArrayList<>(offensiveModifiers.getAll());
+		if (Objects.nonNull(getCurrentCell())) {
+			modifiers.addAll(getCurrentCell().getTerrain().getOffensiveModifiers());
+		}
+		return Collections.unmodifiableList(modifiers);
 	}
 
 	@SafeVarargs
@@ -218,7 +228,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public final List<InteractionModifier<Double>> getDefensiveModifiers() {
-		return Collections.unmodifiableList(defensiveModifiers.getAll());
+		List<InteractionModifier<Double>> modifiers = new ArrayList<>(defensiveModifiers.getAll());
+		if (Objects.nonNull(getCurrentCell())) {
+			modifiers.addAll(getCurrentCell().getTerrain().getDefensiveModifiers());
+		}
+		return Collections.unmodifiableList(modifiers);
 	}
 
 	@Override
@@ -302,14 +316,14 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	@Override
-	public Player getOwner() {
-		return ownerPlayer;
+	public ModifiableUnit setOwner(ImmutablePlayer owner) {
+		this.owner = owner;
+		return this;
 	}
 
 	@Override
-	public ModifiableUnit setOwner(Player p) {
-		ownerPlayer = p;
-		return this;
+	public Optional<ImmutablePlayer> getOwner() {
+		return Optional.ofNullable(owner);
 	}
 
 	@Override

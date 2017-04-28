@@ -51,7 +51,6 @@ public class SocketConnection {
 		try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
 			while (isActive()) {
 				Request request = (Request) inputStream.readObject();
-//				System.out.println("Receive" + request);
 				executor.execute(() -> requestHandler.accept(request));
 			}
 		} catch (IOException e) {

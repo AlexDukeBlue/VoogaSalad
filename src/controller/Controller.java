@@ -17,6 +17,7 @@ import frontend.util.UIComponentListener;
 import util.net.Modifier;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collection;
@@ -26,13 +27,31 @@ import java.util.Collection;
  */
 public interface Controller {
 
-	ReadonlyGameplayState loadFile(Path path) throws IOException;
+	void save(Serializable obj, Path path) throws IOException;
 
-	void saveFile(Path path) throws IOException;
+	abstract <T extends Serializable> T load(Path path) throws IOException;
+
+	void saveState(Path path) throws IOException;
 
 	GameBoard getGrid();
 
 	void setGrid(GameBoard grid);
+
+	String getActivePlayerName();
+
+	String getMyPlayerName();
+
+	default boolean isMyPlayerTurn() {
+		return getMyPlayerName().equals(getActivePlayerName());
+	}
+
+	default ImmutablePlayer getActivePlayer() {
+		return getPlayer(getActivePlayerName());
+	}
+
+	default ImmutablePlayer getMyPlayer() {
+		return getPlayer(getMyPlayerName());
+	}
 
 	void startClient(String host, int port, Duration timeout);
 
@@ -44,7 +63,7 @@ public interface Controller {
 
 	AuthoringGameState getAuthoringGameState();
 
-	GameplayState getGameState();
+	GameplayState getGameplayState();
 
 	ImmutablePlayer getPlayer(String name);
 
@@ -90,45 +109,43 @@ public interface Controller {
 
 	boolean isAuthoringMode();
 
-	String getPlayerName();
-	
 	void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate);
-	
+
 	void removeTurnRequirement(String name);
-	
+
 	void activateTurnRequirement(String name);
-	
+
 	void deactivateTurnRequirement(String name);
-	
+
 	void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer);
-	
+
 	void removeTurnAction(Event event, String name);
-	
+
 	void activateTurnAction(Event event, String name);
-	
+
 	void deactivateTurnAction(Event event, String name);
-	
+
 	void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate);
-	
+
 	void removeEndCondition(String name);
-	
+
 	void activateEndCondition(String name);
-	
+
 	void deactivateEndCondition(String name);
 
 	default Collection<? extends Team> getTeamTemplates() {
 		return (Collection<? extends Team>) getTemplatesByCategory("team");
 	}
 
-	default void addTeamTemplates(Team... teamTemplates) {
+	default void addTeams(Team... teamTemplates) {
 		addTemplatesByCategory("team", teamTemplates);
 	}
 
-	default void removeTeamTemplates(String... teamTemplates) {
+	default void removeTeams(String... teamTemplates) {
 		removeTemplatesByCategory("team", teamTemplates);
 	}
 
-	void addPlayer(String playerName);
+	void setPlayer(String name, String description, String imgPath);
 
 	void undo();
 
@@ -142,9 +159,13 @@ public interface Controller {
 
 	void setBoundsHandler(String boundsHandlerName);
 
-	void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName);
+	void copyTemplateToGrid(VoogaEntity template, HasLocation destination);
 
 	void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation);
 
 	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation);
+
+	void updateAll();
+
+	void joinTeam(String teamName);
 }

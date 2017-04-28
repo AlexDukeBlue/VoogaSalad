@@ -1,5 +1,6 @@
 package frontend;
 
+import backend.grid.CoordinateTuple;
 import frontend.factory.abilitypane.AbilityPane;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.worldview.GridViewExternal;
@@ -10,25 +11,26 @@ import frontend.util.highlighter.ShadowHighlighter;
 import javafx.event.Event;
 import javafx.scene.Node;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
  * @author Created by th174 on 4/22/17.
  */
-public abstract class ClickHandler {
+public class ClickHandler {
 	private static final Highlighter SELECTED_HIGHLIGHTER = new ShadowHighlighter();
 	private SelectableUIComponent<? extends Node> selectedComponent;
 	private Object additionalInfo;
-	private DetailPaneExternal detailPane;
-	private AbilityPane abilityPane;
-	private GridViewExternal gridPane;
+	private final DetailPaneExternal detailPane;
+	private final AbilityPane abilityPane;
+	private final GridViewExternal gridPane;
+	private Mode currentMode;
 
-	public final void setDetailPane(DetailPaneExternal detailPane) {
+	public ClickHandler(DetailPaneExternal detailPane, AbilityPane abilityPane, GridViewExternal gridPane, Mode currentMode) {
 		this.detailPane = detailPane;
-	}
-
-	public final void setAbilityPane(AbilityPane abilityPane) {
 		this.abilityPane = abilityPane;
+		this.gridPane = gridPane;
+		this.currentMode = currentMode;
 	}
 
 	public final void handleClick(Event event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
@@ -45,20 +47,33 @@ public abstract class ClickHandler {
 		}
 	}
 
+	public final void setMode(Mode currentMode) {
+		if (this.currentMode != currentMode){
+			cancel();
+		}
+		this.currentMode = currentMode;
+	}
+
 	public final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
 		cancel();
 		this.selectedComponent = selectedComponent;
-		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getObject());
+		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getNode());
 		selectedComponent.select(this);
 		showDetail(selectedComponent);
 	}
 
-	protected abstract void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event);
+	protected void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event) {
+		if (currentMode.equals(Mode.AUTHORING)) {
+			selectedComponent.actInAuthoringMode(actionTarget, additionalInfo, this, event);
+		} else if (currentMode.equals(Mode.GAMEPLAY)) {
+			selectedComponent.actInGameplayMode(actionTarget, additionalInfo, this, event);
+		}
+	}
 
 	public final void cancel() {
 		if (selectedComponent != null) {
 			selectedComponent.deselect(this);
-			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getObject());
+			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getNode());
 		}
 		selectedComponent = null;
 		additionalInfo = null;
@@ -72,11 +87,15 @@ public abstract class ClickHandler {
 		}
 	}
 
-	public GridViewExternal getGridPane() {
-		return gridPane;
+	public void highlightRange(Collection<CoordinateTuple> coordinates) {
+		gridPane.highlightRange(coordinates);
 	}
 
-	public void setGridPane(GridViewExternal gridPane) {
-		this.gridPane = gridPane;
+	public void resetHighlighting() {
+		gridPane.resetHighlighting();
+	}
+
+	public enum Mode {
+		AUTHORING, GAMEPLAY
 	}
 }

@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>First Blood</name>
-  <description>Attacks do extra damage to targets at full HP.</description>
-  <imgPath>First_blood.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

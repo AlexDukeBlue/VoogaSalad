@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Strong Attack</name>
-  <description>All attacks do extra damage.</description>
-  <imgPath></imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>
