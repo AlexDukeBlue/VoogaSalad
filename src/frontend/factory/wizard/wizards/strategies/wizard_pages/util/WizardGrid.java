@@ -54,6 +54,7 @@ public class WizardGrid extends BaseUIManager<Region> {
 		pane = new ScrollPane();
 		gridView = new Pane();
 		pane.setContent(new Group(gridView));
+
 		polygons = new HashMap<>();
 		delegate = new GridLayoutDelegateFactory();
 		clickedPolygons = new HashSet<>();
@@ -69,11 +70,12 @@ public class WizardGrid extends BaseUIManager<Region> {
 				event.consume();
 			}
 		});
-		pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-		pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+		pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		GameBoard board = new ModifiableGameBoard(gameState.getGrid().getName(), gameState.getGrid().getTemplateCell(),
-				gameState.getGrid().getRows() * 2, gameState.getGrid().getColumns() * 2, gameState.getGrid().getBoundsHandler(),
-				gameState.getGrid().getDescription(), gameState.getGrid().getImgPath()).build();
+				gameState.getGrid().getRows() * 2, gameState.getGrid().getColumns() * 2,
+				gameState.getGrid().getBoundsHandler(), gameState.getGrid().getDescription(),
+				gameState.getGrid().getImgPath()).build();
 
 		board.getCells().keySet().forEach(coordinate -> {
 			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate, board);
@@ -97,6 +99,20 @@ public class WizardGrid extends BaseUIManager<Region> {
 				polygon.setOnMouseClicked(event -> {
 				});
 				polygon.setFill(Color.RED);
+			}
+		});
+
+		pane.setOnZoom(event -> {
+			gridView.setScaleX(gridView.getScaleX() * event.getZoomFactor());
+			gridView.setScaleY(gridView.getScaleY() * event.getZoomFactor());
+			event.consume();
+		});
+
+		pane.addEventFilter(ScrollEvent.ANY, event -> {
+			if (event.isShortcutDown()) {
+				gridView.setScaleX(gridView.getScaleX() - event.getDeltaY() / 700);
+				gridView.setScaleY(gridView.getScaleY() - event.getDeltaY() / 700);
+				event.consume();
 			}
 		});
 	}

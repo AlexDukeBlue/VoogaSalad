@@ -1,6 +1,5 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
