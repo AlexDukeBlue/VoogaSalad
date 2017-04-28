@@ -48,6 +48,9 @@ public class ClickHandler {
 	}
 
 	public final void setMode(Mode currentMode) {
+		if (this.currentMode != currentMode){
+			cancel();
+		}
 		this.currentMode = currentMode;
 	}
 

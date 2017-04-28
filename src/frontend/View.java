@@ -18,10 +18,6 @@
  */
 package frontend;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import backend.player.Team;
 import backend.util.GameplayState;
 import controller.Controller;
@@ -51,6 +47,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class View extends ClickableUIComponent<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
@@ -240,7 +240,6 @@ public class View extends ClickableUIComponent<Region> {
 	private void enterAuthorMode() {
 		addSidePanes();
 		getClickHandler().setMode(ClickHandler.Mode.AUTHORING);
-		getClickHandler().cancel();
 		detailPane.setAuthorMode();
 		setDividerPositions();
 	}
@@ -261,7 +260,6 @@ public class View extends ClickableUIComponent<Region> {
 	private void enterPlayMode() {
 		// TODO Don't remove the minimap!
 		removeSidePanes();
-		getClickHandler().cancel();
 		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
 		detailPane.setPlayMode();
 		setDividerPositions();
