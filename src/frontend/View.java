@@ -93,8 +93,8 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void toggleConditionsPane() {
-		if (!innerSplitPane.getItems().remove(conditionsPane.getObject())) {
-			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
+		if (!innerSplitPane.getItems().remove(conditionsPane.getNode())) {
+			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
 	}
 
@@ -115,7 +115,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return outerSplitPane;
 	}
 
@@ -163,18 +163,18 @@ public class View extends ClickableUIComponent<Region> {
 		box.setFillWidth(true);
 		VBox.setVgrow(endTurnButton, Priority.ALWAYS);
 		VBox.setVgrow(cancelButton, Priority.ALWAYS);
-		bottomPane = new SplitPane(detailPane.getObject(), abilityPane.getObject(), box);
+		bottomPane = new SplitPane(detailPane.getNode(), abilityPane.getNode(), box);
 		bottomPane.setDividerPositions(.6, 1);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
 		box.prefHeightProperty().bind(bottomPane.heightProperty());
 		box.prefWidthProperty().bind(box.widthProperty());
-		worldAndDetailPane = new SplitPane(worldView.getObject(), bottomPane);
+		worldAndDetailPane = new SplitPane(worldView.getNode(), bottomPane);
 		worldAndDetailPane.setDividerPositions(.7);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);
-		innerSplitPane = new SplitPane(conditionsPane.getObject(), worldAndDetailPane, rightPane);
+		innerSplitPane = new SplitPane(conditionsPane.getNode(), worldAndDetailPane, rightPane);
 		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
-		outerSplitPane = new SplitPane(menuBar.getObject(), innerSplitPane);
+		outerSplitPane = new SplitPane(menuBar.getNode(), innerSplitPane);
 		outerSplitPane.setDividerPositions(0);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		outerSplitPane.setOnKeyPressed(event -> {
@@ -183,7 +183,7 @@ public class View extends ClickableUIComponent<Region> {
 				getClickHandler().cancel();
 			}
 		});
-		SplitPane.setResizableWithParent(menuBar.getObject(), false);
+		SplitPane.setResizableWithParent(menuBar.getNode(), false);
 	}
 
 	/**
@@ -193,15 +193,15 @@ public class View extends ClickableUIComponent<Region> {
 	private void initPanes() {
 		menuBar = new VoogaMenuBar(this, getController(), getController().isAuthoringMode());
 		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
-			getObject().getStylesheets().clear();
-			getObject().getStylesheets().add(newValue);
+			getNode().getStylesheets().clear();
+			getNode().getStylesheets().add(newValue);
 		});
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
 		setClickHandler(new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
-		rightPane = new VBox(new MinimapPane(worldView.getGridView().getObject(), getController()).getObject(), tempPane.getObject());
+		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(), tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
@@ -230,8 +230,8 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	private void addSidePanes() {
-		if (!innerSplitPane.getItems().contains(conditionsPane.getObject())) {
-			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getObject());
+		if (!innerSplitPane.getItems().contains(conditionsPane.getNode())) {
+			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
 		if (!innerSplitPane.getItems().contains(rightPane)) {
 			innerSplitPane.getItems().add(rightPane);
@@ -250,7 +250,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	private void removeSidePanes() {
-		innerSplitPane.getItems().remove(conditionsPane.getObject());
+		innerSplitPane.getItems().remove(conditionsPane.getNode());
 		innerSplitPane.getItems().remove(rightPane);
 	}
 

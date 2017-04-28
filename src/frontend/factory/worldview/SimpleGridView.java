@@ -53,7 +53,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	@Override
-	public ScrollPane getObject() {
+	public ScrollPane getNode() {
 		return myScrollPane;
 	}
 
@@ -62,7 +62,7 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController().getGrid()));
 			cellViews.put(coordinate, cl);
-			cellViewObjects.getChildren().add(cl.getObject());
+			cellViewObjects.getChildren().add(cl.getNode());
 		});
 	}
 

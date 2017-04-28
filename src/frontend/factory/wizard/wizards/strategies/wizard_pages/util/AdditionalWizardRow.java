@@ -36,7 +36,7 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region>{
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return hbox;
 	}
 	

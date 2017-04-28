@@ -61,7 +61,7 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return hbox;
 	}
 

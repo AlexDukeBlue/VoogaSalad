@@ -8,7 +8,7 @@ public class ScriptingDialogTest extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		Scene scene = new Scene(new ScriptingDialog().getObject());
+		Scene scene = new Scene(new ScriptingDialog().getNode());
 		stage.setScene(scene);
 		stage.show();
 	}

@@ -37,16 +37,16 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 		entityButton.setPadding(Insets.EMPTY);
 		entityButton.setOnMouseClicked(event -> setAsSelected());
 		entityButton.setOnDragDetected(event -> {
-			getObject().startFullDrag();
+			getNode().startFullDrag();
 			if(entity instanceof Unit || entity instanceof Terrain){
-				getObject().setCursor(new ImageCursor(sprite.snapshot(null, null)));
+				getNode().setCursor(new ImageCursor(sprite.snapshot(null, null)));
 			}
 			setAsSelected();
 		});
 	}
 
 	@Override
-	public Button getObject() {
+	public Button getNode() {
 		return entityButton;
 	}
 

@@ -60,15 +60,15 @@ public class AbilityPane extends ClickableUIComponent<SplitPane> {
 	}
 
 	private Button[] createRow(Unit entity) {
-		return entity.getActiveAbilities().parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 80, getController(), getClickHandler())).map(VoogaEntityButton::getObject).toArray(Button[]::new);
+		return entity.getActiveAbilities().parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 80, getController(), getClickHandler())).map(VoogaEntityButton::getNode).toArray(Button[]::new);
 	}
 
 	private Button[] createRow(VoogaEntity entity, Collection<? extends Ability> collection) {
-		return collection.parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 80, getController(), getClickHandler())).map(VoogaEntityButton::getObject).toArray(Button[]::new);
+		return collection.parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 80, getController(), getClickHandler())).map(VoogaEntityButton::getNode).toArray(Button[]::new);
 	}
 
 	@Override
-	public SplitPane getObject() {
+	public SplitPane getNode() {
 		return abilityPane;
 	}
 }

@@ -54,7 +54,7 @@ public class ClickHandler {
 	public final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
 		cancel();
 		this.selectedComponent = selectedComponent;
-		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getObject());
+		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getNode());
 		selectedComponent.select(this);
 		showDetail(selectedComponent);
 	}
@@ -70,7 +70,7 @@ public class ClickHandler {
 	public final void cancel() {
 		if (selectedComponent != null) {
 			selectedComponent.deselect(this);
-			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getObject());
+			SELECTED_HIGHLIGHTER.removeHighlight(selectedComponent.getNode());
 		}
 		selectedComponent = null;
 		additionalInfo = null;

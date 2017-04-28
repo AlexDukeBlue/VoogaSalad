@@ -130,7 +130,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	 * @return Region object representing the visualization of the Unit
 	 */
 	@Override
-	public Pane getObject() {
+	public Pane getNode() {
 		return unitView;
 	}
 

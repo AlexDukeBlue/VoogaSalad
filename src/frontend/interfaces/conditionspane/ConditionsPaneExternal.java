@@ -11,7 +11,7 @@ import polyglot.Polyglot;
  */
 public interface ConditionsPaneExternal {
 
-	Region getObject();
+	Region getNode();
 
 	Polyglot getPolyglot();
 

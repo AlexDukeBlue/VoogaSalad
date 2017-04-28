@@ -106,7 +106,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return fullPane;
 	}
 

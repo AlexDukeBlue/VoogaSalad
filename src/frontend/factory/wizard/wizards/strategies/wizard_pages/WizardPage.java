@@ -16,6 +16,6 @@ public interface WizardPage {
 
 	StringBinding getDescription();
 	
-	Node getObject();
+	Node getNode();
 
 }

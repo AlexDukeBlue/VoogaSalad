@@ -56,7 +56,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 	}
 
 	@Override
-	public BorderPane getObject() {
+	public BorderPane getNode() {
 		return pane;
 	}
 

@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DetailEdit extends BaseUIManager {
+public class DetailEdit extends BaseUIManager<Node> {
 
 	private Pane pane;
 	private Unit unit;
@@ -159,7 +159,7 @@ public class DetailEdit extends BaseUIManager {
 	}
 
 	@Override
-	public Object getObject() {
+	public Node getNode() {
 		return pane;
 	}
 }

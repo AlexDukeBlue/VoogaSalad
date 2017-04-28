@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 
 public interface UnitViewExternal extends GameBoardObjectView {
 
-	Pane getObject();
+	Pane getNode();
 
 	String getUnitName();
 

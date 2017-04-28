@@ -67,7 +67,7 @@ public class GridInstantiationPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return vbox;
 	}
 
@@ -131,7 +131,7 @@ public class GridInstantiationPage extends BaseWizardPage {
 		terrain.textProperty().bind(getPolyglot().get("Default_Terrain"));
 		HBox terrainBox = new HBox(terrain,terrainChooser);
 
-		vbox.getChildren().addAll(rows.getObject(), cols.getObject(), cellShapeBox, terrainBox);
+		vbox.getChildren().addAll(rows.getNode(), cols.getNode(), cellShapeBox, terrainBox);
 		checkCanNext();
 	}
 

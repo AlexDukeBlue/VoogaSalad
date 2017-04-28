@@ -28,8 +28,8 @@ public class ScriptingPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
-		return dialog.getObject();
+	public Region getNode() {
+		return dialog.getNode();
 	}
 
 }
