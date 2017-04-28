@@ -27,7 +27,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	public transient static final ModifiableTriggeredEffect SHADOWSTALKER = new ModifiableTriggeredEffect("Shadowstalker")
 			.setEffect((unit, event, game) -> unit.setVisible(event.equals(Event.UNIT_POST_ABILITY_USE) || game.getTurnNumber() % 6 != 4 || game.getTurnNumber() % 6 != 5))
 			.setDescription("This unit hides in the shadows, rendering it invisible in nighttime")
-			.setImgPath("resources/images/undead.png")
+			.setImgPath("resources/images/shadow.jpg")
 			.addActivationTriggers(Event.values());
 	public transient static final ModifiableTriggeredEffect POISONED = new ModifiableTriggeredEffect("Poisoned")
 			.setEffect((unit, event, game) -> unit.getHitPoints().setCurrentValue(Math.min(1, unit.getHitPoints().getCurrentValue() - 4)))

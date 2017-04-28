@@ -15,16 +15,16 @@ import frontend.ClickableUIComponent;
 import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,6 +125,16 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		spriteImage.setSmooth(true);
 		spriteImage.setPreserveRatio(true);
 		spriteImage.setFitWidth(120);
+		Tooltip.install(spriteImage, new Tooltip(sprite.getImgPath()));
+		imagePane.setOnMouseClicked(event -> {
+			Stage expandImageWindow = new Stage();
+			ImageView expandedImage = new ImageView(View.getImg(sprite.getImgPath()));
+			expandedImage.setSmooth(true);
+			expandedImage.setPreserveRatio(true);
+			expandImageWindow.setTitle(sprite.getImgPath());
+			expandImageWindow.setScene(new Scene(new Group(expandedImage)));
+			expandImageWindow.show();
+		});
 		imagePane.getChildren().add(name);
 		imagePane.getChildren().add(spriteImage);
 	}

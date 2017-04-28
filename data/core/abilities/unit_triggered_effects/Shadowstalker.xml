@@ -1,7 +1,7 @@
 <backend.util.ModifiableTriggeredEffect>
   <name>Shadowstalker</name>
   <description>This unit hides in the shadows, rendering it invisible in nighttime</description>
-  <imgPath>resources/images/undead.png</imgPath>
+  <imgPath>resources/images/shadow.jpg</imgPath>
   <activationTriggers class="set">
     <backend.util.Event>TURN_START</backend.util.Event>
     <backend.util.Event>UNIT_PRE_MOVEMENT</backend.util.Event>

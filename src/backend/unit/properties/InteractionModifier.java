@@ -22,7 +22,7 @@ public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModi
 	public transient static final InteractionModifier<?> DUMMY = new InteractionModifier<>("Dummy", (originalValue, agent, target, game) -> originalValue, "Dummy modifier that doesn't change anything", "resources/images/blackScreen.png", DEFENSIVE);
 	public transient static final InteractionModifier<Double> NO_EFFECT = new InteractionModifier<>("No effect", (originalValue, agent, target, game) -> 0.0, "Literally nothing", "resources/images/blackScreen.png", DEFENSIVE);
 	//Offensive modifiers, can go on units or attacks
-	public transient static final InteractionModifier<Double> CHAOTIC = new InteractionModifier<>("Chaotic", Modifier.CHAOTIC, "Attacks do more damage in nighttime, but less damage in daytime.", "resources/images/undead.png", OFFENSIVE);
+	public transient static final InteractionModifier<Double> CHAOTIC = new InteractionModifier<>("Chaotic", Modifier.CHAOTIC, "Attacks do more damage in nighttime, but less damage in daytime.", "resources/images/chaotic.png", OFFENSIVE);
 	public transient static final InteractionModifier<Double> LAWFUL = new InteractionModifier<>("Lawful", Modifier.LAWFUL, "Attacks do more damage in daytime, but less damage in nighttime", "resources/images/sherrif.png", OFFENSIVE);
 	public transient static final InteractionModifier<Double> BLINDED = new InteractionModifier<>("Blinded", Modifier.BLINDED, "Attacks have a high chance to miss", "resources/images/blind.png", OFFENSIVE);
 	public transient static final InteractionModifier<Double> FIRST_BLOOD = new InteractionModifier<>("First Blood", Modifier.FIRST_BLOOD, "Attacks do extra damage to targets at full HP.", "resources/images/blood.png", OFFENSIVE);
