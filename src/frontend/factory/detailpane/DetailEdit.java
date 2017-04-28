@@ -47,12 +47,8 @@ public class DetailEdit extends BaseUIManager<Node> {
 		super(controller);
 		myStage = new Stage();
 		pane = new Pane();
-		if (spriteType.equals("Unit")) {
-			unit = (Unit) sprite;
-			createUnitScene();
-		} else {
-			//createTerrainScene();
-		}
+		unit = (Unit) sprite;
+		createUnitScene();
 		Scene edittingScene = new Scene(pane);
 		myStage.setScene(edittingScene);
 		myStage.show();
@@ -119,14 +115,6 @@ public class DetailEdit extends BaseUIManager<Node> {
 			for (Terrain key : moveCosts.keySet()) {
 				finalCosts.put(key, Integer.parseInt(moveCosts.get(key).getText()));
 			}
-//			modifiable.setTerrainMoveCosts(finalCosts);
-//			((ModifiableUnitStat) modifiable.getHitPoints()).setMaxValue(Double.parseDouble(unitStats[0].getText()));
-//			((ModifiableUnitStat) modifiable.getMovePoints()).setMaxValue(Integer.parseInt(unitStats[1].getText()));
-//			if (movePattern!= null) {
-//				modifiable.setMovePattern((GridPattern) getController()
-//					.getAuthoringGameState()
-//					.getTemplateByCategory("Grid Pattern")
-//					.getByName(movePattern));
 			myStage.close();
 
 			Map<String, List<? extends Number>> stats = unitStats.entrySet().stream()
