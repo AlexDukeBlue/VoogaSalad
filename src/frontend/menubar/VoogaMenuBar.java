@@ -67,6 +67,21 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		editModeItem.setDisable(editable);
 	}
 
+	@Override
+	public MenuBar getNode() {
+		return menuBar;
+	}
+
+	public View getView() {
+		return myView;
+
+	}
+
+	@Override
+	public void update() {
+		setEditable(getController().isAuthoringMode());
+	}
+	
 	protected void populateMenuBar() {
 		initMenuItems();
 		initMenus();
@@ -132,7 +147,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		statsPaneItem = factory.getMenuItem(getPolyglot().get("ShowHideStats"), e -> myView.toggleStatsPane());
 		editModeItem = factory.getMenuItem(getPolyglot().get("EditMode"), e -> getController().enterAuthoringMode());
 		editModeItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
-		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> getController().enterGamePlayMode());
+		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> enterGamePlayMode());
 		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
 		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser("frontend/menubar/help.html"));
@@ -235,35 +250,28 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private void create(String categoryName) {
 		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
 		try {
-//			System.out.println(wizard);
-//			System.out.println(wizard.getPolyglot());
-//			System.out.println(wizard.getPolyglot().getLanguage());
-//			System.out.println(getPolyglot());
-//			System.out.println(getPolyglot().getLanguage());
 			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
 		} catch (PolyglotException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
 		}
-
 		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
-
 	}
-
-	@Override
-	public MenuBar getNode() {
-		return menuBar;
-	}
-
-	public View getView() {
-		return myView;
-
-	}
-
-	@Override
-	public void update() {
-		setEditable(getController().isAuthoringMode());
+	
+	private void enterGamePlayMode() {
+		if(getController().getTeamTemplates().size() == 0){
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.titleProperty().bind(getPolyglot().get("NoTeamsTitle"));
+			alert.headerTextProperty().bind(getPolyglot().get("NoTeamsHeader"));
+			alert.contentTextProperty().bind(getPolyglot().get("NoTeamsContent"));
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				newTeamItem.fire();
+			}
+		} else {
+			getController().enterGamePlayMode();
+		}
 	}
 
 }
