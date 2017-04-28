@@ -1,45 +1,80 @@
 package frontend.startup;
 
 import frontend.View;
-import javafx.geometry.Pos;
-import javafx.scene.layout.*;
-import javafx.stage.Screen;
+import frontend.util.BaseUIManager;
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.Parent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class StartupScreen {
-	public static final double DEFAULT_WIDTH = 700;
-	public static final double DEFAULT_HEIGHT = 700;
+/**
+ * 
+ * @author Sam, Dylan Peters
+ *
+ */
+public class StartupScreen extends BaseUIManager<Parent> {
 
 	private BorderPane primaryPane;
-	private double width, height;
-	private StartupSelectionScreen selectionScreen;
-	private Stage stage;
 
 	public StartupScreen() {
-		this(new Stage(), Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+		this(new Stage());
+	}
+
+	public StartupScreen(Stage stage) {
+		this(stage, -1, -1);
 	}
 
 	public StartupScreen(Stage stage, double width, double height) {
-		this.stage = stage;
-		this.width = width;
-		this.height = height;
-		this.primaryPane = initPrimaryPane();
+		initPrimaryPane(stage, width, height);
 	}
 
-	private BorderPane initPrimaryPane() {
-		this.selectionScreen = new StartupSelectionScreen(stage);
-		BackgroundImage bi = new BackgroundImage(View.getImg("frontend/properties/StartupBackground.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(width, height, false, false, true, true));
-		Background imgv = new Background(bi);
-		this.primaryPane = new BorderPane();
-		primaryPane.setMinSize(width, height);
-		primaryPane.setBottom(selectionScreen);
-		selectionScreen.setAlignment(Pos.CENTER);
+	public void setPrefWidth(double width) {
+		primaryPane.setPrefWidth(width);
+	}
+
+	public double getPrefWidth() {
+		return primaryPane.getPrefWidth();
+	}
+
+	public DoubleProperty prefWidthProperty() {
+		return primaryPane.prefWidthProperty();
+	}
+
+	public void setPrefHeight(double height) {
+		primaryPane.setPrefHeight(height);
+	}
+
+	public double getPrefHeight() {
+		return primaryPane.getPrefHeight();
+	}
+
+	public DoubleProperty prefHeightProperty() {
+		return primaryPane.prefHeightProperty();
+	}
+
+	@Override
+	public Parent getNode() {
+		return primaryPane;
+	}
+
+	private void initPrimaryPane(Stage stage, double width, double height) {
+		if (width <= 0) {
+			width = Double.parseDouble(getResourceBundle().getString("DefaultStartupWidth"));
+		}
+		if (height <= 0) {
+			height = Double.parseDouble(getResourceBundle().getString("DefaultStartupHeight"));
+		}
+		Background imgv = new Background(new BackgroundImage(
+				View.getImg(getResourceBundle().getString("StartupBackgroundImage")), BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(width, height, false, false, true, true)));
+		primaryPane = new BorderPane();
+		primaryPane.setBottom(new StartupSelectionScreen(stage).getNode());
+		primaryPane.setPrefWidth(width);
+		primaryPane.setPrefHeight(height);
 		primaryPane.setBackground(imgv);
-		return primaryPane;
 	}
-
-	public BorderPane getPrimaryPane() {
-		return primaryPane;
-	}
-
 }
