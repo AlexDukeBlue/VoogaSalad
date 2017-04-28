@@ -7,7 +7,9 @@ import frontend.interfaces.detailpane.DetailPaneExternal;
 public class DetailPaneFactory {
 	
 	public static DetailPaneExternal newDetailPane(Controller controller, ClickHandler clickHandler){
+
 		return new DetailPane(clickHandler,controller);
+
 	}
 
 }
