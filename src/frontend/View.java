@@ -18,6 +18,9 @@
  */
 package frontend;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import backend.player.Team;
 import backend.util.GameplayState;
 import controller.Controller;
@@ -47,9 +50,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import polyglot.PolyglotException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class View extends ClickableUIComponent<Region> {
 	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
@@ -111,7 +111,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void toggleStatsPane() {
-		//TODO
+		// TODO
 	}
 
 	@Override
@@ -129,7 +129,8 @@ public class View extends ClickableUIComponent<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState GameplayState that the View will now access its data from
+	 * @param newGameState
+	 *            GameplayState that the View will now access its data from
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
@@ -164,18 +165,14 @@ public class View extends ClickableUIComponent<Region> {
 		VBox.setVgrow(endTurnButton, Priority.ALWAYS);
 		VBox.setVgrow(cancelButton, Priority.ALWAYS);
 		bottomPane = new SplitPane(detailPane.getNode(), abilityPane.getNode(), box);
-		bottomPane.setDividerPositions(.6, 1);
 		bottomPane.setOrientation(Orientation.HORIZONTAL);
 		box.prefHeightProperty().bind(bottomPane.heightProperty());
 		box.prefWidthProperty().bind(box.widthProperty());
 		worldAndDetailPane = new SplitPane(worldView.getNode(), bottomPane);
-		worldAndDetailPane.setDividerPositions(.7);
 		worldAndDetailPane.setOrientation(Orientation.VERTICAL);
 		innerSplitPane = new SplitPane(conditionsPane.getNode(), worldAndDetailPane, rightPane);
-		innerSplitPane.setDividerPositions(0, 1);
 		innerSplitPane.setOrientation(Orientation.HORIZONTAL);
 		outerSplitPane = new SplitPane(menuBar.getNode(), innerSplitPane);
-		outerSplitPane.setDividerPositions(0);
 		outerSplitPane.setOrientation(Orientation.VERTICAL);
 		outerSplitPane.setOnKeyPressed(event -> {
 			if (event.getCode().equals(KeyCode.ESCAPE)) {
@@ -183,7 +180,22 @@ public class View extends ClickableUIComponent<Region> {
 				getClickHandler().cancel();
 			}
 		});
+		setDividerPositions();
 		SplitPane.setResizableWithParent(menuBar.getNode(), false);
+
+	}
+
+	private void setDividerPositions() {
+		bottomPane.setDividerPositions(getDoubleFromResourceBundle("BottomPaneDividerPosition1"),
+				getDoubleFromResourceBundle("BottomPaneDividerPosition2"));
+		worldAndDetailPane.setDividerPositions(getDoubleFromResourceBundle("WorldAndDetailPaneDividerPosition1"));
+		innerSplitPane.setDividerPositions(getDoubleFromResourceBundle("innerSplitPaneDividerPosition1"),
+				getDoubleFromResourceBundle("innerSplitPaneDividerPosition2"));
+		outerSplitPane.setDividerPositions(getDoubleFromResourceBundle("outerSplitPaneDividerPosition1"));
+	}
+
+	private double getDoubleFromResourceBundle(String key) {
+		return Double.parseDouble(getResourceBundle().getString(key));
 	}
 
 	/**
@@ -199,9 +211,11 @@ public class View extends ClickableUIComponent<Region> {
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
-		setClickHandler(new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
+		setClickHandler(
+				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
-		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(), tempPane.getNode());
+		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(),
+				tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
@@ -220,14 +234,14 @@ public class View extends ClickableUIComponent<Region> {
 
 	/**
 	 * Performs all necessary actions to convert the View into authoring mode.
-	 * If the View is already in authoring mode, then nothing visually
-	 * changes.
+	 * If the View is already in authoring mode, then nothing visually changes.
 	 */
 	private void enterAuthorMode() {
 		addSidePanes();
 		getClickHandler().setMode(ClickHandler.Mode.AUTHORING);
 		getClickHandler().cancel();
 		detailPane.setAuthorMode();
+		setDividerPositions();
 	}
 
 	private void addSidePanes() {
@@ -244,11 +258,12 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		//TODO Don't remove the minimap!
+		// TODO Don't remove the minimap!
 		removeSidePanes();
 		getClickHandler().cancel();
 		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
 		detailPane.setPlayMode();
+		setDividerPositions();
 	}
 
 	private void removeSidePanes() {
@@ -257,8 +272,9 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void joinTeam() {
-		//TODO POLYGLOT ResourceBundlify
-		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null), getController().getReadOnlyGameState().getTeams());
+		// TODO POLYGLOT ResourceBundlify
+		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
+				getController().getReadOnlyGameState().getTeams());
 		teams.setHeaderText("Join a team to start playing:");
 		teams.setTitle("Join a team");
 		teams.showAndWait().ifPresent(team -> getController().joinTeam(team.getName()));
