@@ -20,6 +20,7 @@ package frontend;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import backend.player.Team;
 import backend.util.GameplayState;
@@ -276,7 +277,20 @@ public class View extends ClickableUIComponent<Region> {
 				getController().getReadOnlyGameState().getTeams());
 		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
 		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
-		teams.showAndWait().ifPresent(team -> getController().joinTeam(team.getName()));
+		Optional<Team> chosenTeam = teams.showAndWait();
+		try{
+			getController().joinTeam(chosenTeam.get().getName());
+		} catch (Exception e) {
+			if(!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
+				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
+				alert.showAndWait();
+				getController().enterAuthoringMode();
+			} else {
+				//Do nothing
+			}
+		}
 	}
 
 	@Override
