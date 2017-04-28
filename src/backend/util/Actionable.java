@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.function.BiConsumer;
 
 public class Actionable extends ImmutableVoogaObject<Actionable> {
+	private static final long serialVersionUID = 1L;
 
 	private SerializableBiConsumer biCon;
 

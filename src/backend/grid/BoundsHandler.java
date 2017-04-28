@@ -11,6 +11,8 @@ import java.util.stream.IntStream;
  * @author Created by th174 on 3/28/2017.
  */
 public class BoundsHandler extends ImmutableVoogaObject<BoundsHandler> implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	//TODO ResourceBundlify this
 	public transient static final BoundsHandler INFINITE_BOUNDS = new BoundsHandler("Infinite Bounds", (input, grid) -> input, "Allows grid to expand to accommodate out of bounds coordinates.");
 	public transient static final BoundsHandler FINITE_BOUNDS = new BoundsHandler("Finite Bounds",

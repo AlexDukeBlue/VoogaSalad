@@ -11,6 +11,8 @@ import java.util.Objects;
  * @author Created by th174 on 3/31/2017.
  */
 public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableTriggeredEffect> implements TriggeredEffect {
+	private static final long serialVersionUID = 1L;
+
 	//Unit passive abilities
 	public transient static final ModifiableTriggeredEffect REGENERATION = new ModifiableTriggeredEffect("Regeneration")
 			.setEffect((unit, event, game) -> unit.takeDamage(-6))

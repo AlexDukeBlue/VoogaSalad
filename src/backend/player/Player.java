@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 3/28/2017.
  */
 public class Player extends ModifiableVoogaObject<Player> implements ImmutablePlayer {
+	private static final long serialVersionUID = 1L;
+
 	private Team team;
 	private final List<ChatMessage> chatLog;
 

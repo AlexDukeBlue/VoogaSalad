@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 3/30/2017.
  */
 public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> implements VoogaEntity {
+	private static final long serialVersionUID = 1L;
+
 	public transient static final String RED = "#ff0000";
 	public transient static final String GREEN = "#00ff00";
 	public transient static final String BLUE = "#0000ff";

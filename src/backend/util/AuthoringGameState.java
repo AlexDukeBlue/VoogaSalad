@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
+	private static final long serialVersionUID = 1L;
+
 	private Map<Event, Collection<Actionable>> availableTurnActions;
 	private Collection<Requirement> availableTurnRequirements;
 	private Collection<Resultant> availableObjectives;

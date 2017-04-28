@@ -10,8 +10,9 @@ import java.util.stream.Stream;
  * @author Created by th174 on 3/28/2017.
  */
 public final class CoordinateTuple implements Iterable<Integer>, Serializable {
-	public transient static final CoordinateTuple EMPTY = new CoordinateTuple();
+	private static final long serialVersionUID = 1L;
 
+	public transient static final CoordinateTuple EMPTY = new CoordinateTuple();
 	private final List<Integer> coordinates;
 
 	public CoordinateTuple(int... coordinates) {

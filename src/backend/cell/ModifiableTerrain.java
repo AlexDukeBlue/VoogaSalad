@@ -16,12 +16,13 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 4/11/2017.
  */
 public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> implements Terrain {
-	public static final int DEFAULT_DEFAULT_MOVE_COST = 1;
-	private static final Map<Class<? extends Ability>, BiConsumer<Ability, Terrain>> actionMap = new HashMap<>();
+	private static final long serialVersionUID = 1L;
+
+	private static final Map<Class<? extends Ability>, BiConsumer<Ability, Terrain>> DISPATCH_MAP = new HashMap<>();
 
 	static {
-		actionMap.put(TriggeredEffect.class, (triggered, terrain) -> terrain.addTriggeredAbilities((TriggeredEffect) triggered));
-		actionMap.put(InteractionModifier.class, (modifier, terrain) -> {
+		DISPATCH_MAP.put(TriggeredEffect.class, (triggered, terrain) -> terrain.addTriggeredAbilities((TriggeredEffect) triggered));
+		DISPATCH_MAP.put(InteractionModifier.class, (modifier, terrain) -> {
 			if (((InteractionModifier) modifier).getType().equals(InteractionModifier.DEFENSIVE)) {
 				terrain.addDefensiveModifiers((InteractionModifier) modifier);
 			} else {
@@ -30,6 +31,7 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 		});
 	}
 
+	private static final int DEFAULT_DEFAULT_MOVE_COST = 1;
 	private final TriggeredAbilitySet triggeredAbilities;
 	private final ModifierSet offensiveModifiers;
 	private final ModifierSet defensiveModifiers;
@@ -44,8 +46,8 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 		super(name, description, imgPath);
 		this.defaultMoveCost = defaultMoveCost;
 		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
-		this.offensiveModifiers = new ModifierSet("Offensive Modifiers", "Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain", "" ,offensiveModifiers);
-		this.defensiveModifiers = new ModifierSet("Defensive Modifiers", "Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain", "" , defensiveModifiers);
+		this.offensiveModifiers = new ModifierSet("Offensive Modifiers", "Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain", "", offensiveModifiers);
+		this.defensiveModifiers = new ModifierSet("Defensive Modifiers", "Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain", "", defensiveModifiers);
 	}
 
 	@Override
@@ -136,19 +138,19 @@ public class ModifiableTerrain extends ModifiableVoogaObject<ModifiableTerrain> 
 	}
 
 	@Override
-	public ModifiableTerrain setSoundPath(String path) {
-		this.soundPath = path;
-		return this;
-	}
-
-	@Override
 	public void addAbility(Ability ability) {
-		actionMap.get(ability.getClass()).accept(ability, this);
+		DISPATCH_MAP.get(ability.getClass()).accept(ability, this);
 	}
 
 	@Override
 	public String getSoundPath() {
 		return soundPath;
+	}
+
+	@Override
+	public ModifiableTerrain setSoundPath(String path) {
+		this.soundPath = path;
+		return this;
 	}
 
 	static class IncompleteTerrainException extends RuntimeException {

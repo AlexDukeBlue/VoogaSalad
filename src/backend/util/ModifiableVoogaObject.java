@@ -4,6 +4,7 @@ package backend.util;
  * @author Created by th174 on 4/5/2017.
  */
 public abstract class ModifiableVoogaObject<T extends ModifiableVoogaObject<T>> extends ImmutableVoogaObject<T> {
+	private static final long serialVersionUID = 1L;
 
 	public ModifiableVoogaObject() {
 		this("");
