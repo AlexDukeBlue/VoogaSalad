@@ -178,7 +178,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		addMoveCosts(unit);
 		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
 		unit.getUnitStats().forEach(e -> addString(e.getName(), e.getCurrentValue().toString()));
-		addString("Move Pattern", unit.getMovePattern().toString());
+		addString("Move Pattern", Objects.nonNull(unit.getMovePattern())?unit.getMovePattern().toString():"");
 		if (authorMode) createButton(unit, resources.getString("Unit"));
 		return content;
 	}
