@@ -1,5 +1,6 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -13,6 +14,12 @@ public class ColorPage extends BaseWizardPage{
 	private BorderPane borderPane;
 	
 	public ColorPage() {
+		this(null,null);
+	}
+
+	public ColorPage(StringBinding title, StringBinding description) {
+		setTitle(title);
+		setDescription(description);
 		colorPicker = new ColorPicker();
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);

@@ -1,5 +1,9 @@
 package frontend.factory.wizard.wizards.strategies;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+
 import frontend.factory.wizard.wizards.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
 import javafx.beans.property.BooleanProperty;
@@ -14,11 +18,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import polyglot.PolyglotException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ResourceBundle;
 
 /**
  * BaseStrategy implements default behavior for the SelectionStrategy interface.
@@ -111,8 +110,8 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		if (canGoToPage(newPageNum)) {
 			WizardPage page = pages.get(newPageNum);
 			scrollPane.setContent(page.getNode());
-			title.setText(page.getTitle().getValue());
-			description.setText(page.getDescription().getValue());
+			title.textProperty().bind(page.getTitle());
+			description.textProperty().bind(page.getDescription());
 
 			canPrevious.unbind();
 			canPrevious.setValue(newPageNum != 0);
