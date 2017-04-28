@@ -4,16 +4,18 @@ import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.Unit;
+import backend.unit.properties.InteractionModifier;
 import backend.util.*;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, VoogaEntity {
+public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, VoogaEntity, HasPassiveModifiers {
 
 	ModifiableCell copy();
 
@@ -54,4 +56,14 @@ public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, 
 	Cell removeOccupants(String... unitNames);
 
 	Cell add(VoogaEntity voogaEntity);
+
+	@Override
+	default List<? extends InteractionModifier> getOffensiveModifiers() {
+		return getTerrain().getOffensiveModifiers();
+	}
+
+	@Override
+	default List<? extends InteractionModifier> getDefensiveModifiers() {
+		return getTerrain().getDefensiveModifiers();
+	}
 }

@@ -91,7 +91,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		if (Objects.isNull(getAbilityPoints())) {
 			addUnitStats(ModifiableUnitStat.ABILITYPOINTS);
 		}
-		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), getOffensiveModifiers(), getDefensiveModifiers(), getDescription(), getImgPath());
+		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), offensiveModifiers.getAll(), defensiveModifiers.getAll(), getDescription(), getImgPath());
 	}
 
 	@Override
@@ -105,12 +105,16 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public void startTurn(GameplayState gameState) {
-		processTriggers(Event.TURN_START, gameState);
+		if (!getOwner().isPresent() || gameState.getActivePlayer().equals(getOwner().get())) {
+			processTriggers(Event.TURN_START, gameState);
+		}
 	}
 
 	@Override
 	public void endTurn(GameplayState gameState) {
-		processTriggers(Event.TURN_END, gameState);
+		if (!getOwner().isPresent() || gameState.getActivePlayer().equals(getOwner().get())) {
+			processTriggers(Event.TURN_END, gameState);
+		}
 	}
 
 	@Override
@@ -191,7 +195,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public final List<InteractionModifier<Double>> getOffensiveModifiers() {
-		return Collections.unmodifiableList(offensiveModifiers.getAll());
+		List<InteractionModifier<Double>> modifiers = new ArrayList<>(offensiveModifiers.getAll());
+		if (Objects.nonNull(getCurrentCell())) {
+			modifiers.addAll(getCurrentCell().getTerrain().getOffensiveModifiers());
+		}
+		return Collections.unmodifiableList(modifiers);
 	}
 
 	@SafeVarargs
@@ -220,7 +228,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public final List<InteractionModifier<Double>> getDefensiveModifiers() {
-		return Collections.unmodifiableList(defensiveModifiers.getAll());
+		List<InteractionModifier<Double>> modifiers = new ArrayList<>(defensiveModifiers.getAll());
+		if (Objects.nonNull(getCurrentCell())) {
+			modifiers.addAll(getCurrentCell().getTerrain().getDefensiveModifiers());
+		}
+		return Collections.unmodifiableList(modifiers);
 	}
 
 	@Override

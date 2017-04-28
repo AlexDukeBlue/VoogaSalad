@@ -2,6 +2,7 @@ package frontend.factory.abilitypane;
 
 import backend.unit.Unit;
 import backend.util.Ability;
+import backend.util.HasPassiveModifiers;
 import backend.util.HasTriggeredAbilities;
 import backend.util.VoogaEntity;
 import controller.Controller;
@@ -57,6 +58,11 @@ public class AbilityPane extends ClickableUIComponent<SplitPane> {
 			passiveAbilitiesContent.getChildren().addAll(createRow(entity, ((HasTriggeredAbilities) entity).getTriggeredAbilities()));
 			abilityPane.getItems().add(passiveAbilities);
 		}
+		if (entity instanceof HasPassiveModifiers) {
+			passiveAbilitiesContent.getChildren().addAll(createRow(entity, ((HasPassiveModifiers) entity).getOffensiveModifiers()));
+			passiveAbilitiesContent.getChildren().addAll(createRow(entity, ((HasPassiveModifiers) entity).getDefensiveModifiers()));
+			abilityPane.getItems().add(passiveAbilities);
+		}
 	}
 
 	private Button[] createRow(Unit entity) {
@@ -64,7 +70,7 @@ public class AbilityPane extends ClickableUIComponent<SplitPane> {
 	}
 
 	private Button[] createRow(VoogaEntity entity, Collection<? extends Ability> collection) {
-		return collection.parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 80, getController(), getClickHandler())).map(VoogaEntityButton::getNode).toArray(Button[]::new);
+		return collection.parallelStream().map(e -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, e, 60, getController(), getClickHandler())).map(VoogaEntityButton::getNode).toArray(Button[]::new);
 	}
 
 	@Override

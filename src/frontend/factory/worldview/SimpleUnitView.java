@@ -47,7 +47,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
-		ImageView imageView = new ImageView(View.getImg(getController().getCell(unitLocation).getOccupantByName(unitName).getImgPath()));
+		ImageView imageView = new ImageView(View.getImg(getEntity().getImgPath()));
 		imageView.setManaged(true);
 		imageView.setPickOnBounds(true);
 		imageView.setPreserveRatio(true);

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * @author Created by th174 on 3/27/2017.
  */
-public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation {
+public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation, HasPassiveModifiers {
 	Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Unit>> DISPATCH_MAP = new HashMap<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Unit>>() {{
 		put(ModifiableTerrain.class, (theTerrain, thisUnit) -> thisUnit.getCurrentCell().add(theTerrain));
 		put(ModifiableUnit.class, (newUnit, thisUnit) -> thisUnit.getCurrentCell().add(newUnit));
@@ -122,8 +122,7 @@ public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation {
 	Unit removeOffensiveModifiers(Collection<InteractionModifier<Double>> modifiers);
 
 	default double applyAllOffensiveModifiers(Double originalValue, Unit target, GameplayState gameState) {
-		Double temp = InteractionModifier.modifyAll(getOffensiveModifiers(), originalValue, this, target, gameState);
-		return InteractionModifier.modifyAll(getCurrentCell().getTerrain().getOffensiveModifiers(), temp, this, target, gameState);
+		return InteractionModifier.modifyAll(getOffensiveModifiers(), originalValue, this, target, gameState);
 	}
 
 	List<InteractionModifier<Double>> getOffensiveModifiers();
@@ -141,10 +140,7 @@ public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation {
 	Unit removeDefensiveModifiers(Collection<InteractionModifier<Double>> modifiers);
 
 	default double applyAllDefensiveModifiers(Double originalValue, Unit agent, GameplayState gameState) {
-		Double temp = InteractionModifier.modifyAll(getDefensiveModifiers(), originalValue, agent, this, gameState);
-		return InteractionModifier.modifyAll(getCurrentCell()
-				.getTerrain()
-				.getDefensiveModifiers(), temp, agent, this, gameState);
+		return InteractionModifier.modifyAll(getDefensiveModifiers(), originalValue, agent, this, gameState);
 	}
 
 	List<InteractionModifier<Double>> getDefensiveModifiers();

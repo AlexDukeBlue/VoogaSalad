@@ -1,0 +1,18 @@
+<backend.unit.properties.InteractionModifier>
+  <name>Default Flat Terrain Defense</name>
+  <description>Units have 30% evasion on Flat terrain by default.</description>
+  <imgPath>resources/images/kansas.png</imgPath>
+  <modifier resolves-to="serialized-lambda">
+    <capturingClass>backend.unit.properties.InteractionModifier</capturingClass>
+    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+    <implClass>backend/unit/properties/InteractionModifier</implClass>
+    <implMethodName>lambda$static$10421f91$1</implMethodName>
+    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+    <capturedArgs/>
+  </modifier>
+  <type>defense</type>
+</backend.unit.properties.InteractionModifier>
