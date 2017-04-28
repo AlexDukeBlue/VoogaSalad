@@ -1,0 +1,17 @@
+<backend.grid.GridPattern>
+  <name>Hexagonal Single Cell</name>
+  <description>This pattern contains single hexagonal cell at the origin</description>
+  <imgPath>resources/images/hexSingle.png</imgPath>
+  <relativeCoordinates class="set">
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>0</int>
+          <int>0</int>
+          <int>0</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+  </relativeCoordinates>
+</backend.grid.GridPattern>
