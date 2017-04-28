@@ -191,13 +191,13 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void createButton(VoogaEntity unit, String unitType) {
-		if (!(unit instanceof Unit)) {
+		//if (!(unit instanceof Unit)) {
 			editBtn = new Button("Edit details");
 			infoPane.getChildren().add(editBtn);
 			editBtn.setOnMouseClicked(e -> {
 				new DetailEdit(unit, unitType, getController());
 			});
-		}
+		//}
 	}
 
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
