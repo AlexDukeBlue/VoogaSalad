@@ -76,7 +76,7 @@ public class PlayersView extends BaseUIManager<GridPane> {
 	}
 
 	@Override
-	public GridPane getObject() {
+	public GridPane getNode() {
 		return gridPane;
 	}
 }

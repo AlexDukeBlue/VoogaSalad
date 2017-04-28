@@ -107,7 +107,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return myNumericInputRow;
 	}
 	

@@ -7,7 +7,7 @@ import polyglot.Polyglot;
 
 public interface DetailPaneExternal {
 
-	Region getObject();
+	Region getNode();
 
 	void setContent(VoogaEntity entity);
 

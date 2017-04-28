@@ -38,7 +38,7 @@ public abstract class TableInputView extends BaseUIManager<Region> {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return scrollPane;
 	}
 

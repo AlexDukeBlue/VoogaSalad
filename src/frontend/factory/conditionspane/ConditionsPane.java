@@ -50,7 +50,7 @@ public class ConditionsPane extends ClickableUIComponent<Region> implements Cond
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return myBox;
 	}
 
@@ -73,7 +73,7 @@ public class ConditionsPane extends ClickableUIComponent<Region> implements Cond
 		content.setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
 		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController().getAuthoringGameState()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
-		content.getChildren().add(addRemoveButton.getObject());
+		content.getChildren().add(addRemoveButton.getNode());
 
 		rulesPane.setContent(new ScrollPane(content));
 		return rulesPane;

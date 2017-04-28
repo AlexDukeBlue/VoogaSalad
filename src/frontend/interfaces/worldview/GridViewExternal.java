@@ -10,7 +10,7 @@ import polyglot.Polyglot;
 import java.util.Collection;
 
 public interface GridViewExternal extends GameBoardObjectView {
-	ScrollPane getObject();
+	ScrollPane getNode();
 
 	void setClickHandler(ClickHandler clickHandler);
 

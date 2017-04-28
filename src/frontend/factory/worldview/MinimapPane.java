@@ -96,7 +96,7 @@ public class MinimapPane extends BaseUIManager<Pane> {
 	}
 
 	@Override
-	public Pane getObject() {
+	public Pane getNode() {
 		return view;
 	}
 }

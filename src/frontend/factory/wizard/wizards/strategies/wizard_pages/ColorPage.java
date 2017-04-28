@@ -24,7 +24,7 @@ public class ColorPage extends BaseWizardPage{
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return borderPane;
 	}
 	

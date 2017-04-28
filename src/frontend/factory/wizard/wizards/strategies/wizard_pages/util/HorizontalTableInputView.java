@@ -29,10 +29,10 @@ public class HorizontalTableInputView extends TableInputView {
 					javafx.collections.ListChangeListener.Change<? extends BaseUIManager<? extends Parent>> change) {
 				if (change.next()) {
 					if (change.wasAdded()) {
-						change.getAddedSubList().stream().forEach(child -> hbox.getChildren().add(child.getObject()));
+						change.getAddedSubList().stream().forEach(child -> hbox.getChildren().add(child.getNode()));
 					} else if (change.wasRemoved()) {
 						change.getAddedSubList().stream()
-								.forEach(child -> hbox.getChildren().remove(child.getObject()));
+								.forEach(child -> hbox.getChildren().remove(child.getNode()));
 					}
 				}
 			}

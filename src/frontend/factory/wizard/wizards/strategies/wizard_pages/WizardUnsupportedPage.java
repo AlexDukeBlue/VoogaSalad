@@ -16,7 +16,7 @@ public class WizardUnsupportedPage extends BaseWizardPage{
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return vbox;
 	}
 

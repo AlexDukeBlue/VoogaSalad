@@ -6,7 +6,7 @@ import polyglot.Polyglot;
 
 public interface TemplatePaneExternal {
 
-	VBox getObject();
+	VBox getNode();
 
 	Polyglot getPolyglot();
 

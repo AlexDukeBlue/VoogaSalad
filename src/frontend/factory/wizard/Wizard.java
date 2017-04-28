@@ -71,7 +71,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	 * Returns the object that this wizard uses to display to the user.
 	 */
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return borderPane;
 	}
 
@@ -125,8 +125,8 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		buttonBar.getButton(buttonBindings.get("Cancel")).setCancelButton(true);
 		buttonBar.getButton(buttonBindings.get("Finish")).setOnAction(event -> finish());
 
-		borderPane.setCenter(selectionStrategy.getObject());
-		borderPane.setBottom(buttonBar.getObject());
+		borderPane.setCenter(selectionStrategy.getNode());
+		borderPane.setBottom(buttonBar.getNode());
 		
 		getPolyglot().setOnLanguageChange(event -> {
 			try {

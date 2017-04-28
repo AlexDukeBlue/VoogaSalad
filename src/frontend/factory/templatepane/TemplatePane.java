@@ -64,11 +64,11 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	}
 
 	private void createButtons(Collection<? extends VoogaEntity> voogaEntities, String entityType, Collection<Node> parent) {
-		voogaEntities.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, entityType, 70, getController(), getClickHandler())).map(VoogaEntityButton::getObject).forEach(parent::add);
+		voogaEntities.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, entityType, 70, getController(), getClickHandler())).map(VoogaEntityButton::getNode).forEach(parent::add);
 	}
 
 	@Override
-	public VBox getObject() {
+	public VBox getNode() {
 		return pane;
 	}
 
@@ -82,13 +82,13 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		createButtons(sprites, label, contentPane.getChildren());
 		sprites.stream()
 				.map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, label, 50, getController(), getClickHandler()))
-				.map(VoogaEntityButton::getObject).forEach(contentPane.getChildren()::add);
+				.map(VoogaEntityButton::getNode).forEach(contentPane.getChildren()::add);
 		contents.put(label, contentPane);
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
 		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
-		VBox box = new VBox(scroller, addRemoveButton.getObject());
+		VBox box = new VBox(scroller, addRemoveButton.getNode());
 		box.setSpacing(2);
 		box.setPadding(new Insets(2, 2, 2, 2));
 		spritePane.setContent(box);

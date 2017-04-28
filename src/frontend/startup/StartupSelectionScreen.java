@@ -226,7 +226,7 @@ public class StartupSelectionScreen extends VBox {
 
 	private void createGame() {
 		View view = new View(control, stage);
-		stage.setScene(new Scene(view.getObject()));
+		stage.setScene(new Scene(view.getNode()));
 		control.updateAll();
 	}
 

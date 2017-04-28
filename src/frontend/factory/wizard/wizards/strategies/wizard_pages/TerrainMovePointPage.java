@@ -55,8 +55,8 @@ public class TerrainMovePointPage extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
-		return table.getObject();
+	public Region getNode() {
+		return table.getNode();
 	}
 
 	private void initialize(AuthoringGameState gameState) {

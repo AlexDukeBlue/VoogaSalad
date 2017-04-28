@@ -189,7 +189,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		help = factory.getMenu(getPolyglot().get("Help"));
 		help.getItems().add(helpItem);
 		help.getItems().add(aboutItem);
-		getObject().getMenus().addAll(file, edit, view, play, language, theme, help);
+		getNode().getMenus().addAll(file, edit, view, play, language, theme, help);
 	}
 
 	private void save() {
@@ -252,7 +252,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	@Override
-	public MenuBar getObject() {
+	public MenuBar getNode() {
 		return menuBar;
 	}
 

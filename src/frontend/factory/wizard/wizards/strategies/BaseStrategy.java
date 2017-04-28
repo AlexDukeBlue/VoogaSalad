@@ -74,7 +74,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	}
 
 	@Override
-	final public Region getObject() {
+	final public Region getNode() {
 		return borderPane;
 	}
 
@@ -95,7 +95,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	protected int getCurrentPageNum() {
 		int i = 0;
 		for (WizardPage page : pages) {
-			if (scrollPane.getContent() == page.getObject()) {
+			if (scrollPane.getContent() == page.getNode()) {
 				return i;
 			}
 			i++;
@@ -110,7 +110,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	private void tryToGoToPageNum(int newPageNum) {
 		if (canGoToPage(newPageNum)) {
 			WizardPage page = pages.get(newPageNum);
-			scrollPane.setContent(page.getObject());
+			scrollPane.setContent(page.getNode());
 			title.setText(page.getTitle().getValue());
 			description.setText(page.getDescription().getValue());
 

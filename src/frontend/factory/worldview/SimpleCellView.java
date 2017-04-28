@@ -80,7 +80,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	 * Returns an object that can be displayed to the user to show the Cell
 	 */
 	@Override
-	public Group getObject() {
+	public Group getNode() {
 		return new Group(polygon, polygonMask, updateGroup);
 	}
 
@@ -107,9 +107,9 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 				getEntity().getOccupants().forEach(unit -> {
 					SimpleUnitView unitView = new SimpleUnitView(unit.getName(), unit.getLocation(), polygon.boundsInParentProperty(), getController(), getClickHandler());
 					unitViews.put(unit.getName(), unitView);
-					updateGroup.getChildren().add(unitView.getObject());
+					updateGroup.getChildren().add(unitView.getNode());
 				});
-				unitViews.values().forEach(unitView -> unitView.getObject().setOnMouseClicked(event -> {
+				unitViews.values().forEach(unitView -> unitView.getNode().setOnMouseClicked(event -> {
 					if (event.getButton().equals(MouseButton.PRIMARY)) {
 						if (getEntity().getOccupants().size() <= 1) {
 							unitView.handleClick(event, null);
@@ -139,7 +139,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	}
 
 	private void installToolTips() {
-		unitViews.values().forEach(uv -> Tooltip.install(uv.getObject(), new Tooltip(getToolTipString(uv))));
+		unitViews.values().forEach(uv -> Tooltip.install(uv.getNode(), new Tooltip(getToolTipString(uv))));
 	}
 
 	private void setContextMenu() {

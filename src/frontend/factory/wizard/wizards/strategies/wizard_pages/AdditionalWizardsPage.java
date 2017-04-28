@@ -26,7 +26,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return vbox;
 	}
 
@@ -40,11 +40,11 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 		wizardRows.addListener((ListChangeListener<AdditionalWizardRow<T>>) listChange -> {
 			listChange.next();
 			listChange.getAddedSubList().stream().forEach(row -> {
-				vbox.getChildren().add(row.getObject());
+				vbox.getChildren().add(row.getNode());
 				row.getObjectProperty().addListener(change -> checkCanNext());
 			});
 			listChange.getRemoved().stream().forEach(row -> {
-				vbox.getChildren().remove(row.getObject());
+				vbox.getChildren().remove(row.getNode());
 			});
 			checkCanNext();
 		});
@@ -64,7 +64,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 				wizardRows.remove(wizardRows.get(wizardRows.size() - 1));
 			}
 		});
-		vbox.getChildren().addAll(numWizardRow.getObject());
+		vbox.getChildren().addAll(numWizardRow.getNode());
 		checkCanNext();
 	}
 
