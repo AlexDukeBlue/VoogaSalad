@@ -261,9 +261,17 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	
 	private void enterGamePlayMode() {
 		if(getController().getTeamTemplates().size() == 0){
-			newTeamItem.fire();
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.titleProperty().bind(getPolyglot().get("NoTeamsTitle"));
+			alert.headerTextProperty().bind(getPolyglot().get("NoTeamsHeader"));
+			alert.contentTextProperty().bind(getPolyglot().get("NoTeamsContent"));
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				newTeamItem.fire();
+			}
+		} else {
+			getController().enterGamePlayMode();
 		}
-		getController().enterGamePlayMode();
 	}
 
 }
