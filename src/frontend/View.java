@@ -272,11 +272,10 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void joinTeam() {
-		// TODO POLYGLOT ResourceBundlify
 		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
 				getController().getReadOnlyGameState().getTeams());
-		teams.setHeaderText("Join a team to start playing:");
-		teams.setTitle("Join a team");
+		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
+		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
 		teams.showAndWait().ifPresent(team -> getController().joinTeam(team.getName()));
 	}
 
