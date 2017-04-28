@@ -1,0 +1,22 @@
+<backend.util.ModifiableTriggeredEffect>
+  <name>Poison</name>
+  <description>For the next three turns, units occupying this cell are poisoned at the end of their turn. Lasts for 3 turns.</description>
+  <imgPath>resources/images/poison.png</imgPath>
+  <activationTriggers class="set">
+    <backend.util.Event>TURN_END</backend.util.Event>
+  </activationTriggers>
+  <effect resolves-to="serialized-lambda">
+    <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+    <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+    <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+    <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+    <implMethodName>lambda$static$c96b8ecf$1</implMethodName>
+    <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+    <capturedArgs/>
+  </effect>
+  <duration>3</duration>
+  <turnsRemaining>2147483647</turnsRemaining>
+</backend.util.ModifiableTriggeredEffect>

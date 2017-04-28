@@ -1,0 +1,18 @@
+<backend.unit.properties.InteractionModifier>
+  <name>Fearful</name>
+  <description>This unit take extra damage in night time</description>
+  <imgPath>resources/images/crow.png</imgPath>
+  <modifier resolves-to="serialized-lambda">
+    <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
+    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+    <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
+    <implMethodName>lambda$static$cd07c34e$1</implMethodName>
+    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+    <capturedArgs/>
+  </modifier>
+  <type>defense</type>
+</backend.unit.properties.InteractionModifier>

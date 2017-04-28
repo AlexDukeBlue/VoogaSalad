@@ -1,0 +1,23 @@
+<backend.util.ModifiableTriggeredEffect>
+  <name>Poisoned</name>
+  <description>This unit is poisoned, and will lose 4 damage at the run and end of each turn, to a minimum of 1 HP. Lasts for 6 turns</description>
+  <imgPath>resources/images/poison.png</imgPath>
+  <activationTriggers class="set">
+    <backend.util.Event>TURN_START</backend.util.Event>
+    <backend.util.Event>TURN_END</backend.util.Event>
+  </activationTriggers>
+  <effect resolves-to="serialized-lambda">
+    <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+    <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+    <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+    <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+    <implMethodName>lambda$static$1cc33d90$1</implMethodName>
+    <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+    <capturedArgs/>
+  </effect>
+  <duration>6</duration>
+  <turnsRemaining>2147483647</turnsRemaining>
+</backend.util.ModifiableTriggeredEffect>

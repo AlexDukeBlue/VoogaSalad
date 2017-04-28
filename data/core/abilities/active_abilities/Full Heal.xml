@@ -1,0 +1,61 @@
+<backend.unit.properties.ActiveAbility>
+  <name>Full Heal</name>
+  <description>The attacker fully heals any neighboring unit</description>
+  <imgPath>resources/images/redCross.png</imgPath>
+  <effect resolves-to="serialized-lambda">
+    <capturingClass>backend.unit.properties.ActiveAbility</capturingClass>
+    <functionalInterfaceClass>backend/unit/properties/ActiveAbility$AbilityEffect</functionalInterfaceClass>
+    <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+    <implClass>backend/unit/properties/ActiveAbility</implClass>
+    <implMethodName>lambda$static$1d4e159a$1</implMethodName>
+    <implMethodSignature>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+    <capturedArgs/>
+  </effect>
+  <range>
+    <name>Square Adjacent</name>
+    <description>This pattern of square coordinates is composed of all square coordinates adjacent to the origin.</description>
+    <imgPath>resources/images/squareAdjacent.png</imgPath>
+    <relativeCoordinates class="set">
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+    </relativeCoordinates>
+  </range>
+  <cost>1.0</cost>
+</backend.unit.properties.ActiveAbility>
