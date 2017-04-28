@@ -5,7 +5,7 @@ import backend.grid.GameBoard;
 import frontend.ClickHandler;
 import frontend.util.GameBoardObjectView;
 import javafx.scene.control.ScrollPane;
-import polyglot.Polyglot;
+import util.polyglot.Polyglot;
 
 import java.util.Collection;
 

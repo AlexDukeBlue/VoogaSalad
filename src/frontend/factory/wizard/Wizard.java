@@ -14,7 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 /**
  * The Wizard class presents a basic API for allowing the user to create new

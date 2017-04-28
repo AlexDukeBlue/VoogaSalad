@@ -10,8 +10,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import polyglot.PolyglotException;
-import polyglot_extended.ObservablePolyglot;
+import util.polyglot.PolyglotException;
+import util.polyglot_extended.ObservablePolyglot;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package polyglot_extended;
+package util.polyglot_extended;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +7,8 @@ import java.util.Locale;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import polyglot.Polyglot;
-import polyglot.PolyglotException;
+import util.polyglot.Polyglot;
+import util.polyglot.PolyglotException;
 
 public class ObservablePolyglot extends Polyglot {
 	public static final EventType<Event> LANGUAGE_CHANGE_EVENT = new EventType<>("Polyglot is changing languages.");

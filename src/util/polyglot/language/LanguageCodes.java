@@ -1,4 +1,4 @@
-package polyglot.language;
+package util.polyglot.language;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  *
  *         This class provides a two-way mapping between Google's language codes
  *         and these language's display names. Because this functionality is
- *         used several times in polyglot, it has been abstracted into its own
+ *         used several times in util.polyglot, it has been abstracted into its own
  *         class.
  * 
  *         The data is originally loaded from a Properties file. Then, a reverse
@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  */
 public class LanguageCodes {
 
-	private static final String LANGUAGE_CODES_PATH = "polyglot/resources/LanguageCodes";
+	private static final String LANGUAGE_CODES_PATH = "util.polyglot/resources/LanguageCodes";
 	private ResourceBundle resources;
 	private Map<String, String> reverseIndex;
 

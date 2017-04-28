@@ -1,4 +1,4 @@
-package polyglot;
+package util.polyglot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,13 +9,13 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javafx.beans.binding.StringBinding;
-import polyglot.language.Language;
-import polyglot.language.LanguageManager;
+import util.polyglot.language.Language;
+import util.polyglot.language.LanguageManager;
 
 /**
  * @author Elliott Bolzan
  *
- *         The highest-level class in the polyglot utility.
+ *         The highest-level class in the util.polyglot utility.
  * 
  *         The class holds references to translateAPI, which processes requests
  *         to Google's Cloud API, and to manager, which caches the languages
@@ -33,7 +33,7 @@ import polyglot.language.LanguageManager;
  */
 public class Polyglot {
 
-	private static final String PATH_TO_EXCEPTION_MESSAGES = "polyglot/resources/PolyglotException";
+	private static final String PATH_TO_EXCEPTION_MESSAGES = "util.polyglot/resources/PolyglotException";
 
 	private TranslateAPI translateAPI;
 	private LanguageManager manager;

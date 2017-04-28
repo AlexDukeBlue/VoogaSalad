@@ -1,4 +1,4 @@
-package polyglot;
+package util.polyglot;
 
 /**
  * @author Elliott Bolzan
@@ -20,14 +20,14 @@ public class PolyglotException extends Exception {
 	private static final long serialVersionUID = -7407335515228039379L;
 
 	/**
-	 * A custom Exception thrown by polyglot. Using one of the other
+	 * A custom Exception thrown by util.polyglot. Using one of the other
 	 * constructors is recommended, to provide more information to the caller.
 	 */
 	public PolyglotException() {
 	}
 
 	/**
-	 * A custom Exception thrown by polyglot, accompanied by a message. If
+	 * A custom Exception thrown by util.polyglot, accompanied by a message. If
 	 * possible, use PolyglotException(String message, Throwable cause) to
 	 * provide more information to the caller.
 	 * 
@@ -39,7 +39,7 @@ public class PolyglotException extends Exception {
 	}
 
 	/**
-	 * A custom Exception thrown by polyglot, accompanied by a Throwable that
+	 * A custom Exception thrown by util.polyglot, accompanied by a Throwable that
 	 * identifies the cause of the problem.
 	 * 
 	 * @param cause
@@ -50,7 +50,7 @@ public class PolyglotException extends Exception {
 	}
 
 	/**
-	 * A custom Exception thrown by polyglot. Created using an error message and
+	 * A custom Exception thrown by util.polyglot. Created using an error message and
 	 * a Throwable. The recommended constructor for PolyglotException.
 	 * 
 	 * @param message
@@ -63,7 +63,7 @@ public class PolyglotException extends Exception {
 	}
 
 	/**
-	 * A custom Exception thrown by polyglot.
+	 * A custom Exception thrown by util.polyglot.
 	 * 
 	 * @param message
 	 *            the message to be passed to the caller.

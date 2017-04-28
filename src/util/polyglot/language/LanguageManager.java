@@ -1,4 +1,4 @@
-package polyglot.language;
+package util.polyglot.language;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -11,13 +11,13 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import polyglot.Case;
+import util.polyglot.Case;
 
 /**
  * @author Elliott Bolzan
  *
  *
- *         This class manages polyglot's state concerning languages.
+ *         This class manages util.polyglot's state concerning languages.
  * 
  *         It holds references to: a Map of languages that have been translated
  *         into; the default Locale; the original Language supplied by the user;
@@ -73,7 +73,7 @@ public class LanguageManager {
 
 	/**
 	 * Switches the Locale to a new value, triggering a language change for
-	 * values that are bound to polyglot.
+	 * values that are bound to util.polyglot.
 	 * 
 	 * @param newLocale
 	 *            the Locale to switch to.
@@ -84,7 +84,7 @@ public class LanguageManager {
 
 	/**
 	 * Switches the Locale to a new value, triggering a language change for
-	 * values that are bound to polyglot.
+	 * values that are bound to util.polyglot.
 	 * 
 	 * In addition, caches the new Language so it does not have to be translated
 	 * again in the future, if the user chooses to switch back to it.
@@ -148,7 +148,7 @@ public class LanguageManager {
 	/**
 	 * @param locale
 	 *            the specified Locale.
-	 * @return whether polyglot has already translated into that Locale or not.
+	 * @return whether util.polyglot has already translated into that Locale or not.
 	 */
 	public boolean hasTranslated(Locale locale) {
 		return languages.containsKey(locale);

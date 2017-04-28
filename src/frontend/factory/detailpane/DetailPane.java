@@ -152,7 +152,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		} else {
 			newSpriteInfo = new Label(content);
 		}
-		//TODO ResourceBundle and polyglot and shit
+		//TODO ResourceBundle and util.polyglot and shit
 		exportButton = new Button("Export");
 		exportButton.setOnAction(e -> {
 			try {

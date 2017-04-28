@@ -2,7 +2,7 @@ package frontend.interfaces.worldview;
 
 import frontend.ClickHandler;
 import javafx.scene.layout.Region;
-import polyglot.Polyglot;
+import util.polyglot.Polyglot;
 
 public interface WorldViewExternal {
 
