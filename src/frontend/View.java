@@ -227,6 +227,7 @@ public class View extends ClickableUIComponent<Region> {
 		addSidePanes();
 		getClickHandler().setMode(ClickHandler.Mode.AUTHORING);
 		getClickHandler().cancel();
+		detailPane.setAuthorMode();
 	}
 
 	private void addSidePanes() {
@@ -247,6 +248,7 @@ public class View extends ClickableUIComponent<Region> {
 		removeSidePanes();
 		getClickHandler().cancel();
 		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
+		detailPane.setPlayMode();
 	}
 
 	private void removeSidePanes() {

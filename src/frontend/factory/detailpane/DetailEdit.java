@@ -1,5 +1,13 @@
 package frontend.factory.detailpane;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GridPattern;
@@ -23,14 +31,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 public class DetailEdit extends BaseUIManager<Node> {
 
 	private Pane pane;
 	private Unit unit;
-	private Terrain terrain;
 	private GridPane sceneView;
 	private Map<Terrain, TextField> moveCosts;
 	private Map<String, List<TextField>> unitStats;

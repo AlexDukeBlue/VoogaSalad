@@ -15,4 +15,8 @@ public interface DetailPaneExternal {
 
 	void setClickHandler(ClickHandler clickHandler);
 
+	void setAuthorMode();
+
+	void setPlayMode();
+
 }
