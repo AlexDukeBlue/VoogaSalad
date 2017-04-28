@@ -5,7 +5,7 @@ import backend.grid.ModifiableGameBoard;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the

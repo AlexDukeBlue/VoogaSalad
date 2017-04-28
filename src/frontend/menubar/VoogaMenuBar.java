@@ -34,7 +34,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 /**
  * @author Stone Mathers Created 4/18/2017
@@ -151,8 +151,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> enterGamePlayMode());
 		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
-		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser("frontend/menubar/help.html"));
-		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> showBrowser("frontend/menubar/about.html"));
+		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser(getResourceBundle().getString("HelpPage")));
+		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> showBrowser(getResourceBundle().getString("AboutPage")));
 
 	}
 

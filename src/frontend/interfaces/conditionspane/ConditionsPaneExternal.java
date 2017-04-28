@@ -4,7 +4,7 @@
 package frontend.interfaces.conditionspane;
 
 import javafx.scene.layout.Region;
-import polyglot.Polyglot;
+import util.polyglot.Polyglot;
 
 /**
  * @author Stone Mathers Created 4/20/2017

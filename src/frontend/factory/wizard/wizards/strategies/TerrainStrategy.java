@@ -5,7 +5,7 @@ import backend.cell.Terrain;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.UnitMovePointPage;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 /**
  * Strategy that extends BaseStrategy to instantiate a new Terrain object.

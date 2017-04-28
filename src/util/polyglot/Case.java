@@ -1,4 +1,4 @@
-package polyglot;
+package util.polyglot;
 
 /**
  * @author Elliott Bolzan

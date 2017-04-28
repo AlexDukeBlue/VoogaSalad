@@ -5,4 +5,4 @@
  * @author Dylan Peters
  *
  */
-package polyglot;
+package resources.html;

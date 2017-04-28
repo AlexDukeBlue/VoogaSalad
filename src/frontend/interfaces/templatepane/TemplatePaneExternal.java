@@ -2,7 +2,7 @@ package frontend.interfaces.templatepane;
 
 import frontend.ClickHandler;
 import javafx.scene.layout.VBox;
-import polyglot.Polyglot;
+import util.polyglot.Polyglot;
 
 public interface TemplatePaneExternal {
 

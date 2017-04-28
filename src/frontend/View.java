@@ -46,7 +46,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 import java.util.HashMap;
 import java.util.Map;

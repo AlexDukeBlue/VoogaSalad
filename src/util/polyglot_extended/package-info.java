@@ -5,4 +5,4 @@
  * @author Dylan Peters
  *
  */
-package frontend.properties;
+package util.polyglot_extended;

@@ -12,7 +12,7 @@ import backend.util.Requirement;
 import controller.Controller;
 import frontend.ClickHandler;
 import javafx.scene.layout.VBox;
-import polyglot.Polyglot;
+import util.polyglot.Polyglot;
 
 /**
  * @author Stone Mathers
