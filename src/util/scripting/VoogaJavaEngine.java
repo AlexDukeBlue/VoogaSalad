@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  */
 public class VoogaJavaEngine implements VoogaScriptEngine {
 	private static int fileCount = 0;
-	private boolean hasCompiled = false;
+	private transient boolean hasCompiled = false;
 	private String className;
 	private String methodName;
 	private String srcPath;
