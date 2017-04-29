@@ -39,7 +39,9 @@ import javafx.scene.shape.Polygon;
  */
 public class WizardGrid extends BaseUIManager<Region> {
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
-	private static final Paint UNCLICKED_FILL = Color.WHITE, CLICKED_FILL = Color.GREEN, BORDER = Color.BLACK;
+	private Paint unselectedPaint;
+	private Paint selectedPaint; 
+	private Paint BORDER = Color.BLACK;
 	private static final double BORDER_WIDTH = 5.0;
 
 	private ScrollPane pane;
@@ -56,8 +58,9 @@ public class WizardGrid extends BaseUIManager<Region> {
 	 *            instantiating itself. It will read the shape and size
 	 *            characteristics of the AuthoringGameState.
 	 */
-	public WizardGrid(AuthoringGameState gameState) {
-		super(null);
+	public WizardGrid(AuthoringGameState gameState, Paint unselectedPaint, Paint selectedPaint) {
+		this.unselectedPaint = unselectedPaint;
+		this.selectedPaint = selectedPaint;
 		initialize(gameState);
 	}
 
@@ -107,13 +110,13 @@ public class WizardGrid extends BaseUIManager<Region> {
 			Polygon polygon = delegate.layoutCell(SCALE, MIN, MAX, coordinate, board);
 			polygon.setStroke(BORDER);
 			polygon.setStrokeWidth(BORDER_WIDTH);
-			polygon.setFill(UNCLICKED_FILL);
+			polygon.setFill(unselectedPaint);
 			EventHandler<Event> onMouseDrag = event -> {
-				if (polygon.getFill().equals(UNCLICKED_FILL)) {
-					polygon.setFill(CLICKED_FILL);
+				if (polygon.getFill().equals(unselectedPaint)) {
+					polygon.setFill(selectedPaint);
 					clickedPolygons.add(polygon);
 				} else {
-					polygon.setFill(UNCLICKED_FILL);
+					polygon.setFill(unselectedPaint);
 					clickedPolygons.remove(polygon);
 				}
 			};
