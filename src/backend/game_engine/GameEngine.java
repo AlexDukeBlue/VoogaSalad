@@ -53,7 +53,7 @@ public interface GameEngine {
 	Object handleLoss(ImmutablePlayer player);
 
 	/**
-	 * The handleTie method is what gets called by a Result.Tie.accept() call. This method
+	 * The handleTie method is what gets called by a Result.TIE.accept() call. This method
 	 * is effectively the decider for the actions that occur when a player Ties. In future
 	 * implementation, this method will probably get passed to the server for it to control
 	 * what happens from the enclosed BiConsumer. In a lot of cases, the same thing probably
