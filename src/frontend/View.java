@@ -48,6 +48,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -58,7 +61,11 @@ public class View extends ClickableUIComponent<Region> {
 	private final Stage myStage;
 
 	static {
-		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
+		try {
+			IMAGE_CACHE.put("", new Image(new FileInputStream("resources/images/transparent.png")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private SplitPane outerSplitPane;
@@ -131,8 +138,7 @@ public class View extends ClickableUIComponent<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState
-	 *            GameplayState that the View will now access its data from
+	 * @param newGameState GameplayState that the View will now access its data from
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
@@ -279,10 +285,10 @@ public class View extends ClickableUIComponent<Region> {
 		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
 		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
 		Optional<Team> chosenTeam = teams.showAndWait();
-		try{
+		try {
 			getController().joinTeam(chosenTeam.get().getName());
 		} catch (Exception e) {
-			if(!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()){
+			if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
 				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
@@ -305,13 +311,16 @@ public class View extends ClickableUIComponent<Region> {
 	public static Image getImg(String imgPath) {
 		if (!IMAGE_CACHE.containsKey(imgPath)) {
 			try {
-				IMAGE_CACHE.put(imgPath, new Image(imgPath));
+				IMAGE_CACHE.put(imgPath, new Image(new FileInputStream(imgPath)));
 			} catch (Exception e) {
-				System.out.println("Error opening image: " + imgPath);
-				IMAGE_CACHE.put(imgPath, IMAGE_CACHE.get(""));
+				System.err.println("Error opening image: " + imgPath + "\t" + e.toString());
 			}
 		}
-		return IMAGE_CACHE.get(imgPath);
+		return IMAGE_CACHE.getOrDefault(imgPath, IMAGE_CACHE.get(""));
+	}
+
+	public static Collection<String> getAllImagePaths(){
+		return IMAGE_CACHE.keySet();
 	}
 
 	@Override
