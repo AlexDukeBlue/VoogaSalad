@@ -61,6 +61,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 				ModifiableUnitStat.MOVEPOINTS.setMinValue(0).setMaxValue(terrainMovePointPage.getUnitMovePoints())
 						.setCurrentValue(terrainMovePointPage.getUnitMovePoints()));
 		unit.setMovePattern(gridPatternPage.getGridPattern());
+		unit.setRangePattern(gridPatternPageRange.getGridPattern());
 		return unit;
 	}
 
