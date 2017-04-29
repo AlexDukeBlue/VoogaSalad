@@ -16,6 +16,11 @@ import java.util.Objects;
 
 /**
  * @author Created by th174 on 4/22/17.
+ * 
+ * This class handles clicking events for all components in the frontend of this project and distinguishes
+ * between the appropriate responses in authoring and playing mode.
+ * 
+ * DEPENDENCIES
  */
 public class ClickHandler {
 	private static final Highlighter SELECTED_HIGHLIGHTER = new ShadowHighlighter();
@@ -33,6 +38,15 @@ public class ClickHandler {
 		this.currentMode = currentMode;
 	}
 
+	/**
+	 * Handles the response for a UI component that has been clicked
+	 * @param event
+	 * The event is the click that has occurred
+	 * @param clickedComponent
+	 * The component of the UI that is being interacted with
+	 * @param additionalInfo
+	 * The object that an action should be performed on as a result of the event
+	 */
 	public final void handleClick(Event event, ClickableUIComponent<? extends Node> clickedComponent, Object additionalInfo) {
 		if (Objects.isNull(selectedComponent) && clickedComponent instanceof SelectableUIComponent) {
 			setSelectedComponent((SelectableUIComponent<? extends Node>) clickedComponent);
@@ -47,6 +61,11 @@ public class ClickHandler {
 		}
 	}
 
+	/**
+	 * Switches between edit and play mode
+	 * @param currentMode
+	 * The mode that the program should be in after this method is called
+	 */
 	public final void setMode(Mode currentMode) {
 		if (this.currentMode != currentMode){
 			cancel();
@@ -54,6 +73,11 @@ public class ClickHandler {
 		this.currentMode = currentMode;
 	}
 
+	/**
+	 * Selects a component of the UI based on user interaction
+	 * @param selectedComponent
+	 * The UI component that has been selected
+	 */
 	public final void setSelectedComponent(SelectableUIComponent<? extends Node> selectedComponent) {
 		cancel();
 		this.selectedComponent = selectedComponent;
@@ -70,6 +94,9 @@ public class ClickHandler {
 		}
 	}
 
+	/**
+	 * Deselects a component of the UI
+	 */
 	public final void cancel() {
 		if (selectedComponent != null) {
 			selectedComponent.deselect(this);
@@ -80,17 +107,31 @@ public class ClickHandler {
 		abilityPane.setContent(null);
 	}
 
-	void showDetail(ClickableUIComponent clickedComponent) {
+	/**
+	 * Sets the detail and ability pane to display information about the selected component,
+	 * if that component is a vooga entity
+	 * @param clickedComponent
+	 * The selected UI component
+	 */
+	public void showDetail(ClickableUIComponent clickedComponent) {
 		if (clickedComponent instanceof GameBoardObjectView) {
 			detailPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 			abilityPane.setContent(((GameBoardObjectView) clickedComponent).getEntity());
 		}
 	}
 
+	/**
+	 * Highlights the designated cells within the game grid
+	 * @param coordinates
+	 * The coordinate locations that should be highlighted
+	 */
 	public void highlightRange(Collection<CoordinateTuple> coordinates) {
 		gridPane.highlightRange(coordinates);
 	}
 
+	/**
+	 * Removes existing highlighting from the grid
+	 */
 	public void resetHighlighting() {
 		gridPane.resetHighlighting();
 	}
