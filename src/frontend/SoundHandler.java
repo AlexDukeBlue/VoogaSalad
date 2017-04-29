@@ -2,11 +2,10 @@ package frontend;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
-
+//Use MediaPlayer, all of Applet is deprecated
 public class SoundHandler {
 
 	public void playSound(Boolean loop, String urlString) {
@@ -20,12 +19,8 @@ public class SoundHandler {
 				clip.play();
 			}
 		}
-		
 		else {
 			System.out.println("Audio file must be in .wav format");
 		}
-		
-		
 	}
-	
 }

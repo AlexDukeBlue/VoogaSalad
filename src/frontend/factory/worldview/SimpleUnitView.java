@@ -3,10 +3,10 @@ package frontend.factory.worldview;
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.HasLocation;
+import backend.util.HasSound;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.View;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
@@ -47,7 +47,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
-		ImageView imageView = new ImageView(View.getImg(getEntity().getImgPath()));
+		ImageView imageView = new ImageView(getImg(getEntity().getImgPath()));
 		imageView.setManaged(true);
 		imageView.setPickOnBounds(true);
 		imageView.setPreserveRatio(true);
@@ -148,6 +148,7 @@ public class SimpleUnitView extends SelectableUIComponent<Pane> implements UnitV
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (isValidMove(target)) {
 			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
+			playMedia(((HasSound) ((GameBoardObjectView) target).getEntity()).getSoundPath());
 		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE) || ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
 			getController().removeUnitFromGrid(getUnitName(), getUnitLocation());
 		}

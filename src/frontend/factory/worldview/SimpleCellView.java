@@ -7,7 +7,6 @@ import backend.unit.properties.UnitStat;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.View;
 import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import javafx.scene.Group;
@@ -60,6 +59,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		polygon.setOnMouseClicked(event -> handleClick(event, null));
 		polygon.setOnMouseDragReleased(event -> {
 			handleClick(event, null);
+			getClickHandler().cancel();
 		});
 		polygon.setStroke(CELL_OUTLINE);
 		polygon.setStrokeWidth(CELL_STROKE);
@@ -93,7 +93,7 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 		if (Objects.nonNull(getEntity())) {
 			if (unitCount < 0 || !getEntity().getTerrain().getImgPath().equals(terrainCache)) {
 				if (getController().getGrid().getImgPath().length() < 1) {
-					polygon.setFill(new ImagePattern(View.getImg(getEntity().getTerrain().getImgPath())));
+					polygon.setFill(new ImagePattern(getImg(getEntity().getTerrain().getImgPath())));
 				} else {
 					polygon.setFill(Color.TRANSPARENT);
 				}
@@ -192,5 +192,10 @@ public class SimpleCellView extends ClickableUIComponent<Group> implements CellV
 	@Override
 	public void unDarken() {
 		polygonMask.setFill(Color.TRANSPARENT);
+	}
+
+	@Override
+	public void playSound() {
+		playMedia(getEntity().getTerrain().getSoundPath());
 	}
 }

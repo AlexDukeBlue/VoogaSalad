@@ -7,8 +7,7 @@ import backend.cell.Cell;
 import backend.cell.ModifiableCell;
 import backend.cell.Terrain;
 import backend.grid.Shape;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
-import javafx.beans.binding.StringBinding;
+import frontend.factory.wizard.wizards.strategies.wizard_pages.util.SliderInputRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -27,11 +26,12 @@ import javafx.scene.layout.VBox;
 public class GridInstantiationPage extends BaseWizardPage {
 
 	private VBox vbox;
-	private NumericInputRow rows, cols;
+	private SliderInputRow rows, cols;
 	private ComboBox<String> cellShapeChooser;
 	private ComboBox<String> terrainChooser;
 	private Map<String, Shape> shapeMap;
 	private Map<String, Terrain> terrainMap = new HashMap<>();
+
 	public GridInstantiationPage(String descriptionKey) {
 		super(descriptionKey);
 		initialize();
@@ -58,21 +58,14 @@ public class GridInstantiationPage extends BaseWizardPage {
 	private void initialize() {
 		vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
-		rows = new NumericInputRow(null, getPolyglot().get("Num_Grid_Rows"), new StringBinding() {
-			@Override
-			protected String computeValue() {
-				return "";
-			}
-		});
-		rows.setValue(Integer.parseInt((getResourceBundle().getString("DEFAULT_NUM_ROWS"))));
-		cols = new NumericInputRow(null, getPolyglot().get("Num_Grid_Cols"), new StringBinding() {
-			@Override
-			protected String computeValue() {
-				return "";
-			}
-		});
-		cols.setValue(Integer.parseInt((getResourceBundle().getString("DEFAULT_NUM_COLS"))));
-
+		rows = new SliderInputRow(null, getPolyglot().get("Num_Grid_Rows"));
+		rows.setMin(Integer.parseInt(getResourceBundle().getString("MIN_ROWS")));
+		rows.setMax(Integer.parseInt(getResourceBundle().getString("MAX_ROWS")));
+		rows.setValue(Integer.parseInt(getResourceBundle().getString("DEFAULT_ROWS")));
+		cols = new SliderInputRow(null, getPolyglot().get("Num_Grid_Cols"));
+		cols.setMin(Integer.parseInt(getResourceBundle().getString("MIN_COLS")));
+		cols.setMax(Integer.parseInt(getResourceBundle().getString("MAX_COLS")));
+		cols.setValue(Integer.parseInt(getResourceBundle().getString("DEFAULT_COLS")));
 		Shape[] shapes = Shape.values();
 		shapeMap = new HashMap<>();
 		ObservableList<String> shapeNames = FXCollections.observableArrayList();
@@ -89,9 +82,6 @@ public class GridInstantiationPage extends BaseWizardPage {
 		});
 		terrainChooser = new ComboBox<>(terrainNames);
 		terrainChooser.setValue(terrainNames.get(0));
-
-		rows.setOnAction(event -> checkCanNext());
-		cols.setOnAction(event -> checkCanNext());
 		cellShapeChooser.setOnAction(event -> checkCanNext());
 		terrainChooser.setOnAction(event -> checkCanNext());
 

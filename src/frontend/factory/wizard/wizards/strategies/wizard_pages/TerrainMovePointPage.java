@@ -42,7 +42,7 @@ public class TerrainMovePointPage extends BaseWizardPage {
 		table.getChildren().add(movePointInput);
 		rowToTerrain = new HashMap<>();
 		gameState.getTemplateByCategory(GameplayState.TERRAIN).forEach(terrain -> {
-			NumericInputRow row = new NumericInputRow(View.getImg(terrain.getImgPath()), terrain.getName(),
+			NumericInputRow row = new NumericInputRow(getImg(terrain.getImgPath()), terrain.getName(),
 					terrain.getDescription());
 			rowToTerrain.put(row, (Terrain) terrain);
 			table.getChildren().add(row);

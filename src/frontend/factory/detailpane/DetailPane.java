@@ -1,4 +1,3 @@
-
 package frontend.factory.detailpane;
 
 import backend.cell.Cell;
@@ -9,7 +8,6 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -121,14 +119,14 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		Label name = new Label(sprite.getName() + "\n");
 		name.setFont(Font.font(25));
 		name.setMinWidth(Region.USE_PREF_SIZE + 10);
-		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
+		ImageView spriteImage = new ImageView(getImg(sprite.getImgPath()));
 		spriteImage.setSmooth(true);
 		spriteImage.setPreserveRatio(true);
 		spriteImage.setFitWidth(120);
 		Tooltip.install(spriteImage, new Tooltip(sprite.getImgPath()));
 		imagePane.setOnMouseClicked(event -> {
 			Stage expandImageWindow = new Stage();
-			ImageView expandedImage = new ImageView(View.getImg(sprite.getImgPath()));
+			ImageView expandedImage = new ImageView(getImg(sprite.getImgPath()));
 			expandedImage.setSmooth(true);
 			expandedImage.setPreserveRatio(true);
 			expandImageWindow.setTitle(sprite.getImgPath());
@@ -191,7 +189,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void createButton(VoogaEntity unit, String unitType) {
-		if ((unit instanceof Unit)) {
+		if (unit instanceof Unit) {
 			editBtn = new Button("Edit details");
 			infoPane.getChildren().add(editBtn);
 			editBtn.setOnMouseClicked(e -> {
@@ -205,7 +203,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		for (VoogaEntity o : collection) {
 			content += o + "\n";
 			if (o.getImgPath() != null) {
-				ImageView oIV = new ImageView(View.getImg(o.getImgPath()));
+				ImageView oIV = new ImageView(getImg(o.getImgPath()));
 				content += oIV;
 			}
 		}

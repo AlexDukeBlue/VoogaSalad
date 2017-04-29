@@ -16,6 +16,7 @@ import backend.util.Requirement.SerializableBiPredicate;
 import frontend.util.UIComponentListener;
 import util.net.Modifier;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -168,4 +169,6 @@ public interface Controller {
 	void updateAll();
 
 	void joinTeam(String teamName);
+
+	void sendFile(String path) throws IOException;
 }

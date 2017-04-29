@@ -16,6 +16,7 @@ import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
+import frontend.util.BaseUIManager;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
 import util.io.Serializer;
@@ -51,7 +52,10 @@ public class CommunicationController implements Controller {
 	private final Executor executor;
 	private final Collection<UIComponentListener> thingsToUpdate;
 	private final CountDownLatch waitForReady;
-	private ObservableClient<ReadonlyGameplayState> mClient;
+	private boolean isHost;
+	private int playerCountCache;
+	private ObservableClient<ReadonlyGameplayState> client;
+	private ObservableServer<ReadonlyGameplayState> server;
 	private String playerName;
 	private Deque<Path> saveHistory;
 
@@ -64,14 +68,15 @@ public class CommunicationController implements Controller {
 		this.waitForReady = new CountDownLatch(1);
 		this.playerName = username;
 		this.executor = Executors.newCachedThreadPool();
+		this.playerCountCache = 1;
 		this.saveHistory = new ArrayDeque<>();
 	}
 
 	public void startClient(String host, int port, Duration timeout) {
 		try {
-			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
-			mClient.addListener(newGameState -> updateGameState());
-			executor.execute(mClient);
+			client = new ObservableClient<>(host, port, XML, XML, timeout);
+			client.addListener(newGameState -> updateGameState());
+			executor.execute(client);
 			setPlayer(this.playerName, "", "");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -81,8 +86,9 @@ public class CommunicationController implements Controller {
 	@Override
 	public void startServer(ReadonlyGameplayState gameState, int port, Duration timeout) {
 		try {
-			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, XML, XML, timeout);
+			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
+			isHost = true;
 			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -134,11 +140,11 @@ public class CommunicationController implements Controller {
 	}
 
 	public ObservableClient<ReadonlyGameplayState> getClient() {
-		return mClient;
+		return client;
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
-		this.mClient = client;
+		this.client = client;
 	}
 
 	@Override
@@ -178,7 +184,7 @@ public class CommunicationController implements Controller {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
+		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 	}
 
 	@Override
@@ -193,6 +199,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void addTemplatesByCategory(String category, VoogaEntity... templates) {
+		Arrays.stream(templates).map(VoogaEntity::getImgPath).forEach(this::sendFile);
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory(category).addAll(templates);
 			return state;
@@ -249,6 +256,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addAvailableTurnRequirements(new Requirement(biPredicate, name, description, imgPath));
@@ -256,6 +264,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void removeTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeAvailableTurnRequirements(req));
@@ -263,20 +272,23 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void activateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.addTurnRequirements(req));
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(state::addTurnRequirements);
 			return state;
 		});
 	}
 
+	@Override
 	public void deactivateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeTurnRequirements(req));
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(state::removeTurnRequirements);
 			return state;
 		});
 	}
 
+	@Override
 	public void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addAvailableTurnActions(event, new Actionable(biConsumer, name, description, imgPath));
@@ -284,6 +296,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void removeTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(event, act));
@@ -291,6 +304,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void activateTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(event, act));
@@ -298,6 +312,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void deactivateTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(event, act));
@@ -305,6 +320,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addObjectives(new Resultant(resultQuadPredicate, name, description, imgPath));
@@ -312,6 +328,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void removeEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
@@ -319,6 +336,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void activateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
@@ -326,6 +344,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void deactivateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
@@ -333,6 +352,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void updateAll() {
 		executor.execute(() -> {
 			try {
@@ -360,6 +380,28 @@ public class CommunicationController implements Controller {
 		sendModifier((GameplayState state) -> state.joinTeam(playerName, teamName));
 	}
 
+	@Override
+	public void sendFile(String path) {
+		if (Objects.nonNull(path) && path.length() > 0) {
+			try {
+				byte[] buffer = Files.readAllBytes(Paths.get(path));
+				sendModifier(state -> {
+					Path newFilePath = Paths.get(path);
+					if (Files.notExists(newFilePath)) {
+						if (Objects.nonNull(newFilePath.getParent())) {
+							Files.createDirectories(newFilePath.getParent());
+						}
+						Files.write(newFilePath, buffer);
+					}
+					return state;
+				});
+			} catch (IOException e) {
+				throw new Error(e);
+			}
+		}
+	}
+
+	@Override
 	public void endTurn() {
 		sendModifier(GameplayState::endTurn);
 	}
@@ -454,6 +496,10 @@ public class CommunicationController implements Controller {
 
 	private synchronized void updateGameState() {
 		updateAll();
+		if (Objects.nonNull(server) && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
+			BaseUIManager.getResourcePaths().forEach(this::sendFile);
+		}
+		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
 	}
 }
