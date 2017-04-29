@@ -1,7 +1,10 @@
 package frontend.factory.wizard.wizards.strategies;
 
+import java.util.Collections;
+
 import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
+import backend.player.Team;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
@@ -40,6 +43,7 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 		gameState.setDescription(gameNamePage.getDescription().getValue());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
+		gameState.addTeam(new Team("Default", "Default Team", Team.WHITE, null, Collections.emptyList()));
 		// gameState.setTeams(additionalTeamWizardsPage.getObjects());
 		return gameState;
 	}
