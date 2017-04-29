@@ -3,25 +3,19 @@ package backend.cell;
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import backend.grid.Shape;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
+import backend.unit.properties.InteractionModifier;
 import backend.util.*;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * @author Created by th174 on 3/28/2017.
  */
-public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, VoogaEntity {
-	Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Cell>> DISPATCH_MAP = new HashMap<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Cell>>() {{
-		put(ModifiableTerrain.class, (theTerrain, cell) -> ((ModifiableCell) cell).setTerrain((Terrain) theTerrain));
-		put(ModifiableUnit.class, ((unit, cell) -> cell.addOccupants((Unit) unit)));
-		put(Ability.class, ((ability, cell) -> cell.getTerrain().addAbility((Ability) ability)));
-	}};
+public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, VoogaEntity, HasPassiveModifiers {
 
 	ModifiableCell copy();
 
@@ -55,12 +49,21 @@ public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, 
 
 	void arrive(Unit unit, GameplayState gamestate);
 
-	ModifiableCell addOccupants(Unit... units);
+	Cell addOccupants(Unit... units);
 
-	ModifiableCell removeOccupants(Unit... units);
+	Cell removeOccupants(Unit... units);
 
-	default Cell add(VoogaEntity voogaEntity) {
-		DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);
-		return this;
+	Cell removeOccupants(String... unitNames);
+
+	Cell add(VoogaEntity voogaEntity);
+
+	@Override
+	default List<? extends InteractionModifier> getOffensiveModifiers() {
+		return getTerrain().getOffensiveModifiers();
+	}
+
+	@Override
+	default List<? extends InteractionModifier> getDefensiveModifiers() {
+		return getTerrain().getDefensiveModifiers();
 	}
 }

@@ -13,11 +13,11 @@ import java.util.Map;
  * @author Created by th174 on 4/11/2017.
  */
 public interface ReadonlyGameplayState extends VoogaEntity {
-	ImmutablePlayer getCurrentPlayer();
+	ImmutablePlayer getActivePlayer();
 
 	ImmutablePlayer getPlayerByName(String name);
 
-	List<? extends ImmutablePlayer> getAllPlayers();
+	List<String> getOrderedPlayerNames();
 
 	Team getTeamByName(String teamName);
 

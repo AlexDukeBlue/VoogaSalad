@@ -38,6 +38,7 @@ public class MinimapPane extends BaseUIManager<Pane> {
 		view.minHeightProperty().bind(view.widthProperty().multiply(ratio));
 		view.maxHeightProperty().bind(view.widthProperty().multiply(ratio));
 		minimapSnapshot = new ImageView();
+		minimapSnapshot.setSmooth(true);
 		minimapSnapshot.setMouseTransparent(true);
 		minimapSnapshot.fitWidthProperty().bind(view.widthProperty());
 		minimapSnapshot.fitHeightProperty().bind(view.heightProperty());
@@ -95,7 +96,7 @@ public class MinimapPane extends BaseUIManager<Pane> {
 	}
 
 	@Override
-	public Pane getObject() {
+	public Pane getNode() {
 		return view;
 	}
 }

@@ -1,7 +1,0 @@
-<backend.unit.properties.ModifiableUnitStat>
-  <name>Movepoints</name>
-  <description>Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.</description>
-  <imgPath>Boot.png</imgPath>
-  <maxValue class="int">5</maxValue>
-  <minValue class="int">0</minValue>
-</backend.unit.properties.ModifiableUnitStat>

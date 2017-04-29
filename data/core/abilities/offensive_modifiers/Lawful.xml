@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Lawful</name>
-  <description>Attacks do more damage in daytime, but less damage in nighttime</description>
-  <imgPath>Lawful.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

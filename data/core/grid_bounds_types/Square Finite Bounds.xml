@@ -1,0 +1,17 @@
+<backend.grid.BoundsHandler>
+  <name>Square Finite Bounds</name>
+  <description>Converts out of bounds coordinates to the closest inbounds coordinate on a square grid.</description>
+  <imgPath>resources/images/blackScreen.png</imgPath>
+  <boundsGetter resolves-to="serialized-lambda">
+    <capturingClass>backend.grid.BoundsHandler</capturingClass>
+    <functionalInterfaceClass>backend/grid/BoundsHandler$CoordinateMapper</functionalInterfaceClass>
+    <functionalInterfaceMethodName>mapCoordinate</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</functionalInterfaceMethodSignature>
+    <implClass>backend/grid/BoundsHandler</implClass>
+    <implMethodName>lambda$static$d613fdeb$1</implMethodName>
+    <implMethodSignature>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/grid/CoordinateTuple;Lbackend/grid/GameBoard;)Lbackend/grid/CoordinateTuple;</instantiatedMethodType>
+    <capturedArgs/>
+  </boundsGetter>
+</backend.grid.BoundsHandler>

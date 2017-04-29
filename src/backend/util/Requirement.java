@@ -5,7 +5,8 @@ import backend.player.ImmutablePlayer;
 import java.io.Serializable;
 import java.util.function.BiPredicate;
 
-public class Requirement extends ImmutableVoogaObject<Requirement> implements Serializable {
+public class Requirement extends ImmutableVoogaObject<Requirement>{
+	private static final long serialVersionUID = 1L;
 
 	private SerializableBiPredicate biPred;
 

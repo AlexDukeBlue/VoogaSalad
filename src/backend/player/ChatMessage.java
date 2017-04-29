@@ -4,6 +4,7 @@ import backend.util.GameplayState;
 import controller.GameplayModifierBuilder;
 import util.net.Modifier;
 
+import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -13,7 +14,9 @@ import java.time.format.FormatStyle;
 /**
  * @author Created by th174 on 4/9/2017.
  */
-public final class ChatMessage {
+public final class ChatMessage implements Serializable{
+	private static final long serialVersionUID = 1L;
+
 	private final ImmutablePlayer sender;
 	private final Instant timeStamp;
 	private final AccessLevel accessLevel;
@@ -64,6 +67,11 @@ public final class ChatMessage {
 
 		public Modifier<GameplayState> getSendMessageModifier(String message, String senderName, String recipientName) {
 			return gameplayModifierBuilder.buildFrom(message, senderName, recipientName);
+		}
+
+		@Override
+		public String toString() {
+			return super.toString();
 		}
 	}
 }

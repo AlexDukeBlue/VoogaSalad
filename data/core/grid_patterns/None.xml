@@ -1,0 +1,6 @@
+<backend.grid.GridPattern>
+  <name>None</name>
+  <description>This pattern contains no coordinates</description>
+  <imgPath>resources/images/blackScreen.png</imgPath>
+  <relativeCoordinates class="set"/>
+</backend.grid.GridPattern>

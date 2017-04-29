@@ -14,9 +14,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		@SuppressWarnings("unused")
 		GridPattern pattern = GridPattern.HEXAGONAL_ADJACENT;
-		StartupScreen starter = new StartupScreen(primaryStage, 700.0, 700.0);
-		primaryStage.setScene(new Scene(starter.getPrimaryPane()));
+		primaryStage.setScene(new Scene(new StartupScreen(primaryStage).getNode()));
 		primaryStage.setResizable(true);
+		primaryStage.setOnCloseRequest(event -> System.exit(0));
 		primaryStage.show();
 	}
 }

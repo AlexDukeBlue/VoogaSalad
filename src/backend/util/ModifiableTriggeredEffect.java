@@ -11,6 +11,8 @@ import java.util.Objects;
  * @author Created by th174 on 3/31/2017.
  */
 public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableTriggeredEffect> implements TriggeredEffect {
+	private static final long serialVersionUID = 1L;
+
 	//Unit passive abilities
 	public transient static final ModifiableTriggeredEffect REGENERATION = new ModifiableTriggeredEffect("Regeneration")
 			.setEffect((unit, event, game) -> unit.takeDamage(-6))
@@ -22,11 +24,11 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 			.setDescription("This unit heals nearby units for 6 HP at the run of each turn.")
 			.setImgPath("resources/images/redCross.png")
 			.addActivationTriggers(Event.TURN_START);
-	public transient static final ModifiableTriggeredEffect SHADOWSTALKER = new ModifiableTriggeredEffect("Shadowstalker")
-			.setEffect((unit, event, game) -> unit.setVisible(event.equals(Event.UNIT_POST_ABILITY_USE) || game.getTurnNumber() % 6 != 4 || game.getTurnNumber() % 6 != 5))
-			.setDescription("This unit hides in the shadows, rendering it invisible in nighttime")
-			.setImgPath("resources/images/undead.png")
-			.addActivationTriggers(Event.values());
+	//	public transient static final ModifiableTriggeredEffect SHADOWSTALKER = new ModifiableTriggeredEffect("Shadowstalker")
+//			.setEffect((unit, event, game) -> unit.setVisible(event.equals(Event.UNIT_POST_ABILITY_USE) || game.getTurnNumber() % 6 != 4 || game.getTurnNumber() % 6 != 5))
+//			.setDescription("This unit hides in the shadows, rendering it invisible in nighttime")
+//			.setImgPath("resources/images/shadow.jpg")
+//			.addActivationTriggers(Event.values());
 	public transient static final ModifiableTriggeredEffect POISONED = new ModifiableTriggeredEffect("Poisoned")
 			.setEffect((unit, event, game) -> unit.getHitPoints().setCurrentValue(Math.min(1, unit.getHitPoints().getCurrentValue() - 4)))
 			.setDuration(6)
@@ -36,17 +38,17 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	public transient static final ModifiableTriggeredEffect RESET_MOVE_POINTS = new ModifiableTriggeredEffect("Reset Move Points")
 			.setEffect((unit, event, game) -> unit.getMovePoints().resetValue())
 			.setDescription("This unit regains full movepoints at the beginning of each turn.")
-			.setImgPath("resources/images/reset_movepoints.png")
+			.setImgPath("resources/images/timbs.png")
 			.addActivationTriggers(Event.TURN_START);
 	public transient static final ModifiableTriggeredEffect RESET_ABILITY_POINTS = new ModifiableTriggeredEffect("Reset Ability Points")
 			.setEffect((unit, event, game) -> unit.getAbilityPoints().resetValue())
 			.setDescription("This unit regains full ability points at the beginning of each turn.")
-			.setImgPath("resources/images/reset_abilitypoints.png")
+			.setImgPath("resources/images/ability_points.png")
 			.addActivationTriggers(Event.TURN_START);
 	public transient static final ModifiableTriggeredEffect REGENERATE_ENERGY_POINTS = new ModifiableTriggeredEffect("Regenerate Energy Points")
-			.setEffect((unit, event, game) -> unit.getEnergy().setCurrentValue(Math.max(unit.getEnergy().getMaxValue(),unit.getEnergy().getCurrentValue() + 10)))
+			.setEffect((unit, event, game) -> unit.getEnergy().setCurrentValue(Math.max(unit.getEnergy().getMaxValue(), unit.getEnergy().getCurrentValue() + 10)))
 			.setDescription("This unit regenerates some energy points at the beginning of each turn.")
-			.setImgPath("resources/images/blue_cross.png")
+			.setImgPath("resources/images/energy.png")
 			.addActivationTriggers(Event.TURN_START);
 	//Cell passive abilities
 	public transient static final ModifiableTriggeredEffect FULL_HEAL = new ModifiableTriggeredEffect("Full Heal")
@@ -96,7 +98,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 
 	@Deprecated
 	public static Collection<ModifiableTriggeredEffect> getPredefinedTriggeredUnitAbilities() {
-		return Arrays.asList(REGENERATION, HEALER, SHADOWSTALKER, POISONED);
+		return Arrays.asList(REGENERATION, HEALER, POISONED, RESET_ABILITY_POINTS, RESET_MOVE_POINTS, REGENERATE_ENERGY_POINTS);
 	}
 
 	@Deprecated
@@ -165,7 +167,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 	}
 
 	@Override
-	public ModifiableTriggeredEffect setSoundPath(String path){
+	public ModifiableTriggeredEffect setSoundPath(String path) {
 		this.soundPath = path;
 		return this;
 	}

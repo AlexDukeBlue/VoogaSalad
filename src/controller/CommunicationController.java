@@ -2,6 +2,7 @@ package controller;
 
 import backend.cell.Cell;
 import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
@@ -10,11 +11,13 @@ import backend.grid.Shape;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Player;
+import backend.player.Team;
 import backend.unit.Unit;
 import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
+import frontend.util.BaseUIManager;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
 import util.io.Serializer;
@@ -23,6 +26,7 @@ import util.net.ObservableClient;
 import util.net.ObservableServer;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,14 +48,16 @@ import java.util.concurrent.Executors;
  */
 public class CommunicationController implements Controller {
 	//TODO RESOURCE BUNDLE PLS
-	private static final XMLSerializer<ReadonlyGameplayState> XML = new XMLSerializer<>();
+	private static final XMLSerializer XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
-
 	private final Executor executor;
-	private ObservableClient<ReadonlyGameplayState> mClient;
 	private final Collection<UIComponentListener> thingsToUpdate;
-	private String playerName;
 	private final CountDownLatch waitForReady;
+	private boolean isHost;
+	private int playerCountCache;
+	private ObservableClient<ReadonlyGameplayState> client;
+	private ObservableServer<ReadonlyGameplayState> server;
+	private String playerName;
 	private Deque<Path> saveHistory;
 
 	public CommunicationController(String username) {
@@ -63,15 +69,16 @@ public class CommunicationController implements Controller {
 		this.waitForReady = new CountDownLatch(1);
 		this.playerName = username;
 		this.executor = Executors.newCachedThreadPool();
+		this.playerCountCache = 1;
 		this.saveHistory = new ArrayDeque<>();
 	}
 
 	public void startClient(String host, int port, Duration timeout) {
 		try {
-			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
-			mClient.addListener(newGameState -> updateGameState());
-			executor.execute(mClient);
-			addPlayer(this.playerName);
+			client = new ObservableClient<>(host, port, XML, XML, timeout);
+			client.addListener(newGameState -> updateGameState());
+			executor.execute(client);
+			setPlayer(this.playerName, "", "");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -80,8 +87,9 @@ public class CommunicationController implements Controller {
 	@Override
 	public void startServer(ReadonlyGameplayState gameState, int port, Duration timeout) {
 		try {
-			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, XML, XML, timeout);
+			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
+			isHost = true;
 			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -89,19 +97,24 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public ReadonlyGameplayState loadFile(Path path) throws IOException {
-		return XML.unserialize(new String(Files.readAllBytes(path)));
+	public void saveState(Path path) throws IOException {
+		save(getAuthoringGameState(), path);
 	}
 
 	@Override
-	public void saveFile(Path path) throws IOException {
+	public void save(Serializable obj, Path path) throws IOException {
 		Files.createDirectories(path.getParent());
-		Files.write(path, ((String) XML.serialize(getAuthoringGameState())).getBytes());
+		Files.write(path, ((String) XML.serialize(obj)).getBytes());
+	}
+
+	@Override
+	public <T extends Serializable> T load(Path path) throws IOException {
+		return (T) XML.unserialize(new String(Files.readAllBytes(path)));
 	}
 
 	@Override
 	public GameBoard getGrid() {
-		return getGameState().getGrid();
+		return getGameplayState().getGrid();
 	}
 
 	@Override
@@ -113,21 +126,26 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
+	public String getActivePlayerName() {
+		return getAuthoringGameState().getActivePlayer().getName();
+	}
+
+	@Override
+	public String getMyPlayerName() {
+		return playerName;
+	}
+
+	@Override
 	public Cell getCell(CoordinateTuple tuple) {
 		return getGrid().get(tuple);
 	}
 
-	private synchronized void updateGameState() {
-		updateAll();
-		waitForReady.countDown();
+	public ObservableClient<ReadonlyGameplayState> getClient() {
+		return client;
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
-		this.mClient = client;
-	}
-
-	public ObservableClient<ReadonlyGameplayState> getClient() {
-		return mClient;
+		this.client = client;
 	}
 
 	@Override
@@ -151,13 +169,13 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public GameplayState getGameState() {
+	public GameplayState getGameplayState() {
 		return (GameplayState) getClient().getState();
 	}
 
 	@Override
 	public ImmutablePlayer getPlayer(String name) {
-		return getGameState().getPlayerByName(name);
+		return getGameplayState().getPlayerByName(name);
 	}
 
 	@Override
@@ -167,12 +185,12 @@ public class CommunicationController implements Controller {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
+		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 	}
 
 	@Override
 	public Collection<? extends Unit> getUnits() {
-		return getGameState().getGrid().getUnits();
+		return getGameplayState().getGrid().getUnits();
 	}
 
 	@Override
@@ -182,6 +200,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void addTemplatesByCategory(String category, VoogaEntity... templates) {
+		Arrays.stream(templates).map(VoogaEntity::getImgPath).forEach(this::sendFile);
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory(category).addAll(templates);
 			return state;
@@ -224,23 +243,36 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public boolean isAuthoringMode() {
-		return getGameState().isAuthoringMode();
+		return getGameplayState().isAuthoringMode();
+	}
+	
+	@Override
+	public boolean activePlayerWon(){
+		return getActivePlayer().getResult().equals(Result.WIN);
+	}
+	
+	@Override
+	public boolean activePlayerLost(){
+		return getActivePlayer().getResult().equals(Result.LOSE);
+	}
+	
+	@Override
+	public boolean activePlayerTied(){
+		return getActivePlayer().getResult().equals(Result.TIE);
 	}
 
 	@Override
-	public String getPlayerName() {
-		return playerName;
-	}
-
-	@Override
-	public void addPlayer(String playerName) {
-		this.playerName = playerName;
+	public void setPlayer(String name, String description, String imgPath) {
+		this.playerName = name;
+		Team temp = new Team(name + "'s Team", "Temporary team for " + name, Team.COLORS.get((int) (Math.random() * Team.COLORS.size())), imgPath);
+		Player me = new Player(name, description, imgPath);
 		sendModifier((AuthoringGameState state) -> {
-			state.addPlayer(new Player(playerName, "Test player", ""));
+			state.addPlayer(me);
 			return state;
 		});
 	}
 
+	@Override
 	public void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addAvailableTurnRequirements(new Requirement(biPredicate, name, description, imgPath));
@@ -248,6 +280,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void removeTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeAvailableTurnRequirements(req));
@@ -255,20 +288,23 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void activateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.addTurnRequirements(req));
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(state::addTurnRequirements);
 			return state;
 		});
 	}
 
+	@Override
 	public void deactivateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeTurnRequirements(req));
+			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(state::removeTurnRequirements);
 			return state;
 		});
 	}
 
+	@Override
 	public void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addAvailableTurnActions(event, new Actionable(biConsumer, name, description, imgPath));
@@ -276,6 +312,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void removeTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(event, act));
@@ -283,6 +320,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void activateTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(event, act));
@@ -290,6 +328,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void deactivateTurnAction(Event event, String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(event, act));
@@ -297,6 +336,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate) {
 		sendModifier((AuthoringGameState state) -> {
 			state.addObjectives(new Resultant(resultQuadPredicate, name, description, imgPath));
@@ -304,6 +344,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void removeEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
@@ -311,6 +352,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void activateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
@@ -318,6 +360,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	@Override
 	public void deactivateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
 			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
@@ -325,11 +368,12 @@ public class CommunicationController implements Controller {
 		});
 	}
 
-	private void updateAll() {
+	@Override
+	public void updateAll() {
 		executor.execute(() -> {
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveFile(autoSavePath);
+				saveState(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
 				System.err.println("You're going TOO FAST!!!!");
@@ -346,6 +390,34 @@ public class CommunicationController implements Controller {
 		}));
 	}
 
+	@Override
+	public void joinTeam(String teamName) {
+		String playerName = this.playerName;
+		sendModifier((GameplayState state) -> state.joinTeam(playerName, teamName));
+	}
+
+	@Override
+	public void sendFile(String path) {
+		if (Objects.nonNull(path) && path.length() > 0) {
+			try {
+				byte[] buffer = Files.readAllBytes(Paths.get(path));
+				sendModifier(state -> {
+					Path newFilePath = Paths.get(path);
+					if (Files.notExists(newFilePath)) {
+						if (Objects.nonNull(newFilePath.getParent())) {
+							Files.createDirectories(newFilePath.getParent());
+						}
+						Files.write(newFilePath, buffer);
+					}
+					return state;
+				});
+			} catch (IOException e) {
+				throw new Error(e);
+			}
+		}
+	}
+
+	@Override
 	public void endTurn() {
 		sendModifier(GameplayState::endTurn);
 	}
@@ -373,25 +445,46 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void copyTemplateToGrid(String templateName, CoordinateTuple gridLocation, String targetUnitName) {
+	public void copyTemplateToGrid(VoogaEntity template, HasLocation destination) {
+		String templateName = template.getName();
+		String targetUnitName = destination.getName();
+		CoordinateTuple gridLocation = destination.getLocation();
+		String playerName = getMyPlayerName();
 		sendModifier((AuthoringGameState gameState) -> {
+			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
 			try {
 				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
 				if (Objects.nonNull(targetUnit)) {
-					targetUnit.add(gameState.getTemplateByName(templateName).copy());
+					targetUnit.add(templateCopy);
 				} else {
 					throw new Exception();
 				}
 			} catch (Exception e) {
 				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
-					targetCell.add(gameState.getTemplateByName(templateName).copy());
+					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
+					if (templateCopy instanceof Unit) {
+						((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName));
+						
+						//((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName).getTeam());
+						
+					}
+					targetCell.add(templateCopy);
 				} else {
 					e.printStackTrace();
 				}
 			}
 			return gameState;
 		});
+	}
+
+	@Override
+	public void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation) {
+		sendModifier((AuthoringGameState gameState) -> {
+			gameState.getGrid().get(unitLocation).removeOccupants(unitName);
+			return gameState;
+		});
+
 	}
 
 	@Override
@@ -407,7 +500,7 @@ public class CommunicationController implements Controller {
 	public void undo() {
 		try {
 			saveHistory.pop();
-			setGameState(loadFile(saveHistory.pop()));
+			setGameState(this.load(saveHistory.pop()));
 		} catch (IOException ignored) {
 		}
 	}
@@ -415,5 +508,14 @@ public class CommunicationController implements Controller {
 	@Override
 	public Shape getShape() {
 		return getGrid().getShape();
+	}
+
+	private synchronized void updateGameState() {
+		updateAll();
+		if (Objects.nonNull(server) && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
+			BaseUIManager.getResourcePaths().forEach(this::sendFile);
+		}
+		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
+		waitForReady.countDown();
 	}
 }

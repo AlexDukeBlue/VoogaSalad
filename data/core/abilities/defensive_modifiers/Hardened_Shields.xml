@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Hardened Shields</name>
-  <description>Incoming attacks that would deal more than 5 damage have their damage reduced to 5</description>
-  <imgPath>Protoss_Immortal.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

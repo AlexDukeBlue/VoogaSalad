@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  */
 public class VoogaJavaEngine implements VoogaScriptEngine {
 	private static int fileCount = 0;
-	private boolean hasCompiled = false;
+	private transient boolean hasCompiled = false;
 	private String className;
 	private String methodName;
 	private String srcPath;
@@ -29,6 +29,7 @@ public class VoogaJavaEngine implements VoogaScriptEngine {
 				.mapToObj(i -> temp[i].getCanonicalName() + " " + paramNames[i])
 				.collect(Collectors.joining(", "));
 		String output = String.format(fullSource, methodArgs);
+		Files.createDirectories(Paths.get(srcPath).getParent());
 		Files.write(Paths.get(srcPath), output.getBytes());
 		compiler.run(null, null, null,
 				srcPath,

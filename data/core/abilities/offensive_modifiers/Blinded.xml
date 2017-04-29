@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Blinded</name>
-  <description>Attacks have a high chance to miss</description>
-  <imgPath>Helen_Keller.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

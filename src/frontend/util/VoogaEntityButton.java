@@ -1,25 +1,17 @@
 package frontend.util;
 
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-
 import backend.cell.Terrain;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.View;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 
 
 /**
@@ -32,33 +24,37 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 	public VoogaEntityButton(VoogaEntity entity, int size, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.entity = entity;
-		ImageView sprite = new ImageView(View.getImg(entity.getImgPath()));
+		ImageView sprite = new ImageView(getImg(entity.getImgPath()));
+		sprite.setSmooth(true);
+		sprite.setPreserveRatio(true);
 		entityButton = new Button("", sprite);
 		entityButton.setPadding(new Insets(10, 10, 10, 10));
 		sprite.setFitWidth(size);
 		sprite.setFitHeight(size);
+		entityButton.setPrefSize(size,size);
 		entityButton.setTooltip(new Tooltip(entity.getFormattedName()));
 		entityButton.setPadding(Insets.EMPTY);
 		entityButton.setOnMouseClicked(event -> setAsSelected());
 		entityButton.setOnDragDetected(event -> {
-			getObject().startFullDrag();
+			getNode().startFullDrag();
 			if(entity instanceof Unit || entity instanceof Terrain){
-				getObject().setCursor(new ImageCursor(sprite.snapshot(null, null)));
+				getNode().setCursor(new ImageCursor(sprite.snapshot(null, null)));
 			}
 			setAsSelected();
 		});
 	}
 
 	@Override
-	public Button getObject() {
+	public Button getNode() {
 		return entityButton;
 	}
 
-	public final VoogaEntity getEntity() {
+	@Override
+	public VoogaEntity getEntity() {
 		return entity;
 	}
 
-	protected final void setEntity(VoogaEntity entity){
+	protected final void setEntity(VoogaEntity entity) {
 		this.entity = entity;
 	}
 

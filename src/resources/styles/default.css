@@ -13,13 +13,11 @@
             -fx-mid-text-color 60%
     );
     -fx-focused-mark-color: -fx-focused-text-base-color;
-
     -fx-font-family: verdana;
 }
 
 .button, .combo-box, .menu-bar, .menu, .menu-item {
-    -fx-background-color: #bfe7ff;
-    -fx-border-color: #afd7ef;
+    -fx-border-color: #636da6;
     -fx-background-radius: 7;
     -fx-border-radius: 7;
 }
@@ -27,3 +25,9 @@
 .button:hover, .combo-box:hover {
     -fx-background-color: #e0f7f0;
 }
+
+.text-area .scroll-pane .viewport, .text-area.scroll-pane, .text-area.scroll-pane.content,.hbox, .text-area {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+

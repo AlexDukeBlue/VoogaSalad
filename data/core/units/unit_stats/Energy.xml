@@ -1,7 +1,0 @@
-<backend.unit.properties.ModifiableUnitStat>
-  <name>Energy</name>
-  <description>Energy points are required for and consumed by some powerful abilities.</description>
-  <imgPath>NRG.png</imgPath>
-  <maxValue class="double">100.0</maxValue>
-  <minValue class="double">0.0</minValue>
-</backend.unit.properties.ModifiableUnitStat>

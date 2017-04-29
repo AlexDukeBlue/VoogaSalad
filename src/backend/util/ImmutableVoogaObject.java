@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 4/8/2017.
  */
 public abstract class ImmutableVoogaObject<T extends ImmutableVoogaObject<T>> implements VoogaEntity {
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
 	private String imgPath;

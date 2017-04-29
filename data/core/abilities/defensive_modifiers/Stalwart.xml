@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Stalwart</name>
-  <description>This unit takes less damage if it does not move this turn.</description>
-  <imgPath>Siege_Engine.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

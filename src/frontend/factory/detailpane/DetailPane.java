@@ -1,38 +1,40 @@
-/**
- * @author Faith Rodriguez
- * Created 4/9/2017
- */
 package frontend.factory.detailpane;
 
 import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.VoogaEntity;
+import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.View;
 import frontend.interfaces.detailpane.DetailPaneExternal;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
  * @author Faith Rodriguez
  *         <p>
- *         This class displays details about the units, as well as lets the user
- *         change aspects of a sprite and activate a unit or terrain's
+ *         This class displays details about any sprite that the user selects from the template pane,
+ *         as well as lets the user change aspects of a sprite and activate a unit or terrain's
  *         abilities.
  *         <p>
  *         This class is dependent on TemplatePane and CellView classes for its
@@ -46,24 +48,29 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	private VBox imagePane = new VBox();
 	private Label spriteInfo;
 	private String content = "";
-	private String AAContent = "";
 	private VoogaEntity currentSprite;
+	private ResourceBundle resources;
+	private Button editBtn;
+	private ScrollPane scrollPane;
+	private Button exportButton;
+	private boolean authorMode;
 
 	private double PANE_WIDTH = 1000;
 
-	public DetailPane(ClickHandler clickHandler) {
-		super(clickHandler);
+	public DetailPane(ClickHandler clickHandler, Controller controller) {
+		super(controller, clickHandler);
+		resources = ResourceBundle.getBundle("frontend/factory/detailpane/resources");
 		paneSetup();
 		setLabel();
 		clearContent();
 		getPolyglot().setOnLanguageChange(change -> {
-//			paneSetup();
-//			setLabel();
-//			clearContent();
 			if (currentSprite != null) {
 				setContent(currentSprite);
 			}
 		});
+		setAuthorMode();
+		scrollPane = new ScrollPane();
+		scrollPane.setContent(fullPane);
 	}
 
 	private void paneSetup() {
@@ -89,8 +96,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
 	 *
-	 * @param sprite     A sprite that has just been clicked on in the TemplatePane
-	 * @param spriteType A string revealing whether the sprite is a unit or terrain
+	 * @param sprite A sprite that has just been clicked on in the TemplatePane
 	 */
 	public void setContent(VoogaEntity sprite) {
 		currentSprite = sprite;
@@ -101,19 +107,32 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		}
 	}
 
+	/**
+	 * Returns the entire detail pane region
+	 */
 	@Override
-	public Region getObject() {
-		return fullPane;
+	public Region getNode() {
+		return scrollPane;
 	}
 
 	private void setImageContent(VoogaEntity sprite) {
 		Label name = new Label(sprite.getName() + "\n");
 		name.setFont(Font.font(25));
 		name.setMinWidth(Region.USE_PREF_SIZE + 10);
-		ImageView spriteImage = new ImageView(View.getImg(sprite.getImgPath()));
+		ImageView spriteImage = new ImageView(getImg(sprite.getImgPath()));
 		spriteImage.setSmooth(true);
-		spriteImage.setFitHeight(80);
-		spriteImage.setFitWidth(80);
+		spriteImage.setPreserveRatio(true);
+		spriteImage.setFitWidth(120);
+		Tooltip.install(spriteImage, new Tooltip(sprite.getImgPath()));
+		imagePane.setOnMouseClicked(event -> {
+			Stage expandImageWindow = new Stage();
+			ImageView expandedImage = new ImageView(getImg(sprite.getImgPath()));
+			expandedImage.setSmooth(true);
+			expandedImage.setPreserveRatio(true);
+			expandImageWindow.setTitle(sprite.getImgPath());
+			expandImageWindow.setScene(new Scene(new Group(expandedImage)));
+			expandImageWindow.show();
+		});
 		imagePane.getChildren().add(name);
 		imagePane.getChildren().add(spriteImage);
 	}
@@ -131,6 +150,24 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		} else {
 			newSpriteInfo = new Label(content);
 		}
+		//TODO ResourceBundle and util.polyglot and shit
+		exportButton = new Button("Export");
+		exportButton.setOnAction(e -> {
+			try {
+				FileChooser chooser = new FileChooser();
+				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
+				chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+				chooser.setInitialFileName(sprite.getFormattedName() + ".xml");
+				File file = chooser.showSaveDialog(null);
+				getController().save(sprite, Paths.get(file.getPath()));
+			} catch (NullPointerException | IOException e1) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
+				alert.contentTextProperty().bind(getPolyglot().get("TryAgain"));
+				alert.show();
+			}
+		});
+		infoPane.getChildren().add(exportButton);
 		spriteInfo = newSpriteInfo;
 		setLabel();
 	}
@@ -139,20 +176,26 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		addMoveCosts(unit);
 		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
 		unit.getUnitStats().forEach(e -> addString(e.getName(), e.getCurrentValue().toString()));
-		addString("Move Pattern", unit.getMovePattern().toString());
+		addString("Move Pattern", Objects.nonNull(unit.getMovePattern())?unit.getMovePattern().toString():"");
+		if (authorMode) createButton(unit, resources.getString("Unit"));
 		return content;
 	}
-
-//	private void setAbilityPaneContent(Unit unit) {
-//		AAContent = addCollection(getPolyglot().get("ActiveAbilities").getValueSafe(), unit.getActiveAbilities(), AAContent);
-//		Label AALabel = new Label(AAContent);
-//		AAPane.getChildren().add(AALabel);
-//	}
 
 	private String setTerrainContent(Terrain terrain) {
 		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());
 		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
+		if (authorMode) createButton(terrain, "Terrain");
 		return content;
+	}
+
+	private void createButton(VoogaEntity unit, String unitType) {
+		if (unit instanceof Unit) {
+			editBtn = new Button("Edit details");
+			infoPane.getChildren().add(editBtn);
+			editBtn.setOnMouseClicked(e -> {
+				new DetailEdit(unit, unitType, getController());
+			});
+		}
 	}
 
 	private String addCollection(String label, Collection<? extends VoogaEntity> collection, String content) {
@@ -160,7 +203,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		for (VoogaEntity o : collection) {
 			content += o + "\n";
 			if (o.getImgPath() != null) {
-				ImageView oIV = new ImageView(View.getImg(o.getImgPath()));
+				ImageView oIV = new ImageView(getImg(o.getImgPath()));
 				content += oIV;
 			}
 		}
@@ -184,8 +227,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private void clearContent() {
 		content = "";
-		AAContent = "";
-		infoPane.getChildren().remove(spriteInfo);
+		infoPane.getChildren().removeAll(exportButton, spriteInfo, editBtn);
 		AAPane.getChildren().clear();
 		imagePane.getChildren().clear();
 	}
@@ -195,5 +237,15 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 			content += label + ": ";
 		}
 		return content;
+	}
+
+	@Override
+	public void setAuthorMode() {
+		authorMode = true;
+	}
+
+	@Override
+	public void setPlayMode() {
+		authorMode = false;
 	}
 }

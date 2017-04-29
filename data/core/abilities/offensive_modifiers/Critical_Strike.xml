@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Critical Strike</name>
-  <description>Attacks have a chance to critical strike, hitting for extra damage.</description>
-  <imgPath>RNGesus.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

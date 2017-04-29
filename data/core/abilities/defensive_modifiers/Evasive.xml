@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Evasive</name>
-  <description>This unit has a high chance to evade attacks, but it takes extra damage when hit</description>
-  <imgPath>Evasion.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

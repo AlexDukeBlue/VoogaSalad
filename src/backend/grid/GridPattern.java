@@ -14,6 +14,8 @@ import java.util.stream.Stream;
  * @author Created by th174 on 3/30/2017.
  */
 public class GridPattern extends ModifiableVoogaObject<GridPattern> implements VoogaEntity, HasShape {
+	private static final long serialVersionUID = 1L;
+
 	//TODO ResourceBundlify
 	public transient static final GridPattern NONE = new GridPattern("None", "This pattern contains no coordinates", "resources/images/blackScreen.png");
 	public transient static final GridPattern HEXAGONAL_SINGLE_CELL = new GridPattern("Hexagonal Single Cell", "This pattern contains single hexagonal cell at the origin", "resources/images/hexSingle.png", CoordinateTuple.getOrigin(3));
@@ -62,6 +64,6 @@ public class GridPattern extends ModifiableVoogaObject<GridPattern> implements V
 
 	@Override
 	public Shape getShape() {
-		return Shape.fromDimension(relativeCoordinates.stream().findAny().orElse(null).dimension());
+		return Shape.fromDimension(relativeCoordinates.stream().findAny().orElse(CoordinateTuple.getOrigin(2)).dimension());
 	}
 }

@@ -5,12 +5,10 @@ import backend.grid.GameBoard;
 import backend.grid.Shape;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.util.Event;
-import backend.util.GameplayState;
-import backend.util.ModifiableTriggeredEffect;
-import backend.util.TriggeredEffect;
+import backend.util.*;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import static backend.util.ImmutableVoogaObject.getPredefined;
 
@@ -18,6 +16,16 @@ import static backend.util.ImmutableVoogaObject.getPredefined;
  * @author Created by th174 on 3/31/2017.
  */
 public class ModifiableCell implements Cell {
+	private static final long serialVersionUID = 1L;
+
+	private static final Map<Class<? extends VoogaEntity>, BiConsumer<VoogaEntity, Cell>> DISPATCH_MAP = new HashMap<>();
+
+	static {
+		DISPATCH_MAP.put(ModifiableTerrain.class, (terrain, cell) -> ((ModifiableCell) cell).setTerrain((Terrain) terrain));
+		DISPATCH_MAP.put(ModifiableUnit.class, ((unit, cell) -> cell.addOccupants((Unit) unit)));
+		DISPATCH_MAP.put(Ability.class, ((ability, cell) -> cell.getTerrain().addAbility((Ability) ability)));
+	}
+
 	private final Map<String, Unit> occupants;
 	private Shape shape;
 	private Terrain terrain;
@@ -52,6 +60,11 @@ public class ModifiableCell implements Cell {
 			occupants.remove(unit.getName());
 			((ModifiableUnit) unit).setCurrentCell(null);
 		});
+		return this;
+	}
+
+	public ModifiableCell removeOccupants(String... unitNames) {
+		removeOccupants(Arrays.stream(unitNames).map(this::getOccupantByName).toArray(Unit[]::new));
 		return this;
 	}
 
@@ -177,6 +190,12 @@ public class ModifiableCell implements Cell {
 	@Override
 	public String getImgPath() {
 		return getTerrain().getImgPath();
+	}
+
+	@Override
+	public Cell add(VoogaEntity voogaEntity) {
+		DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);
+		return this;
 	}
 
 	static class IncompleteCellException extends RuntimeException {

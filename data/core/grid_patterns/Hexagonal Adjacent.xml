@@ -1,0 +1,67 @@
+<backend.grid.GridPattern>
+  <name>Hexagonal Adjacent</name>
+  <description>This pattern of hexagonal coordinates is composed of all hexagonal coordinates adjacent to the origin.</description>
+  <imgPath>resources/images/hexAdjacent.png</imgPath>
+  <relativeCoordinates class="set">
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>0</int>
+          <int>-1</int>
+          <int>1</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>1</int>
+          <int>-1</int>
+          <int>0</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>0</int>
+          <int>1</int>
+          <int>-1</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>-1</int>
+          <int>1</int>
+          <int>0</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>1</int>
+          <int>0</int>
+          <int>-1</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+    <backend.grid.CoordinateTuple>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>-1</int>
+          <int>0</int>
+          <int>1</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </backend.grid.CoordinateTuple>
+  </relativeCoordinates>
+</backend.grid.GridPattern>

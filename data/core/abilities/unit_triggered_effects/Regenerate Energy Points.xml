@@ -1,0 +1,22 @@
+<backend.util.ModifiableTriggeredEffect>
+  <name>Regenerate Energy Points</name>
+  <description>This unit regenerates some energy points at the beginning of each turn.</description>
+  <imgPath>resources/images/energy.png</imgPath>
+  <activationTriggers class="set">
+    <backend.util.Event>TURN_START</backend.util.Event>
+  </activationTriggers>
+  <effect resolves-to="serialized-lambda">
+    <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+    <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+    <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+    <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+    <implMethodName>lambda$static$e3f54b94$1</implMethodName>
+    <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+    <capturedArgs/>
+  </effect>
+  <duration>2147483647</duration>
+  <turnsRemaining>2147483647</turnsRemaining>
+</backend.util.ModifiableTriggeredEffect>

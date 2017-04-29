@@ -1,6 +1,0 @@
-<backend.unit.properties.InteractionModifier>
-  <name>Executioner</name>
-  <description>Attacks do extra damage to targets at low HP.</description>
-  <imgPath>Axe.png</imgPath>
-  <modifier class="null"/>
-</backend.unit.properties.InteractionModifier>

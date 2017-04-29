@@ -35,7 +35,7 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	}
 
 	@Override
-	public Region getObject() {
+	public Region getNode() {
 		return myBox;
 	}
 	

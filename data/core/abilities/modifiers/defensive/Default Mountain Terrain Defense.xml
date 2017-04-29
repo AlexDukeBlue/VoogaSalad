@@ -1,0 +1,18 @@
+<backend.unit.properties.InteractionModifier>
+  <name>Default Mountain Terrain Defense</name>
+  <description>Units have 50% evasion on Mountain terrain by default.</description>
+  <imgPath>resources/images/mountain.png</imgPath>
+  <modifier resolves-to="serialized-lambda">
+    <capturingClass>backend.unit.properties.InteractionModifier</capturingClass>
+    <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+    <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+    <implClass>backend/unit/properties/InteractionModifier</implClass>
+    <implMethodName>lambda$static$5170b4fd$1</implMethodName>
+    <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+    <capturedArgs/>
+  </modifier>
+  <type>defense</type>
+</backend.unit.properties.InteractionModifier>

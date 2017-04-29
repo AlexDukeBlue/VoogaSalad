@@ -23,6 +23,7 @@ public enum Shape {
 			new CoordinateTuple(1, -1, 0),
 			new CoordinateTuple(-1, 1, 0));
 
+	private static final long serialVersionUID = 1L;
 	private static final Map<Integer, Shape> DIMENSION_SHAPE_MAP = new HashMap<>();
 
 	static {
@@ -30,17 +31,17 @@ public enum Shape {
 	}
 
 	private final int dimension;
-	private final GridPattern neighborsPattern;
+	private final CoordinateTuple[] neighborsPattern;
 	private final String name;
 
 	Shape(String name, CoordinateTuple... neighborsRelativeCoordinates) {
 		this.name = name;
 		this.dimension = neighborsRelativeCoordinates[0].dimension();
-		this.neighborsPattern = new GridPattern(neighborsRelativeCoordinates);
+		this.neighborsPattern = neighborsRelativeCoordinates;
 	}
 
 	public GridPattern getNeighborPattern() {
-		return neighborsPattern;
+		return new GridPattern(neighborsPattern);
 	}
 
 	public int getDimension() {

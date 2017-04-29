@@ -1,242 +1,71 @@
 package frontend.startup;
 
-import backend.util.ReadonlyGameplayState;
-import controller.CommunicationController;
-import controller.Controller;
-import frontend.View;
-import frontend.factory.wizard.WizardFactory;
-import javafx.animation.*;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import util.net.ObservableHost;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import frontend.util.BaseUIManager;
+import frontend.util.ButtonFactory;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
- * The intro screen containing a "create new game" button.
+ * The StartupSelectionScreen sets up a Node that can be displayed to allow the
+ * user to select whether to start a new game, load a previously saved game, or
+ * join a game that is currently being hosted.
  *
- * @authors Sam, ncp14, Stone Mathers
+ * @authors Sam, ncp14, Stone Mathers, Dylan Peters
  */
-public class StartupSelectionScreen extends VBox {
-	private ResourceBundle SelectionProperties = ResourceBundle.getBundle("frontend/properties/SelectionProperties");
-	private Stage stage;
-	private Controller control;
-	private Color startColor;
-	private Color endColor;
-	private ObjectProperty<Color> color;
-	private final int TIMEOUT = 20; //Timeout for server. Store this in a resource file or something
+class StartupSelectionScreen extends BaseUIManager<Node> {
+	private static final Collection<String> buttonNames = new ArrayList<>(Arrays.asList("create", "join", "play"));
 
-	public StartupSelectionScreen(Stage stage) { //should have some sort of parameter that is passing the UI
-		this.stage = stage;
-		this.setUpPane();
+	private VBox vbox;
+
+	/**
+	 * Creates a new instance of the StartupSelectionScreen with a reference to
+	 * the Stage object being passed to it.
+	 * 
+	 * @param stage
+	 *            the stage on which the game will be placed.
+	 */
+	StartupSelectionScreen(Stage stage) {
+		super(null);
+		initializePane(stage);
 	}
 
-	public void setButtonAnimationColors() {
-		startColor = Color.web("#e08090");
-		endColor = Color.web("#80e090");
-		color = new SimpleObjectProperty<>(startColor);
+	@Override
+	public Node getNode() {
+		return vbox;
 	}
 
-	// This method returns a string that represents the color above as a JavaFX CSS function:
-	// -fx-body-color: rgb(r, g, b);
-	// with r, g, b integers between 0 and 255
-	public StringBinding generateStringBinding() {
-		StringBinding cssColorSpec = Bindings.createStringBinding(() -> String.format("-fx-body-color: rgb(%d, %d, %d);",
-				(int) (256 * color.get().getRed()),
-				(int) (256 * color.get().getGreen()),
-				(int) (256 * color.get().getBlue())), color);
-		return cssColorSpec;
-	}
-
-	public Pane generateShape(Rectangle rotatingRect) {
-		final Pane rectHolder = new Pane();
-		rectHolder.setMinSize(20, 16);
-		rectHolder.setPrefSize(20, 16);
-		rectHolder.setMaxSize(20, 16);
-		rectHolder.getChildren().add(rotatingRect);
-		return rectHolder;
-	}
-
-	public RotateTransition generateRotation(Rectangle rotatingRect) {
-		final RotateTransition rotate = new RotateTransition(javafx.util.Duration.seconds(1), rotatingRect);
-		rotate.setByAngle(360);
-		rotate.setCycleCount(Animation.INDEFINITE);
-		rotate.setInterpolator(Interpolator.LINEAR);
-		return rotate;
-	}
-
-	public void setUpPane() {
-		Button create = new Button(SelectionProperties.getString("Create"));
-		Button join = new Button(SelectionProperties.getString("Join"));
-		Button load = new Button(SelectionProperties.getString("Load"));
-		/////////********** basic animation idea from https://gist.github.com/james-d/8474941, but heavily refactored and changed by ncp14
-		setButtonAnimationColors();
-		create.styleProperty().bind(generateStringBinding());
-		join.styleProperty().bind(generateStringBinding());
-		load.styleProperty().bind(generateStringBinding());
-		final Timeline timeline = new Timeline(
-				new KeyFrame(javafx.util.Duration.ZERO, new KeyValue(color, startColor)),
-				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color, endColor)));
-		create.setOnAction(event -> {
-			timeline.play();
-			try {
-				create(getPortNumber());
-			} catch (Exception e) {
-				throwServerAlert();
-			}
+	private void initializePane(Stage stage) {
+		vbox = new VBox();
+		vbox.setAlignment(Pos.CENTER);
+		StartupDelegate delegate = new ConcreteStartupDelegate();
+		buttonNames.stream().forEachOrdered(name -> {
+			Button button = ButtonFactory.newSpinningButton();
+			button.textProperty().bind(getPolyglot().get(name));
+			vbox.getChildren().add(button);
+			button.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+				try {
+					delegate.getClass().getDeclaredMethod(name, Stage.class).invoke(delegate, stage);
+				} catch (Exception e) {
+					vbox.getChildren().remove(button);
+				}
+			});
 		});
-		join.setOnAction(event -> {
-			timeline.play();
-			try {
-				join(getHost(), getPortNumber());
-			} catch (Exception e) {
-				throwServerAlert();
-			}
-		});
-		load.setOnAction(event -> {
-			timeline.play();
-			try {
-				load(getPortNumber());
-			} catch (Exception e) {
-				throwServerAlert();
-			}
-		});
-		// Create a rotating rectangle and set it as the graphic for the button
-		final Rectangle rotatingRect = new Rectangle(5, 5, 10, 6);
-		rotatingRect.setFill(Color.CORNFLOWERBLUE);
-		Pane rectHolder = generateShape(rotatingRect);
-		RotateTransition rotate = generateRotation(rotatingRect);
-		// Create a rotating rectangle and set it as the graphic for the button
-		final Rectangle rotatingRect2 = new Rectangle(5, 5, 10, 6);
-		rotatingRect2.setFill(Color.CORNFLOWERBLUE);
-		Pane rectHolder2 = generateShape(rotatingRect2);
-		RotateTransition rotate2 = generateRotation(rotatingRect2);
-		final Rectangle rotatingRect3 = new Rectangle(5, 5, 10, 6);
-		rotatingRect3.setFill(Color.CORNFLOWERBLUE);
-		Pane rectHolder3 = generateShape(rotatingRect3);
-		RotateTransition rotate3 = generateRotation(rotatingRect3);
-		create.setGraphic(rectHolder);
-		join.setGraphic(rectHolder2);
-		load.setGraphic(rectHolder3);
-		// make the rectangle rotate when the mouse hovers over the button
-		create.setOnMouseEntered(event -> rotate.play());
-		create.setOnMouseExited(event -> {
-			rotate.stop();
-			rotatingRect.setRotate(0);
-		});
-		join.setOnMouseEntered(event -> rotate2.play());
-		join.setOnMouseExited(event -> {
-			rotate2.stop();
-			rotatingRect2.setRotate(0);
-		});
-		load.setOnMouseEntered(event -> rotate3.play());
-		load.setOnMouseExited(event -> {
-			rotate3.stop();
-			rotatingRect3.setRotate(0);
-		});
-		this.setPadding(new Insets(30, 10, 10, 10));
-		this.setSpacing(10);
-		this.setMinWidth(450);
-		this.setMinHeight(400);
-		this.getChildren().add(create);
-		this.getChildren().add(load);
-		this.getChildren().add(join);
+		vbox.setPadding(new Insets(Double.parseDouble(getResourceBundle().getString("INSETS_TOP")),
+				Double.parseDouble(getResourceBundle().getString("INSETS_RIGHT")),
+				Double.parseDouble(getResourceBundle().getString("INSETS_BOTTOM")),
+				Double.parseDouble(getResourceBundle().getString("INSETS_LEFT"))));
+		vbox.setSpacing(Double.parseDouble(getResourceBundle().getString("SPACING")));
+		vbox.setMinWidth(Double.parseDouble(getResourceBundle().getString("MIN_WIDTH")));
+		vbox.setMinHeight(Double.parseDouble(getResourceBundle().getString("MIN_HEIGHT")));
 	}
 
-	private int getPortNumber() {
-		try {
-			TextInputDialog dialog = new TextInputDialog("Enter a number (1024 - 65535)");
-			dialog.setTitle("Creating server....");
-			dialog.setHeaderText("Enter a port number for your server");
-			dialog.setContentText("Port number:");
-			Optional<String> result = dialog.showAndWait();
-			if (isValidPort(Integer.parseInt(result.get()))) {
-				return Integer.parseInt(result.get());
-			} else {
-				throw new RuntimeException();
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private String getHost() {
-		try {
-			TextInputDialog dialog = new TextInputDialog("Enter Host Address");
-			dialog.setTitle("Connecting to host");
-			dialog.setHeaderText("Please enter the hostname of the server you are trying to connect to.");
-			dialog.setContentText("Hostname/IP address");
-			Optional<String> result = dialog.showAndWait();
-			return result.orElseThrow(RuntimeException::new);
-		} catch (Exception e) {
-			return ObservableHost.LOCALHOST;
-		}
-	}
-
-	private void create(int port) {
-		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		WizardFactory.newWizard("gamestate", null).addObserver((o, arg) -> {
-			//GridPattern gridPattern = GridPattern.HEXAGONAL_ADJACENT;
-			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
-			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
-			createGame();
-		});
-	}
-
-	private void join(String host, int port) {
-		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		control.startClient(host, port, Duration.ofSeconds(30));
-		createGame();
-	}
-
-	private void load(int port) {
-		control = new CommunicationController(System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		control.startServer(loadFile(), port, Duration.ofSeconds(30));
-		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
-		createGame();
-	}
-
-	private ReadonlyGameplayState loadFile() {
-		try {
-			FileChooser chooser = new FileChooser();
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			return control.loadFile(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()));
-		} catch (Exception e) {
-			Platform.exit();
-			return null;
-		}
-	}
-
-	private void createGame() {
-		View view = new View(control, stage);
-		stage.setScene(new Scene(view.getObject()));
-	}
-
-	private boolean isValidPort(int port) {
-		return (port > 1024 && port <= 65535);
-	}
-
-	private void throwServerAlert() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setContentText("Invalid Port Number"); //TODO Resource bundle this jawn		
-		alert.show();
-	}
 }
