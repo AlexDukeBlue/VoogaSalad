@@ -1,5 +1,7 @@
 package frontend.factory.wizard.strategies;
 
+import java.util.Optional;
+
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
@@ -9,6 +11,9 @@ import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.TerrainMovePointPage;
 import javafx.beans.binding.StringBinding;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 
 /**
@@ -65,8 +70,24 @@ class UnitStrategy extends BaseStrategy<Unit> {
 		terrainMovePointPage = new TerrainMovePointPage(gameState, "UnitTerrainDescription");
 		gridPatternPage = new GridPatternPage(gameState, "UnitGridPatternDescription", Color.WHITE, Color.GREEN);
 		gridPatternPageRange = new GridPatternPage(gameState, "UnitGridPatternRangeDescription", Color.WHITE, Color.YELLOW);
+		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
+		if(isARangedUnit()) getPages().add(gridPatternPageRange);
+	}
+	
+	private boolean isARangedUnit()
+	{
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Ranged");
+		alert.setHeaderText("Does this unit have a ranged attack?");
+		alert.setContentText("Select yes if this unit can attack units that it is not adjacent to without moving.");
 
-		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage, gridPatternPageRange);
+		ButtonType buttonTypeOne = new ButtonType("Yes");
+		ButtonType buttonTypeTwo = new ButtonType("No");
+
+		alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+		Optional<ButtonType> result = alert.showAndWait();
+		return (result.get() == buttonTypeOne);
 	}
 
 	@Override
