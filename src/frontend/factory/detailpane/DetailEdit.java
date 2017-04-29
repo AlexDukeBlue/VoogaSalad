@@ -31,6 +31,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * @author Faith Rodriguez
+ *         <p>
+ *         This class allows the user to edit details and characteristics of a unit existing on the board.
+ *         <p>
+ *         This class is dependent on DetailPane to work effectively.
+ */
+
 public class DetailEdit extends BaseUIManager<Node> {
 
 	private Pane pane;

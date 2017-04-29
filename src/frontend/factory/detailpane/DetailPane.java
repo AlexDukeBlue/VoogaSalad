@@ -1,7 +1,4 @@
-/**
- * @author Faith Rodriguez
- * Created 4/9/2017
- */
+
 package frontend.factory.detailpane;
 
 import backend.cell.Cell;
@@ -38,8 +35,8 @@ import java.util.stream.Collectors;
 /**
  * @author Faith Rodriguez
  *         <p>
- *         This class displays details about the units, as well as lets the user
- *         change aspects of a sprite and activate a unit or terrain's
+ *         This class displays details about any sprite that the user selects from the template pane,
+ *         as well as lets the user change aspects of a sprite and activate a unit or terrain's
  *         abilities.
  *         <p>
  *         This class is dependent on TemplatePane and CellView classes for its
@@ -112,6 +109,9 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		}
 	}
 
+	/**
+	 * Returns the entire detail pane region
+	 */
 	@Override
 	public Region getNode() {
 		return scrollPane;
