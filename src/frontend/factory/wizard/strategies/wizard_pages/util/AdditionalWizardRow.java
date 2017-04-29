@@ -63,6 +63,7 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region> {
 	 *            is interacted with.
 	 */
 	public AdditionalWizardRow(StringBinding description, Wizard<T> wizard) {
+		super(null);
 		initialize(description, wizard);
 	}
 

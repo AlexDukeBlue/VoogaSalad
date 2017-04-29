@@ -3,7 +3,7 @@ package frontend.factory.wizard.strategies;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.AbilitiesAdderPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
@@ -32,8 +32,9 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	 *            the AuthoringGameState that the UnitStrategy will use to
 	 *            instantiate the unit.
 	 */
-	public UnitStrategy(AuthoringGameState gameState) {
-		initialize(gameState);
+	public UnitStrategy(Controller controller) {
+		super(controller);
+		initialize();
 	}
 
 	/**
@@ -57,11 +58,11 @@ class UnitStrategy extends BaseStrategy<Unit> {
 		return unit;
 	}
 
-	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage("UnitNameDescription");
-		abilitiesAdderPage = new AbilitiesAdderPage(gameState, "UnitAbilitiesAdderDescription");
-		terrainMovePointPage = new TerrainMovePointPage(gameState, "UnitTerrainDescription");
-		gridPatternPage = new GridPatternPage(gameState, "UnitGridPatternDescription");
+	private void initialize() {
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "UnitNameDescription");
+		abilitiesAdderPage = new AbilitiesAdderPage(getController(), "UnitAbilitiesAdderDescription");
+		terrainMovePointPage = new TerrainMovePointPage(getController(), "UnitTerrainDescription");
+		gridPatternPage = new GridPatternPage(getController(), "UnitGridPatternDescription");
 
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
 	}

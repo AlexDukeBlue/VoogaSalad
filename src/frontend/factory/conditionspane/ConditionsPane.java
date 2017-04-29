@@ -72,7 +72,7 @@ public class ConditionsPane extends ClickableUIComponent<Region> implements Cond
 		VBox content = boxFactory.createConditionVBox(getPolyglot(), type);
 		content.setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
-		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
 		content.getChildren().add(addRemoveButton.getNode());
 
 		rulesPane.setContent(new ScrollPane(content));

@@ -2,7 +2,7 @@ package frontend.factory.wizard.strategies;
 
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.UnitMovePointPage;
 import javafx.beans.binding.StringBinding;
@@ -25,8 +25,9 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	 *            the AuthoringGameState that will be used to populate parts of
 	 *            the wizard.
 	 */
-	public TerrainStrategy(AuthoringGameState gameState) {
-		initialize(gameState);
+	public TerrainStrategy(Controller controller) {
+		super(controller);
+		initialize();
 	}
 
 	/**
@@ -46,9 +47,9 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		return getPolyglot().get("TerrainTitle");
 	}
 
-	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage("TerrainNameDescription");
-		unitMovePointPage = new UnitMovePointPage(gameState, "TerrainMovePointDescription");
+	private void initialize() {
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription");
+		unitMovePointPage = new UnitMovePointPage(getController(), "TerrainMovePointDescription");
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
 	}
 

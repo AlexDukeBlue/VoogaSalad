@@ -7,6 +7,7 @@ import backend.cell.Cell;
 import backend.cell.ModifiableCell;
 import backend.cell.Terrain;
 import backend.grid.Shape;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.SliderInputRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,8 +40,8 @@ public class GridInstantiationPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public GridInstantiationPage(String descriptionKey) {
-		super(descriptionKey);
+	public GridInstantiationPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
 		initialize();
 	}
 

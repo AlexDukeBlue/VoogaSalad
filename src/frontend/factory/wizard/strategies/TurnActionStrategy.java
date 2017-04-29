@@ -1,6 +1,7 @@
 package frontend.factory.wizard.strategies;
 
 import backend.util.Actionable;
+import controller.Controller;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -15,8 +16,8 @@ class TurnActionStrategy extends NameScriptBaseStrategy<Actionable> {
 	/**
 	 * Creates a new instance of TurnActionStrategy.
 	 */
-	public TurnActionStrategy() {
-		super("TurnActionNamePageDescription", "TurnActionScriptingPageDescription");
+	public TurnActionStrategy(Controller controller) {
+		super(controller, "TurnActionNamePageDescription", "TurnActionScriptingPageDescription");
 		setScriptPrompt("TurnAction_Example_");
 	}
 

@@ -1,6 +1,6 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.layout.Region;
@@ -26,9 +26,9 @@ public class UnitMovePointPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public UnitMovePointPage(AuthoringGameState gameState, String descriptionKey) {
-		super(descriptionKey);
-		initialize(gameState);
+	public UnitMovePointPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
+		initialize();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class UnitMovePointPage extends BaseWizardPage {
 		return numericInputRow.getValue();
 	}
 
-	private void initialize(AuthoringGameState gameState) {
+	private void initialize() {
 		numericInputRow = new NumericInputRow(null, getPolyglot().get("Default_UnitMovePoint_Title"),
 				new StringBinding() {
 

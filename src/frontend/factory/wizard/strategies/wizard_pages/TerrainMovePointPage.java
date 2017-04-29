@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import backend.cell.Terrain;
-import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
@@ -34,29 +34,14 @@ public class TerrainMovePointPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public TerrainMovePointPage(AuthoringGameState gameState, String descriptionKey) {
-		super(descriptionKey);
-		initialize(gameState);
+	public TerrainMovePointPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
+		initialize();
 	}
 
 	@Override
 	public Region getNode() {
 		return table.getNode();
-	}
-
-	private void initialize(AuthoringGameState gameState) {
-		table = new VerticalTableInputView();
-		movePointInput = new NumericInputRow(null, getPolyglot().get("TerrainMovePoint_RowPrompt"),
-				getPolyglot().get("Move_Points"));
-		table.getChildren().add(movePointInput);
-		rowToTerrain = new HashMap<>();
-		gameState.getTemplateByCategory(GameplayState.TERRAIN).forEach(terrain -> {
-			NumericInputRow row = new NumericInputRow(getImg(terrain.getImgPath()), terrain.getName(),
-					terrain.getDescription());
-			rowToTerrain.put(row, (Terrain) terrain);
-			table.getChildren().add(row);
-		});
-		canNextWritable().setValue(true);
 	}
 
 	public Map<Terrain, Integer> getTerrainMovePoints() {
@@ -66,6 +51,21 @@ public class TerrainMovePointPage extends BaseWizardPage {
 
 	public Integer getUnitMovePoints() {
 		return movePointInput.getValue();
+	}
+
+	private void initialize() {
+		table = new VerticalTableInputView();
+		movePointInput = new NumericInputRow(null, getPolyglot().get("TerrainMovePoint_RowPrompt"),
+				getPolyglot().get("Move_Points"));
+		table.getChildren().add(movePointInput);
+		rowToTerrain = new HashMap<>();
+		getController().getAuthoringGameState().getTemplateByCategory(GameplayState.TERRAIN).forEach(terrain -> {
+			NumericInputRow row = new NumericInputRow(getImg(terrain.getImgPath()), terrain.getName(),
+					terrain.getDescription());
+			rowToTerrain.put(row, (Terrain) terrain);
+			table.getChildren().add(row);
+		});
+		canNextWritable().setValue(true);
 	}
 
 }

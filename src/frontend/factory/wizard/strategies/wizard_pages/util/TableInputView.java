@@ -38,6 +38,7 @@ public abstract class TableInputView extends BaseUIManager<Region> {
 	 *            a collection of BaseUIManagers to add to the TableInputView
 	 */
 	public TableInputView(Collection<BaseUIManager<? extends Parent>> childrenToAdd) {
+		super(null);
 		children = FXCollections.observableArrayList();
 		children.addAll(childrenToAdd);
 		scrollPane = new ScrollPane();

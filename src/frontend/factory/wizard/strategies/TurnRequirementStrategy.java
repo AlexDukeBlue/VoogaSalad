@@ -1,6 +1,7 @@
 package frontend.factory.wizard.strategies;
 
 import backend.util.Requirement;
+import controller.Controller;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -14,8 +15,8 @@ class TurnRequirementStrategy extends NameScriptBaseStrategy<Requirement> {
 	/**
 	 * Creates a new instance of TurnReuirementStrategy.
 	 */
-	public TurnRequirementStrategy() {
-		super("TurnRequirementNamePageDescription", "TurnRequirementScriptingPageDescription");
+	public TurnRequirementStrategy(Controller controller) {
+		super(controller, "TurnRequirementNamePageDescription", "TurnRequirementScriptingPageDescription");
 		setScriptPrompt("TurnRequirement_Example_");
 	}
 

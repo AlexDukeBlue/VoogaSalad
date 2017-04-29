@@ -1,6 +1,7 @@
 package frontend.factory.wizard.strategies;
 
 import backend.unit.properties.InteractionModifier;
+import controller.Controller;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -15,8 +16,8 @@ class InteractionModifierStrategy extends NameScriptBaseStrategy<InteractionModi
 	/**
 	 * Creates a new InteractionModifierStrategy
 	 */
-	public InteractionModifierStrategy() {
-		super("InteractionModifierNamePageDescription", "InteractionModifierScriptingPageDescription");
+	public InteractionModifierStrategy(Controller controller) {
+		super(controller, "InteractionModifierNamePageDescription", "InteractionModifierScriptingPageDescription");
 	}
 
 	/**
