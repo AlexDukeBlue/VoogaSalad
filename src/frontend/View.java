@@ -184,8 +184,8 @@ public class View extends ClickableUIComponent<Region> {
 			}
 		});
 		setDividerPositions();
+		setMaxWidthsAndHeights();
 		SplitPane.setResizableWithParent(menuBar.getNode(), false);
-
 	}
 
 	private void setDividerPositions() {
@@ -195,6 +195,15 @@ public class View extends ClickableUIComponent<Region> {
 		innerSplitPane.setDividerPositions(getDoubleFromResourceBundle("innerSplitPaneDividerPosition1"),
 				getDoubleFromResourceBundle("innerSplitPaneDividerPosition2"));
 		outerSplitPane.setDividerPositions(getDoubleFromResourceBundle("outerSplitPaneDividerPosition1"));
+	}
+
+	private void setMaxWidthsAndHeights() {
+		rightPane.maxWidthProperty()
+				.bind(outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("RightPaneWidthMultiplier")));
+		conditionsPane.getNode().maxWidthProperty().bind(
+				outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("ConditionsPaneWidthMultiplier")));
+		bottomPane.maxHeightProperty()
+				.bind(outerSplitPane.heightProperty().multiply(getDoubleFromResourceBundle("BottomPaneHeightMultiplier")));
 	}
 
 	private double getDoubleFromResourceBundle(String key) {
@@ -252,7 +261,7 @@ public class View extends ClickableUIComponent<Region> {
 		if (!innerSplitPane.getItems().contains(conditionsPane.getNode())) {
 			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
-		if (!rightPane.getChildren().contains(tempPane.getNode())){
+		if (!rightPane.getChildren().contains(tempPane.getNode())) {
 			rightPane.getChildren().add(tempPane.getNode());
 		}
 	}
@@ -279,17 +288,17 @@ public class View extends ClickableUIComponent<Region> {
 		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
 		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
 		Optional<Team> chosenTeam = teams.showAndWait();
-		try{
+		try {
 			getController().joinTeam(chosenTeam.get().getName());
 		} catch (Exception e) {
-			if(!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()){
+			if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
 				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
 				alert.showAndWait();
 				getController().enterAuthoringMode();
 			} else {
-				//Do nothing
+				// Do nothing
 			}
 		}
 	}
