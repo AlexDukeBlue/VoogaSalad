@@ -16,6 +16,7 @@ import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
 import backend.unit.properties.UnitStat;
 import backend.util.AuthoringGameState;
+import backend.util.ModifiableVoogaCollection;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.util.BaseUIManager;
@@ -141,6 +142,8 @@ public class DetailEdit extends BaseUIManager<Node> {
 			String movePatternName = movePatternBox.getValue();
 			String playerName = playerNameBox.getValue();
 			getController().sendModifier((AuthoringGameState state) -> {
+//				ModifiableUnit newUnit = (ModifiableUnit) getTemplateByCategory("Unit").getAll().stream()
+//						.filter(x -> x.getName().equals(unitName));
 				ModifiableUnit newUnit = (ModifiableUnit) state.getGrid().get(unitLocation).getOccupantByName(unitName);
 				newUnit.setTerrainMoveCosts(finalCosts);
 				stats.forEach((names, values) -> ((ModifiableUnitStat) newUnit
@@ -156,6 +159,12 @@ public class DetailEdit extends BaseUIManager<Node> {
 			});
 
 		});
+	}
+
+	private ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection> getTemplateByCategory(
+			String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
