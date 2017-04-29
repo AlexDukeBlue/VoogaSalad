@@ -9,7 +9,6 @@ import frontend.factory.wizard.wizards.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.TerrainMovePointPage;
 import javafx.beans.binding.StringBinding;
-import util.polyglot.PolyglotException;
 
 /**
  * UnitStrategy implements the SelectionStrategy interface in order to allow the
@@ -47,33 +46,17 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewUnit"),
-				new StringBinding() {
+		imageNameDescriptionPage = new ImageNameDescriptionPage("UnitNameDescription");
+		abilitiesAdderPage = new AbilitiesAdderPage(gameState, "UnitAbilitiesAdderDescription");
+		terrainMovePointPage = new TerrainMovePointPage(gameState, "UnitTerrainDescription");
+		gridPatternPage = new GridPatternPage(gameState, "UnitGridPatternDescription");
 
-					@Override
-					protected String computeValue() {
-						return "";
-					}
-
-				});
-		abilitiesAdderPage = new AbilitiesAdderPage(gameState);
-		terrainMovePointPage = new TerrainMovePointPage(getPolyglot().get("Default_TerrainMovePoint_Title"),
-				getPolyglot().get("Default_TerrainMovePoint_Description"), gameState);
-		gridPatternPage = new GridPatternPage(getPolyglot().get("Default_MovePattern_Title"),
-				getPolyglot().get("Default_MovePattern_Description"), gameState);
-		getPolyglot().setOnLanguageChange(event -> {
-			try {
-				imageNameDescriptionPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				abilitiesAdderPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				terrainMovePointPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				gridPatternPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-			} catch (PolyglotException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("UnitTitle");
 	}
 
 }

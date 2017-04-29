@@ -6,6 +6,7 @@ import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ScriptingPage;
+import javafx.beans.binding.StringBinding;
 
 /**
  * ActiveAbilityStrategy implements the SelectionStrategy interface in order to
@@ -15,7 +16,7 @@ import frontend.factory.wizard.wizards.strategies.wizard_pages.ScriptingPage;
  *
  */
 class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
-	
+
 	private ImageNameDescriptionPage namePage;
 	private ScriptingPage scriptingPage;
 	private GridPatternPage gridPage;
@@ -26,14 +27,22 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	@Override
 	public ActiveAbility<?> finish() {
-		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(), (AbilityEffect<?>)(scriptingPage.getScriptEngine().get()),gridPage.getGridPattern(), namePage.getDescription().getValueSafe(), namePage.getImagePath()) : null;
+		return scriptingPage.getScriptEngine().isPresent()
+				? new ActiveAbility<>(namePage.getName(), (AbilityEffect<?>) (scriptingPage.getScriptEngine().get()),
+						gridPage.getGridPattern(), namePage.getDescription().getValueSafe(), namePage.getImagePath())
+				: null;
 	}
-	
-	private void initialize(AuthoringGameState gameState){
-		namePage = new ImageNameDescriptionPage();
-		scriptingPage = new ScriptingPage();
-		gridPage = new GridPatternPage(gameState);
-		getPages().addAll(namePage,scriptingPage,gridPage);
+
+	private void initialize(AuthoringGameState gameState) {
+		namePage = new ImageNameDescriptionPage("ActiveAbilityNameDescription");
+		scriptingPage = new ScriptingPage("ActiveAbilityScriptingDescription");
+		gridPage = new GridPatternPage(gameState, "ActiveAbilityGridPatternDescription");
+		getPages().addAll(namePage, scriptingPage, gridPage);
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("ActiveAbilityWizardTitle");
 	}
 
 }

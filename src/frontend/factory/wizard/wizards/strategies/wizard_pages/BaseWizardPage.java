@@ -18,19 +18,14 @@ import javafx.scene.layout.Region;
 abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPage {
 
 	private BooleanProperty canNext;
-	private StringBinding title, description;
+	private StringBinding description;
 
 	public BaseWizardPage() {
 		this("");
 	}
 
-	public BaseWizardPage(String title) {
-		this(title, "");
-	}
-
-	public BaseWizardPage(String title, String description) {
-		this.title = getPolyglot().get(title);
-		this.description = getPolyglot().get(description);
+	public BaseWizardPage(String descriptionKey) {
+		this.description = getPolyglot().get(descriptionKey);
 		canNext = new SimpleBooleanProperty(false);
 	}
 
@@ -40,23 +35,12 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	@Override
-	public void setTitle(StringBinding title) {
-		this.title = title;
-	}
-
-	@Override
-	public StringBinding getTitle() {
-		return title;
-	}
-
-	@Override
-	public void setDescription(StringBinding description) {
-		this.description = description;
-	}
-
-	@Override
 	public StringBinding getDescription() {
 		return description;
+	}
+
+	void setDescription(StringBinding description) {
+		this.description = description;
 	}
 
 	protected BooleanProperty canNextWritable() {

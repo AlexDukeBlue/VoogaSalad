@@ -2,7 +2,6 @@ package frontend.factory.wizard.wizards.strategies;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.ResourceBundle;
 
 import frontend.factory.wizard.wizards.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
@@ -35,12 +34,8 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	private BooleanProperty canPrevious, canNext, canFinish;
 	private BorderPane borderPane;
 	private ScrollPane scrollPane;
-	private VBox titleDescriptionBox;
-	private Label title;
-	private Label description;
-	private ResourceBundle bundle = ResourceBundle
-			.getBundle("frontend.factory.wizard.wizards.strategies.properties/BaseSelection");
-	// , new Locale("es", "MX")
+	private VBox descriptionBox;
+	private Label descriptionLabel;
 	private ObservableList<WizardPage> pages;
 
 	/**
@@ -110,8 +105,8 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		if (canGoToPage(newPageNum)) {
 			WizardPage page = pages.get(newPageNum);
 			scrollPane.setContent(page.getNode());
-			title.textProperty().bind(page.getTitle());
-			description.textProperty().bind(page.getDescription());
+			descriptionLabel.textProperty().unbind();
+			descriptionLabel.textProperty().bind(page.getDescription());
 
 			canPrevious.unbind();
 			canPrevious.setValue(newPageNum != 0);
@@ -143,12 +138,11 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		canFinish = new SimpleBooleanProperty(false);
 		borderPane = new BorderPane();
 		scrollPane = new ScrollPane();
-		title = new Label();
-		description = new Label();
-		titleDescriptionBox = new VBox();
-		titleDescriptionBox.getChildren().addAll(title, description);
-		titleDescriptionBox.setAlignment(Pos.CENTER);
-		borderPane.setTop(titleDescriptionBox);
+		descriptionLabel = new Label();
+		descriptionBox = new VBox();
+		descriptionBox.getChildren().add(descriptionLabel);
+		descriptionBox.setAlignment(Pos.CENTER);
+		borderPane.setTop(descriptionBox);
 		borderPane.setCenter(scrollPane);
 		this.pages = FXCollections.observableArrayList();
 		this.pages.addListener(new ListChangeListener<WizardPage>() {
@@ -159,25 +153,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 				}
 			}
 		});
-//		getPolyglot().setOnLanguageChange(event -> {
-//			try {
-//				//getPolyglot().setLanguage(getPolyglot().getLanguage());
-//				title.getPolyglot().setLanguage(getPolyglot().getLanguage());
-//				unitMovePointPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-//			} catch (PolyglotException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		});
-		
+
 		this.pages.addAll(pages);
-	}
-
-	protected ResourceBundle getBundle() {
-		return bundle;
-	}
-
-	protected String getString(String string) {
-		return bundle.getString(string);
 	}
 }

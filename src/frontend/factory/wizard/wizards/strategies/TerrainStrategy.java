@@ -5,7 +5,7 @@ import backend.cell.Terrain;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.UnitMovePointPage;
-import util.polyglot.PolyglotException;
+import javafx.beans.binding.StringBinding;
 
 /**
  * Strategy that extends BaseStrategy to instantiate a new Terrain object.
@@ -23,19 +23,9 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	}
 
 	private void initialize(AuthoringGameState gameState) {
-		imageNameDescriptionPage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewTerrain"));
-		unitMovePointPage = new UnitMovePointPage(gameState);
+		imageNameDescriptionPage = new ImageNameDescriptionPage("TerrainNameDescription");
+		unitMovePointPage = new UnitMovePointPage(gameState, "TerrainMovePointDescription");
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
-		getPolyglot().setOnLanguageChange(event -> {
-			try {
-				//getPolyglot().setLanguage(getPolyglot().getLanguage());
-				imageNameDescriptionPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				unitMovePointPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-			} catch (PolyglotException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
 	}
 
 	@Override
@@ -45,6 +35,11 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		terrain.setImgPath(imageNameDescriptionPage.getImagePath());
 		terrain.setDefaultMoveCost(unitMovePointPage.getValue());
 		return terrain;
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("TerrainTitle");
 	}
 
 }

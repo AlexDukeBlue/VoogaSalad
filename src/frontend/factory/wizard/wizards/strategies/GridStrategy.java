@@ -4,6 +4,7 @@ import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
+import javafx.beans.binding.StringBinding;
 
 public class GridStrategy extends BaseStrategy<ModifiableGameBoard> {
 
@@ -24,11 +25,14 @@ public class GridStrategy extends BaseStrategy<ModifiableGameBoard> {
 	}
 
 	private void initialize() {
-		boardNamePage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewBoard"),
-				getPolyglot().get("CreateNewBoardDesc"));
-		gridInstantiationPage = new GridInstantiationPage(getPolyglot().get("Default_GridInstantiation_Title"),
-				getPolyglot().get("Default_GridInstantiation_Description"));
+		boardNamePage = new ImageNameDescriptionPage("GridStrategyNameDescription");
+		gridInstantiationPage = new GridInstantiationPage("GridStrategyInstantiationDescription");
 		getPages().addAll(boardNamePage, gridInstantiationPage);
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("GridStrategyDescription");
 	}
 
 }

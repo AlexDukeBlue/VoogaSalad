@@ -84,6 +84,6 @@ public interface WizardStrategy<T> {
 	
 	ObservablePolyglot getPolyglot();
 	
-//	StringBinding getTitle();
+	StringBinding getTitle();
 
 }
