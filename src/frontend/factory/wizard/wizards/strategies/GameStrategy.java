@@ -56,6 +56,8 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 		gridInstantiationPage = new GridInstantiationPage("GameStrategyGridInstantiationDescription");
 		
 		additionalTeamWizardsPage = new AdditionalWizardsPage<Team>("GameStrategyAdditionalTeamWizardsDescription", "team", gameState);
+		additionalTeamWizardsPage.setTitle("AdditionalWizardsTeamTitle");
+		additionalTeamWizardsPage.setLabel("AdditionalWizardsTeamLabel");
 
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalTeamWizardsPage);
 	}

@@ -8,6 +8,7 @@ import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.AdditionalWizardRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
+import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -30,6 +31,14 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 	@Override
 	public Region getNode() {
 		return vbox;
+	}
+	
+	public void setTitle(String name){
+		numWizardRow.setName(name);
+	}
+	
+	public void setLabel(String label){
+		numWizardRow.setLabel(label);
 	}
 
 	public Collection<T> getObjects() {
