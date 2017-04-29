@@ -2,6 +2,7 @@ package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
@@ -9,6 +10,7 @@ import frontend.View;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
 import frontend.interfaces.worldview.GridViewExternal;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
@@ -26,6 +28,7 @@ import java.util.Set;
 class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal {
 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
+	public static final double FULL_CIRCLE = Math.PI * 2;
 	private final ScrollPane myScrollPane;
 	private final Pane cellViewObjects;
 	private final Map<CoordinateTuple, SimpleCellView> cellViews;
@@ -58,7 +61,15 @@ class SimpleGridView extends ClickableUIComponent<ScrollPane> implements GridVie
 	}
 
 	private void populateCellViews() {
-		cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		double width = MIN + ((MAX - MIN) * SCALE);
+		double radius = width /(Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
+		double xOffset = (getController().getGrid().getRows());
+		double inset = (0.7*xOffset)*radius;
+		if (getController().getShape().equals(Shape.SQUARE)){
+			cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, null)));
+		} else {
+			cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(View.getImg(getController().getGrid().getImgPath())), null, new Insets(-1*inset, 0, inset, 0))));
+		}
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			SimpleCellView cl = new SimpleCellView(coordinate, getController(), getClickHandler(), myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController().getGrid()));
 			cellViews.put(coordinate, cl);
