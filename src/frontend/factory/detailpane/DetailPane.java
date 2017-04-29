@@ -1,4 +1,3 @@
-
 package frontend.factory.detailpane;
 
 import backend.cell.Cell;
@@ -191,7 +190,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	}
 
 	private void createButton(VoogaEntity unit, String unitType) {
-		if ((unit instanceof Unit)) {
+		if (unit instanceof Unit) {
 			editBtn = new Button("Edit details");
 			infoPane.getChildren().add(editBtn);
 			editBtn.setOnMouseClicked(e -> {

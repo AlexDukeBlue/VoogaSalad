@@ -1,29 +1,19 @@
 package frontend.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Optional;
-
-import org.python.google.common.io.Resources;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 import util.scripting.VoogaScriptException;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Optional;
 
 /**
  * TODO: RESOUCE BUNDLE PLSSSS
@@ -33,14 +23,14 @@ import util.scripting.VoogaScriptException;
 public class ScriptingDialog extends BaseUIManager<Region> {
 	private final BorderPane pane;
 	private final TextArea scriptArea;
-	private final ComboBox<String> languagesMenu;
+	private final ChoiceBox<String> languagesMenu;
 	private VoogaScriptEngine scriptEngine;
 	private BooleanProperty hasCompiled;
 	private String strategy;
 
 	public ScriptingDialog() {
 		hasCompiled = new SimpleBooleanProperty(false);
-		languagesMenu = new ComboBox<>(FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
+		languagesMenu = new ChoiceBox<>(FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
 		pane = new BorderPane();
 		scriptArea = new TextArea();
 		Button compileButton = new Button();
@@ -60,17 +50,17 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		topBox.setAlignment(Pos.CENTER);
 		HBox bottomBox = new HBox(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
-		languagesMenu.setOnAction(event -> scriptArea.setPromptText(getResourceBundle().getString(strategy + languagesMenu.getValue())));
+		languagesMenu.setOnAction(event -> scriptArea.setText(VoogaScriptEngineManager.getDefaultText(languagesMenu.getValue())));
 		pane.setTop(topBox);
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);
 	}
-	
-	public ReadOnlyBooleanProperty hasCompiled(){
+
+	public ReadOnlyBooleanProperty hasCompiled() {
 		return hasCompiled;
 	}
-	
-	public void setPrompt(String strat){
+
+	public void setPrompt(String strat) {
 		scriptArea.setPromptText(getResourceBundle().getString(strat + languagesMenu.getValue()));
 		strategy = strat;
 	}
@@ -110,8 +100,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	public Region getNode() {
 		return pane;
 	}
-	
-	public String getLanguage(){
+
+	public String getLanguage() {
 		return languagesMenu.getValue();
 	}
 

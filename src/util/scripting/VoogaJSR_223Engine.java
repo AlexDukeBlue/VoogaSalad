@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author Created by th174 on 4/7/2017.
  */
 public abstract class VoogaJSR_223Engine implements VoogaScriptEngine {
-	private transient static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager();
+	protected transient static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager();
 	private transient ScriptEngine engine;
 	private transient CompiledScript compiledScript;
 	private String script;
@@ -18,6 +18,10 @@ public abstract class VoogaJSR_223Engine implements VoogaScriptEngine {
 	}
 
 	protected abstract String getEngineName();
+
+	protected final ScriptEngine getEngine(){
+		return engine;
+	}
 
 	@Override
 	public VoogaJSR_223Engine setScript(String script) throws VoogaScriptException {
@@ -37,11 +41,12 @@ public abstract class VoogaJSR_223Engine implements VoogaScriptEngine {
 	@Override
 	public Object eval(Map<String, Object> bindings) throws VoogaScriptException {
 		try {
-			if (Objects.isNull(engine)) {
+			if (Objects.isNull(engine) || Objects.isNull(compiledScript)) {
 				engine = SCRIPT_ENGINE_MANAGER.getEngineByName(getEngineName());
+				engine.setBindings(new SimpleBindings(bindings),ScriptContext.ENGINE_SCOPE);
 				compiledScript = ((Compilable) engine).compile(getScript());
 			}
-			return compiledScript.eval(new SimpleBindings(bindings));
+			return compiledScript.eval();
 		} catch (ScriptException e) {
 			throw new VoogaScriptException(e);
 		}

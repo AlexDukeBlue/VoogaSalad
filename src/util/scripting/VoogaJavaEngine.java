@@ -29,6 +29,7 @@ public class VoogaJavaEngine implements VoogaScriptEngine {
 				.mapToObj(i -> temp[i].getCanonicalName() + " " + paramNames[i])
 				.collect(Collectors.joining(", "));
 		String output = String.format(fullSource, methodArgs);
+		Files.createDirectories(Paths.get(srcPath).getParent());
 		Files.write(Paths.get(srcPath), output.getBytes());
 		compiler.run(null, null, null,
 				srcPath,
