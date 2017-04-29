@@ -1,6 +1,7 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
 import backend.grid.GridPattern;
+import backend.util.AuthoringGameState;
 import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.WizardGrid;
 import javafx.scene.layout.Region;
@@ -28,13 +29,13 @@ public class GridPatternPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public GridPatternPage(AuthoringGameState gameState, String descriptionKey, Paint unselectedPaint, Paint selectedPaint) {
-		super(descriptionKey);
-		initialize(gameState, unselectedPaint, selectedPaint);
+	public GridPatternPage(Controller controller, String descriptionKey, Paint unselectedPaint, Paint selectedPaint) {
+		super(controller, descriptionKey);
+		initialize(unselectedPaint, selectedPaint);
 	}
 
-	private void initialize(AuthoringGameState gameState, Paint unselectedPaint, Paint selectedPaint) {
-		grid = new WizardGrid(gameState, unselectedPaint, selectedPaint);
+	private void initialize(Paint unselectedPaint, Paint selectedPaint) {
+		grid = new WizardGrid(getController().getAuthoringGameState(), unselectedPaint, selectedPaint);
 		canNextWritable().setValue(true);
 	}
 

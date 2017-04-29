@@ -59,10 +59,12 @@ public class WizardGrid extends BaseUIManager<Region> {
 	 *            characteristics of the AuthoringGameState.
 	 */
 	public WizardGrid(AuthoringGameState gameState, Paint unselectedPaint, Paint selectedPaint) {
+		super(null);
 		this.unselectedPaint = unselectedPaint;
 		this.selectedPaint = selectedPaint;
 		initialize(gameState);
 	}
+
 
 	@Override
 	public Region getNode() {
