@@ -2,12 +2,12 @@ package frontend.interfaces.templatepane;
 
 import frontend.ClickHandler;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
 import util.polyglot.Polyglot;
 
 public interface TemplatePaneExternal {
 
-	VBox getNode();
+	Region getNode();
 
 	Polyglot getPolyglot();
 
