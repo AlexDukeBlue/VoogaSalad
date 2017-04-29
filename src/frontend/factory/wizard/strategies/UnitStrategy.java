@@ -9,6 +9,7 @@ import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.TerrainMovePointPage;
 import javafx.beans.binding.StringBinding;
+import javafx.scene.paint.Color;
 
 /**
  * UnitStrategy implements the SelectionStrategy interface in order to allow the
@@ -22,6 +23,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	private AbilitiesAdderPage abilitiesAdderPage;
 	private TerrainMovePointPage terrainMovePointPage;
 	private GridPatternPage gridPatternPage;
+	private GridPatternPage gridPatternPageRange;
 
 	/**
 	 * Creates a new instance of UnitStrategy. Uses the gameState to gather
@@ -61,9 +63,10 @@ class UnitStrategy extends BaseStrategy<Unit> {
 		imageNameDescriptionPage = new ImageNameDescriptionPage("UnitNameDescription");
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState, "UnitAbilitiesAdderDescription");
 		terrainMovePointPage = new TerrainMovePointPage(gameState, "UnitTerrainDescription");
-		gridPatternPage = new GridPatternPage(gameState, "UnitGridPatternDescription");
+		gridPatternPage = new GridPatternPage(gameState, "UnitGridPatternDescription", Color.WHITE, Color.GREEN);
+		gridPatternPageRange = new GridPatternPage(gameState, "UnitGridPatternDescription", Color.WHITE, Color.YELLOW);
 
-		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
+		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage, gridPatternPageRange);
 	}
 
 	@Override
