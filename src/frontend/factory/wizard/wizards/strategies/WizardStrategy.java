@@ -1,7 +1,8 @@
 package frontend.factory.wizard.wizards.strategies;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.scene.Node;
+import javafx.scene.layout.Region;
 import util.polyglot_extended.ObservablePolyglot;
 
 /**
@@ -52,7 +53,7 @@ public interface WizardStrategy<T> {
 	 * @return the object that displays to the user to allow the user to input
 	 *         settings.
 	 */
-	Node getNode();
+	Region getNode();
 
 	/**
 	 * Called to make the strategy go to the previous page to allow the user to
@@ -82,5 +83,7 @@ public interface WizardStrategy<T> {
 	T finish();
 	
 	ObservablePolyglot getPolyglot();
+	
+	StringBinding getTitle();
 
 }

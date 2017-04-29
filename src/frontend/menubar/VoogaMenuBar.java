@@ -57,6 +57,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		menuBar.setUseSystemMenuBar(SYSTEM_MENU_BAR);
 		factory = new ComponentFactory();
 		populateMenuBar();
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 	}
 
 	public void setEditable(boolean editable) {
@@ -110,12 +111,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
-			WizardFactory.newWizard("grid", getController().getAuthoringGameState()).addObserver((observer, object) -> {
+			WizardFactory.newWizard("grid", getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((observer, object) -> {
 				getController().setGrid((GameBoard) object);
 			});
 		});
 		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
-			WizardFactory.newWizard("team", getController().getAuthoringGameState()).addObserver((observer, object) -> {
+			WizardFactory.newWizard("team", getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((observer, object) -> {
 				getController().addTeams((Team) object);
 			});
 		});
@@ -138,7 +139,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		}
 		setThemeItem = factory.getMenu(getPolyglot().get("SetTheme"));
 		getPossibleStyleSheetNamesAndFileNames().forEach((name, fileName) -> {
-			MenuItem menuItem = new MenuItem(name);
+			MenuItem menuItem = new MenuItem();
+			menuItem.textProperty().bind(getPolyglot().get(name));
 			menuItem.setOnAction(event -> getStyleSheet().setValue(fileName));
 			setThemeItem.getItems().add(menuItem);
 		});
@@ -251,7 +253,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState());
+		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue());
 		try {
 			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
 		} catch (PolyglotException e) {

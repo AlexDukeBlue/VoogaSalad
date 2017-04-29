@@ -3,6 +3,7 @@
  */
 package frontend.interfaces.conditionspane;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.layout.Region;
 import util.polyglot.Polyglot;
 
@@ -14,5 +15,7 @@ public interface ConditionsPaneExternal {
 	Region getNode();
 
 	Polyglot getPolyglot();
+
+	ObjectProperty<String> getStyleSheet();
 
 }

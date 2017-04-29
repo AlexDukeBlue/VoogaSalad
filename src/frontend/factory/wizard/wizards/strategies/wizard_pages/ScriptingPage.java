@@ -10,7 +10,8 @@ public class ScriptingPage extends BaseWizardPage {
 
 	private ScriptingDialog dialog;
 
-	public ScriptingPage() {
+	public ScriptingPage(String descriptionKey) {
+		super(descriptionKey);
 		dialog = new ScriptingDialog();
 		canNextWritable().bind(dialog.hasCompiled());
 	}

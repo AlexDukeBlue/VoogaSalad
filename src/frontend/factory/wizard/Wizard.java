@@ -1,19 +1,15 @@
 package frontend.factory.wizard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import frontend.factory.wizard.wizards.strategies.WizardStrategy;
-import frontend.factory.wizard.wizards.strategies.wizard_pages.util.ButtonBar;
 import frontend.util.BaseUIManager;
-import javafx.beans.binding.StringBinding;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.layout.Region;
-import javafx.stage.Stage;
+import javafx.stage.Modality;
 import util.polyglot.PolyglotException;
 
 /**
@@ -35,24 +31,9 @@ import util.polyglot.PolyglotException;
  *            The object type that the wizard will return after instantiation.
  */
 public class Wizard<T> extends BaseUIManager<Region> {
-	private static final Collection<String> buttonNames = new ArrayList<>(
-			Arrays.asList("Cancel", "Previous", "Next", "Finish"));
 
 	private WizardStrategy<T> selectionStrategy;
-	private BorderPane borderPane;
-	private Stage stage;
-	private Map<String,StringBinding> buttonBindings;
-
-	/**
-	 * Creates a new Wizard object using the SelectionStrategy specified.
-	 * Creates a new stage for the wizard. Sets all values to default.
-	 * 
-	 * @param selectionStrategy
-	 *            WizardStrategy to use when populating the wizard's pages.
-	 */
-	Wizard(WizardStrategy<T> selectionStrategy) {
-		this(new Stage(), selectionStrategy);
-	}
+	private Dialog<Scene> dialog;
 
 	/**
 	 * Creates a new Wizard object using the SelectionStrategy specified and
@@ -63,8 +44,8 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	 * @param selectionStrategy
 	 *            WizardStrategy to use when populating the wizard's pages.
 	 */
-	Wizard(Stage stage, WizardStrategy<T> selectionStrategy) {
-		initialize(stage, selectionStrategy);
+	Wizard(WizardStrategy<T> selectionStrategy) {
+		initialize(selectionStrategy);
 	}
 
 	/**
@@ -72,15 +53,15 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	 */
 	@Override
 	public Region getNode() {
-		return borderPane;
+		return selectionStrategy.getNode();
 	}
 
 	public void show() {
-		stage.show();
+		dialog.show();
 	}
 
 	public void hide() {
-		stage.hide();
+		dialog.hide();
 	}
 
 	private void previous() {
@@ -92,42 +73,19 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	}
 
 	private void cancel() {
-		stage.close();
+		dialog.close();
 	}
 
 	private void finish() {
 		setChanged();
 		notifyObservers(selectionStrategy.finish());
 		clearChanged();
-		stage.close();
+		dialog.close();
 	}
 
-	private void initialize(Stage stage, WizardStrategy<T> selectionStrategy) {
-		this.stage = stage;
+	private void initialize(WizardStrategy<T> selectionStrategy) {
 		this.selectionStrategy = selectionStrategy;
-		borderPane = new BorderPane();
-		buttonBindings = new HashMap<String,StringBinding>();
-		ArrayList<StringBinding> stringBindings = new ArrayList<>();
-		buttonNames.stream().forEachOrdered(e -> {
-			StringBinding binding = getPolyglot().get(e);
-			buttonBindings.put(e,binding);
-			stringBindings.add(binding);
-		});
-		ButtonBar buttonBar = new ButtonBar(stringBindings);
-		buttonBar.getButton(buttonBindings.get("Previous")).disableProperty().bind(selectionStrategy.canPrevious().not());
-		buttonBar.getButton(buttonBindings.get("Next")).disableProperty().bind(selectionStrategy.canNext().not());
-		buttonBar.getButton(buttonBindings.get("Next")).setDefaultButton(true);
-		buttonBar.getButton(buttonBindings.get("Finish")).disableProperty().bind(selectionStrategy.canFinish().not());
-		buttonBar.getButton(buttonBindings.get("Finish")).setDefaultButton(true);
-		buttonBar.getButton(buttonBindings.get("Previous")).setOnAction(event -> previous());
-		buttonBar.getButton(buttonBindings.get("Next")).setOnAction(event -> next());
-		buttonBar.getButton(buttonBindings.get("Cancel")).setOnAction(event -> cancel());
-		buttonBar.getButton(buttonBindings.get("Cancel")).setCancelButton(true);
-		buttonBar.getButton(buttonBindings.get("Finish")).setOnAction(event -> finish());
 
-		borderPane.setCenter(selectionStrategy.getNode());
-		borderPane.setBottom(buttonBar.getNode());
-		
 		getPolyglot().setOnLanguageChange(event -> {
 			try {
 				selectionStrategy.getPolyglot().setLanguage(getPolyglot().getLanguage());
@@ -136,9 +94,46 @@ public class Wizard<T> extends BaseUIManager<Region> {
 				e.printStackTrace();
 			}
 		});
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
-		stage.setScene(new Scene(borderPane));
+		dialog = new Dialog<>();
+		DialogPane dialogPane = new DialogPane();
+		dialogPane.setContent(selectionStrategy.getNode());
+
+		dialog.setDialogPane(dialogPane);
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.setResizable(true);
+		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.NEXT, ButtonType.PREVIOUS,
+				ButtonType.FINISH);
+		dialog.titleProperty().bind(selectionStrategy.getTitle());
+
+		dialog.getDialogPane().lookupButton(ButtonType.NEXT).addEventFilter(ActionEvent.ACTION,
+				event -> event.consume());
+		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).addEventFilter(ActionEvent.ACTION,
+				event -> event.consume());
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION,
+				event -> event.consume());
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).addEventFilter(ActionEvent.ACTION, event -> finish());
+
+		dialog.getDialogPane().lookupButton(ButtonType.NEXT).setOnMouseClicked(event -> next());
+		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).setOnMouseClicked(event -> previous());
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setOnMouseClicked(event -> cancel());
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).setOnMouseClicked(event -> finish());
+
+		dialog.getDialogPane().lookupButton(ButtonType.NEXT).disableProperty().bind(selectionStrategy.canNext().not());
+		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).disableProperty()
+				.bind(selectionStrategy.canPrevious().not());
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).disableProperty()
+				.bind(selectionStrategy.canFinish().not());
+		((Button) (dialog.getDialogPane().lookupButton(ButtonType.NEXT))).defaultButtonProperty()
+				.bind(selectionStrategy.canNext());
+		((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).defaultButtonProperty()
+				.bind(selectionStrategy.canFinish());
+		
+		dialog.getDialogPane().lookupButton(ButtonType.NEXT).accessibleTextProperty().bind(getPolyglot().get("Next"));
+		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).accessibleTextProperty().bind(getPolyglot().get("Previous"));
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).accessibleTextProperty().bind(getPolyglot().get("Finish"));
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).accessibleTextProperty().bind(getPolyglot().get("Cancel"));
+
+
 		show();
 	}
 
