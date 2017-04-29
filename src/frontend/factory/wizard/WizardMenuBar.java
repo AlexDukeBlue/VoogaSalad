@@ -14,11 +14,27 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 
+/**
+ * The Wizard Menu Bar produces a menu bar object with the items necessary to
+ * run a Wizard that can create any object. Some of its possible functions
+ * include: loading an object from a file instead of having to go through the
+ * whole wizard, changing the Wizard's language, changing the wizard's
+ * StyleSheet/theme.
+ * 
+ * @author Dylan Peters
+ *
+ * @param <T>
+ *            the object type of the wizard; this is the type of object that the
+ *            wizard is attempting to create.
+ */
 class WizardMenuBar<T> extends BaseUIManager<MenuBar> {
 
 	private MenuBar menuBar;
 	private T objectToReturn;
 
+	/**
+	 * Creates a new instance of WizardMenuBar. Sets all values to defaults.
+	 */
 	WizardMenuBar() {
 		menuBar = new MenuBar();
 		menuBar.setUseSystemMenuBar(Boolean.parseBoolean(getResourceBundle().getString("Use_System_Menu_Bar")));
