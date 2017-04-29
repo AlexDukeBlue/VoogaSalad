@@ -3,6 +3,13 @@
  */
 package frontend.menubar;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 import backend.grid.GameBoard;
 import backend.player.Team;
 import backend.util.VoogaEntity;
@@ -14,8 +21,9 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -26,14 +34,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import polyglot.PolyglotException;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Optional;
+import util.polyglot.PolyglotException;
 
 /**
  * @author Stone Mathers Created 4/18/2017
@@ -42,8 +43,9 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
 
 	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
-	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem, newGridItem, newTeamItem,
-			conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem, editModeItem, playModeItem, helpItem, aboutItem, undoItem, joinTeam;
+	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
+			newGridItem, newTeamItem, conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem,
+			editModeItem, playModeItem, helpItem, aboutItem, undoItem, joinTeam;
 	private ComponentFactory factory;
 	private MenuBar menuBar;
 	private View myView;
@@ -81,7 +83,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	public void update() {
 		setEditable(getController().isAuthoringMode());
 	}
-	
+
 	protected void populateMenuBar() {
 		initMenuItems();
 		initMenus();
@@ -93,12 +95,11 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		loadItem = factory.getMenuItem(getPolyglot().get("Load"), e -> load());
 		homeScreenItem = factory.getMenuItem(getPolyglot().get("HomeScreen"), e -> {
 
-			StartupScreen su = new StartupScreen(myView.getStage(), StartupScreen.DEFAULT_WIDTH,
-					StartupScreen.DEFAULT_HEIGHT);
-			myView.getStage().setScene(new Scene(su.getPrimaryPane()));
+			myView.getStage().setScene(new Scene(new StartupScreen(myView.getStage()).getNode()));
 
 		});
-		homeScreenItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
+		homeScreenItem.setAccelerator(
+				new KeyCodeCombination(KeyCode.H, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
 		quitItem = factory.getMenuItem(getPolyglot().get("Quit"), e -> System.exit(0));
 		quitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
 		undoItem = factory.getMenuItem(getPolyglot().get("Undo"), e -> getController().undo());
@@ -150,8 +151,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		playModeItem = factory.getMenuItem(getPolyglot().get("PlayMode"), e -> enterGamePlayMode());
 		playModeItem.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 
-		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser("frontend/menubar/help.html"));
-		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> showBrowser("frontend/menubar/about.html"));
+		helpItem = factory.getMenuItem(getPolyglot().get("Help"), e -> showBrowser(getResourceBundle().getString("HelpPage")));
+		aboutItem = factory.getMenuItem(getPolyglot().get("About"), e -> showBrowser(getResourceBundle().getString("AboutPage")));
 
 	}
 
@@ -231,8 +232,8 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			getController().setGameState(
-					getController().load(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
+			getController()
+					.setGameState(getController().load(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (NullPointerException e) {
@@ -257,11 +258,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			e.printStackTrace();
 
 		}
-		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState().getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
+		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState()
+				.getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
 	}
-	
+
 	private void enterGamePlayMode() {
-		if(getController().getTeamTemplates().size() == 0){
+		if (getController().getTeamTemplates().size() == 0) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.titleProperty().bind(getPolyglot().get("NoTeamsTitle"));
 			alert.headerTextProperty().bind(getPolyglot().get("NoTeamsHeader"));

@@ -9,7 +9,7 @@ import frontend.factory.wizard.wizards.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.TerrainMovePointPage;
 import javafx.beans.binding.StringBinding;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 /**
  * UnitStrategy implements the SelectionStrategy interface in order to allow the

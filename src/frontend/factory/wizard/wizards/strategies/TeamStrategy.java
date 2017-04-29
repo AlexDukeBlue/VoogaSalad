@@ -5,7 +5,7 @@ import java.util.Collections;
 import backend.player.Team;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ColorPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
-import polyglot.PolyglotException;
+import util.polyglot.PolyglotException;
 
 class TeamStrategy extends BaseStrategy<Team> {
 
