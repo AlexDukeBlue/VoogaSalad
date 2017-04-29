@@ -1,6 +1,5 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import frontend.View;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -93,7 +92,7 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		File file = choose.showOpenDialog(null);
 		if (file != null) {
 			imagePath = Paths.get(System.getProperty("user.dir")).relativize(Paths.get(file.getPath())).toString();
-			imageView.setImage(View.getImg(imagePath));
+			imageView.setImage(getImg(imagePath));
 		}
 	}
 

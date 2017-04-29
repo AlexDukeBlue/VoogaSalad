@@ -30,14 +30,13 @@ public class ClickHandler {
 	private final AbilityPane abilityPane;
 	private final GridViewExternal gridPane;
 	private Mode currentMode;
-	private SoundHandler sound;
+//	private SoundHandler sound;
 
 	public ClickHandler(DetailPaneExternal detailPane, AbilityPane abilityPane, GridViewExternal gridPane, Mode currentMode) {
 		this.detailPane = detailPane;
 		this.abilityPane = abilityPane;
 		this.gridPane = gridPane;
 		this.currentMode = currentMode;
-		 sound = new SoundHandler();
 	}
 
 	/**
@@ -86,11 +85,11 @@ public class ClickHandler {
 		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getNode());
 		selectedComponent.select(this);
 		showDetail(selectedComponent);
-		sound.playSound(false, "resources/click.wav");
+//		sound.playSound(false, "resources/click.wav");
 	}
 
 	protected void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event) {
-		sound.playSound(false, "resources/plop.wav");
+//		sound.playSound(false, "resources/plop.wav");
 		if (currentMode.equals(Mode.AUTHORING)) {
 			selectedComponent.actInAuthoringMode(actionTarget, additionalInfo, this, event);
 		} else if (currentMode.equals(Mode.GAMEPLAY)) {

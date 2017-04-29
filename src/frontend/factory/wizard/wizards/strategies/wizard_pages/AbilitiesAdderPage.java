@@ -1,20 +1,19 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import backend.unit.properties.ActiveAbility;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.HasShape;
-import frontend.View;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.scene.layout.Region;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The WizardPage for letting users add abilities
@@ -46,7 +45,7 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 		rowToAbility = new HashMap<>();
 		gameState.getTemplateByCategory(GameplayState.ACTIVE_ABILITY).stream()
 				.filter(e -> ((HasShape) e).getShape().equals(gameState.getGrid().getShape())).forEach(ability -> {
-					SelectableInputRow row = new SelectableInputRow(View.getImg(ability.getImgPath()),
+					SelectableInputRow row = new SelectableInputRow(getImg(ability.getImgPath()),
 							ability.getName(), ability.getDescription());
 					rowToAbility.put(row, (ActiveAbility<?>) ability);
 					table.getChildren().add(row);

@@ -16,7 +16,7 @@ import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
-import frontend.View;
+import frontend.util.BaseUIManager;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
 import util.io.Serializer;
@@ -387,7 +387,9 @@ public class CommunicationController implements Controller {
 				sendModifier(state -> {
 					Path newFilePath = Paths.get(path);
 					if (Files.notExists(newFilePath)) {
-						Files.createDirectories(newFilePath.getParent());
+						if (Objects.nonNull(newFilePath.getParent())) {
+							Files.createDirectories(newFilePath.getParent());
+						}
 						Files.write(newFilePath, buffer);
 					}
 					return state;
@@ -491,7 +493,7 @@ public class CommunicationController implements Controller {
 	private synchronized void updateGameState() {
 		updateAll();
 		if (isHost && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
-			View.getAllImagePaths().forEach(this::sendFile);
+			BaseUIManager.getResourcePaths().forEach(this::sendFile);
 		}
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();

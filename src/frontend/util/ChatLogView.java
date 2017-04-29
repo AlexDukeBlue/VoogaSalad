@@ -2,7 +2,6 @@ package frontend.util;
 
 import backend.player.ChatMessage;
 import controller.Controller;
-import frontend.View;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
@@ -43,7 +42,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		String formatString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----" + getPolyglot().get("Joined").getValueSafe() + " [No place like 127.0.0.1]'s " + getPolyglot().get("chat room").getValueSafe() + "!----\n\n---%s----\n\n";
 		header = String.format(formatString, Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)));
 		pane = new BorderPane();
-		showHideArrow = new ImageView(View.getImg(getResourceBundle().getString("trianglePath")));
+		showHideArrow = new ImageView(getImg(getResourceBundle().getString("trianglePath")));
 		showHideArrow.setSmooth(true);
 		showHideArrow.setOnMouseClicked(event -> setExpandedState(!isExpanded()));
 		showHideArrow.setFitWidth(20);

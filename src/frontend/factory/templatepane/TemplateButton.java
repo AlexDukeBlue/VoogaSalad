@@ -2,10 +2,12 @@ package frontend.factory.templatepane;
 
 import backend.grid.BoundsHandler;
 import backend.util.HasLocation;
+import backend.util.HasSound;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
+import frontend.interfaces.worldview.CellViewExternal;
 import frontend.util.AddRemoveButton;
 import frontend.util.GameBoardObjectView;
 import frontend.util.VoogaEntityButton;
@@ -31,6 +33,9 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 			getController().setBoundsHandler(getEntity().getName());
 		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			getController().copyTemplateToGrid(getEntity(), (HasLocation) ((GameBoardObjectView) target).getEntity());
+			if (((GameBoardObjectView) target).getEntity() instanceof CellViewExternal) {
+				playMedia(((HasSound) ((GameBoardObjectView) target).getEntity()).getSoundPath());
+			}
 		}
 		super.actInAuthoringMode(target, additionalInfo, clickHandler, event);
 	}
