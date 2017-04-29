@@ -14,4 +14,6 @@ public interface CellViewExternal extends GameBoardObjectView {
 	void darken();
 
 	void unDarken();
+
+	void playSound();
 }

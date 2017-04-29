@@ -5,7 +5,6 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.SoundHandler;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.util.AddRemoveButton;
@@ -20,7 +19,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -43,14 +45,15 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	private Map<String, VBox> contents;
 
 	public TemplatePane(Controller controller, ClickHandler clickHandler, String... templateCategories) {
-		super(controller, clickHandler);;
+		super(controller, clickHandler);
+		;
 		contents = new HashMap<>();
 		templateNamesCache = new HashMap<>();
 		Arrays.stream(templateCategories)
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		update();
-		
+
 	}
 
 	@Override
@@ -89,7 +92,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
-		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState(), getPolyglot().getLanguage(), getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
 		VBox box = new VBox(scroller, addRemoveButton.getNode());
 		box.setSpacing(2);
 		box.setPadding(new Insets(2, 2, 2, 2));

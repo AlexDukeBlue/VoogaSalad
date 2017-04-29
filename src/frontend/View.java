@@ -39,7 +39,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
@@ -48,25 +47,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class View extends ClickableUIComponent<Region> {
-	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private static final int CONDITIONS_PANE_POS = 0;
 	private final Stage myStage;
-
-	static {
-		try {
-			IMAGE_CACHE.put("", new Image(new FileInputStream("resources/images/transparent.png")));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private SplitPane outerSplitPane;
 	private SplitPane innerSplitPane;
@@ -154,7 +139,7 @@ public class View extends ClickableUIComponent<Region> {
 		endTurnButton.setMinWidth(70);
 		endTurnButton.setPadding(new Insets(5, 2, 5, 2));
 		endTurnButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
-		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
+		ImageView cancelImg = new ImageView(getImg(getResourceBundle().getString("cancelImgPath")));
 		cancelImg.setPreserveRatio(true);
 		cancelImg.setSmooth(true);
 		cancelImg.setFitWidth(50);
@@ -306,21 +291,6 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane.setClickHandler(clickHandler);
 		worldView.setClickHandler(clickHandler);
 		detailPane.setClickHandler(clickHandler);
-	}
-
-	public static Image getImg(String imgPath) {
-		if (!IMAGE_CACHE.containsKey(imgPath)) {
-			try {
-				IMAGE_CACHE.put(imgPath, new Image(new FileInputStream(imgPath)));
-			} catch (Exception e) {
-				System.err.println("Error opening image: " + imgPath + "\t" + e.toString());
-			}
-		}
-		return IMAGE_CACHE.getOrDefault(imgPath, IMAGE_CACHE.get(""));
-	}
-
-	public static Collection<String> getAllImagePaths(){
-		return IMAGE_CACHE.keySet();
 	}
 
 	@Override

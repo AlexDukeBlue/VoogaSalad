@@ -1,18 +1,15 @@
 package frontend.util;
 
-import frontend.View;
 import javafx.beans.binding.StringBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 import java.io.File;
-import java.net.URL;
 
 /**
  * @author Alexander Zapata
@@ -91,28 +88,5 @@ public class ComponentFactory {
 		return myChooser;
 	}
 
-	/**
-	 * Returns an image of size x,y with the image from the given URLString.
-	 * If invalid, returns an "oopsImage" of pre-set URLString
-	 *
-	 * @param imageURL
-	 * @param x
-	 * @param y
-	 * @return Image
-	 */
-	public Image getURLImage(String imageURL, int x, int y) {
-		Image img = null;
-		try {
-			URL url = new URL(imageURL);
-			img = (Image) url.getContent();
-			url.openConnection();
-			//don't create images, use View.getImg
-			img = new Image(imageURL, x, y, true, false);
-		} catch (Exception e) {
-			return View.getImg(oopsURL);
-//			System.out.println("No Image");
-		}
-		return img;
-	}
 }
 
