@@ -54,7 +54,8 @@ public class CommunicationController implements Controller {
 	private final CountDownLatch waitForReady;
 	private boolean isHost;
 	private int playerCountCache;
-	private ObservableClient<ReadonlyGameplayState> mClient;
+	private ObservableClient<ReadonlyGameplayState> client;
+	private ObservableServer<ReadonlyGameplayState> server;
 	private String playerName;
 	private Deque<Path> saveHistory;
 
@@ -73,9 +74,9 @@ public class CommunicationController implements Controller {
 
 	public void startClient(String host, int port, Duration timeout) {
 		try {
-			mClient = new ObservableClient<>(host, port, XML, XML, timeout);
-			mClient.addListener(newGameState -> updateGameState());
-			executor.execute(mClient);
+			client = new ObservableClient<>(host, port, XML, XML, timeout);
+			client.addListener(newGameState -> updateGameState());
+			executor.execute(client);
 			setPlayer(this.playerName, "", "");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -85,7 +86,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void startServer(ReadonlyGameplayState gameState, int port, Duration timeout) {
 		try {
-			ObservableServer<ReadonlyGameplayState> server = new ObservableServer<>(gameState, port, XML, XML, timeout);
+			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
 			isHost = true;
 			System.out.println("Server started successfully on port: " + port);
@@ -139,11 +140,11 @@ public class CommunicationController implements Controller {
 	}
 
 	public ObservableClient<ReadonlyGameplayState> getClient() {
-		return mClient;
+		return client;
 	}
 
 	public void setClient(ObservableClient<ReadonlyGameplayState> client) {
-		this.mClient = client;
+		this.client = client;
 	}
 
 	@Override
@@ -183,7 +184,7 @@ public class CommunicationController implements Controller {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		mClient.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
+		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 	}
 
 	@Override
@@ -492,7 +493,7 @@ public class CommunicationController implements Controller {
 
 	private synchronized void updateGameState() {
 		updateAll();
-		if (isHost && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
+		if (Objects.nonNull(server) && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
 			BaseUIManager.getResourcePaths().forEach(this::sendFile);
 		}
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
