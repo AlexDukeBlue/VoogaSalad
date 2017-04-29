@@ -15,16 +15,25 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * The intro screen containing a "create new game" button.
+ * The StartupSelectionScreen sets up a Node that can be displayed to allow the
+ * user to select whether to start a new game, load a previously saved game, or
+ * join a game that is currently being hosted.
  *
  * @authors Sam, ncp14, Stone Mathers, Dylan Peters
  */
-public class StartupSelectionScreen extends BaseUIManager<Node> {
+class StartupSelectionScreen extends BaseUIManager<Node> {
 	private static final Collection<String> buttonNames = new ArrayList<>(Arrays.asList("create", "join", "play"));
 
 	private VBox vbox;
 
-	public StartupSelectionScreen(Stage stage) {
+	/**
+	 * Creates a new instance of the StartupSelectionScreen with a reference to
+	 * the Stage object being passed to it.
+	 * 
+	 * @param stage
+	 *            the stage on which the game will be placed.
+	 */
+	StartupSelectionScreen(Stage stage) {
 		initializePane(stage);
 	}
 
@@ -49,10 +58,13 @@ public class StartupSelectionScreen extends BaseUIManager<Node> {
 				}
 			});
 		});
-		vbox.setPadding(new Insets(30, 10, 10, 10));
-		vbox.setSpacing(10);
-		vbox.setMinWidth(450);
-		vbox.setMinHeight(400);
+		vbox.setPadding(new Insets(Double.parseDouble(getResourceBundle().getString("INSETS_TOP")),
+				Double.parseDouble(getResourceBundle().getString("INSETS_RIGHT")),
+				Double.parseDouble(getResourceBundle().getString("INSETS_BOTTOM")),
+				Double.parseDouble(getResourceBundle().getString("INSETS_LEFT"))));
+		vbox.setSpacing(Double.parseDouble(getResourceBundle().getString("SPACING")));
+		vbox.setMinWidth(Double.parseDouble(getResourceBundle().getString("MIN_WIDTH")));
+		vbox.setMinHeight(Double.parseDouble(getResourceBundle().getString("MIN_HEIGHT")));
 	}
 
 }

@@ -14,19 +14,38 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * The ButtonFactory creates a way to easily generate different, complex types
+ * of buttons with different graphical interfaces, without having to directly
+ * manipulate the graphical properties of the button. Simply call the method
+ * specifying the button type and the factory sets up the properties of the
+ * button.
+ * 
+ * @author Dylan Peters, Noah Pritt
+ *
+ */
 public class ButtonFactory {
 
+	/**
+	 * Creates a button that changes color upon pressing and displays a spinning
+	 * rectangle to show the user that the request is being processed.
+	 * 
+	 * @return
+	 */
 	public static Button newSpinningButton() {
 		Button button = new Button();
 		new ButtonFactory().styleButton(button);
 		return button;
 	}
 
+	/**
+	 * 
+	 * basic animation idea from https://gist.github.com/james-d/8474941, but
+	 * heavily refactored and changed by ncp14, dlp22
+	 * 
+	 * @param button the button to style
+	 */
 	private void styleButton(Button button) {
-
-		///////// ********** basic animation idea from
-		///////// https://gist.github.com/james-d/8474941, but heavily
-		///////// refactored and changed by ncp14, dlp22
 		Color startColor = Color.web("#e08090");
 		Color endColor = Color.web("#80e090");
 		SimpleObjectProperty<Color> color = new SimpleObjectProperty<>(startColor);

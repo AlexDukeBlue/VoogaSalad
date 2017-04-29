@@ -24,10 +24,21 @@ class ObservableQueue<E> implements Queue<E>, Observable {
 	Collection<InvalidationListener> listeners;
 	List<E> elements;
 
+	/**
+	 * Creates a new instance of ObservableQueue with no items.
+	 */
 	ObservableQueue() {
 		this(new ArrayList<E>());
 	}
 
+	/**
+	 * Creates a new instance of ObservableQueue with the elements passed to it.
+	 * The elements are placed into the queue in the order given by the
+	 * collection's iterator.
+	 * 
+	 * @param elements
+	 *            a collection of elements to add to the queue
+	 */
 	ObservableQueue(Collection<? extends E> elements) {
 		this.elements = new ArrayList<>(elements);
 		listeners = new ArrayList<>();
