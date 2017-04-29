@@ -93,7 +93,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		if (Objects.isNull(getAbilityPoints())) {
 			addUnitStats(ModifiableUnitStat.ABILITYPOINTS);
 		}
-		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), offensiveModifiers.getAll(), defensiveModifiers.getAll(), getDescription(), getImgPath());
+		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getRangePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), offensiveModifiers.getAll(), defensiveModifiers.getAll(), getDescription(), getImgPath());
 	}
 
 	@Override
@@ -142,6 +142,11 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	@Override
 	public final GridPattern getMovePattern() {
 		return movePattern;
+	}
+	
+	@Override
+	public final GridPattern getRangePattern() {
+		return rangePattern;
 	}
 
 	public final ModifiableUnit setMovePattern(GridPattern movePattern) {
