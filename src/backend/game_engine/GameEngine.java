@@ -37,9 +37,8 @@ public interface GameEngine {
 	 * what happens from the enclosed BiConsumer.
 	 *
 	 * @param player
-	 * @return Object
 	 */
-	Object handleWin(ImmutablePlayer player);
+	void handleWin(ImmutablePlayer player);
 
 	/**
 	 * The handleLoss method is what gets called by a Result.LOSE.accept() call. This method
@@ -48,9 +47,8 @@ public interface GameEngine {
 	 * what happens from the enclosed BiConsumer.
 	 *
 	 * @param player
-	 * @return
 	 */
-	Object handleLoss(ImmutablePlayer player);
+	void handleLoss(ImmutablePlayer player);
 
 	/**
 	 * The handleTie method is what gets called by a Result.TIE.accept() call. This method
@@ -58,9 +56,7 @@ public interface GameEngine {
 	 * implementation, this method will probably get passed to the server for it to control
 	 * what happens from the enclosed BiConsumer. In a lot of cases, the same thing probably
 	 * occurs as when Result.NONE.accept() is called, but that is uniquely up to the game.
-	 *
-	 * @return
 	 */
-	Object handleTie();
+	void handleTie();
 
 }
