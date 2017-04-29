@@ -3,6 +3,7 @@ package frontend.factory.wizard.strategies.wizard_pages;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import controller.Controller;
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.strategies.wizard_pages.util.AdditionalWizardRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
@@ -41,8 +42,8 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 	 * @param clazz
 	 *            the class of wizard that this class will create
 	 */
-	public AdditionalWizardsPage(String descriptionKey, Class<? extends Wizard<T>> clazz) {
-		super(descriptionKey);
+	public AdditionalWizardsPage(Controller controller, String descriptionKey, Class<? extends Wizard<T>> clazz) {
+		super(controller, descriptionKey);
 		initialize(clazz);
 	}
 

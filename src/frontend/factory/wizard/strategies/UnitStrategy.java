@@ -5,7 +5,7 @@ import java.util.Optional;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.AbilitiesAdderPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
@@ -39,8 +39,9 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	 *            the AuthoringGameState that the UnitStrategy will use to
 	 *            instantiate the unit.
 	 */
-	public UnitStrategy(AuthoringGameState gameState) {
-		initialize(gameState);
+	public UnitStrategy(Controller controller) {
+		super(controller);
+		initialize();
 	}
 
 	/**

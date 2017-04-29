@@ -3,6 +3,7 @@ package frontend.factory.wizard.strategies;
 import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
 import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import javafx.beans.binding.StringBinding;
@@ -22,7 +23,8 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	/**
 	 * Creates a new instance of GameStrategy
 	 */
-	public GameStrategy() {
+	public GameStrategy(Controller controller) {
+		super(controller);
 		initialize();
 	}
 
@@ -47,9 +49,9 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	}
 
 	private void initialize() {
-		gameNamePage = new ImageNameDescriptionPage("GameStrategyGameNameDescription");
-		boardNamePage = new ImageNameDescriptionPage("GameStrategyBoardNameDescription");
-		gridInstantiationPage = new GridInstantiationPage("GameStrategyGridInstantiationDescription");
+		gameNamePage = new ImageNameDescriptionPage(getController(), "GameStrategyGameNameDescription");
+		boardNamePage = new ImageNameDescriptionPage(getController(), "GameStrategyBoardNameDescription");
+		gridInstantiationPage = new GridInstantiationPage(getController(), "GameStrategyGridInstantiationDescription");
 
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
 	}

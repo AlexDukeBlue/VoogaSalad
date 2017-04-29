@@ -1,7 +1,7 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
 import backend.grid.GridPattern;
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.WizardGrid;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;

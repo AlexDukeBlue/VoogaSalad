@@ -3,6 +3,7 @@ package frontend.factory.wizard.strategies.wizard_pages;
 import java.io.File;
 import java.nio.file.Paths;
 
+import controller.Controller;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -38,8 +39,8 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public ImageNameDescriptionPage(String descriptionKey) {
-		super(descriptionKey);
+	public ImageNameDescriptionPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
 		initialize();
 	}
 

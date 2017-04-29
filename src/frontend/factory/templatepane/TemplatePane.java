@@ -96,7 +96,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
-		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState(), getPolyglot().getLanguage(), getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController(), getPolyglot().getLanguage(), getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
 		VBox box = new VBox(scroller, addRemoveButton.getNode());
 		box.setSpacing(2);
 		box.setPadding(new Insets(2, 2, 2, 2));

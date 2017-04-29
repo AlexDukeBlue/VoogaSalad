@@ -1,5 +1,6 @@
 package frontend.factory.wizard.strategies;
 
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
 import util.scripting.VoogaScriptEngine;
@@ -29,7 +30,9 @@ abstract class NameScriptBaseStrategy<T> extends BaseStrategy<T> {
 	 *            a string to be used as the key when getting the description of
 	 *            the name page from a ResouceBundle.
 	 */
-	public NameScriptBaseStrategy(String namePageDescriptionKey, String scriptingPageDescriptionKey) {
+	public NameScriptBaseStrategy(Controller controller, String namePageDescriptionKey,
+			String scriptingPageDescriptionKey) {
+		super(controller);
 		initialize(namePageDescriptionKey, scriptingPageDescriptionKey);
 	}
 
@@ -58,8 +61,8 @@ abstract class NameScriptBaseStrategy<T> extends BaseStrategy<T> {
 	}
 
 	private void initialize(String namePageDescriptionKey, String scriptingPageDescriptionKey) {
-		namePage = new ImageNameDescriptionPage(namePageDescriptionKey);
-		scriptingPage = new ScriptingPage(scriptingPageDescriptionKey);
+		namePage = new ImageNameDescriptionPage(getController(), namePageDescriptionKey);
+		scriptingPage = new ScriptingPage(getController(), scriptingPageDescriptionKey);
 		getPages().addAll(namePage, scriptingPage);
 	}
 

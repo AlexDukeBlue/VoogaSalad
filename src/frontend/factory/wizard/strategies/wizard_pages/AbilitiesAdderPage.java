@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import backend.unit.properties.ActiveAbility;
-import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.HasShape;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
@@ -36,9 +36,9 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public AbilitiesAdderPage(AuthoringGameState gameState, String descriptionKey) {
-		super(descriptionKey);
-		initialize(gameState);
+	public AbilitiesAdderPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
+		initialize(controller);
 	}
 
 	@Override
@@ -65,15 +65,15 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 		return hprow.getValue();
 	}
 
-	private void initialize(AuthoringGameState gameState) {
+	private void initialize(Controller controller) {
 		table = new VerticalTableInputView();
 
 		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt"), getPolyglot().get("HP"));
 		table.getChildren().add(hprow);
 
 		rowToAbility = new HashMap<>();
-		gameState.getTemplateByCategory(GameplayState.ACTIVE_ABILITY).stream()
-				.filter(e -> ((HasShape) e).getShape().equals(gameState.getGrid().getShape())).forEach(ability -> {
+		controller.getAuthoringGameState().getTemplateByCategory(GameplayState.ACTIVE_ABILITY).stream()
+				.filter(e -> ((HasShape) e).getShape().equals(controller.getAuthoringGameState().getGrid().getShape())).forEach(ability -> {
 					SelectableInputRow row = new SelectableInputRow(getImg(ability.getImgPath()), ability.getName(),
 							ability.getDescription());
 					rowToAbility.put(row, (ActiveAbility<?>) ability);

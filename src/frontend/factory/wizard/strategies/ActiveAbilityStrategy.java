@@ -2,7 +2,7 @@ package frontend.factory.wizard.strategies;
 
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.ActiveAbility.AbilityEffect;
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
@@ -26,8 +26,9 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 * 
 	 * @param gameState
 	 */
-	public ActiveAbilityStrategy(AuthoringGameState gameState) {
-		initialize(gameState);
+	public ActiveAbilityStrategy(Controller controller) {
+		super(controller);
+		initialize();
 	}
 
 	/**
@@ -40,10 +41,10 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 				namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath()) : null;
 	}
 
-	private void initialize(AuthoringGameState gameState) {
-		namePage = new ImageNameDescriptionPage("ActiveAbilityNameDescription");
-		scriptingPage = new ScriptingPage("ActiveAbilityScriptingDescription");
-		gridPage = new GridPatternPage(gameState, "ActiveAbilityGridPatternDescription");
+	private void initialize() {
+		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription");
+		scriptingPage = new ScriptingPage(getController(),"ActiveAbilityScriptingDescription");
+		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription");
 		getPages().addAll(namePage, scriptingPage, gridPage);
 	}
 

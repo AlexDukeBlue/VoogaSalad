@@ -3,7 +3,7 @@ package frontend.factory.wizard.strategies;
 import java.util.HashMap;
 import java.util.Map;
 
-import backend.util.AuthoringGameState;
+import controller.Controller;
 
 /**
  * StrategyFactory allows client code to create new WizardStrategies simply by
@@ -48,16 +48,16 @@ public class StrategyFactory {
 	 * @return a WizardStrategy that has all the components necessary to get
 	 *         information from the user about the object to be created.
 	 */
-	public static WizardStrategy<?> newStrategy(String categoryName, AuthoringGameState gameState) {
+	public static WizardStrategy<?> newStrategy(String categoryName, Controller controller) {
 		categoryName = categoryName.replaceAll(" ", "").toLowerCase().replaceAll("ies$", "y").replaceAll("s$", "");
 		try {
-			return STRATEGY_MAP.get(categoryName).getConstructor(gameState.getClass()).newInstance(gameState);
+			return STRATEGY_MAP.get(categoryName).getConstructor(Controller.class).newInstance(controller);
 		} catch (Exception e) {
 			try {
 				return STRATEGY_MAP.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
 				e1.printStackTrace();
-				return new WizardUnsupportedStrategy();
+				return new WizardUnsupportedStrategy(controller);
 			}
 		}
 	}
