@@ -1,8 +1,8 @@
 package frontend.factory.wizard.strategies;
 
-import backend.util.AuthoringGameState;
 import backend.util.ModifiableTriggeredEffect;
 import backend.util.TriggeredEffect;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.ActivationTriggersPage;
 import frontend.factory.wizard.strategies.wizard_pages.NumTurnsPage;
 import javafx.beans.binding.StringBinding;
@@ -26,9 +26,9 @@ class TriggeredEffectStrategy extends NameScriptBaseStrategy<TriggeredEffect> {
 	 *            the AuthoringGameState that will be used to instatiate parts
 	 *            of the wizard
 	 */
-	public TriggeredEffectStrategy(AuthoringGameState gameState) {
-		super("TriggeredEffectNamePageDescription", "TriggeredEffectScriptingPageDescription");
-		initialize(gameState);
+	public TriggeredEffectStrategy(Controller controller) {
+		super(controller, "TriggeredEffectNamePageDescription", "TriggeredEffectScriptingPageDescription");
+		initialize();
 	}
 
 	/**
@@ -40,10 +40,10 @@ class TriggeredEffectStrategy extends NameScriptBaseStrategy<TriggeredEffect> {
 				getDescriptionBoxText(), getImgPath(), activationTriggersPage.getSelectedActivationTriggers());
 	}
 
-	private void initialize(AuthoringGameState gameState) {
-		numTurnsPage = new NumTurnsPage("TriggeredEffectNumTurnsPageDescription");
+	private void initialize() {
+		numTurnsPage = new NumTurnsPage(getController(), "TriggeredEffectNumTurnsPageDescription");
 		getPages().add(numTurnsPage);
-		activationTriggersPage = new ActivationTriggersPage(gameState,
+		activationTriggersPage = new ActivationTriggersPage(getController(),
 				"TriggeredEffectActivationTriggersPageDescription");
 		getPages().add(activationTriggersPage);
 	}

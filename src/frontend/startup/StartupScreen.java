@@ -53,6 +53,7 @@ public class StartupScreen extends BaseUIManager<Parent> {
 	 *            the height to set the stage to
 	 */
 	public StartupScreen(Stage stage, double width, double height) {
+		super(null);
 		initPrimaryPane(stage, width, height);
 	}
 

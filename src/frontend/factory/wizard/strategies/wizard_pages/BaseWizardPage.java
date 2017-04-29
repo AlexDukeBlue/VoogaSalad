@@ -1,5 +1,6 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
+import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
@@ -25,8 +26,8 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	 * Creates a new BaseWizardPage. Sets the description to the default for all
 	 * BaseWizardPages.
 	 */
-	public BaseWizardPage() {
-		this("");
+	public BaseWizardPage(Controller controller) {
+		this(controller, "");
 	}
 
 	/**
@@ -36,7 +37,8 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public BaseWizardPage(String descriptionKey) {
+	public BaseWizardPage(Controller controller, String descriptionKey) {
+		super(controller);
 		description = getPolyglot().get(descriptionKey);
 		canNext = new SimpleBooleanProperty(false);
 	}

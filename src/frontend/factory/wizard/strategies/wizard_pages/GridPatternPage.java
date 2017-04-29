@@ -1,9 +1,10 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
 import backend.grid.GridPattern;
-import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.WizardGrid;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Paint;
 
 /**
  * GridPatternPage is a WizardPage that shows the user a Grid that is similar to
@@ -27,13 +28,13 @@ public class GridPatternPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public GridPatternPage(AuthoringGameState gameState, String descriptionKey) {
+	public GridPatternPage(AuthoringGameState gameState, String descriptionKey, Paint unselectedPaint, Paint selectedPaint) {
 		super(descriptionKey);
-		initialize(gameState);
+		initialize(gameState, unselectedPaint, selectedPaint);
 	}
 
-	private void initialize(AuthoringGameState gameState) {
-		grid = new WizardGrid(gameState);
+	private void initialize(AuthoringGameState gameState, Paint unselectedPaint, Paint selectedPaint) {
+		grid = new WizardGrid(gameState, unselectedPaint, selectedPaint);
 		canNextWritable().setValue(true);
 	}
 

@@ -67,6 +67,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	 *            a StringBinding to use as the description for the row.
 	 */
 	public NumericInputRow(Image image, StringBinding name, StringBinding label) {
+		super(null);
 		initialize(image, name, label);
 	}
 

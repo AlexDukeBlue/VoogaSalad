@@ -35,6 +35,7 @@ public class ButtonBar extends BaseUIManager<Region> {
 	 *            each button.
 	 */
 	public ButtonBar(Collection<StringBinding> buttonNames) {
+		super(null);
 		initialize(buttonNames);
 	}
 

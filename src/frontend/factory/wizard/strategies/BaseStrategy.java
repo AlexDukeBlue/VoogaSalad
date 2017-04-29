@@ -3,6 +3,7 @@ package frontend.factory.wizard.strategies;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
 import javafx.beans.property.BooleanProperty;
@@ -41,14 +42,15 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	/**
 	 * Instantiates the BaseStrategy with an empty set of pages.
 	 */
-	BaseStrategy() {
-		this(new ArrayList<>());
+	BaseStrategy(Controller controller) {
+		this(controller,new ArrayList<>());
 	}
 
 	/**
 	 * Instantiates the BaseStrategy with the pages specified.
 	 */
-	BaseStrategy(Collection<WizardPage> pages) {
+	BaseStrategy(Controller controller,Collection<WizardPage> pages) {
+		super(controller);
 		initialize(pages);
 	}
 

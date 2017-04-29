@@ -1,19 +1,28 @@
 package frontend.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Optional;
+
+import controller.Controller;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 import util.scripting.VoogaScriptException;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Optional;
 
 /**
  * TODO: RESOUCE BUNDLE PLSSSS
@@ -28,9 +37,11 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private BooleanProperty hasCompiled;
 	private String strategy;
 
-	public ScriptingDialog() {
+	public ScriptingDialog(Controller controller) {
+		super(controller);
 		hasCompiled = new SimpleBooleanProperty(false);
-		languagesMenu = new ChoiceBox<>(FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
+		languagesMenu = new ChoiceBox<>(
+				FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
 		pane = new BorderPane();
 		scriptArea = new TextArea();
 		Button compileButton = new Button();
@@ -50,7 +61,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		topBox.setAlignment(Pos.CENTER);
 		HBox bottomBox = new HBox(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
-		languagesMenu.setOnAction(event -> scriptArea.setText(VoogaScriptEngineManager.getDefaultText(languagesMenu.getValue())));
+		languagesMenu.setOnAction(
+				event -> scriptArea.setText(VoogaScriptEngineManager.getDefaultText(languagesMenu.getValue())));
 		pane.setTop(topBox);
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);

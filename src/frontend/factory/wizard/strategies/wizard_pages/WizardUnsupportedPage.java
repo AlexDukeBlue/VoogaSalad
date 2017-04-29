@@ -1,5 +1,6 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
+import controller.Controller;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
@@ -19,7 +20,8 @@ public class WizardUnsupportedPage extends BaseWizardPage {
 	/**
 	 * Creates a new instance of WizardUnsupportedPage
 	 */
-	public WizardUnsupportedPage() {
+	public WizardUnsupportedPage(Controller controller) {
+		super(controller);
 		vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		vbox.getChildren().add(new Label("Wizard not supported."));

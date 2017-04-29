@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import backend.util.io.XMLSerializer;
+import controller.Controller;
 import frontend.util.BaseUIManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -35,7 +36,8 @@ class WizardMenuBar<T> extends BaseUIManager<MenuBar> {
 	/**
 	 * Creates a new instance of WizardMenuBar. Sets all values to defaults.
 	 */
-	WizardMenuBar() {
+	WizardMenuBar(Controller controller) {
+		super(controller);
 		menuBar = new MenuBar();
 		menuBar.setUseSystemMenuBar(Boolean.parseBoolean(getResourceBundle().getString("Use_System_Menu_Bar")));
 		Menu file = new Menu();
