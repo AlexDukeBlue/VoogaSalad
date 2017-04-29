@@ -100,16 +100,15 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		DialogPane dialogPane = new DialogPane();
 		borderPane = new BorderPane(selectionStrategy.getNode());
 		WizardMenuBar<T> menuBar = new WizardMenuBar<>();
-		menuBar.addObserver((observable,object) -> finish(menuBar.finish()));
+		menuBar.addObserver((observable, object) -> finish(menuBar.finish()));
 		borderPane.setTop(menuBar.getNode());
 		dialogPane.setContent(borderPane);
-		
 
 		dialog.setDialogPane(dialogPane);
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.setResizable(true);
-		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.NEXT, ButtonType.PREVIOUS,
-				ButtonType.FINISH);
+		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.FINISH, ButtonType.NEXT,
+				ButtonType.PREVIOUS);
 		dialog.titleProperty().bind(selectionStrategy.getTitle());
 
 		dialog.getDialogPane().lookupButton(ButtonType.NEXT).addEventFilter(ActionEvent.ACTION,
@@ -118,12 +117,14 @@ public class Wizard<T> extends BaseUIManager<Region> {
 				event -> event.consume());
 		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION,
 				event -> event.consume());
-		dialog.getDialogPane().lookupButton(ButtonType.FINISH).addEventFilter(ActionEvent.ACTION, event -> finish(selectionStrategy.finish()));
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).addEventFilter(ActionEvent.ACTION,
+				event -> finish(selectionStrategy.finish()));
 
 		dialog.getDialogPane().lookupButton(ButtonType.NEXT).setOnMouseClicked(event -> next());
 		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).setOnMouseClicked(event -> previous());
 		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setOnMouseClicked(event -> cancel());
-		dialog.getDialogPane().lookupButton(ButtonType.FINISH).setOnMouseClicked(event -> finish(selectionStrategy.finish()));
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH)
+				.setOnMouseClicked(event -> finish(selectionStrategy.finish()));
 
 		dialog.getDialogPane().lookupButton(ButtonType.NEXT).disableProperty().bind(selectionStrategy.canNext().not());
 		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).disableProperty()
@@ -135,13 +136,32 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).defaultButtonProperty()
 				.bind(selectionStrategy.canFinish());
 
-		dialog.getDialogPane().lookupButton(ButtonType.NEXT).accessibleTextProperty().bind(getPolyglot().get("Next"));
-		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).accessibleTextProperty()
+		((Button) (dialog.getDialogPane().lookupButton(ButtonType.NEXT))).textProperty()
+				.bind(getPolyglot().get("Next"));
+		((Button) (dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS))).textProperty()
 				.bind(getPolyglot().get("Previous"));
-		dialog.getDialogPane().lookupButton(ButtonType.FINISH).accessibleTextProperty()
+		((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).textProperty()
 				.bind(getPolyglot().get("Finish"));
-		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).accessibleTextProperty()
+		((Button) (dialog.getDialogPane().lookupButton(ButtonType.CANCEL))).textProperty()
 				.bind(getPolyglot().get("Cancel"));
+
+		getStyleSheet().addListener(change -> {
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.NEXT))).getStylesheets().clear();
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.NEXT))).getStylesheets()
+					.add(getStyleSheet().getValue());
+
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS))).getStylesheets().clear();
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS))).getStylesheets()
+					.add(getStyleSheet().getValue());
+
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.CANCEL))).getStylesheets().clear();
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.CANCEL))).getStylesheets()
+					.add(getStyleSheet().getValue());
+
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).getStylesheets().clear();
+			((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).getStylesheets()
+					.add(getStyleSheet().getValue());
+		});
 
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 		show();
