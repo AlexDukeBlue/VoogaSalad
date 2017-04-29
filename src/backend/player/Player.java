@@ -1,6 +1,7 @@
 package backend.player;
 
 import backend.cell.Cell;
+import backend.game_engine.ResultQuadPredicate.Result;
 import backend.grid.ModifiableGameBoard;
 import backend.unit.Unit;
 import backend.util.ModifiableVoogaObject;
@@ -16,11 +17,13 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 
 	private Team team;
 	private final List<ChatMessage> chatLog;
+	private Result myResult;
 
 	public Player(String name, String description, String imgPath) {
 		super(name, description, imgPath);
 		chatLog = new ArrayList<>();
 		setTeam(team);
+		setResult(Result.NONE);
 	}
 
 	@Override
@@ -68,5 +71,15 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	@Override
 	public List<ChatMessage> getChatLog() {
 		return chatLog;
+	}
+
+	@Override
+	public Result getResult() {
+		return myResult;
+	}
+
+	@Override
+	public void setResult(Result result) {
+		myResult = result;
 	}
 }

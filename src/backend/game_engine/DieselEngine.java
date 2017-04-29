@@ -10,22 +10,26 @@ import util.net.ObservableServer;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author Alexander Zapata
  */
 
-//TODO: Implement some way to checkTurnState() to determine if it is the beginning or end of a turn. Implement restart(), save() and load() (Tavo's job). Also implement a messagePlayer(Player from, Player to, String message).
+// TODO: Implement some way to checkTurnState() to determine if it is the
+// beginning or end of a turn. Implement restart(), save() and load() (Tavo's
+// job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
 	private ObservableServer<GameplayState> myServer;
 	private Consumer<GameplayState> stateUpdateListener = this::checkGame;
 
 	/**
-	 * This constructor passes in the ObservableServer<GameplayState> that the GameEngine will communicate with
-	 * and add listeners to.
+	 * This constructor passes in the ObservableServer<GameplayState> that the
+	 * GameEngine will communicate with and add listeners to.
 	 *
 	 * @param server
 	 */
@@ -36,8 +40,9 @@ public class DieselEngine implements GameEngine {
 	}
 
 	/**
-	 * This method compiles all of the necessary checking methods to run at the change of a GameState.
-	 * This method is what gets passed to the Server to execute with lambdas.
+	 * This method compiles all of the necessary checking methods to run at the
+	 * change of a GameState. This method is what gets passed to the Server to
+	 * execute with lambdas.
 	 *
 	 * @param state
 	 */
@@ -52,7 +57,7 @@ public class DieselEngine implements GameEngine {
 		try {
 			new XMLSerializer<>().doSerialize(gameState);
 		} catch (Exception e) {
-			//Something here.
+			// Something here.
 		}
 	}
 
@@ -60,29 +65,32 @@ public class DieselEngine implements GameEngine {
 	public AuthoringGameState load(File gameStateFile) {
 		AuthoringGameState newGameState;
 		try {
-			newGameState = (AuthoringGameState) new XMLSerializer<>().unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
+			newGameState = (AuthoringGameState) new XMLSerializer<>()
+					.unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
-			//Something here.
+			// Something here.
 			newGameState = null;
 		}
 		return newGameState;
 	}
 
 	/**
-	 * This method will take the TurnRequirements within GameState (which are wrapped by Requirement)
-	 * and in the case they are all satisfied call state.endTurn().
+	 * This method will take the TurnRequirements within GameState (which are
+	 * wrapped by Requirement) and in the case they are all satisfied call
+	 * state.endTurn().
 	 *
 	 * @param state
 	 */
 	private void checkTurnRules(GameplayState state) {
-		if (!state.getTurnRequirements().parallelStream()
-				.allMatch(e -> e.test(state.getActivePlayer(), state)) && state.turnRequirementsSatisfied())
+		if (!state.getTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActivePlayer(), state))
+				&& state.turnRequirementsSatisfied())
 			state.endTurn();
 	}
 
 	/**
-	 * This method will go through all of the TurnEvents (wrapped by Actionables) and execute their BIPredicates when added
-	 * as a listener in the Server.
+	 * This method will go through all of the TurnEvents (wrapped by
+	 * Actionables) and execute their BIPredicates when added as a listener in
+	 * the Server.
 	 *
 	 * @param state
 	 */
@@ -91,8 +99,8 @@ public class DieselEngine implements GameEngine {
 	}
 
 	/**
-	 * This method goes through all of the objectives of the GameState so that every-time a state changes
-	 * the Server can check for a winner.
+	 * This method goes through all of the objectives of the GameState so that
+	 * every-time a state changes the Server can check for a winner.
 	 *
 	 * @param state
 	 */
@@ -106,18 +114,44 @@ public class DieselEngine implements GameEngine {
 	@Override
 	public Object handleWin(ImmutablePlayer player) {
 		// TODO Auto-generated method stub
+
+		myServer.sendAndApply((GameplayState state) -> {
+			state.getOrderedPlayerNames().stream().map(playerName -> state.getPlayerByName(playerName))
+					.forEach(aPlayer -> aPlayer
+							.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
+			return state;
+		});
+
 		return null;
 	}
 
 	@Override
 	public Object handleLoss(ImmutablePlayer player) {
 		// TODO Auto-generated method stub
+
+		myServer.sendAndApply((GameplayState state) -> {
+			state.getPlayerByName(player.getName()).setResult(Result.LOSE);
+			List<String> remainingPlayers = state.getOrderedPlayerNames().stream()
+					.filter(playerName -> state.getPlayerByName(playerName).getResult().equals(Result.NONE))
+					.collect(Collectors.toList());
+			if (remainingPlayers.size() == 1) {
+				state.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
+			}
+			return state;
+		});
+
 		return null;
 	}
 
 	@Override
 	public Object handleTie() {
 		// TODO Auto-generated method stub
+
+		myServer.sendAndApply((GameplayState state) -> {
+			state.getOrderedPlayerNames().stream().forEach(name -> state.getPlayerByName(name).setResult(Result.TIE));
+			return state;
+		});
+
 		return null;
 	}
 
