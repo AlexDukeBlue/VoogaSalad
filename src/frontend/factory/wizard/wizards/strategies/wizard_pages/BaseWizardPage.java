@@ -6,6 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Region;
+import util.polyglot.PolyglotException;
 
 /**
  * BaseWizardPage is an abstract class whose sub-classes implement the full UIs
@@ -37,6 +38,16 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	@Override
 	public StringBinding getDescriptionLabelBinding() {
 		return description;
+	}
+	
+	@Override
+	public void setLanguage(String language){
+		try {
+			getPolyglot().setLanguage(language);
+		} catch (PolyglotException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	void setDescription(StringBinding description) {

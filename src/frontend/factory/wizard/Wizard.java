@@ -3,12 +3,12 @@ package frontend.factory.wizard;
 import frontend.factory.wizard.wizards.strategies.WizardStrategy;
 import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import util.polyglot.PolyglotException;
 
@@ -30,7 +30,7 @@ import util.polyglot.PolyglotException;
  * @param <T>
  *            The object type that the wizard will return after instantiation.
  */
-public class Wizard<T> extends BaseUIManager<Node> {
+public class Wizard<T> extends BaseUIManager<Region> {
 
 	private WizardStrategy<T> selectionStrategy;
 	private Dialog<Scene> dialog;
@@ -52,7 +52,7 @@ public class Wizard<T> extends BaseUIManager<Node> {
 	 * Returns the object that this wizard uses to display to the user.
 	 */
 	@Override
-	public Node getNode() {
+	public Region getNode() {
 		return selectionStrategy.getNode();
 	}
 
@@ -127,6 +127,12 @@ public class Wizard<T> extends BaseUIManager<Node> {
 				.bind(selectionStrategy.canNext());
 		((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).defaultButtonProperty()
 				.bind(selectionStrategy.canFinish());
+		
+		dialog.getDialogPane().lookupButton(ButtonType.NEXT).accessibleTextProperty().bind(getPolyglot().get("Next"));
+		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).accessibleTextProperty().bind(getPolyglot().get("Previous"));
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).accessibleTextProperty().bind(getPolyglot().get("Finish"));
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).accessibleTextProperty().bind(getPolyglot().get("Cancel"));
+
 
 		show();
 	}

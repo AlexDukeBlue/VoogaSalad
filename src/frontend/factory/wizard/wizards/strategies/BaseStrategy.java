@@ -155,5 +155,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		});
 
 		this.pages.addAll(pages);
+		getPolyglot().setOnLanguageChange(
+				event -> this.pages.stream().forEach(page -> page.setLanguage(getPolyglot().getLanguage())));
 	}
 }

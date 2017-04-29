@@ -11,5 +11,7 @@ public interface WizardPage {
 	StringBinding getDescriptionLabelBinding();
 
 	Node getNode();
+	
+	void setLanguage(String language);
 
 }
