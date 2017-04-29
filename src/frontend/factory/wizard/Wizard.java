@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import util.polyglot.PolyglotException;
@@ -34,6 +35,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 
 	private WizardStrategy<T> selectionStrategy;
 	private Dialog<Scene> dialog;
+	private BorderPane borderPane;
 
 	/**
 	 * Creates a new Wizard object using the SelectionStrategy specified and
@@ -53,7 +55,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	 */
 	@Override
 	public Region getNode() {
-		return selectionStrategy.getNode();
+		return borderPane;
 	}
 
 	public void show() {
@@ -76,9 +78,9 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		dialog.close();
 	}
 
-	private void finish() {
+	private void finish(Object object) {
 		setChanged();
-		notifyObservers(selectionStrategy.finish());
+		notifyObservers(object);
 		clearChanged();
 		dialog.close();
 	}
@@ -96,7 +98,12 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		});
 		dialog = new Dialog<>();
 		DialogPane dialogPane = new DialogPane();
-		dialogPane.setContent(selectionStrategy.getNode());
+		borderPane = new BorderPane(selectionStrategy.getNode());
+		WizardMenuBar<T> menuBar = new WizardMenuBar<>();
+		menuBar.addObserver((observable,object) -> finish(menuBar.finish()));
+		borderPane.setTop(menuBar.getNode());
+		dialogPane.setContent(borderPane);
+		
 
 		dialog.setDialogPane(dialogPane);
 		dialog.initModality(Modality.APPLICATION_MODAL);
@@ -111,12 +118,12 @@ public class Wizard<T> extends BaseUIManager<Region> {
 				event -> event.consume());
 		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION,
 				event -> event.consume());
-		dialog.getDialogPane().lookupButton(ButtonType.FINISH).addEventFilter(ActionEvent.ACTION, event -> finish());
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).addEventFilter(ActionEvent.ACTION, event -> finish(selectionStrategy.finish()));
 
 		dialog.getDialogPane().lookupButton(ButtonType.NEXT).setOnMouseClicked(event -> next());
 		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).setOnMouseClicked(event -> previous());
 		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setOnMouseClicked(event -> cancel());
-		dialog.getDialogPane().lookupButton(ButtonType.FINISH).setOnMouseClicked(event -> finish());
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).setOnMouseClicked(event -> finish(selectionStrategy.finish()));
 
 		dialog.getDialogPane().lookupButton(ButtonType.NEXT).disableProperty().bind(selectionStrategy.canNext().not());
 		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).disableProperty()
@@ -127,13 +134,16 @@ public class Wizard<T> extends BaseUIManager<Region> {
 				.bind(selectionStrategy.canNext());
 		((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).defaultButtonProperty()
 				.bind(selectionStrategy.canFinish());
-		
+
 		dialog.getDialogPane().lookupButton(ButtonType.NEXT).accessibleTextProperty().bind(getPolyglot().get("Next"));
-		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).accessibleTextProperty().bind(getPolyglot().get("Previous"));
-		dialog.getDialogPane().lookupButton(ButtonType.FINISH).accessibleTextProperty().bind(getPolyglot().get("Finish"));
-		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).accessibleTextProperty().bind(getPolyglot().get("Cancel"));
+		dialog.getDialogPane().lookupButton(ButtonType.PREVIOUS).accessibleTextProperty()
+				.bind(getPolyglot().get("Previous"));
+		dialog.getDialogPane().lookupButton(ButtonType.FINISH).accessibleTextProperty()
+				.bind(getPolyglot().get("Finish"));
+		dialog.getDialogPane().lookupButton(ButtonType.CANCEL).accessibleTextProperty()
+				.bind(getPolyglot().get("Cancel"));
 
-
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 		show();
 	}
 
