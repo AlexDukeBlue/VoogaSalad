@@ -32,8 +32,11 @@ import frontend.interfaces.detailpane.DetailPaneExternal;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.interfaces.worldview.WorldViewExternal;
 import frontend.menubar.VoogaMenuBar;
+import frontend.startup.StartupScreen;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -128,6 +131,45 @@ public class View extends ClickableUIComponent<Region> {
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
+	}
+	
+	public void joinTeam() {
+		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
+				getController().getReadOnlyGameState().getTeams());
+		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
+		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
+		Optional<Team> chosenTeam = teams.showAndWait();
+		try {
+			getController().joinTeam(chosenTeam.get().getName());
+		} catch (Exception e) {
+			if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
+				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
+				alert.showAndWait();
+				getController().enterAuthoringMode();
+			} else {
+				// Do nothing
+			}
+		}
+	}
+
+	@Override
+	public void setClickHandler(ClickHandler clickHandler) {
+		super.setClickHandler(clickHandler);
+		abilityPane.setClickHandler(clickHandler);
+		worldView.setClickHandler(clickHandler);
+		detailPane.setClickHandler(clickHandler);
+	}
+
+	@Override
+	public void update() {
+		this.setViewEditable(getController().isAuthoringMode());
+		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
+		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
+			joinTeam();
+		}
+		checkForCondition();
 	}
 
 	private void placePanes() {
@@ -272,42 +314,22 @@ public class View extends ClickableUIComponent<Region> {
 		innerSplitPane.getItems().remove(conditionsPane.getNode());
 		rightPane.getChildren().remove(tempPane.getNode());
 	}
-
-	public void joinTeam() {
-		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
-				getController().getReadOnlyGameState().getTeams());
-		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
-		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
-		Optional<Team> chosenTeam = teams.showAndWait();
-		try {
-			getController().joinTeam(chosenTeam.get().getName());
-		} catch (Exception e) {
-			if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
-				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
-				alert.showAndWait();
-				getController().enterAuthoringMode();
-			} else {
-				// Do nothing
-			}
+	
+	private void checkForCondition() {
+		if(getController().activePlayerWon()){
+			displayEndPopup(getPolyglot().get("WinMessage"));
+		} else if(getController().activePlayerLost()){
+			displayEndPopup(getPolyglot().get("LoseMessage"));
+		} else if(getController().activePlayerTied()){
+			displayEndPopup(getPolyglot().get("TieMessage"));
 		}
 	}
-
-	@Override
-	public void setClickHandler(ClickHandler clickHandler) {
-		super.setClickHandler(clickHandler);
-		abilityPane.setClickHandler(clickHandler);
-		worldView.setClickHandler(clickHandler);
-		detailPane.setClickHandler(clickHandler);
-	}
-
-	@Override
-	public void update() {
-		this.setViewEditable(getController().isAuthoringMode());
-		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
-		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
-			joinTeam();
-		}
+	
+	private void displayEndPopup(StringBinding message){
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.headerTextProperty().bind(message);
+		alert.contentTextProperty().bind(getPolyglot().get("EndMessage"));
+		alert.showAndWait();
+		myStage.setScene(new Scene(new StartupScreen(myStage).getNode()));
 	}
 }

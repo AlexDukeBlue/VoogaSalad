@@ -109,6 +109,12 @@ public interface Controller {
 	void enterGamePlayMode();
 
 	boolean isAuthoringMode();
+	
+	boolean activePlayerWon();
+	
+	boolean activePlayerLost();
+	
+	boolean activePlayerTied();
 
 	void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate);
 

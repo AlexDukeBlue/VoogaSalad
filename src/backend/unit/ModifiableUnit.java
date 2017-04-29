@@ -44,21 +44,23 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	private final Map<String, Integer> terrainMoveCosts;
 	private final UnitStats stats;
 	private GridPattern movePattern;
+	private GridPattern rangePattern;
 	private Faction faction;
 	private ImmutablePlayer owner;
 	private Cell currentCell;
 	private boolean isVisible;
 
 	public ModifiableUnit(String unitName) {
-		this(unitName, Collections.emptySet(), null, null, Collections.emptyMap(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), "", "");
+		this(unitName, Collections.emptySet(), null, null, null, Collections.emptyMap(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), "", "");
 	}
 
-	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, Map<? extends String, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
+	public ModifiableUnit(String unitName, Collection<? extends UnitStat> unitStats, Faction faction, GridPattern movePattern, GridPattern rangePattern, Map<? extends String, Integer> moveCosts, Collection<? extends ActiveAbility> activeAbilities, Collection<? extends TriggeredEffect> triggeredAbilities, Collection<? extends InteractionModifier<Double>> offensiveModifiers, Collection<? extends InteractionModifier<Double>> defensiveModifiers, String unitDescription, String imgPath) {
 		super(unitName, unitDescription, imgPath);
 		this.faction = faction;
 		this.terrainMoveCosts = new HashMap<>(moveCosts);
 		this.stats = new UnitStats(unitStats);
 		this.movePattern = movePattern;
+		this.rangePattern = rangePattern;
 		this.triggeredAbilities = new TriggeredAbilitySet(triggeredAbilities);
 		this.activeAbilities = new ActiveAbilitySet(activeAbilities);
 		this.offensiveModifiers = new ModifierSet("Offensive Modifiers", "Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.", "", offensiveModifiers);
@@ -91,7 +93,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 		if (Objects.isNull(getAbilityPoints())) {
 			addUnitStats(ModifiableUnitStat.ABILITYPOINTS);
 		}
-		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), offensiveModifiers.getAll(), defensiveModifiers.getAll(), getDescription(), getImgPath());
+		return new ModifiableUnit(getName(), getUnitStats(), getFaction(), getMovePattern(), getRangePattern(), getTerrainMoveCosts(), getActiveAbilities(), getTriggeredAbilities(), offensiveModifiers.getAll(), defensiveModifiers.getAll(), getDescription(), getImgPath());
 	}
 
 	@Override
@@ -141,9 +143,19 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	public final GridPattern getMovePattern() {
 		return movePattern;
 	}
+	
+	@Override
+	public final GridPattern getRangePattern() {
+		return rangePattern;
+	}
 
 	public final ModifiableUnit setMovePattern(GridPattern movePattern) {
 		this.movePattern = movePattern;
+		return this;
+	}
+	
+	public final ModifiableUnit setRangePattern(GridPattern rangePattern) {
+		this.rangePattern = rangePattern;
 		return this;
 	}
 
