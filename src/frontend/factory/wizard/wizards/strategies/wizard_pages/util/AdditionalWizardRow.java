@@ -54,6 +54,7 @@ public class AdditionalWizardRow<T> extends BaseUIManager<Region>{
 		button = new Button();
 		button.textProperty().bind(getPolyglot().get("CreateNew"));
 		button.setOnAction(event -> {
+			wizard.show();
 			wizard.addObserver((observable,object) -> {
 				objectProperty.setValue((T)object);
 				checkbox.setSelected(true);
