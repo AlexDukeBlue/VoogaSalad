@@ -5,6 +5,7 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
+import frontend.SoundHandler;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.util.AddRemoveButton;
@@ -42,13 +43,14 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	private Map<String, VBox> contents;
 
 	public TemplatePane(Controller controller, ClickHandler clickHandler, String... templateCategories) {
-		super(controller, clickHandler);
+		super(controller, clickHandler);;
 		contents = new HashMap<>();
 		templateNamesCache = new HashMap<>();
 		Arrays.stream(templateCategories)
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		update();
+		
 	}
 
 	@Override
