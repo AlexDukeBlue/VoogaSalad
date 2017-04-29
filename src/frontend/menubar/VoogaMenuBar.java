@@ -67,6 +67,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		playModeItem.setDisable(!editable);
 
 		editModeItem.setDisable(editable);
+		joinTeam.setDisable(!editable);
 	}
 
 	@Override
