@@ -20,14 +20,6 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 
 	VoogaScriptEngine setScript(String script) throws VoogaScriptException;
 
-	default String getDefaultText() {
-		return RESOURCES.getString(getLanguage() + "DefaultText");
-	}
-
-	default String getLanguage() {
-		return RESOURCES.getString(getClass().getSimpleName().replaceAll("Vooga|Engine", ""));
-	}
-
 	Object eval(Map<String, Object> bindings) throws VoogaScriptException;
 
 	@Override

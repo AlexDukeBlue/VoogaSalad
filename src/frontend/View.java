@@ -39,7 +39,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
@@ -48,18 +47,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class View extends ClickableUIComponent<Region> {
-	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private static final int CONDITIONS_PANE_POS = 0;
 	private final Stage myStage;
-
-	static {
-		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
-	}
 
 	private SplitPane outerSplitPane;
 	private SplitPane innerSplitPane;
@@ -73,6 +65,7 @@ public class View extends ClickableUIComponent<Region> {
 	private TemplatePaneExternal tempPane;
 	private ConditionsPaneExternal conditionsPane;
 	private VBox rightPane;
+	private MinimapPane miniMap;
 
 	public View(Controller controller) {
 		this(controller, new Stage());
@@ -131,8 +124,7 @@ public class View extends ClickableUIComponent<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState
-	 *            GameplayState that the View will now access its data from
+	 * @param newGameState GameplayState that the View will now access its data from
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
@@ -148,7 +140,7 @@ public class View extends ClickableUIComponent<Region> {
 		endTurnButton.setMinWidth(70);
 		endTurnButton.setPadding(new Insets(5, 2, 5, 2));
 		endTurnButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
-		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
+		ImageView cancelImg = new ImageView(getImg(getResourceBundle().getString("cancelImgPath")));
 		cancelImg.setPreserveRatio(true);
 		cancelImg.setSmooth(true);
 		cancelImg.setFitWidth(50);
@@ -183,8 +175,8 @@ public class View extends ClickableUIComponent<Region> {
 			}
 		});
 		setDividerPositions();
+		setMaxWidthsAndHeights();
 		SplitPane.setResizableWithParent(menuBar.getNode(), false);
-
 	}
 
 	private void setDividerPositions() {
@@ -194,6 +186,15 @@ public class View extends ClickableUIComponent<Region> {
 		innerSplitPane.setDividerPositions(getDoubleFromResourceBundle("innerSplitPaneDividerPosition1"),
 				getDoubleFromResourceBundle("innerSplitPaneDividerPosition2"));
 		outerSplitPane.setDividerPositions(getDoubleFromResourceBundle("outerSplitPaneDividerPosition1"));
+	}
+
+	private void setMaxWidthsAndHeights() {
+		rightPane.maxWidthProperty()
+				.bind(outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("RightPaneWidthMultiplier")));
+		conditionsPane.getNode().maxWidthProperty().bind(
+				outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("ConditionsPaneWidthMultiplier")));
+		bottomPane.maxHeightProperty()
+				.bind(outerSplitPane.heightProperty().multiply(getDoubleFromResourceBundle("BottomPaneHeightMultiplier")));
 	}
 
 	private double getDoubleFromResourceBundle(String key) {
@@ -212,8 +213,8 @@ public class View extends ClickableUIComponent<Region> {
 		setClickHandler(
 				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
-		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(),
-				tempPane.getNode());
+		miniMap = new MinimapPane(worldView.getGridView().getNode(), getController());
+		rightPane = new VBox(miniMap.getNode(), tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		getStyleSheet().bind(menuBar.getStyleSheet());
 		worldView.getStyleSheet().bind(getStyleSheet());
@@ -251,8 +252,8 @@ public class View extends ClickableUIComponent<Region> {
 		if (!innerSplitPane.getItems().contains(conditionsPane.getNode())) {
 			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
-		if (!innerSplitPane.getItems().contains(rightPane)) {
-			innerSplitPane.getItems().add(rightPane);
+		if (!rightPane.getChildren().contains(tempPane.getNode())) {
+			rightPane.getChildren().add(tempPane.getNode());
 		}
 	}
 
@@ -261,7 +262,6 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		// TODO Don't remove the minimap!
 		removeSidePanes();
 		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
 		detailPane.setPlayMode();
@@ -270,7 +270,7 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void removeSidePanes() {
 		innerSplitPane.getItems().remove(conditionsPane.getNode());
-		innerSplitPane.getItems().remove(rightPane);
+		rightPane.getChildren().remove(tempPane.getNode());
 	}
 
 	public void joinTeam() {
@@ -279,17 +279,17 @@ public class View extends ClickableUIComponent<Region> {
 		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
 		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
 		Optional<Team> chosenTeam = teams.showAndWait();
-		try{
+		try {
 			getController().joinTeam(chosenTeam.get().getName());
 		} catch (Exception e) {
-			if(!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()){
+			if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.titleProperty().bind(getPolyglot().get("NoTeamSelectedTitle"));
 				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
 				alert.showAndWait();
 				getController().enterAuthoringMode();
 			} else {
-				//Do nothing
+				// Do nothing
 			}
 		}
 	}
@@ -300,18 +300,6 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane.setClickHandler(clickHandler);
 		worldView.setClickHandler(clickHandler);
 		detailPane.setClickHandler(clickHandler);
-	}
-
-	public static Image getImg(String imgPath) {
-		if (!IMAGE_CACHE.containsKey(imgPath)) {
-			try {
-				IMAGE_CACHE.put(imgPath, new Image(imgPath));
-			} catch (Exception e) {
-				System.out.println("Error opening image: " + imgPath);
-				IMAGE_CACHE.put(imgPath, IMAGE_CACHE.get(""));
-			}
-		}
-		return IMAGE_CACHE.get(imgPath);
 	}
 
 	@Override

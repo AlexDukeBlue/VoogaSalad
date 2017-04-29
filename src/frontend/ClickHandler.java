@@ -37,7 +37,7 @@ public class ClickHandler {
 		this.abilityPane = abilityPane;
 		this.gridPane = gridPane;
 		this.currentMode = currentMode;
-		 sound = new SoundHandler();
+		sound = new SoundHandler();
 	}
 
 	/**

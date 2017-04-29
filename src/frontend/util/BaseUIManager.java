@@ -3,27 +3,39 @@
  */
 package frontend.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Observable;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.sun.javafx.collections.UnmodifiableObservableMap;
+
 import controller.Controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import util.polyglot.PolyglotException;
 import util.polyglot_extended.ObservablePolyglot;
 
-import java.util.*;
-
 /**
- *
- * SlogoBaseUIManager is the base class for every front end class in the Slogo
+ * BaseUIManager is the base class for almost every front end class in the
  * program. It was designed to be powerful enough to add significant
  * functionality to all classes that extend it, while being flexible enough to
  * allow any UI class to extend it.
  * <p>
  * This class has three key parts that are critical to every UI component in a
- * JavaFX program: language, style, and an Object that is being managed.
+ * JavaFX program: language, style, and a Node that is being managed.
  * <p>
  * This class contains an ObjectProperty for both the language and the
  * styleSheet. It supplies getter methods for both of those to allow client code
@@ -32,13 +44,20 @@ import java.util.*;
  * this can extend the getLanguage or getStyleSheet methods to make them return
  * readonly properties to prevent other classes from modifying them.
  * <p>
- * This class implements the NodeManager interface, with the object being
- * managed being a Parent. This allows any class that extends this to have its
- * object be used by client code to be the root of a Scene.
+ * This class implements the NodeManager interface, so that other classes know
+ * they can access the UI component that the manager is manipulating and setting
+ * up.
+ * <p>
+ * The ObjectProperty holding the language has been deprecated because we have
+ * incorporated the Polyglot utility to allow us to translate into hundreds of
+ * languages, instead of having to hand-write a resource bundle for every
+ * language.
  *
- * @author Dylan Peters
+ * @author Dylan Peters, Timmy Huang
  */
 public abstract class BaseUIManager<T extends Node> extends Observable implements NodeManager<T>, UIComponentListener {
+	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
+	private static final Map<String, Media> MEDIA_CACHE = new HashMap<>();
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -55,16 +74,22 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private final String resourcePath;
 
 	/**
-	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
+	 * Creates a new BaseUIManager. Sets all values for the language and
 	 * stylesheet to default. The default language is English.
-	 *
-	 * Yo Dylan wrong
-	 * project lmao
 	 */
 	public BaseUIManager() {
 		this(null);
 	}
 
+	/**
+	 * Creates a new BaseUIManager with a reference to the controller passed in.
+	 * The getController() method will now return the controller that was passed
+	 * as a param.
+	 * 
+	 * @param controller
+	 *            the Controller object that this BaseUIManager will communicate
+	 *            with.
+	 */
 	public BaseUIManager(Controller controller) {
 		this.controller = controller;
 		if (Objects.nonNull(controller)) {
@@ -83,6 +108,12 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		resources = ResourceBundle.getBundle(resourcePath);
 	}
 
+	/**
+	 * Returns the Controller object that this BaseUIManager is communicating
+	 * with.
+	 * 
+	 * @return Controller object that this BaseUIManager is communicating with.
+	 */
 	public Controller getController() {
 		return controller;
 	}
@@ -110,10 +141,18 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public void update() {
 	}
 
-	public static ObservablePolyglot getPolyglot(String resourcePath){
-		if (!POLYGLOT_CACHE.containsKey(resourcePath)){
+	/**
+	 * Generates an ObservablePolyglot object from the ResourceBundle at the
+	 * specified path.
+	 * 
+	 * @param resourcePath
+	 *            the filepath to the resourcebundle that the Polyglot will use.
+	 * @return ObservablePolyglot object that translates the resourcebundle.
+	 */
+	public static ObservablePolyglot getPolyglot(String resourcePath) {
+		if (!POLYGLOT_CACHE.containsKey(resourcePath)) {
 			try {
-				POLYGLOT_CACHE.put(resourcePath,new ObservablePolyglot(API_KEY, resourcePath));
+				POLYGLOT_CACHE.put(resourcePath, new ObservablePolyglot(API_KEY, resourcePath));
 				POLYGLOT_CACHE.get(resourcePath).setLanguage(DEFAULT_LANGUAGE);
 			} catch (PolyglotException e) {
 				throw new Error(e);
@@ -122,6 +161,11 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		return POLYGLOT_CACHE.get(resourcePath);
 	}
 
+	/**
+	 * Returns the polyglot instance that this BaseUIManager uses to translate.
+	 * 
+	 * @return polyglot instance that this BaseUIManager uses to translate.
+	 */
 	public ObservablePolyglot getPolyglot() {
 		return getPolyglot(resourcePath);
 	}
@@ -130,6 +174,10 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * Generates a map whose keys are Strings that are the filepaths of all
 	 * ResourceBundles that this class can use for its language, and whose
 	 * values are the ResourceBundles themselves.
+	 * <p>
+	 * This method has been deprecated because the program no longer uses
+	 * multiple resourcebundles with different languages, but instead uses a
+	 * single resourcebundle in English being translated by the Polyglot.
 	 *
 	 * @return a map whose keys are Strings that are the filepaths of all
 	 *         ResourceBundles that this class can use for its language, and
@@ -169,6 +217,10 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * Creates a ResourceBundle that this class uses by default. The default
 	 * ResourceBundle is specified in the bundle pointed to by the
 	 * LANGUAGE_RESOURCE_POINTER field.
+	 * <p>
+	 * This method has been deprecated because the program no longer uses
+	 * multiple resourcebundles with different languages, but instead uses a
+	 * single resourcebundle in English being translated by the Polyglot.
 	 *
 	 * @return a ResourceBundle that this class uses by default
 	 */
@@ -189,8 +241,74 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(DEFAULT_STYLE_KEY);
 	}
 
+	/**
+	 * Returns the ResourceBundle that the BaseUIManager uses to access Strings
+	 * and Objects.
+	 * 
+	 * @return the ResourceBundle that the BaseUIManager uses to access Strings
+	 *         and Objects.
+	 */
 	protected ResourceBundle getResourceBundle() {
 		return resources;
 	}
 
+	/**
+	 * Returns an image from a cache. This prevents the program from slowing
+	 * down if the same image is being loaded multiple times.
+	 * 
+	 * @param imgPath
+	 *            filepath to the image
+	 * @return Image at specified path.
+	 */
+	public final Image getImg(String imgPath) {
+		if (!IMAGE_CACHE.containsKey(imgPath)) {
+			try {
+				IMAGE_CACHE.put(imgPath, new Image(new FileInputStream(imgPath)));
+				getController().sendFile(imgPath);
+			} catch (Exception e) {
+				System.err.println("Error opening image: " + imgPath + "\t" + e.toString());
+			}
+		}
+		return IMAGE_CACHE.getOrDefault(imgPath, IMAGE_CACHE.get(""));
+	}
+
+	/**
+	 * Plays the sound file at the specified path.
+	 * 
+	 * @param mediaPath
+	 *            the filepath to the sound to play.
+	 */
+	public final void playMedia(String mediaPath) {
+		if (!MEDIA_CACHE.containsKey(mediaPath)) {
+			try {
+				MEDIA_CACHE.put(mediaPath, new Media(mediaPath));
+				getController().sendFile(mediaPath);
+			} catch (Exception e) {
+				System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());
+			}
+		}
+		if (MEDIA_CACHE.containsKey(mediaPath)) {
+			new MediaPlayer(MEDIA_CACHE.get(mediaPath)).play();
+		}
+	}
+
+	/**
+	 * Returns the filepaths to all ResourceBundles that have been accessed by
+	 * subclasses of the BaseUIManager.
+	 * 
+	 * @return the filepaths to all ResourceBundles that have been accessed by
+	 *         subclasses of the BaseUIManager.
+	 */
+	public static Collection<String> getResourcePaths() {
+		return Stream.of(IMAGE_CACHE.keySet(), MEDIA_CACHE.keySet()).flatMap(Collection::stream)
+				.collect(Collectors.toSet());
+	}
+
+	static {
+		try {
+			IMAGE_CACHE.put("", new Image(new FileInputStream("resources/images/transparent.png")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -1,11 +1,16 @@
 package frontend.factory.templatepane;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import backend.util.HasShape;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.SoundHandler;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.templatepane.TemplatePaneExternal;
 import frontend.util.AddRemoveButton;
@@ -15,13 +20,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Faith Rodriguez, Timmy Huang Created 3/29/2017
@@ -39,18 +42,22 @@ import java.util.stream.Collectors;
 class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneExternal {
 
 	private final Map<String, Collection<String>> templateNamesCache;
-	private VBox pane = new VBox();
+	private VBox vbox = new VBox();
+	private ScrollPane scrollPane = new ScrollPane();
 	private Map<String, VBox> contents;
 
 	public TemplatePane(Controller controller, ClickHandler clickHandler, String... templateCategories) {
-		super(controller, clickHandler);;
+		super(controller, clickHandler);
 		contents = new HashMap<>();
 		templateNamesCache = new HashMap<>();
+		scrollPane.setContent(vbox);
+		scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		Arrays.stream(templateCategories)
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
 		update();
-		
+
 	}
 
 	@Override
@@ -70,8 +77,8 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	}
 
 	@Override
-	public VBox getNode() {
-		return pane;
+	public Region getNode() {
+		return scrollPane;
 	}
 
 	private void createCollabsible(String label, Collection<? extends VoogaEntity> sprites) {
@@ -89,13 +96,13 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
-		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController().getAuthoringGameState(), getPolyglot().getLanguage(), getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
 		VBox box = new VBox(scroller, addRemoveButton.getNode());
 		box.setSpacing(2);
 		box.setPadding(new Insets(2, 2, 2, 2));
 		spritePane.setContent(box);
 		spritePane.setCollapsible(true);
 		spritePane.setExpanded(false);
-		pane.getChildren().add(spritePane);
+		vbox.getChildren().add(spritePane);
 	}
 }
