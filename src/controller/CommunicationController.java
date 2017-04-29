@@ -2,6 +2,7 @@ package controller;
 
 import backend.cell.Cell;
 import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
@@ -243,6 +244,21 @@ public class CommunicationController implements Controller {
 	@Override
 	public boolean isAuthoringMode() {
 		return getGameplayState().isAuthoringMode();
+	}
+	
+	@Override
+	public boolean activePlayerWon(){
+		return getActivePlayer().getResult().equals(Result.WIN);
+	}
+	
+	@Override
+	public boolean activePlayerLost(){
+		return getActivePlayer().getResult().equals(Result.LOSE);
+	}
+	
+	@Override
+	public boolean activePlayerTied(){
+		return getActivePlayer().getResult().equals(Result.TIE);
 	}
 
 	@Override
