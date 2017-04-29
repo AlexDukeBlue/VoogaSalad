@@ -1,7 +1,8 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
+import java.io.File;
+
 import frontend.View;
-import javafx.beans.binding.StringBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,10 +16,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-import java.io.File;
-
 /**
- * The WizardPage for creating any object that needs to include an image, name, and/or description
+ * The WizardPage for creating any object that needs to include an image, name,
+ * and/or description
  *
  * @author Andreas
  */
@@ -31,32 +31,8 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	private TextField nameField;
 	private TextArea descriptionField;
 
-	public ImageNameDescriptionPage() {
-		this(new StringBinding() {
-
-			@Override
-			protected String computeValue() {
-				return "";
-			}
-			
-		});
-	}
-
-	public ImageNameDescriptionPage(StringBinding title) {
-		this(title, new StringBinding() {
-
-			@Override
-			protected String computeValue() {
-				return "";
-			}
-			
-		});
-	}
-
-	public ImageNameDescriptionPage(StringBinding title, StringBinding description) {
-		super();
-		this.setTitle(title);
-		this.setDescription(description);
+	public ImageNameDescriptionPage(String descriptionKey) {
+		super(descriptionKey);
 		initialize();
 	}
 
@@ -91,7 +67,8 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		uploadButton.textProperty().bind(getPolyglot().get("Upload_Image"));
 		imageView = new ImageView();
 		nameField = new TextField();
-		nameField.promptTextProperty().bind(getPolyglot().get("Name"));;
+		nameField.promptTextProperty().bind(getPolyglot().get("Name"));
+		;
 		descriptionField = new TextArea();
 		descriptionField.promptTextProperty().bind(getPolyglot().get("Description"));
 		VBox imageBox = new VBox();
@@ -115,11 +92,15 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		File file = choose.showOpenDialog(null);
 		if (file != null) {
 			imageView.setImage(View.getImg(file.toURI().toString()));
-			imagePath = file.toURI().toString(); //todo make this a relative path
+			imagePath = file.toURI().toString(); // todo make this a relative
+													// path
 		}
 	}
 
 	private void checkIfCanNext() {
-		canNextWritable().setValue(/*imageView.getImage() != null && !nameField.getText().isEmpty()))*/ true);
+		canNextWritable().setValue(/*
+									 * imageView.getImage() != null &&
+									 * !nameField.getText().isEmpty()))
+									 */ true);
 	}
 }

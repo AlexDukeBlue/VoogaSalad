@@ -20,7 +20,8 @@ public class ActivationTriggersPage extends BaseWizardPage {
 	private Map<SelectableInputRow, Event> rowToTrigger;
 	private NumericInputRow hprow;
 
-	public ActivationTriggersPage(AuthoringGameState gameState) {
+	public ActivationTriggersPage(AuthoringGameState gameState, String descriptionKey) {
+		super(descriptionKey);
 		initialize(gameState);
 	}
 

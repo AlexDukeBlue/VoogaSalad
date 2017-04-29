@@ -4,6 +4,7 @@ import backend.grid.BoundsHandler;
 import backend.grid.ModifiableGameBoard;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
+import javafx.beans.binding.StringBinding;
 
 public class GridStrategy extends BaseStrategy<ModifiableGameBoard> {
 
@@ -17,18 +18,21 @@ public class GridStrategy extends BaseStrategy<ModifiableGameBoard> {
 	@Override
 	public ModifiableGameBoard finish() {
 		return (ModifiableGameBoard) new ModifiableGameBoard("").setName(boardNamePage.getName())
-				.setDescription(boardNamePage.getDescription().getValueSafe()).setImgPath(boardNamePage.getImagePath())
+				.setDescription(boardNamePage.getDescriptionLabelBinding().getValueSafe()).setImgPath(boardNamePage.getImagePath())
 				.setRows(gridInstantiationPage.getRows()).setColumns(gridInstantiationPage.getCols())
 				.setTemplateCell(gridInstantiationPage.getTemplateCell())
 				.setBoundsHandler(BoundsHandler.INFINITE_BOUNDS).build();
 	}
 
 	private void initialize() {
-		boardNamePage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewBoard"),
-				getPolyglot().get("CreateNewBoardDesc"));
-		gridInstantiationPage = new GridInstantiationPage(getPolyglot().get("Default_GridInstantiation_Title"),
-				getPolyglot().get("Default_GridInstantiation_Description"));
+		boardNamePage = new ImageNameDescriptionPage("GridStrategyNameDescription");
+		gridInstantiationPage = new GridInstantiationPage("GridStrategyInstantiationDescription");
 		getPages().addAll(boardNamePage, gridInstantiationPage);
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("GridStrategyTitle");
 	}
 
 }
