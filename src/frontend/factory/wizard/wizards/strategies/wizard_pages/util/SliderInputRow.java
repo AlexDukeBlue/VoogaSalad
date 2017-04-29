@@ -71,6 +71,12 @@ public class SliderInputRow extends BaseUIManager<Region> {
 		return (int) mySlider.getValue();
 	}
 
+
+	public void setValue(int value) {
+		mySlider.setValue(value);
+	}
+
+
 	void setLabel(String label) {
 		myLabelField.setText(label);
 	}
@@ -83,5 +89,5 @@ public class SliderInputRow extends BaseUIManager<Region> {
 	public Region getNode() {
 		return myNumericInputRow;
 	}
-
+	
 }

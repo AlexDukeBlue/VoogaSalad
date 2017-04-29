@@ -61,9 +61,11 @@ public class GridInstantiationPage extends BaseWizardPage {
 		rows = new SliderInputRow(null, getPolyglot().get("Num_Grid_Rows"));
 		rows.setMin(Integer.parseInt(getResourceBundle().getString("MIN_ROWS")));
 		rows.setMax(Integer.parseInt(getResourceBundle().getString("MAX_ROWS")));
+		rows.setValue(Integer.parseInt(getResourceBundle().getString("DEFAULT_ROWS")));
 		cols = new SliderInputRow(null, getPolyglot().get("Num_Grid_Cols"));
 		cols.setMin(Integer.parseInt(getResourceBundle().getString("MIN_COLS")));
 		cols.setMax(Integer.parseInt(getResourceBundle().getString("MAX_COLS")));
+		cols.setValue(Integer.parseInt(getResourceBundle().getString("DEFAULT_COLS")));
 		Shape[] shapes = Shape.values();
 		shapeMap = new HashMap<>();
 		ObservableList<String> shapeNames = FXCollections.observableArrayList();
