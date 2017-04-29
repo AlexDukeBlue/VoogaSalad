@@ -18,8 +18,23 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.net.ObservableHost;
 
+/**
+ * This ConcreteStartupDelegate is a concrete implementation of the
+ * StartupDelegate interface. It implements the methods required to startup
+ * games given the 4/30/17 API.
+ * 
+ * @author Dylan Peters
+ *
+ */
 class ConcreteStartupDelegate implements StartupDelegate {
 
+	/**
+	 * Creates a new game in edit mode. Can either create a whole new game or
+	 * load a game from a file.
+	 * 
+	 * @param stage
+	 *            the stage on which to show the game.
+	 */
 	@Override
 	public void create(Stage stage) {
 		try {
@@ -29,6 +44,13 @@ class ConcreteStartupDelegate implements StartupDelegate {
 		}
 	}
 
+	/**
+	 * Attempts to join a game that is currently being hosted on someone else's
+	 * computer.
+	 * 
+	 * @param stage
+	 *            the stage on which to show the game.
+	 */
 	@Override
 	public void join(Stage stage) {
 		try {
@@ -38,6 +60,14 @@ class ConcreteStartupDelegate implements StartupDelegate {
 		}
 	}
 
+	/**
+	 * Enters play-only mode for the game that the user chooses to load. This
+	 * prevents the user from being able to edit the game.
+	 * 
+	 * @param stage
+	 *            the stage on which to show the game.
+	 * 
+	 */
 	@Override
 	public void play(Stage stage) {
 		try {

@@ -1,6 +1,6 @@
 package frontend.factory.wizard;
 
-import frontend.factory.wizard.wizards.strategies.WizardStrategy;
+import frontend.factory.wizard.strategies.WizardStrategy;
 import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -58,10 +58,16 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		return borderPane;
 	}
 
+	/**
+	 * Show the wizard dialog.
+	 */
 	public void show() {
 		dialog.show();
 	}
 
+	/**
+	 * Hide the wizard dialog.
+	 */
 	public void hide() {
 		dialog.hide();
 	}
