@@ -386,10 +386,10 @@ public class CommunicationController implements Controller {
 				byte[] buffer = Files.readAllBytes(Paths.get(path));
 				sendModifier(state -> {
 					Path newFilePath = Paths.get(path);
-					System.out.println("Received: " + newFilePath);
 					if (Files.notExists(newFilePath)) {
-						System.out.println("Written new file:" + newFilePath);
-						Files.createDirectories(newFilePath.getParent());
+						if (Objects.nonNull(newFilePath.getParent())) {
+							Files.createDirectories(newFilePath.getParent());
+						}
 						Files.write(newFilePath, buffer);
 					}
 					return state;
