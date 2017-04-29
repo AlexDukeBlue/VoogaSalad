@@ -1,8 +1,5 @@
 package frontend.factory.wizard.wizards.strategies.wizard_pages;
 
-import java.io.File;
-
-import frontend.View;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,6 +12,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * The WizardPage for creating any object that needs to include an image, name,
@@ -91,9 +91,8 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		choose.getExtensionFilters().setAll(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File file = choose.showOpenDialog(null);
 		if (file != null) {
-			imageView.setImage(View.getImg(file.toURI().toString()));
-			imagePath = file.toURI().toString(); // todo make this a relative
-													// path
+			imagePath = Paths.get(System.getProperty("user.dir")).relativize(Paths.get(file.getPath())).toString();
+			imageView.setImage(getImg(imagePath));
 		}
 	}
 

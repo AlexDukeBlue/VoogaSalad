@@ -6,7 +6,6 @@ import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.View;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.ImageCursor;
@@ -25,7 +24,7 @@ public class VoogaEntityButton extends SelectableUIComponent<Button> {
 	public VoogaEntityButton(VoogaEntity entity, int size, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.entity = entity;
-		ImageView sprite = new ImageView(View.getImg(entity.getImgPath()));
+		ImageView sprite = new ImageView(getImg(entity.getImgPath()));
 		sprite.setSmooth(true);
 		sprite.setPreserveRatio(true);
 		entityButton = new Button("", sprite);

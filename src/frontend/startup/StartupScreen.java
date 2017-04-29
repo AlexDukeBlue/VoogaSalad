@@ -69,7 +69,7 @@ public class StartupScreen extends BaseUIManager<Parent> {
 			height = Double.parseDouble(getResourceBundle().getString("DefaultStartupHeight"));
 		}
 		Background imgv = new Background(new BackgroundImage(
-				View.getImg(getResourceBundle().getString("StartupBackgroundImage")), BackgroundRepeat.NO_REPEAT,
+				getImg(getResourceBundle().getString("StartupBackgroundImage")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(width, height, false, false, true, true)));
 		primaryPane = new BorderPane();
 		primaryPane.setBottom(new StartupSelectionScreen(stage).getNode());

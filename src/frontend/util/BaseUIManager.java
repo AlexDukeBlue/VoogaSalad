@@ -10,13 +10,19 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import util.polyglot.PolyglotException;
 import util.polyglot_extended.ObservablePolyglot;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- *
  * SlogoBaseUIManager is the base class for every front end class in the Slogo
  * program. It was designed to be powerful enough to add significant
  * functionality to all classes that extend it, while being flexible enough to
@@ -39,6 +45,8 @@ import java.util.*;
  * @author Dylan Peters
  */
 public abstract class BaseUIManager<T extends Node> extends Observable implements NodeManager<T>, UIComponentListener {
+	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
+	private static final Map<String, Media> MEDIA_CACHE = new HashMap<>();
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -57,7 +65,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	/**
 	 * Creates a new SlogoBaseUIManager. Sets all values for the language and
 	 * stylesheet to default. The default language is English.
-	 *
+	 * <p>
 	 * Yo Dylan wrong
 	 * project lmao
 	 */
@@ -96,7 +104,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * style.
 	 *
 	 * @return an ObjectProperty containing a String pointing to the stylesheet
-	 *         that this class uses to style the Parent it manages.
+	 * that this class uses to style the Parent it manages.
 	 */
 	public ObjectProperty<String> getStyleSheet() {
 		return styleSheet;
@@ -110,10 +118,10 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public void update() {
 	}
 
-	public static ObservablePolyglot getPolyglot(String resourcePath){
-		if (!POLYGLOT_CACHE.containsKey(resourcePath)){
+	public static ObservablePolyglot getPolyglot(String resourcePath) {
+		if (!POLYGLOT_CACHE.containsKey(resourcePath)) {
 			try {
-				POLYGLOT_CACHE.put(resourcePath,new ObservablePolyglot(API_KEY, resourcePath));
+				POLYGLOT_CACHE.put(resourcePath, new ObservablePolyglot(API_KEY, resourcePath));
 				POLYGLOT_CACHE.get(resourcePath).setLanguage(DEFAULT_LANGUAGE);
 			} catch (PolyglotException e) {
 				throw new Error(e);
@@ -132,8 +140,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * values are the ResourceBundles themselves.
 	 *
 	 * @return a map whose keys are Strings that are the filepaths of all
-	 *         ResourceBundles that this class can use for its language, and
-	 *         whose values are the ResourceBundles themselves.
+	 * ResourceBundles that this class can use for its language, and
+	 * whose values are the ResourceBundles themselves.
 	 */
 	@Deprecated
 	protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
@@ -152,8 +160,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * stylesheets themselves.
 	 *
 	 * @return a map whose keys are Strings that are the names of all the
-	 *         possible stylesheets that this class can use, and whose values
-	 *         are the stylesheets themselves.
+	 * possible stylesheets that this class can use, and whose values
+	 * are the stylesheets themselves.
 	 */
 	protected final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
 		Map<String, String> map = new HashMap<>();
@@ -193,4 +201,41 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		return resources;
 	}
 
+	public final Image getImg(String imgPath) {
+		if (!IMAGE_CACHE.containsKey(imgPath)) {
+			try {
+				IMAGE_CACHE.put(imgPath, new Image(new FileInputStream(imgPath)));
+				getController().sendFile(imgPath);
+			} catch (Exception e) {
+				System.err.println("Error opening image: " + imgPath + "\t" + e.toString());
+			}
+		}
+		return IMAGE_CACHE.getOrDefault(imgPath, IMAGE_CACHE.get(""));
+	}
+	
+	public final void playMedia(String mediaPath){
+		if (!MEDIA_CACHE.containsKey(mediaPath)) {
+			try {
+				MEDIA_CACHE.put(mediaPath, new Media(mediaPath));
+				getController().sendFile(mediaPath);
+			} catch (Exception e) {
+				System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());
+			}
+		}
+		if (MEDIA_CACHE.containsKey(mediaPath)){
+			new MediaPlayer(MEDIA_CACHE.get(mediaPath)).play();
+		}
+	}
+
+	public static Collection<String> getResourcePaths(){
+		return Stream.of(IMAGE_CACHE.keySet(),MEDIA_CACHE.keySet()).flatMap(Collection::stream).collect(Collectors.toSet());
+	}
+
+	static {
+		try {
+			IMAGE_CACHE.put("", new Image(new FileInputStream("resources/images/transparent.png")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -39,7 +39,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
@@ -48,18 +47,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class View extends ClickableUIComponent<Region> {
-	private static final Map<String, Image> IMAGE_CACHE = new HashMap<>();
 	private static final int CONDITIONS_PANE_POS = 0;
 	private final Stage myStage;
-
-	static {
-		IMAGE_CACHE.put("", new Image("resources/images/transparent.png"));
-	}
 
 	private SplitPane outerSplitPane;
 	private SplitPane innerSplitPane;
@@ -132,8 +124,7 @@ public class View extends ClickableUIComponent<Region> {
 	/**
 	 * Sets the GameState that the View accesses its data from.
 	 *
-	 * @param newGameState
-	 *            GameplayState that the View will now access its data from
+	 * @param newGameState GameplayState that the View will now access its data from
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
@@ -149,7 +140,7 @@ public class View extends ClickableUIComponent<Region> {
 		endTurnButton.setMinWidth(70);
 		endTurnButton.setPadding(new Insets(5, 2, 5, 2));
 		endTurnButton.setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
-		ImageView cancelImg = new ImageView(View.getImg(getResourceBundle().getString("cancelImgPath")));
+		ImageView cancelImg = new ImageView(getImg(getResourceBundle().getString("cancelImgPath")));
 		cancelImg.setPreserveRatio(true);
 		cancelImg.setSmooth(true);
 		cancelImg.setFitWidth(50);
@@ -309,18 +300,6 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane.setClickHandler(clickHandler);
 		worldView.setClickHandler(clickHandler);
 		detailPane.setClickHandler(clickHandler);
-	}
-
-	public static Image getImg(String imgPath) {
-		if (!IMAGE_CACHE.containsKey(imgPath)) {
-			try {
-				IMAGE_CACHE.put(imgPath, new Image(imgPath));
-			} catch (Exception e) {
-				System.out.println("Error opening image: " + imgPath);
-				IMAGE_CACHE.put(imgPath, IMAGE_CACHE.get(""));
-			}
-		}
-		return IMAGE_CACHE.get(imgPath);
 	}
 
 	@Override
