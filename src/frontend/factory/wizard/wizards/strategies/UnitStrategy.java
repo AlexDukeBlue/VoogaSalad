@@ -30,7 +30,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	@Override
 	public Unit finish() {
 		ModifiableUnit unit = new ModifiableUnit(imageNameDescriptionPage.getName());
-		unit.setDescription(imageNameDescriptionPage.getDescription().getValue());
+		unit.setDescription(imageNameDescriptionPage.getDescriptionLabelBinding().getValue());
 		unit.setImgPath(imageNameDescriptionPage.getImagePath());
 		unit.removeActiveAbilities(unit.getActiveAbilities());
 		unit.addActiveAbilities(abilitiesAdderPage.getSelectedAbilities());

@@ -106,7 +106,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 			WizardPage page = pages.get(newPageNum);
 			scrollPane.setContent(page.getNode());
 			descriptionLabel.textProperty().unbind();
-			descriptionLabel.textProperty().bind(page.getDescription());
+			descriptionLabel.textProperty().bind(page.getDescriptionLabelBinding());
 
 			canPrevious.unbind();
 			canPrevious.setValue(newPageNum != 0);

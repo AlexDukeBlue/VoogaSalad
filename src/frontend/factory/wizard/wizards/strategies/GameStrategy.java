@@ -27,14 +27,14 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	public AuthoringGameState finish() {
 		ModifiableGameBoard boardBuilder = new ModifiableGameBoard("");
 		boardBuilder.setName(boardNamePage.getName());
-		boardBuilder.setDescription(boardNamePage.getDescription().getValue());
+		boardBuilder.setDescription(boardNamePage.getDescriptionLabelBinding().getValue());
 		boardBuilder.setImgPath(boardNamePage.getImagePath());
 		boardBuilder.setRows(gridInstantiationPage.getRows());
 		boardBuilder.setColumns(gridInstantiationPage.getCols());
 		boardBuilder.setTemplateCell(gridInstantiationPage.getTemplateCell());
 		boardBuilder.setBoundsHandler(BoundsHandler.INFINITE_BOUNDS);
 		AuthoringGameState gameState = new AuthoringGameState(gameNamePage.getName());
-		gameState.setDescription(gameNamePage.getDescription().getValue());
+		gameState.setDescription(gameNamePage.getDescriptionLabelBinding().getValue());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
 		return gameState;

@@ -8,7 +8,7 @@ public interface WizardPage {
 
 	ReadOnlyBooleanProperty canNext();
 
-	StringBinding getDescription();
+	StringBinding getDescriptionLabelBinding();
 
 	Node getNode();
 

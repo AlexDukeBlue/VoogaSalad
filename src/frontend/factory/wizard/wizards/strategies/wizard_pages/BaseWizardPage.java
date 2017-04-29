@@ -25,7 +25,7 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	public BaseWizardPage(String descriptionKey) {
-		this.description = getPolyglot().get(descriptionKey);
+		description = getPolyglot().get(descriptionKey);
 		canNext = new SimpleBooleanProperty(false);
 	}
 
@@ -35,7 +35,7 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	}
 
 	@Override
-	public StringBinding getDescription() {
+	public StringBinding getDescriptionLabelBinding() {
 		return description;
 	}
 

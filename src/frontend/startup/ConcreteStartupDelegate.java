@@ -50,9 +50,7 @@ class ConcreteStartupDelegate implements StartupDelegate {
 	private void create(Stage stage, int port) {
 		Controller control = new CommunicationController(
 				System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
-		System.out.println("Creating wizard");
 		WizardFactory.newWizard("gamestate", null).addObserver((o, arg) -> {
-			System.out.println("Detected change in wizard");
 			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 			createGame(control, stage);
