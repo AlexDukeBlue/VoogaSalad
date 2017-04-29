@@ -1,6 +1,7 @@
 package frontend.factory.wizard;
 
 import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.strategies.StrategyFactory;
 import util.polyglot.PolyglotException;
 
@@ -29,8 +30,8 @@ public class WizardFactory {
 	 *            the wizard.
 	 * @return a wizard that produces the correct type of object.
 	 */
-	public static Wizard<?> newWizard(String categoryName, AuthoringGameState gameState) {
-		return new Wizard<>(StrategyFactory.newStrategy(categoryName, gameState));
+	public static Wizard<?> newWizard(String categoryName, Controller controller) {
+		return new Wizard<>(controller,StrategyFactory.newStrategy(categoryName, controller));
 	}
 
 	/**
@@ -51,9 +52,9 @@ public class WizardFactory {
 	 *            the stylesheet to style the wizard with
 	 * @return
 	 */
-	public static Wizard<?> newWizard(String categoryName, AuthoringGameState gameState, String language,
+	public static Wizard<?> newWizard(String categoryName, Controller controller, String language,
 			String stylesheet) {
-		Wizard<?> wizard = new Wizard<>(StrategyFactory.newStrategy(categoryName, gameState));
+		Wizard<?> wizard = new Wizard<>(controller,StrategyFactory.newStrategy(categoryName, controller));
 		try {
 			wizard.getPolyglot().setLanguage(language);
 		} catch (PolyglotException e) {

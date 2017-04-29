@@ -1,5 +1,6 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
@@ -24,8 +25,8 @@ public class NumTurnsPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public NumTurnsPage(String descriptionKey) {
-		super(descriptionKey);
+	public NumTurnsPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
 		initialize();
 	}
 

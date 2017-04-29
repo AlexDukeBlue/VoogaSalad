@@ -2,6 +2,7 @@ package frontend.factory.wizard.strategies;
 
 import backend.grid.BoundsHandler;
 import backend.grid.BoundsHandler.CoordinateMapper;
+import controller.Controller;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -16,8 +17,8 @@ class GridBoundsStrategy extends NameScriptBaseStrategy<BoundsHandler> {
 	/**
 	 * Creates a new instance of GridBoundsStrategy
 	 */
-	public GridBoundsStrategy() {
-		super("GridBoundsNamePageDescription", "GridBoundsScriptingPageDescription");
+	public GridBoundsStrategy(Controller controller) {
+		super(controller, "GridBoundsNamePageDescription", "GridBoundsScriptingPageDescription");
 		setScriptPrompt("GridBounds_Example_");
 	}
 

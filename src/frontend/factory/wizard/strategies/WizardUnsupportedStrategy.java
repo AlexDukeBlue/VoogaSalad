@@ -1,5 +1,6 @@
 package frontend.factory.wizard.strategies;
 
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.WizardUnsupportedPage;
 import javafx.beans.binding.StringBinding;
 
@@ -19,8 +20,9 @@ class WizardUnsupportedStrategy extends BaseStrategy<Object> {
 	/**
 	 * Creates a new instance of WizardUnsupportedStrategy.
 	 */
-	public WizardUnsupportedStrategy() {
-		page = new WizardUnsupportedPage();
+	public WizardUnsupportedStrategy(Controller controller) {
+		super(controller);
+		page = new WizardUnsupportedPage(controller);
 		getPages().add(page);
 	}
 
