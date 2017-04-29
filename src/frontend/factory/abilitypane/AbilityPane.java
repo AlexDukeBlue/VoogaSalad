@@ -20,6 +20,9 @@ import java.util.Collection;
 
 /**
  * @author Created by th174 on 4/21/17.
+ * 
+ * Sets the content for the Ability Pane, which allows the user to view and apply active abilities
+ * for each unit and terrain.
  */
 public class AbilityPane extends ClickableUIComponent<SplitPane> {
 	private final ScrollPane activeAbilities;
@@ -46,6 +49,11 @@ public class AbilityPane extends ClickableUIComponent<SplitPane> {
 		passiveAbilities.setFitToHeight(true);
 	}
 
+	/**
+	 * Sets the details that should be displayed within the pane
+	 * @param entity
+	 * The VoogaEntity that has been selected for viewing
+	 */
 	public void setContent(VoogaEntity entity) {
 		abilityPane.getItems().clear();
 		activeAbilitiesContent.getChildren().clear();

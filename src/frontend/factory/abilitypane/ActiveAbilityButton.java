@@ -14,6 +14,7 @@ import java.util.Collections;
 
 /**
  * @author Created by th174 on 4/27/2017.
+ * Creates a button that allows a user to use an active ability belonging to either a unit or terrain
  */
 public class ActiveAbilityButton extends AbilityButton {
 	public ActiveAbilityButton(Unit unit, ActiveAbility entity, int size, Controller controller, ClickHandler clickHandler) {
