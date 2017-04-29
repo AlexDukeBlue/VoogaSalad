@@ -82,7 +82,8 @@ public class View extends ClickableUIComponent<Region> {
 		super(controller, null);
 		myStage = stage;
 		placePanes();
-		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
+		menuBar.getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DarkTheme"));
+		menuBar.getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 	}
 
 	private void setViewEditable(boolean editable) {
@@ -205,10 +206,6 @@ public class View extends ClickableUIComponent<Region> {
 	 */
 	private void initPanes() {
 		menuBar = new VoogaMenuBar(this, getController(), getController().isAuthoringMode());
-		menuBar.getStyleSheet().addListener((observable, oldValue, newValue) -> {
-			getNode().getStylesheets().clear();
-			getNode().getStylesheets().add(newValue);
-		});
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
@@ -218,6 +215,12 @@ public class View extends ClickableUIComponent<Region> {
 		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(),
 				tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
+		getStyleSheet().bind(menuBar.getStyleSheet());
+		worldView.getStyleSheet().bind(getStyleSheet());
+		detailPane.getStyleSheet().bind(getStyleSheet());
+		abilityPane.getStyleSheet().bind(getStyleSheet());
+		tempPane.getStyleSheet().bind(getStyleSheet());
+		conditionsPane.getStyleSheet().bind(getStyleSheet());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
 				worldView.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());

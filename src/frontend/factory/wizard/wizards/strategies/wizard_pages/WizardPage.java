@@ -8,14 +8,10 @@ public interface WizardPage {
 
 	ReadOnlyBooleanProperty canNext();
 
-	void setTitle(StringBinding title);
+	StringBinding getDescriptionLabelBinding();
 
-	StringBinding getTitle();
-
-	void setDescription(StringBinding description);
-
-	StringBinding getDescription();
-	
 	Node getNode();
+	
+	void setLanguage(String language);
 
 }

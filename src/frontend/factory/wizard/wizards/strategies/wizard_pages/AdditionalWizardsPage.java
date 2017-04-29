@@ -20,8 +20,8 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 	private NumericInputRow numWizardRow;
 	private ObservableList<AdditionalWizardRow<T>> wizardRows;
 
-	public AdditionalWizardsPage(String title, String description, Class<? extends Wizard<T>> clazz) {
-		super(title, description);
+	public AdditionalWizardsPage(String descriptionKey, Class<? extends Wizard<T>> clazz) {
+		super(descriptionKey);
 		initialize(clazz);
 	}
 

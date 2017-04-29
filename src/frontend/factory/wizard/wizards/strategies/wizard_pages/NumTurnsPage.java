@@ -10,7 +10,8 @@ public class NumTurnsPage extends BaseWizardPage{
 	private TableInputView table;
 	private NumericInputRow input;
 	
-	public NumTurnsPage(){
+	public NumTurnsPage(String descriptionKey){
+		super(descriptionKey);
 		initialize();
 	}
 

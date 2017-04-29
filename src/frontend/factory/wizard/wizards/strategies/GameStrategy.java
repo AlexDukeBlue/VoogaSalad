@@ -8,7 +8,7 @@ import backend.player.Team;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.wizards.strategies.wizard_pages.ImageNameDescriptionPage;
-import util.polyglot.PolyglotException;
+import javafx.beans.binding.StringBinding;
 
 /**
  * GameStrategy implements the SelectionStrategy interface in order to allow the
@@ -21,9 +21,6 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	private ImageNameDescriptionPage gameNamePage;
 	private ImageNameDescriptionPage boardNamePage;
 	private GridInstantiationPage gridInstantiationPage;
-	// private AdditionalWizardsPage<Team> additionalTeamWizardsPage;
-	// private AdditionalWizardsPage<Unit> additionalUnitWizardsPage;
-	// private AdditionalWizardsPage<Terrain> additionalTerrainWizardsPage;
 
 	public GameStrategy() {
 		initialize();
@@ -33,14 +30,14 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	public AuthoringGameState finish() {
 		ModifiableGameBoard boardBuilder = new ModifiableGameBoard("");
 		boardBuilder.setName(boardNamePage.getName());
-		boardBuilder.setDescription(boardNamePage.getDescription().getValue());
+		boardBuilder.setDescription(boardNamePage.getDescriptionLabelBinding().getValue());
 		boardBuilder.setImgPath(boardNamePage.getImagePath());
 		boardBuilder.setRows(gridInstantiationPage.getRows());
 		boardBuilder.setColumns(gridInstantiationPage.getCols());
 		boardBuilder.setTemplateCell(gridInstantiationPage.getTemplateCell());
 		boardBuilder.setBoundsHandler(BoundsHandler.INFINITE_BOUNDS);
 		AuthoringGameState gameState = new AuthoringGameState(gameNamePage.getName());
-		gameState.setDescription(gameNamePage.getDescription().getValue());
+		gameState.setDescription(gameNamePage.getDescriptionLabelBinding().getValue());
 		gameState.setImgPath(gameNamePage.getImagePath());
 		gameState.setGrid(boardBuilder.build());
 		gameState.addTeam(new Team("Default", "Default Team", Team.WHITE, null, Collections.emptyList()));
@@ -49,23 +46,15 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	}
 
 	private void initialize() {
-		gameNamePage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewGame"), 
-				getPolyglot().get("CreateNewGameDesc"));
-		boardNamePage = new ImageNameDescriptionPage(getPolyglot().get("CreateNewBoard"), 
-				getPolyglot().get("CreateNewBoardDesc"));
-		gridInstantiationPage = new GridInstantiationPage(getPolyglot().get("Default_GridInstantiation_Title"), 
-				getPolyglot().get("Default_GridInstantiation_Description"));
-		getPolyglot().setOnLanguageChange(event -> {
-			try {
-				gameNamePage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				boardNamePage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-				gridInstantiationPage.getPolyglot().setLanguage(getPolyglot().getLanguage());
-			} catch (PolyglotException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		
+		gameNamePage = new ImageNameDescriptionPage("GameStrategyGameNameDescription");
+		boardNamePage = new ImageNameDescriptionPage("GameStrategyBoardNameDescription");
+		gridInstantiationPage = new GridInstantiationPage("GameStrategyGridInstantiationDescription");
+
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage);
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("GameStrategyTitle");
 	}
 }
