@@ -449,6 +449,9 @@ public class CommunicationController implements Controller {
 					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
 					if (templateCopy instanceof Unit) {
 						((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName));
+						
+						//((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName).getTeam());
+						
 					}
 					targetCell.add(templateCopy);
 				} else {
