@@ -64,7 +64,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 		abilitiesAdderPage = new AbilitiesAdderPage(gameState, "UnitAbilitiesAdderDescription");
 		terrainMovePointPage = new TerrainMovePointPage(gameState, "UnitTerrainDescription");
 		gridPatternPage = new GridPatternPage(gameState, "UnitGridPatternDescription", Color.WHITE, Color.GREEN);
-		gridPatternPageRange = new GridPatternPage(gameState, "UnitGridPatternDescription", Color.WHITE, Color.YELLOW);
+		gridPatternPageRange = new GridPatternPage(gameState, "UnitGridPatternRangeDescription", Color.WHITE, Color.YELLOW);
 
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage, gridPatternPageRange);
 	}
