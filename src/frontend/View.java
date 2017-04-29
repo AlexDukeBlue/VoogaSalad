@@ -65,6 +65,7 @@ public class View extends ClickableUIComponent<Region> {
 	private TemplatePaneExternal tempPane;
 	private ConditionsPaneExternal conditionsPane;
 	private VBox rightPane;
+	private MinimapPane miniMap;
 
 	public View(Controller controller) {
 		this(controller, new Stage());
@@ -174,8 +175,8 @@ public class View extends ClickableUIComponent<Region> {
 			}
 		});
 		setDividerPositions();
+		setMaxWidthsAndHeights();
 		SplitPane.setResizableWithParent(menuBar.getNode(), false);
-
 	}
 
 	private void setDividerPositions() {
@@ -185,6 +186,15 @@ public class View extends ClickableUIComponent<Region> {
 		innerSplitPane.setDividerPositions(getDoubleFromResourceBundle("innerSplitPaneDividerPosition1"),
 				getDoubleFromResourceBundle("innerSplitPaneDividerPosition2"));
 		outerSplitPane.setDividerPositions(getDoubleFromResourceBundle("outerSplitPaneDividerPosition1"));
+	}
+
+	private void setMaxWidthsAndHeights() {
+		rightPane.maxWidthProperty()
+				.bind(outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("RightPaneWidthMultiplier")));
+		conditionsPane.getNode().maxWidthProperty().bind(
+				outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("ConditionsPaneWidthMultiplier")));
+		bottomPane.maxHeightProperty()
+				.bind(outerSplitPane.heightProperty().multiply(getDoubleFromResourceBundle("BottomPaneHeightMultiplier")));
 	}
 
 	private double getDoubleFromResourceBundle(String key) {
@@ -203,8 +213,8 @@ public class View extends ClickableUIComponent<Region> {
 		setClickHandler(
 				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
-		rightPane = new VBox(new MinimapPane(worldView.getGridView().getNode(), getController()).getNode(),
-				tempPane.getNode());
+		miniMap = new MinimapPane(worldView.getGridView().getNode(), getController());
+		rightPane = new VBox(miniMap.getNode(), tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		getStyleSheet().bind(menuBar.getStyleSheet());
 		worldView.getStyleSheet().bind(getStyleSheet());
@@ -242,8 +252,8 @@ public class View extends ClickableUIComponent<Region> {
 		if (!innerSplitPane.getItems().contains(conditionsPane.getNode())) {
 			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
-		if (!innerSplitPane.getItems().contains(rightPane)) {
-			innerSplitPane.getItems().add(rightPane);
+		if (!rightPane.getChildren().contains(tempPane.getNode())) {
+			rightPane.getChildren().add(tempPane.getNode());
 		}
 	}
 
@@ -252,7 +262,6 @@ public class View extends ClickableUIComponent<Region> {
 	 * View is already in play mode, then nothing visually changes.
 	 */
 	private void enterPlayMode() {
-		// TODO Don't remove the minimap!
 		removeSidePanes();
 		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
 		detailPane.setPlayMode();
@@ -261,7 +270,7 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void removeSidePanes() {
 		innerSplitPane.getItems().remove(conditionsPane.getNode());
-		innerSplitPane.getItems().remove(rightPane);
+		rightPane.getChildren().remove(tempPane.getNode());
 	}
 
 	public void joinTeam() {
@@ -280,7 +289,7 @@ public class View extends ClickableUIComponent<Region> {
 				alert.showAndWait();
 				getController().enterAuthoringMode();
 			} else {
-				//Do nothing
+				// Do nothing
 			}
 		}
 	}
