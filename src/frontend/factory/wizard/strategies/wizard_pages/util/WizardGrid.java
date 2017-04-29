@@ -57,6 +57,7 @@ public class WizardGrid extends BaseUIManager<Region> {
 	 *            characteristics of the AuthoringGameState.
 	 */
 	public WizardGrid(AuthoringGameState gameState) {
+		super(null);
 		initialize(gameState);
 	}
 

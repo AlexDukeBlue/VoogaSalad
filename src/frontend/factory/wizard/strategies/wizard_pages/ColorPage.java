@@ -1,5 +1,6 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
+import controller.Controller;
 import javafx.geometry.Pos;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -27,8 +28,8 @@ public class ColorPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public ColorPage(String descriptionKey) {
-		super(descriptionKey);
+	public ColorPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
 		colorPicker = new ColorPicker();
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);

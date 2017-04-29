@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import backend.util.AuthoringGameState;
+import controller.Controller;
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.factory.wizard.strategies.wizard_pages.util.AdditionalWizardRow;
@@ -43,9 +44,9 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 	 * @param clazz
 	 *            the class of wizard that this class will create
 	 */
-	public AdditionalWizardsPage(String descriptionKey, String wizardType, AuthoringGameState gameState) {
-		super(descriptionKey);
-		initialize(wizardType,gameState);
+	public AdditionalWizardsPage(String descriptionKey, String wizardType, Controller controller) {
+		super(controller, descriptionKey);
+		initialize(wizardType);
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 		return wizardRows.stream().map(row -> row.getObjectProperty().getValue()).collect(Collectors.toList());
 	}
 
-	private void initialize(String wizardType,AuthoringGameState gameState) {
+	private void initialize(String wizardType) {
 		vbox = new VBox();
 		wizardRows = FXCollections.observableArrayList();
 		wizardRows.addListener((ListChangeListener<AdditionalWizardRow<T>>) listChange -> {
@@ -83,7 +84,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 			int numRows = (Integer) object;
 			try {
 				while (wizardRows.size() < numRows) {
-					Wizard<T> wizard = (Wizard<T>) WizardFactory.newWizard(wizardType, gameState);
+					Wizard<T> wizard = (Wizard<T>) WizardFactory.newWizard(wizardType, getController());
 					wizard.hide();
 					wizardRows.add(new AdditionalWizardRow<>(getPolyglot().get("Description"), wizard));
 				}

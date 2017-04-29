@@ -1,5 +1,6 @@
 package frontend.factory.wizard;
 
+import controller.Controller;
 import frontend.factory.wizard.strategies.WizardStrategy;
 import frontend.util.BaseUIManager;
 import javafx.event.ActionEvent;
@@ -46,7 +47,8 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	 * @param selectionStrategy
 	 *            WizardStrategy to use when populating the wizard's pages.
 	 */
-	Wizard(WizardStrategy<T> selectionStrategy) {
+	Wizard(Controller controller,WizardStrategy<T> selectionStrategy) {
+		super(controller);
 		initialize(selectionStrategy);
 	}
 
@@ -105,7 +107,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		dialog = new Dialog<>();
 		DialogPane dialogPane = new DialogPane();
 		borderPane = new BorderPane(selectionStrategy.getNode());
-		WizardMenuBar<T> menuBar = new WizardMenuBar<>();
+		WizardMenuBar<T> menuBar = new WizardMenuBar<>(getController());
 		menuBar.addObserver((observable, object) -> finish(menuBar.finish()));
 		borderPane.setTop(menuBar.getNode());
 		dialogPane.setContent(borderPane);

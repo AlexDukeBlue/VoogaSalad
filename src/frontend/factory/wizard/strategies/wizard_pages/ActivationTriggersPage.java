@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import backend.util.AuthoringGameState;
 import backend.util.Event;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
@@ -39,9 +39,9 @@ public class ActivationTriggersPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public ActivationTriggersPage(AuthoringGameState gameState, String descriptionKey) {
-		super(descriptionKey);
-		initialize(gameState);
+	public ActivationTriggersPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
+		initialize();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ActivationTriggersPage extends BaseWizardPage {
 				.collect(Collectors.toList());
 	}
 
-	private void initialize(AuthoringGameState gameState) {
+	private void initialize() {
 		table = new VerticalTableInputView();
 
 		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt"), getPolyglot().get("HP"));

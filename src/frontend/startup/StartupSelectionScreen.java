@@ -34,6 +34,7 @@ class StartupSelectionScreen extends BaseUIManager<Node> {
 	 *            the stage on which the game will be placed.
 	 */
 	StartupSelectionScreen(Stage stage) {
+		super(null);
 		initializePane(stage);
 	}
 

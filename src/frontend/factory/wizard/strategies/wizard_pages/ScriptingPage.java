@@ -2,6 +2,7 @@ package frontend.factory.wizard.strategies.wizard_pages;
 
 import java.util.Optional;
 
+import controller.Controller;
 import frontend.util.ScriptingDialog;
 import javafx.scene.layout.Region;
 import util.scripting.VoogaScriptEngine;
@@ -25,9 +26,9 @@ public class ScriptingPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public ScriptingPage(String descriptionKey) {
-		super(descriptionKey);
-		dialog = new ScriptingDialog();
+	public ScriptingPage(Controller controller, String descriptionKey) {
+		super(controller, descriptionKey);
+		dialog = new ScriptingDialog(controller);
 		canNextWritable().bind(dialog.hasCompiled());
 	}
 

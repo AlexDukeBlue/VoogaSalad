@@ -1,6 +1,7 @@
 package frontend.factory.wizard.strategies;
 
 import backend.game_engine.Resultant;
+import controller.Controller;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -15,8 +16,8 @@ class EndConditionStrategy extends NameScriptBaseStrategy<Resultant> {
 	/**
 	 * Creates a new instance of EndConditionsStrategy
 	 */
-	public EndConditionStrategy() {
-		super("EndConditionNamePageDescription", "EndConditionScriptingPageDescription");
+	public EndConditionStrategy(Controller controller) {
+		super(controller, "EndConditionNamePageDescription", "EndConditionScriptingPageDescription");
 		setScriptPrompt("EndCondition_Example_");
 	}
 

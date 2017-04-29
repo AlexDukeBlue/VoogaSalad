@@ -3,6 +3,7 @@ package frontend.factory.wizard.strategies;
 import java.util.Collections;
 
 import backend.player.Team;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.ColorPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import javafx.beans.binding.StringBinding;
@@ -21,7 +22,8 @@ class TeamStrategy extends BaseStrategy<Team> {
 	/**
 	 * Creates a new TeamStrategy object.
 	 */
-	public TeamStrategy() {
+	public TeamStrategy(Controller controller) {
+		super(controller);
 		initialize();
 	}
 
@@ -40,8 +42,8 @@ class TeamStrategy extends BaseStrategy<Team> {
 	}
 
 	private void initialize() {
-		namePage = new ImageNameDescriptionPage("TeamNameDescription");
-		colorPage = new ColorPage("TeamColorDescription");
+		namePage = new ImageNameDescriptionPage(getController(), "TeamNameDescription");
+		colorPage = new ColorPage(getController(), "TeamColorDescription");
 		getPages().addAll(namePage, colorPage);
 	}
 

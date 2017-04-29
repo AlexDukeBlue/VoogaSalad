@@ -111,12 +111,12 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		newActiveAbilityItem = factory.getMenuItem(getPolyglot().get("CreateNewActiveAbility"),
 				e -> create("activeability"));
 		newGridItem = factory.getMenuItem(getPolyglot().get("createNewGrid"), e -> {
-			WizardFactory.newWizard("grid", getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((observer, object) -> {
+			WizardFactory.newWizard("grid", getController(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((observer, object) -> {
 				getController().setGrid((GameBoard) object);
 			});
 		});
 		newTeamItem = factory.getMenuItem(getPolyglot().get("createNewTeam"), e -> {
-			WizardFactory.newWizard("team", getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((observer, object) -> {
+			WizardFactory.newWizard("team", getController(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((observer, object) -> {
 				getController().addTeams((Team) object);
 			});
 		});
@@ -253,7 +253,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	}
 
 	private void create(String categoryName) {
-		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController().getAuthoringGameState(),getPolyglot().getLanguage(),getStyleSheet().getValue());
+		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController(),getPolyglot().getLanguage(),getStyleSheet().getValue());
 		try {
 			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
 		} catch (PolyglotException e) {

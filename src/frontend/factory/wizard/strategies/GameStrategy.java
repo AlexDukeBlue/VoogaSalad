@@ -7,6 +7,7 @@ import backend.grid.ModifiableGameBoard;
 import backend.player.Team;
 import backend.util.AuthoringGameState;
 import frontend.factory.wizard.strategies.wizard_pages.AdditionalWizardsPage;
+import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.GridInstantiationPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 
@@ -29,7 +30,8 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	/**
 	 * Creates a new instance of GameStrategy
 	 */
-	public GameStrategy() {
+	public GameStrategy(Controller controller) {
+		super(controller);
 		initialize();
 	}
 
@@ -57,14 +59,13 @@ class GameStrategy extends BaseStrategy<AuthoringGameState> implements WizardStr
 	}
 
 	private void initialize() {
-		gameNamePage = new ImageNameDescriptionPage("GameStrategyGameNameDescription");
-		gameState = new AuthoringGameState(gameNamePage.getName());
-		boardNamePage = new ImageNameDescriptionPage("GameStrategyBoardNameDescription");
-		gridInstantiationPage = new GridInstantiationPage("GameStrategyGridInstantiationDescription");
-		
-		additionalTeamWizardsPage = new AdditionalWizardsPage<Team>("GameStrategyAdditionalTeamWizardsDescription", "team", gameState);
+		additionalTeamWizardsPage = new AdditionalWizardsPage<Team>("GameStrategyAdditionalTeamWizardsDescription", "team", getController());
 		additionalTeamWizardsPage.setTitle("AdditionalWizardsTeamTitle");
 		additionalTeamWizardsPage.setLabel("AdditionalWizardsTeamLabel");
+		gameNamePage = new ImageNameDescriptionPage(getController(), "GameStrategyGameNameDescription");
+		gameState = new AuthoringGameState(gameNamePage.getName());
+		boardNamePage = new ImageNameDescriptionPage(getController(), "GameStrategyBoardNameDescription");
+		gridInstantiationPage = new GridInstantiationPage(getController(), "GameStrategyGridInstantiationDescription");
 
 		getPages().addAll(gameNamePage, boardNamePage, gridInstantiationPage, additionalTeamWizardsPage);
 	}

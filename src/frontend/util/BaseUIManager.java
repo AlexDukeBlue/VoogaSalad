@@ -77,9 +77,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * Creates a new BaseUIManager. Sets all values for the language and
 	 * stylesheet to default. The default language is English.
 	 */
-	public BaseUIManager() {
-		this(null);
-	}
+	// public BaseUIManager() {
+	// this(null);
+	// }
 
 	/**
 	 * Creates a new BaseUIManager with a reference to the controller passed in.
@@ -264,7 +264,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		if (!IMAGE_CACHE.containsKey(imgPath)) {
 			try {
 				IMAGE_CACHE.put(imgPath, new Image(new FileInputStream(imgPath)));
-				getController().sendFile(imgPath);
+				if (getController() != null)
+					getController().sendFile(imgPath);
 			} catch (Exception e) {
 				System.err.println("Error opening image: " + imgPath + "\t" + e.toString());
 			}

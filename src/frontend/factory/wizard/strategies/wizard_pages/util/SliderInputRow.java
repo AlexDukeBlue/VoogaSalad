@@ -49,6 +49,7 @@ public class SliderInputRow extends BaseUIManager<Region> {
 	 *            The name to put in the sliderInputRow.
 	 */
 	public SliderInputRow(Image image, StringBinding name) {
+		super(null);
 		initialize(image, name);
 	}
 
