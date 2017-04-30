@@ -3,24 +3,11 @@
  */
 package frontend.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.sun.javafx.collections.UnmodifiableObservableMap;
-
 import controller.Controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -28,6 +15,13 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import util.polyglot.PolyglotException;
 import util.polyglot_extended.ObservablePolyglot;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * BaseUIManager is the base class for almost every front end class in the
@@ -86,10 +80,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * Creates a new BaseUIManager with a reference to the controller passed in.
 	 * The getController() method will now return the controller that was passed
 	 * as a param.
-	 * 
-	 * @param controller
-	 *            the Controller object that this BaseUIManager will communicate
-	 *            with.
+	 *
+	 * @param controller the Controller object that this BaseUIManager will communicate
+	 *                   with.
 	 */
 	public BaseUIManager(Controller controller) {
 		this.controller = controller;
@@ -112,7 +105,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	/**
 	 * Returns the Controller object that this BaseUIManager is communicating
 	 * with.
-	 * 
+	 *
 	 * @return Controller object that this BaseUIManager is communicating with.
 	 */
 	public Controller getController() {
@@ -128,7 +121,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * style.
 	 *
 	 * @return an ObjectProperty containing a String pointing to the stylesheet
-	 *         that this class uses to style the Parent it manages.
+	 * that this class uses to style the Parent it manages.
 	 */
 	public ObjectProperty<String> getStyleSheet() {
 		return styleSheet;
@@ -145,9 +138,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	/**
 	 * Generates an ObservablePolyglot object from the ResourceBundle at the
 	 * specified path.
-	 * 
-	 * @param resourcePath
-	 *            the filepath to the resourcebundle that the Polyglot will use.
+	 *
+	 * @param resourcePath the filepath to the resourcebundle that the Polyglot will use.
 	 * @return ObservablePolyglot object that translates the resourcebundle.
 	 */
 	public static ObservablePolyglot getPolyglot(String resourcePath) {
@@ -164,7 +156,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 
 	/**
 	 * Returns the polyglot instance that this BaseUIManager uses to translate.
-	 * 
+	 *
 	 * @return polyglot instance that this BaseUIManager uses to translate.
 	 */
 	public ObservablePolyglot getPolyglot() {
@@ -181,18 +173,17 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * single resourcebundle in English being translated by the Polyglot.
 	 *
 	 * @return a map whose keys are Strings that are the filepaths of all
-	 *         ResourceBundles that this class can use for its language, and
-	 *         whose values are the ResourceBundles themselves.
+	 * ResourceBundles that this class can use for its language, and
+	 * whose values are the ResourceBundles themselves.
 	 */
 	@Deprecated
-	protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
+	protected final ObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
 		Map<String, ResourceBundle> map = new HashMap<>();
 		ResourceBundle bundle = ResourceBundle.getBundle(LANGUAGE_RESOURCE_LIST);
 		for (String key : bundle.keySet()) {
 			map.put(key, ResourceBundle.getBundle(bundle.getString(key)));
 		}
-		return (UnmodifiableObservableMap<String, ResourceBundle>) FXCollections
-				.unmodifiableObservableMap(FXCollections.observableMap(map));
+		return FXCollections.unmodifiableObservableMap(FXCollections.observableMap(map));
 	}
 
 	/**
@@ -201,17 +192,16 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 * stylesheets themselves.
 	 *
 	 * @return a map whose keys are Strings that are the names of all the
-	 *         possible stylesheets that this class can use, and whose values
-	 *         are the stylesheets themselves.
+	 * possible stylesheets that this class can use, and whose values
+	 * are the stylesheets themselves.
 	 */
-	protected final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
+	protected final ObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
 		Map<String, String> map = new HashMap<>();
 		ResourceBundle fileBundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
 			map.put(key, fileBundle.getString(key));
 		}
-		return (UnmodifiableObservableMap<String, String>) FXCollections
-				.unmodifiableObservableMap(FXCollections.observableMap(map));
+		return FXCollections.unmodifiableObservableMap(FXCollections.observableMap(map));
 	}
 
 	/**
@@ -227,8 +217,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 */
 	@Deprecated
 	protected ResourceBundle createDefaultResourceBundle() {
-		return ResourceBundle
-				.getBundle(ResourceBundle.getBundle(LANGUAGE_RESOURCE_POINTER).getString(DEFAULT_LANGUAGE_KEY));
+		return ResourceBundle.getBundle(ResourceBundle.getBundle(LANGUAGE_RESOURCE_POINTER).getString(DEFAULT_LANGUAGE_KEY));
 	}
 
 	/**
@@ -245,9 +234,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	/**
 	 * Returns the ResourceBundle that the BaseUIManager uses to access Strings
 	 * and Objects.
-	 * 
+	 *
 	 * @return the ResourceBundle that the BaseUIManager uses to access Strings
-	 *         and Objects.
+	 * and Objects.
 	 */
 	protected ResourceBundle getResourceBundle() {
 		return resources;
@@ -256,9 +245,8 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	/**
 	 * Returns an image from a cache. This prevents the program from slowing
 	 * down if the same image is being loaded multiple times.
-	 * 
-	 * @param imgPath
-	 *            filepath to the image
+	 *
+	 * @param imgPath filepath to the image
 	 * @return Image at specified path.
 	 */
 	public final Image getImg(String imgPath) {
@@ -276,18 +264,16 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 
 	/**
 	 * Plays the sound file at the specified path.
-	 * 
-	 * @param mediaPath
-	 *            the filepath to the sound to play.
+	 *
+	 * @param mediaPath the filepath to the sound to play.
 	 */
 	public final void playMedia(String mediaPath) {
-		if (mediaPath != null && !mediaPath.isEmpty()){
+		if (Objects.nonNull(mediaPath) && mediaPath.length() < 1) {
 			if (!MEDIA_CACHE.containsKey(mediaPath)) {
 				try {
 					MEDIA_CACHE.put(mediaPath, new Media(Paths.get(mediaPath).toUri().toString()));
 					getController().sendFile(mediaPath);
 				} catch (Exception e) {
-					e.printStackTrace();
 					System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());
 				}
 			}
@@ -300,9 +286,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	/**
 	 * Returns the filepaths to all ResourceBundles that have been accessed by
 	 * subclasses of the BaseUIManager.
-	 * 
+	 *
 	 * @return the filepaths to all ResourceBundles that have been accessed by
-	 *         subclasses of the BaseUIManager.
+	 * subclasses of the BaseUIManager.
 	 */
 	public static Collection<String> getResourcePaths() {
 		return Stream.of(IMAGE_CACHE.keySet(), MEDIA_CACHE.keySet()).flatMap(Collection::stream)

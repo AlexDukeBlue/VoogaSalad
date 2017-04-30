@@ -99,7 +99,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public Team getActiveTeam() {
-		return getTeams().get(currentTeamNumber);
+		return getTeams().isEmpty() ? null : getTeams().get(currentTeamNumber);
 	}
 
 	@Override

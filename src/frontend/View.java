@@ -50,6 +50,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class View extends ClickableUIComponent<Region> {
@@ -68,6 +69,7 @@ public class View extends ClickableUIComponent<Region> {
 	private TemplatePaneExternal tempPane;
 	private ConditionsPaneExternal conditionsPane;
 	private VBox rightPane;
+	private ChoiceDialog<Team> teams;
 	private MinimapPane miniMap;
 
 	public View(Controller controller) {
@@ -134,7 +136,7 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	public void joinTeam() {
-		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
+		teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
 				getController().getReadOnlyGameState().getTeams());
 		teams.headerTextProperty().bind(getPolyglot().get("JoinTeamMessage"));
 		teams.titleProperty().bind(getPolyglot().get("JoinTeamTitle"));
@@ -318,7 +320,7 @@ public class View extends ClickableUIComponent<Region> {
 	public void update() {
 		this.setViewEditable(getController().isAuthoringMode());
 		endTurnButton.setDisable(!getController().isMyTeam() || getController().isAuthoringMode());
-		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
+		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode() && (Objects.isNull(teams)) || !teams.isShowing()) {
 			joinTeam();
 		}
 	}

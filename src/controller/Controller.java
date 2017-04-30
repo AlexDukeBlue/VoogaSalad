@@ -37,24 +37,26 @@ public interface Controller {
 
 	void setGrid(GameBoard grid);
 
-	String getActivePlayerName();
+	default String getActiveTeamName(){
+		return getAuthoringGameState().getActiveTeam().getName();
+	}
 
 	String getMyPlayerName();
 
 	default boolean isMyTeam() {
-		return !getMyPlayer().getTeam().isPresent() || getMyPlayer().getTeam().get().equals(getAuthoringGameState().getActiveTeam());
-	}
-
-	default ImmutablePlayer getActivePlayer() {
-		return getPlayer(getActivePlayerName());
+		return !getMyPlayer().getTeam().isPresent() || getMyPlayer().getTeam().get().equals(getActiveTeam());
 	}
 
 	default ImmutablePlayer getMyPlayer() {
 		return getPlayer(getMyPlayerName());
 	}
 
-	default Team getActiveTeam() {
-		return getActivePlayer().getTeam().orElse(null);
+	default Team getActiveTeam(){
+		return getAuthoringGameState().getActiveTeam();
+	}
+
+	default Team getMyTeam(){
+		return getMyPlayer().getTeam().orElse(null);
 	}
 
 	void startClient(String host, int port, Duration timeout);
@@ -205,9 +207,6 @@ public interface Controller {
 	 *            String describing the turn action.
 	 * @param imgPath
 	 *            String used to access image which represents the turn action.
-	 * @param biPredicate
-	 *            SerializableBiConsumer which is used to carry out the turn
-	 *            action.
 	 */
 	void addTurnAction(String name, String description, String imgPath, SerializableBiConsumer biConsumer);
 
@@ -251,9 +250,6 @@ public interface Controller {
 	 * @param imgPath
 	 *            String used to access image which represents the end
 	 *            condition.
-	 * @param biPredicate
-	 *            ResultQuadPredicate which is used to determine whether the end
-	 *            condition has been satisfied.
 	 */
 	void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate);
 
