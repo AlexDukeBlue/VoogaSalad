@@ -89,6 +89,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	@Override
 	public void update() {
 		try {
+			
 			dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 			double fractionRemaining = getEntity().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
