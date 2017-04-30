@@ -5,6 +5,7 @@ package frontend.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -282,7 +283,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	public final void playMedia(String mediaPath) {
 		if (!MEDIA_CACHE.containsKey(mediaPath)) {
 			try {
-				MEDIA_CACHE.put(mediaPath, new Media(mediaPath));
+				MEDIA_CACHE.put(mediaPath, new Media(Paths.get(mediaPath).toUri().toString()));
 				getController().sendFile(mediaPath);
 			} catch (Exception e) {
 				System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());

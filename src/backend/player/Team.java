@@ -25,6 +25,7 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	public transient static final String CYAN = "#00ffff";
 	public transient static final String MAGENTA = "#ff00ff";
 	public transient static final String BLACK = "#000000";
+	public transient static final String WHITE = "#ffffff";
 	public transient static final List<String> COLORS = Arrays.asList(RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, BLACK);
 	private static final String NO_TEAM_ASSIGNED = "NO_TEAM_ASSIGNED";
 	private final String colorString;
