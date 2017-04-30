@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+
 import controller.Controller;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -15,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -25,6 +29,7 @@ import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 import util.scripting.VoogaScriptException;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,10 +62,16 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		Button compileButton = new Button();
 		Button loadScriptButton = new Button();
 		Button quickCreateButton = new Button(); 
+		Button helpButton = new Button(); 
+
 		compileButton.textProperty().bind(getPolyglot().get("Compile"));
 		loadScriptButton.textProperty().bind(getPolyglot().get("loadScript"));
 		quickCreateButton.textProperty().bind(getPolyglot().get("quickAdd"));
 		
+		Image help = new Image("file:img/help.png");
+		ImageView mImageView = new ImageView(help);
+		helpButton.setGraphic(mImageView);
+
 		compileButton.setOnAction(evt -> {
 			try {
 				scriptEngine = VoogaScriptEngineManager.read(languagesMenu.getValue(), scriptArea.getText());
@@ -91,6 +102,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		HBox topBox = new HBox(scriptingLabel);
 		topBox.getChildren().add(languagesMenu);
 		topBox.getChildren().add(quickCreateButton);
+		topBox.getChildren().add(helpButton);
 		topBox.setAlignment(Pos.CENTER);
 		topBox.setSpacing(SPACING);
 		
