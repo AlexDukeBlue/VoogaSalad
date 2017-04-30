@@ -42,7 +42,7 @@ import util.polyglot.PolyglotException;
 public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 	private static final boolean SYSTEM_MENU_BAR = false;
 
-	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem;
+	private Menu file, edit, language, theme, view, help, setLanguageItem, setThemeItem, play, team;
 	private MenuItem loadItem, saveItem, homeScreenItem, quitItem, newUnitItem, newTerrainItem, newActiveAbilityItem,
 			newGridItem, newTeamItem, conditionsPaneItem, templatePaneItem, detailsPaneItem, statsPaneItem,
 			editModeItem, playModeItem, helpItem, aboutItem, undoItem, joinTeam;
@@ -69,6 +69,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 		editModeItem.setDisable(editable);
 		joinTeam.setDisable(!editable);
+		newTeamItem.setDisable(!editable);
 	}
 
 	@Override
@@ -188,7 +189,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
 		edit.getItems().add(newGridItem);
-		edit.getItems().add(newTeamItem);
+		//edit.getItems().add(newTeamItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
@@ -201,14 +202,20 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		view.getItems().add(templatePaneItem);
 		view.getItems().add(detailsPaneItem);
 		view.getItems().add(statsPaneItem);
-		Menu play = factory.getMenu(getPolyglot().get("Play"));
-		play.getItems().add(joinTeam);
+		play = factory.getMenu(getPolyglot().get("Play"));
+		//play.getItems().add(joinTeam);
 		play.getItems().add(editModeItem);
 		play.getItems().add(playModeItem);
+		
+		team = factory.getMenu(getPolyglot().get("Teams"));
+		team.getItems().add(joinTeam);
+		team.getItems().add(newTeamItem);
+		
+		
 		help = factory.getMenu(getPolyglot().get("Help"));
 		help.getItems().add(helpItem);
 		help.getItems().add(aboutItem);
-		getNode().getMenus().addAll(file, edit, view, play, language, theme, help);
+		getNode().getMenus().addAll(file, edit, view, play, language, theme, team, help);
 	}
 
 	private void save() {
