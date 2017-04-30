@@ -52,7 +52,7 @@ public class UpdatableConditionVBoxFactory {
 	 *            type of condition that will be held.
 	 * @return The UpdatableConditionVBox object.
 	 */
-	public UpdatableConditionVBox createConditionVBox(Polyglot poly, String type) {
+	public UpdatableVBox<ConditionBox> createConditionVBox(Polyglot poly, String type) {
 		if (type.equals(poly.get("TurnRequirements").get())) {
 			return createTurnRequirementsVBox(type);
 		} else if (type.equals(poly.get("TurnActions").get())) {
@@ -64,13 +64,13 @@ public class UpdatableConditionVBoxFactory {
 		}
 	}
 
-	private UpdatableConditionVBox createTurnRequirementsVBox(String type) {
+	private UpdatableVBox<ConditionBox> createTurnRequirementsVBox(String type) {
 		ArrayList<ConditionBox> condBoxes = new ArrayList<ConditionBox>();
 		Collection<Requirement> requirements = (Collection<Requirement>) myController.getTemplatesByCategory(type);
 		requirements.forEach(
 				req -> condBoxes.add(new TurnRequirementBox(req.getName(), type, myController, myClickHandler)));
 
-		return new UpdatableConditionVBox(condBoxes, subBoxes -> {
+		return new UpdatableVBox<ConditionBox>(condBoxes, subBoxes -> {
 			requirements.forEach(req -> {
 				if (subBoxes.stream().map(box -> box.getName()).filter(boxName -> boxName.equals(req.getName()))
 						.count() == 0) {
@@ -88,12 +88,12 @@ public class UpdatableConditionVBoxFactory {
 		});
 	}
 
-	private UpdatableConditionVBox createTurnActionsVBox(String type) {
+	private UpdatableVBox<ConditionBox> createTurnActionsVBox(String type) {
 		ArrayList<ConditionBox> condBoxes = new ArrayList<ConditionBox>();
 		Collection<Actionable> actions = (Collection<Actionable>) myController.getTemplatesByCategory(type);
 		actions.forEach(act -> condBoxes.add(new TurnActionBox(act.getName(), type, myController, myClickHandler)));
 
-		return new UpdatableConditionVBox(condBoxes, subBoxes -> {
+		return new UpdatableVBox<ConditionBox>(condBoxes, subBoxes -> {
 			actions.forEach(act -> {
 				if (subBoxes.stream().map(box -> box.getName()).filter(boxName -> boxName.equals(act.getName()))
 						.count() == 0) {
@@ -111,13 +111,13 @@ public class UpdatableConditionVBoxFactory {
 		});
 	}
 
-	private UpdatableConditionVBox createEndConditionsVBox(String type) {
+	private UpdatableVBox<ConditionBox> createEndConditionsVBox(String type) {
 		ArrayList<ConditionBox> condBoxes = new ArrayList<ConditionBox>();
 		Collection<Resultant> resultants = (Collection<Resultant>) myController.getTemplatesByCategory(type);
 		resultants
 				.forEach(res -> condBoxes.add(new EndConditionBox(res.getName(), type, myController, myClickHandler)));
 
-		return new UpdatableConditionVBox(condBoxes, subBoxes -> {
+		return new UpdatableVBox<ConditionBox>(condBoxes, subBoxes -> {
 			resultants.forEach(res -> {
 				if (subBoxes.stream().map(box -> box.getName()).filter(boxName -> boxName.equals(res.getName()))
 						.count() == 0) {

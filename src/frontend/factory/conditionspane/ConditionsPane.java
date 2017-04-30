@@ -32,7 +32,7 @@ public class ConditionsPane extends ClickableUIComponent<Region>implements Condi
 
 	private VBox myBox = new VBox();
 	private UpdatableConditionVBoxFactory boxFactory;
-	private Collection<UpdatableConditionVBox> subBoxes;
+	private Collection<UpdatableVBox<ConditionBox>> subBoxes;
 
 	/**
 	 * Constructs a ConditionsPane using the passed parameters.
@@ -46,7 +46,7 @@ public class ConditionsPane extends ClickableUIComponent<Region>implements Condi
 	public ConditionsPane(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		boxFactory = new UpdatableConditionVBoxFactory(controller, clickHandler);
-		subBoxes = new ArrayList<UpdatableConditionVBox>();
+		subBoxes = new ArrayList<UpdatableVBox<ConditionBox>>();
 		initPane();
 	}
 
@@ -57,7 +57,7 @@ public class ConditionsPane extends ClickableUIComponent<Region>implements Condi
 
 	@Override
 	public void update() {
-		subBoxes.forEach(box -> ((UpdatableConditionVBox) box).update());
+		subBoxes.forEach(box -> ((UpdatableVBox<ConditionBox>) box).update());
 	}
 
 	private void initPane() {
@@ -69,7 +69,7 @@ public class ConditionsPane extends ClickableUIComponent<Region>implements Condi
 		TitledPane rulesPane = new TitledPane();
 		rulesPane.setText(type);
 		rulesPane.setCollapsible(true);
-		UpdatableConditionVBox content = boxFactory.createConditionVBox(getPolyglot(), type);
+		UpdatableVBox<ConditionBox> content = boxFactory.createConditionVBox(getPolyglot(), type);
 		content.getVBox().setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
 		addRemoveButton.setOnAddClicked(e -> WizardFactory
