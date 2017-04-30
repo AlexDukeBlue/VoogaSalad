@@ -23,11 +23,9 @@ import java.util.stream.Collectors;
 // job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
-	private ObservableServer<ReadonlyGameplayState> myServer;
 	private GameplayState currentState;
 
-	public DieselEngine(ObservableServer<ReadonlyGameplayState> gameServer) {
-		myServer = gameServer;
+	public DieselEngine() {
 		currentState = null;
 	}
 
