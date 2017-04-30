@@ -132,7 +132,7 @@ public class View extends ClickableUIComponent<Region> {
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
 	}
-	
+
 	public void joinTeam() {
 		ChoiceDialog<Team> teams = new ChoiceDialog<>(getController().getMyPlayer().getTeam().orElse(null),
 				getController().getReadOnlyGameState().getTeams());
@@ -160,16 +160,6 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane.setClickHandler(clickHandler);
 		worldView.setClickHandler(clickHandler);
 		detailPane.setClickHandler(clickHandler);
-	}
-
-	@Override
-	public void update() {
-		this.setViewEditable(getController().isAuthoringMode());
-		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
-		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
-			joinTeam();
-		}
-		checkForCondition();
 	}
 
 	private void placePanes() {
@@ -252,8 +242,7 @@ public class View extends ClickableUIComponent<Region> {
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
-		setClickHandler(
-				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
+		setClickHandler(new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		miniMap = new MinimapPane(worldView.getGridView().getNode(), getController());
 		rightPane = new VBox(miniMap.getNode(), tempPane.getNode());
@@ -314,18 +303,27 @@ public class View extends ClickableUIComponent<Region> {
 		innerSplitPane.getItems().remove(conditionsPane.getNode());
 		rightPane.getChildren().remove(tempPane.getNode());
 	}
-	
+
 	private void checkForCondition() {
-		if(getController().activePlayerWon()){
+		if (getController().activePlayerWon()) {
 			displayEndPopup(getPolyglot().get("WinMessage"));
-		} else if(getController().activePlayerLost()){
+		} else if (getController().activePlayerLost()) {
 			displayEndPopup(getPolyglot().get("LoseMessage"));
-		} else if(getController().activePlayerTied()){
+		} else if (getController().activePlayerTied()) {
 			displayEndPopup(getPolyglot().get("TieMessage"));
 		}
 	}
-	
-	private void displayEndPopup(StringBinding message){
+
+	@Override
+	public void update() {
+		this.setViewEditable(getController().isAuthoringMode());
+		endTurnButton.setDisable(!getController().isMyTeam() || getController().isAuthoringMode());
+		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
+			joinTeam();
+		}
+	}
+
+	private void displayEndPopup(StringBinding message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.headerTextProperty().bind(message);
 		alert.contentTextProperty().bind(getPolyglot().get("EndMessage"));

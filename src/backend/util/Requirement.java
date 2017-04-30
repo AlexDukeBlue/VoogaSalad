@@ -1,6 +1,6 @@
 package backend.util;
 
-import backend.player.ImmutablePlayer;
+import backend.player.Team;
 
 import java.io.Serializable;
 import java.util.function.BiPredicate;
@@ -13,7 +13,6 @@ public class Requirement extends ImmutableVoogaObject<Requirement>{
 	/**
 	 * Pass a BiPredicate<ImmutablePlayer, GameplayState> with a name so that it can later be removed if necessary.
 	 *
-	 * @param bipredicate
 	 * @param name
 	 */
 	public Requirement(SerializableBiPredicate bi, String name, String description) {
@@ -31,7 +30,7 @@ public class Requirement extends ImmutableVoogaObject<Requirement>{
 	 *
 	 * @return BiPredicate
 	 */
-	public boolean test(ImmutablePlayer player, ReadonlyGameplayState gameState) {
+	public boolean test(Team player, ReadonlyGameplayState gameState) {
 		return biPred.test(player, gameState);
 	}
 
@@ -40,5 +39,5 @@ public class Requirement extends ImmutableVoogaObject<Requirement>{
 		return new Requirement(biPred, getName(), getDescription(), getImgPath());
 	}
 	
-	public interface SerializableBiPredicate extends BiPredicate<ImmutablePlayer, ReadonlyGameplayState>, Serializable{}
+	public interface SerializableBiPredicate extends BiPredicate<Team, ReadonlyGameplayState>, Serializable{}
 }

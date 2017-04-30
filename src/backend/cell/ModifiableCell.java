@@ -194,7 +194,11 @@ public class ModifiableCell implements Cell {
 
 	@Override
 	public Cell add(VoogaEntity voogaEntity) {
-		DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);
+		if (DISPATCH_MAP.containsKey(voogaEntity.getClass())) {
+			DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);
+		} else {
+			System.err.println("Operation not supported");
+		}
 		return this;
 	}
 

@@ -41,8 +41,8 @@ public interface Controller {
 
 	String getMyPlayerName();
 
-	default boolean isMyPlayerTurn() {
-		return getMyPlayerName().equals(getActivePlayerName());
+	default boolean isMyTeam() {
+		return !getMyPlayer().getTeam().isPresent() || getMyPlayer().getTeam().get().equals(getAuthoringGameState().getActiveTeam());
 	}
 
 	default ImmutablePlayer getActivePlayer() {
@@ -51,6 +51,10 @@ public interface Controller {
 
 	default ImmutablePlayer getMyPlayer() {
 		return getPlayer(getMyPlayerName());
+	}
+
+	default Team getActiveTeam() {
+		return getActivePlayer().getTeam().orElse(null);
 	}
 
 	void startClient(String host, int port, Duration timeout);
