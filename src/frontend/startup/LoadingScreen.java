@@ -69,7 +69,7 @@ public class LoadingScreen extends Group {
 		this.getChildren().add(circle);
 		circle.setOnMouseDragged(e -> run(circle));
 		//		wrap(circle);
-		System.out.println(circle.getCenterX() + " " + circle.getCenterY());
+		
 
 		Text loading = createText(circle);
 		this.getChildren().add(loading);
