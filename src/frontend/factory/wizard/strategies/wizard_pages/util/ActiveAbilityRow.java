@@ -31,7 +31,7 @@ public class ActiveAbilityRow extends BaseUIManager<Parent> {
 	private void initialize(ActiveAbility<?> ability) {
 		selectable = new SelectableInputRow(getImg(ability.getImgPath()), ability.getFormattedName(),
 				ability.getDescription());
-		numeric = new IntegerInputRow(null, getPolyglot().get("MovePoints"), null);
+		numeric = new IntegerInputRow(null, getPolyglot().get("AbilityPointCost"), null);
 		hbox = new HBox(selectable.getNode(), numeric.getNode());
 	}
 

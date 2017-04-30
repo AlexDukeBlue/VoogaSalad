@@ -1,12 +1,16 @@
 package frontend.factory.wizard.strategies;
 
+import java.util.stream.Collectors;
+
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
+import backend.unit.properties.InteractionModifier;
 import backend.util.GameplayState;
-import backend.util.PassiveAbility;
+import backend.util.TriggeredEffect;
 import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.EntityMovePointPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
+import frontend.factory.wizard.strategies.wizard_pages.PassiveAbilitiesAdderPage;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -19,6 +23,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
 	private EntityMovePointPage unitMovePointPage;
+	private PassiveAbilitiesAdderPage passiveAbilitiesPage;
 
 	/**
 	 * Creates a new instance of TerrainStrategy.
@@ -42,6 +47,15 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		terrain.setImgPath(imageNameDescriptionPage.getImagePath());
 		terrain.setSoundPath(imageNameDescriptionPage.getSoundPath());
 		terrain.setDefaultMoveCost(unitMovePointPage.getDefault());
+		passiveAbilitiesPage.getPassiveAbilitiesByCategory(GameplayState.DEFENSIVE_MODIFIER).stream()
+				.map(ability -> (InteractionModifier<Double>) ability).collect(Collectors.toList())
+				.forEach(modifier -> terrain.addDefensiveModifiers(modifier));
+		passiveAbilitiesPage.getPassiveAbilitiesByCategory(GameplayState.OFFENSIVE_MODIFIER).stream()
+				.map(ability -> (InteractionModifier<Double>) ability).collect(Collectors.toList())
+				.forEach(modifier -> terrain.addOffensiveModifiers(modifier));
+		passiveAbilitiesPage.getPassiveAbilitiesByCategory(GameplayState.CELL_TRIGGERED_EFFECT).stream()
+				.map(ability -> (TriggeredEffect) ability).collect(Collectors.toList())
+				.forEach(modifier -> terrain.addTriggeredAbilities(modifier));
 		return terrain;
 	}
 
@@ -53,7 +67,10 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	private void initialize() {
 		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription", true);
 		unitMovePointPage = new EntityMovePointPage(getController(), "TerrainMovePointDescription", GameplayState.UNIT);
-		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
+		passiveAbilitiesPage = new PassiveAbilitiesAdderPage(getController(), "TerrainPassiveAbilitiesDescription",
+				GameplayState.CELL_TRIGGERED_EFFECT, GameplayState.DEFENSIVE_MODIFIER,
+				GameplayState.OFFENSIVE_MODIFIER);
+		getPages().addAll(imageNameDescriptionPage, unitMovePointPage, passiveAbilitiesPage);
 	}
 
 }
