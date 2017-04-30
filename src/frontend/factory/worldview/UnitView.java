@@ -1,6 +1,7 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.HasLocation;
 import controller.Controller;
@@ -88,8 +89,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void update() {
-		dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 		try {
+			dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 			double fractionRemaining = getEntity().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
 			if (fractionRemaining < 1 / 3.0) {
