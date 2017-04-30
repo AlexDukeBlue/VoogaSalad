@@ -1,12 +1,12 @@
 package frontend.startup;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -33,20 +33,17 @@ public class LoadingScreen extends Group {
 		}
 	}
 
-	public void keyValues(Circle circle) {
-
-	}
 
 	public Text createText(Circle circle) {
 		Text loading = new Text();
 		loading.setText("Loading");
 		loading.setFont(Font.loadFont("file:resources/styles/PlaylistFF/Playlist Script.otf", 10));
-		loading.setFont(Font.font(javafx.scene.text.Font.getFamilies()
-				.get((int) (Math.random() * javafx.scene.text.Font.getFamilies().size()))));
+		loading.setFont(Font.font(javafx.scene.text.Font.getFamilies().get((int) (Math.random() * javafx.scene.text.Font.getFamilies().size()))));
 		double lsWidth = (loading.getLayoutBounds().getMaxX() - loading.getLayoutBounds().getMinX());
 		loading.xProperty().bind(circle.centerXProperty().subtract(lsWidth / 2));
 
 		loading.yProperty().bind(circle.centerYProperty());
+
 
 		return loading;
 	}
@@ -63,15 +60,16 @@ public class LoadingScreen extends Group {
 		Text loading = createText(circle);
 		this.getChildren().add(loading);
 
+
 		double randScale = (Math.random() * 4) + 1;
 		KeyValue kValueX = new KeyValue(circle.scaleXProperty(), randScale);
 		KeyValue kValueY = new KeyValue(circle.scaleYProperty(), randScale);
 		KeyValue loadingkValueX = new KeyValue(loading.scaleXProperty(), randScale - 1);
 		KeyValue loadingkValueY = new KeyValue(loading.scaleYProperty(), randScale - 1);
 
+
 		KeyValue color = new KeyValue(circle.fillProperty(), Color.color(Math.random(), Math.random(), Math.random()));
-		KeyFrame kFrame = new KeyFrame(Duration.millis(5000 + (Math.random() * 5000)), kValueX, kValueY, color,
-				loadingkValueX, loadingkValueY);
+		KeyFrame kFrame = new KeyFrame(Duration.millis(5000 + (Math.random() * 5000)), kValueX, kValueY, color, loadingkValueX, loadingkValueY);
 
 		Timeline linhaT = new Timeline();
 
@@ -99,5 +97,18 @@ public class LoadingScreen extends Group {
 		}
 
 	}
+
+	private void moveCircleOnMousePress(Scene scene, final Circle circle, final TranslateTransition transition) {
+	    scene.setOnMousePressed(event -> {
+	      if (!event.isControlDown()) {
+	        circle.setCenterX(event.getSceneX());
+	        circle.setCenterY(event.getSceneY());
+	      } else {
+	        transition.setToX(event.getSceneX() - circle.getCenterX());
+	        transition.setToY(event.getSceneY() - circle.getCenterY());
+	        transition.playFromStart();
+	      }
+	    });
+	  }
 
 }
