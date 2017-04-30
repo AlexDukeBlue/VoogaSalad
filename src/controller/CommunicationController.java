@@ -3,7 +3,6 @@ package controller;
 import backend.cell.Cell;
 import backend.game_engine.DieselEngine;
 import backend.game_engine.ResultQuadPredicate;
-import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
@@ -93,7 +92,6 @@ public class CommunicationController implements Controller {
 		try {
 			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
-		//	isHost = true;
 			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -127,11 +125,6 @@ public class CommunicationController implements Controller {
 			state.setGrid(gameBoard);
 			return state;
 		});
-	}
-
-	@Override
-	public String getActivePlayerName() {
-		return getAuthoringGameState().getActiveTeam().getName();
 	}
 
 	@Override
@@ -254,18 +247,21 @@ public class CommunicationController implements Controller {
 	}
 	
 	@Override
-	public boolean activePlayerWon(){
-		return getActivePlayer().getResult().equals(Result.WIN);
+	public boolean activeTeamWon(){
+//		return getActiveTeam().getResult().equals(Result.WIN);
+		return false;
 	}
-	
+
 	@Override
-	public boolean activePlayerLost(){
-		return getActivePlayer().getResult().equals(Result.LOSE);
+	public boolean activeTeamLost(){
+//		return getActiveTeam().getResult().equals(Result.LOSE);
+		return false;
 	}
-	
+
 	@Override
-	public boolean activePlayerTied(){
-		return getActivePlayer().getResult().equals(Result.TIE);
+	public boolean activeTeamTied(){
+//		return getActiveTeam().getResult().equals(Result.TIE);
+		return false;
 	}
 
 	@Override
@@ -377,23 +373,11 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void updateAll() {
-		executor.execute(() -> {
-			try {
-				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveState(autoSavePath);
-				saveHistory.push(autoSavePath);
-			} catch (Serializer.SerializationException e) {
-				System.err.println("You're going TOO FAST!!!!");
-			} catch (IOException e) {
-				showGenericAlert();
-				e.printStackTrace();
-			}
-		});
-		engine.checkGame(this.getGameplayState());
 		thingsToUpdate.forEach(e -> Platform.runLater(() -> {
 			try {
 				e.update();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				removeListener(e);
 			}
 		}));
@@ -455,7 +439,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void copyTemplateToGrid(VoogaEntity template, HasLocation destination) {
-		String templateName = template.getName();
+		String templateName = template.getFormattedName();
 		String targetUnitName = destination.getName();
 		CoordinateTuple gridLocation = destination.getLocation();
 		String playerName = getMyPlayerName();
@@ -471,7 +455,6 @@ public class CommunicationController implements Controller {
 			} catch (Exception e) {
 				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
-					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
 					if (templateCopy instanceof Unit) {
 						((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
 					}
@@ -518,6 +501,18 @@ public class CommunicationController implements Controller {
 	}
 
 	private synchronized void updateGameState() {
+		executor.execute(() -> {
+			try {
+				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
+				saveState(autoSavePath);
+				saveHistory.push(autoSavePath);
+			} catch (Serializer.SerializationException e) {
+				System.err.println("You're going TOO FAST!!!!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		engine.checkGame(this.getGameplayState());
 		updateAll();
 		if (Objects.nonNull(server) && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
 			BaseUIManager.getResourcePaths().forEach(this::sendFile);

@@ -1,9 +1,5 @@
 package frontend.startup;
 
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.Optional;
-
 import backend.util.ReadonlyGameplayState;
 import controller.CommunicationController;
 import controller.Controller;
@@ -17,6 +13,10 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.net.ObservableHost;
+
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Optional;
 
 /**
  * This ConcreteStartupDelegate is a concrete implementation of the
@@ -115,7 +115,6 @@ class ConcreteStartupDelegate implements StartupDelegate {
 		View view = new View(control, stage);
 		stage.setScene(new Scene(view.getNode()));
 		stage.setMaximized(true);
-		control.updateAll();
 	}
 
 	private String getHost() {

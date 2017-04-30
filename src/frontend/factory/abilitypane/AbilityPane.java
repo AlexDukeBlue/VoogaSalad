@@ -20,9 +20,9 @@ import java.util.Collection;
 
 /**
  * @author Created by th174 on 4/21/17.
- * 
- * Sets the content for the Ability Pane, which allows the user to view and apply active abilities
- * for each unit and terrain.
+ *         <p>
+ *         Sets the content for the Ability Pane, which allows the user to view and apply active abilities
+ *         for each unit and terrain.
  */
 public class AbilityPane extends ClickableUIComponent<SplitPane> {
 	private final ScrollPane activeAbilities;
@@ -51,8 +51,8 @@ public class AbilityPane extends ClickableUIComponent<SplitPane> {
 
 	/**
 	 * Sets the details that should be displayed within the pane
-	 * @param entity
-	 * The VoogaEntity that has been selected for viewing
+	 *
+	 * @param entity The VoogaEntity that has been selected for viewing
 	 */
 	public void setContent(VoogaEntity entity) {
 		abilityPane.getItems().clear();
@@ -69,7 +69,9 @@ public class AbilityPane extends ClickableUIComponent<SplitPane> {
 		if (entity instanceof HasPassiveModifiers) {
 			passiveAbilitiesContent.getChildren().addAll(createRow(entity, ((HasPassiveModifiers) entity).getOffensiveModifiers()));
 			passiveAbilitiesContent.getChildren().addAll(createRow(entity, ((HasPassiveModifiers) entity).getDefensiveModifiers()));
-			abilityPane.getItems().add(passiveAbilities);
+			if (!abilityPane.getItems().contains(passiveAbilities)) {
+				abilityPane.getItems().add(passiveAbilities);
+			}
 		}
 	}
 
