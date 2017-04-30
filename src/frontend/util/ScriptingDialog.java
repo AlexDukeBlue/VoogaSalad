@@ -105,7 +105,6 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	}
 	
 	private String loadScript() {
-		System.out.println("got here");
 		String code = "";
 		final FileChooser filechooser = new FileChooser();
 		filechooser.setTitle("Open Script");
@@ -136,7 +135,12 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private void configureFileChooser(final FileChooser filechooser) {
 		filechooser.setTitle("Load XML");
 		filechooser.setInitialDirectory(new File(System.getProperty("user.dir") + "/data/examples"));
-		filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JAVA", "*.java"));
+		filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JAVA", "*.java"),
+				new FileChooser.ExtensionFilter("JavaScript", "*.js"),
+				new FileChooser.ExtensionFilter("Lua", "*.lua"),
+				new FileChooser.ExtensionFilter("Groovy", "*.groovy"),
+				new FileChooser.ExtensionFilter("Ruby", "*.rb"),
+				new FileChooser.ExtensionFilter("Python", "*.py"));
 	}
 
 
