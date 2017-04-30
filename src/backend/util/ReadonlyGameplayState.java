@@ -12,8 +12,8 @@ import java.util.Map;
 /**
  * @author Created by th174 on 4/11/2017.
  */
-public interface ReadonlyGameplayState extends VoogaEntity {
-	Team getActiveTeam();
+public interface ReadonlyGameplayState extends VoogaEntity, HasSound {
+	ImmutablePlayer getActivePlayer();
 
 	ImmutablePlayer getPlayerByName(String name);
 

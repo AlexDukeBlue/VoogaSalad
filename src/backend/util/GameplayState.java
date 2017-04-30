@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * @author Created by th174 on 4/10/2017.
  */
 public class GameplayState extends ImmutableVoogaObject implements ReadonlyGameplayState {
+	private String sound;
 	private static final long serialVersionUID = 1L;
 
 	public transient static final String
@@ -284,8 +285,16 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
 	}
 
-	public AuthoringGameState removeTurnActions(Actionable[] actions) {
+	@Override
+	public String getSoundPath() {
 		// TODO Auto-generated method stub
-		return null;
+		return sound;
+	}
+
+	@Override
+	public <T extends HasSound> T setSoundPath(String path) {
+		// TODO Auto-generated method stub
+		this.sound = path;
+		return this;
 	}
 }
