@@ -110,15 +110,14 @@ public class DieselEngine implements GameEngine {
 	}
 
 	@Override
-	public Object handleWin(ImmutablePlayer player) {
+	public void handleWin(ImmutablePlayer player) {
 		System.out.println("winner");
 		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName)).forEach(
 				aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
-		return null;
 	}
 
 	@Override
-	public Object handleLoss(ImmutablePlayer player) {
+	public void handleLoss(ImmutablePlayer player) {
 		currentState.getPlayerByName(player.getName()).setResult(Result.LOSE);
 		List<String> remainingPlayers = currentState.getOrderedPlayerNames().stream()
 				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
@@ -126,13 +125,11 @@ public class DieselEngine implements GameEngine {
 		if (remainingPlayers.size() == 1) {
 			currentState.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
 		}
-		return null;
 	}
 
 	@Override
-	public Object handleTie() {
+	public void handleTie() {
 			currentState.getOrderedPlayerNames().stream().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
-		return null;
 	}
 
 }
