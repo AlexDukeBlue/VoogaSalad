@@ -34,7 +34,7 @@ Work on this project began March 24 and ended on April 30 with an estimated tota
 //TODO EVERYONE ADD THEIR CONTRIBUTIONS
 
 * Faith Rodriguez (far10) contributed to the front end development of the project.  She created both the DetailPane and TemplatePane.  Additionally, she worked to implement dragging capabilities and editing capabilities for units, as well as other various tasks that came up as the project progressed, such as helping to switch a unit from belonging to a player to belonging to a team.
-
+* Sam Schwaller (scs51) contributed to the front end development of the project. Created the StartupScreen, StartupSelectionScreen, and Loading group. Identified bugs in UI and assissted with Style and placement decisions. 
 
 **Getting Started**
 
