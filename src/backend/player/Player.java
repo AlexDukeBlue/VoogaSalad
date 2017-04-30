@@ -50,7 +50,7 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 
 	@Override
 	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
-		return grid.getUnits().parallelStream().filter(e -> e.getOwner().equals(this)).collect(Collectors.toSet());
+		return grid.getUnits().parallelStream().filter(e -> e.getTeam().equals(this)).collect(Collectors.toSet());
 	}
 
 	@Override

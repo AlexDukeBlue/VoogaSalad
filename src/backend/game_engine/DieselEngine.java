@@ -12,8 +12,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -76,7 +74,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnRules(GameplayState state) {
-		if (!state.getTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActivePlayer(), state))
+		if (!state.getTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActiveTeam(), state))
 				&& state.turnRequirementsSatisfied())
 			state.endTurn();
 	}
@@ -89,7 +87,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((value) -> value.accept(state.getActivePlayer(), state));
+//		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getActiveTeam(), state)));
 	}
 
 	/**
@@ -101,9 +99,8 @@ public class DieselEngine implements GameEngine {
 	private void checkObjectives(GameplayState state) {
 		System.out.println(state.getObjectives().toString());
 		state.getObjectives().parallelStream().forEach(e -> {
-			Result result = e.getResultQuad().determine(state.getActivePlayer(), state);
-			System.out.println(result.toString());
-			result.accept(state.getActivePlayer(), this);
+//			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
+//			result.accept(state.getActiveTeam(), this);
 		});
 	}
 
