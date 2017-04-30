@@ -6,13 +6,16 @@ import java.util.stream.Collectors;
 import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
-import backend.unit.properties.ModifiableUnitStat;
+import backend.unit.properties.InteractionModifier;
 import backend.util.GameplayState;
+import backend.util.TriggeredEffect;
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.AbilitiesAdderPage;
+import frontend.factory.wizard.strategies.wizard_pages.ActiveAbilitiesAdderPage;
 import frontend.factory.wizard.strategies.wizard_pages.EntityMovePointPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
+import frontend.factory.wizard.strategies.wizard_pages.PassiveAbilitiesAdderPage;
+import frontend.factory.wizard.strategies.wizard_pages.UnitStatsPage;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -28,10 +31,11 @@ import javafx.scene.paint.Color;
 class UnitStrategy extends BaseStrategy<Unit> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
-	private AbilitiesAdderPage abilitiesAdderPage;
+	private PassiveAbilitiesAdderPage passiveAbilitiesAdderPage;
+	private ActiveAbilitiesAdderPage activeAbilitiesAdderPage;
 	private EntityMovePointPage terrainMovePointPage;
+	private UnitStatsPage statsPage;
 	private GridPatternPage gridPatternPage;
-	private GridPatternPage gridPatternPageRange;
 
 	/**
 	 * Creates a new instance of UnitStrategy. Uses the gameState to gather
@@ -52,33 +56,41 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	 */
 	@Override
 	public Unit finish() {
-		ModifiableUnit unit = new ModifiableUnit(imageNameDescriptionPage.getName());
-		unit.setDescription(imageNameDescriptionPage.getDescriptionLabelBinding().getValue());
-		unit.setImgPath(imageNameDescriptionPage.getImagePath());
+		ModifiableUnit unit = new ModifiableUnit(imageNameDescriptionPage.getName())
+				.setDescription(imageNameDescriptionPage.getDescriptionLabelBinding().getValue())
+				.setImgPath(imageNameDescriptionPage.getImagePath());
 		unit.removeActiveAbilities(unit.getActiveAbilities());
-		unit.addActiveAbilities(abilitiesAdderPage.getSelectedAbilities());
-		unit.addUnitStats(
-				ModifiableUnitStat.HITPOINTS.setMinValue(0.0).setMaxValue(new Double(abilitiesAdderPage.getHP()))
-						.setCurrentValue(new Double(abilitiesAdderPage.getHP())));
-		unit.setTerrainMoveCosts(terrainMovePointPage.getEntityMovePoints().keySet().stream()
-				.map(entity -> (Terrain) entity).collect(Collectors.toMap(entity -> entity,
-						entity -> terrainMovePointPage.getEntityMovePoints().get(entity))));
-		unit.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMinValue(0).setMaxValue(10).setCurrentValue(10));
-		unit.setMovePattern(gridPatternPage.getGridPattern());
-		unit.setRangePattern(gridPatternPageRange.getGridPattern());
+		unit.addActiveAbilities(activeAbilitiesAdderPage.getSelectedAbilities())
+				.addDefensiveModifiers(passiveAbilitiesAdderPage
+						.getPassiveAbilitiesByCategory(GameplayState.DEFENSIVE_MODIFIER).stream()
+						.map(ability -> (InteractionModifier<Double>) ability).collect(Collectors.toList()))
+				.addOffensiveModifiers(passiveAbilitiesAdderPage
+						.getPassiveAbilitiesByCategory(GameplayState.OFFENSIVE_MODIFIER).stream()
+						.map(ability -> (InteractionModifier<Double>) ability).collect(Collectors.toList()))
+				.addTriggeredAbilities(
+						passiveAbilitiesAdderPage.getPassiveAbilitiesByCategory(GameplayState.UNIT_TRIGGERED_EFFECT)
+								.stream().map(ability -> (TriggeredEffect) ability).collect(Collectors.toList()))
+				.addUnitStats(statsPage.getStats())
+				.setTerrainMoveCosts(
+						terrainMovePointPage.getEntityMovePoints().keySet().stream().map(entity -> (Terrain) entity)
+								.collect(Collectors.toMap(entity -> entity,
+										entity -> terrainMovePointPage.getEntityMovePoints().get(entity))))
+				.setMovePattern(gridPatternPage.getGridPattern());
 		return unit;
 	}
 
 	private void initialize() {
 		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "UnitNameDescription");
-		abilitiesAdderPage = new AbilitiesAdderPage(getController(), "UnitAbilitiesAdderDescription");
-		terrainMovePointPage = new EntityMovePointPage(getController(), "UnitTerrainDescription", GameplayState.TERRAIN);
+		passiveAbilitiesAdderPage = new PassiveAbilitiesAdderPage(getController(),
+				"UnitPassiveAbilitiesAdderDescription", GameplayState.DEFENSIVE_MODIFIER,
+				GameplayState.OFFENSIVE_MODIFIER, GameplayState.UNIT_TRIGGERED_EFFECT);
+		activeAbilitiesAdderPage = new ActiveAbilitiesAdderPage(getController(), "UnitActiveAbilitiesAdderDescription");
+		terrainMovePointPage = new EntityMovePointPage(getController(), "UnitTerrainDescription",
+				GameplayState.TERRAIN);
+		statsPage = new UnitStatsPage(getController(), "UnitStatsPageDescription");
 		gridPatternPage = new GridPatternPage(getController(), "UnitGridPatternDescription", Color.WHITE, Color.GREEN);
-		gridPatternPageRange = new GridPatternPage(getController(), "UnitGridPatternRangeDescription", Color.WHITE,
-				Color.YELLOW);
-		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
-		if (isARangedUnit())
-			getPages().add(gridPatternPageRange);
+		getPages().addAll(imageNameDescriptionPage, activeAbilitiesAdderPage, passiveAbilitiesAdderPage,
+				terrainMovePointPage, statsPage, gridPatternPage);
 	}
 
 	private boolean isARangedUnit() {

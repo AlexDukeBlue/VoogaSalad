@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
+import frontend.factory.wizard.strategies.wizard_pages.util.IntegerInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.beans.binding.StringBinding;
@@ -21,8 +21,8 @@ import javafx.scene.layout.Region;
 public class EntityMovePointPage extends BaseWizardPage {
 
 	private TableInputView table;
-	private Map<NumericInputRow, VoogaEntity> rowToEntity;
-	private NumericInputRow defaultVal;
+	private Map<IntegerInputRow, VoogaEntity> rowToEntity;
+	private IntegerInputRow defaultVal;
 
 	/**
 	 * Creates a new instance of EntityMovePointPage
@@ -46,7 +46,7 @@ public class EntityMovePointPage extends BaseWizardPage {
 
 	public Map<VoogaEntity, Integer> getEntityMovePoints() {
 		return rowToEntity.keySet().stream()
-				.collect(Collectors.toMap(row -> rowToEntity.get(row), NumericInputRow::getValue));
+				.collect(Collectors.toMap(row -> rowToEntity.get(row), IntegerInputRow::getValue));
 	}
 
 	public Integer getDefault() {
@@ -56,7 +56,7 @@ public class EntityMovePointPage extends BaseWizardPage {
 	private void initialize(String category) {
 		table = new VerticalTableInputView();
 		rowToEntity = new HashMap<>();
-		defaultVal = new NumericInputRow(null, getPolyglot().get("DefaultVal"), new StringBinding() {
+		defaultVal = new IntegerInputRow(null, getPolyglot().get("DefaultVal"), new StringBinding() {
 			@Override
 			protected String computeValue() {
 				return "";
@@ -67,7 +67,7 @@ public class EntityMovePointPage extends BaseWizardPage {
 				event -> rowToEntity.keySet().stream().forEach(row -> row.setValue(defaultVal.getValue())));
 
 		getController().getAuthoringGameState().getTemplateByCategory(category).forEach(entity -> {
-			NumericInputRow row = new NumericInputRow(getImg(entity.getImgPath()), entity.getName(),
+			IntegerInputRow row = new IntegerInputRow(getImg(entity.getImgPath()), entity.getName(),
 					entity.getDescription());
 			rowToEntity.put(row, entity);
 			table.getChildren().add(row);

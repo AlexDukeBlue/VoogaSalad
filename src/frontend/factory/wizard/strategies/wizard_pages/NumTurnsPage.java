@@ -1,7 +1,7 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
+import frontend.factory.wizard.strategies.wizard_pages.util.IntegerInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.scene.layout.Region;
@@ -16,7 +16,7 @@ import javafx.scene.layout.Region;
 public class NumTurnsPage extends BaseWizardPage {
 
 	private TableInputView table;
-	private NumericInputRow input;
+	private IntegerInputRow input;
 
 	/**
 	 * Creates a new instance of NumTurnsPage
@@ -47,7 +47,7 @@ public class NumTurnsPage extends BaseWizardPage {
 	}
 
 	private void initialize() {
-		input = new NumericInputRow(null, getPolyglot().get("NumTurnsPrompt").getValueSafe(),
+		input = new IntegerInputRow(null, getPolyglot().get("NumTurnsPrompt").getValueSafe(),
 				getPolyglot().get("NumTurnsLabel").getValueSafe());
 		input.setValue(Integer.MAX_VALUE);
 		table = new VerticalTableInputView();
