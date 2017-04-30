@@ -21,7 +21,6 @@ public class PlayersView extends BaseUIManager<GridPane> {
 	private final SimpleObjectProperty<Color> DEFAULT_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 	private final GridPane gridPane;
 	private final Label playersHeader;
-	private final Label currentTurnLabel;
 	private final Label teamsHeader;
 
 	public PlayersView(Controller controller) {
@@ -33,9 +32,6 @@ public class PlayersView extends BaseUIManager<GridPane> {
 		teamsHeader = new Label("Team:");
 		teamsHeader.textFillProperty().bind(DEFAULT_COLOR);
 		GridPane.setHalignment(teamsHeader, HPos.CENTER);
-		currentTurnLabel = new Label(">");
-		currentTurnLabel.textFillProperty().bind(DEFAULT_COLOR);
-		GridPane.setHalignment(currentTurnLabel, HPos.RIGHT);
 		gridPane.setBackground(new Background(new BackgroundFill(new Color(1, 1, 1, 0.5), new CornerRadii(10), null)));
 		gridPane.setAlignment(Pos.TOP_RIGHT);
 		gridPane.setMouseTransparent(true);
@@ -50,119 +46,6 @@ public class PlayersView extends BaseUIManager<GridPane> {
 		if (!getController().isAuthoringMode()) {
 			gridPane.add(teamsHeader, 2, 0);
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		for (int i = 0; i < getController().getReadOnlyGameState().getOrderedPlayerNames().size(); i++) {
 			String playerName = getController().getReadOnlyGameState().getOrderedPlayerNames().get(i);
 			Label playerLabel = new Label(getController().getMyPlayerName().equals(playerName) ? "(You) " + playerName : "" + playerName);
@@ -170,7 +53,10 @@ public class PlayersView extends BaseUIManager<GridPane> {
 			GridPane.setHalignment(playerLabel, HPos.RIGHT);
 			playerLabel.textFillProperty().bind(DEFAULT_COLOR);
 			gridPane.add(playerLabel, 1, i + 1);
-			if (getController().getActivePlayer().getName().equals(playerName) && !getController().isAuthoringMode()) {
+			if (getController().getActiveTeam().equals(getController().getPlayer(playerName).getTeam().get()) && !getController().isAuthoringMode()) {
+				Label currentTurnLabel = new Label(">");
+				currentTurnLabel.textFillProperty().bind(DEFAULT_COLOR);
+				GridPane.setHalignment(currentTurnLabel, HPos.RIGHT);
 				gridPane.add(currentTurnLabel, 0, i + 1);
 			}
 			int row = i;
@@ -181,7 +67,6 @@ public class PlayersView extends BaseUIManager<GridPane> {
 					teamLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 					GridPane.setHalignment(teamLabel, HPos.RIGHT);
 					teamLabel.setPadding(Insets.EMPTY);
-					teamLabel.textFillProperty().bind(DEFAULT_COLOR);
 					gridPane.add(teamLabel, 2, row + 1);
 				}
 			});
