@@ -36,6 +36,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private VoogaScriptEngine scriptEngine;
 	private BooleanProperty hasCompiled;
 	private String strategy;
+	private final double SPACING = 20;
 
 	public ScriptingDialog(Controller controller) {
 		super(controller);
@@ -45,7 +46,12 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		pane = new BorderPane();
 		scriptArea = new TextArea();
 		Button compileButton = new Button();
+		Button loadScriptButton = new Button();
+		Button quickCreateButton = new Button(); 
 		compileButton.textProperty().bind(getPolyglot().get("Compile"));
+		loadScriptButton.textProperty().bind(getPolyglot().get("loadScript"));
+		quickCreateButton.textProperty().bind(getPolyglot().get("quickAdd"));
+		
 		compileButton.setOnAction(evt -> {
 			try {
 				scriptEngine = VoogaScriptEngineManager.read(languagesMenu.getValue(), scriptArea.getText());
@@ -54,12 +60,32 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 				handleException(e);
 			}
 		});
+		
+		loadScriptButton.setOnAction(evt -> {
+			try {
+				System.out.println("Loading script...");
+			} catch (VoogaScriptException e) {
+				handleException(e);
+			}
+		});
+		
+		quickCreateButton.setOnAction(evt -> {
+			try {
+				System.out.println("Loading quick add gui...");
+			} catch (VoogaScriptException e) {
+				handleException(e);
+			}
+		});
+		
 		Label scriptingLabel = new Label();
 		scriptingLabel.textProperty().bind(getPolyglot().get("chooseScriptingLang"));
 		HBox topBox = new HBox(scriptingLabel);
 		topBox.getChildren().add(languagesMenu);
+		topBox.getChildren().add(quickCreateButton);
 		topBox.setAlignment(Pos.CENTER);
-		HBox bottomBox = new HBox(compileButton);
+		topBox.setSpacing(SPACING);
+		HBox bottomBox = new HBox(loadScriptButton);
+		bottomBox.getChildren().add(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
 		languagesMenu.setOnAction(
 				event -> scriptArea.setText(VoogaScriptEngineManager.getDefaultText(languagesMenu.getValue())));
