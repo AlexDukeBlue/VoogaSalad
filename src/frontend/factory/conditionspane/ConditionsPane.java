@@ -5,6 +5,7 @@ package frontend.factory.conditionspane;
 
 import backend.game_engine.Resultant;
 import backend.game_rules.GameRule;
+import backend.util.Requirement;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickableUIComponent;
@@ -21,6 +22,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Observable;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 /**
@@ -30,22 +33,18 @@ import java.util.stream.Stream;
 public class ConditionsPane extends ClickableUIComponent<Region> implements ConditionsPaneExternal {
 
 	private VBox myBox = new VBox();
-	private ConditionVBoxFactory boxFactory;
+	private UpdatableConditionVBoxFactory boxFactory;
+	private Collection<UpdatableConditionVBox> subBoxes;
 	private Collection<ConditionsPaneObserver> observers;
-	private Collection<Resultant> resultants;
-	private Collection<GameRule> rules;
 
 	/**
 	 *
 	 */
 	public ConditionsPane(Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
-		boxFactory = new ConditionVBoxFactory(controller, clickHandler);
+		boxFactory = new UpdatableConditionVBoxFactory(controller, clickHandler);
 		observers = new ArrayList<>();
-		resultants = new ArrayList<>();    //temporary
-		rules = new ArrayList<>();            //temporary
-		//resultant = getController().getResultants();	//TODO
-		//rules = getController().getRules();			//TODO
+		subBoxes = new ArrayList<UpdatableConditionVBox>();
 		initPane();
 	}
 
@@ -56,26 +55,24 @@ public class ConditionsPane extends ClickableUIComponent<Region> implements Cond
 
 	@Override
 	public void update() {
-		//TODO
-		//updateRulePane();
-		//updateResultantPane();
+		subBoxes.forEach(box -> ((UpdatableConditionVBox) box).update());
 	}
 
 	private void initPane() {
-		Stream.of("TurnRequirements", "TurnActions", "EndConditions").map(this::createPane).forEach(myBox.getChildren()::add);
+		Stream.of(getPolyglot().get("TurnRequirements").get(), getPolyglot().get("TurnActions").get(), getPolyglot().get("EndConditions").get()).map(this::createPane).forEach(myBox.getChildren()::add);
 	}
 
 	private TitledPane createPane(String type) {
 		TitledPane rulesPane = new TitledPane();
-		rulesPane.textProperty().bind(getPolyglot().get(type));
+		rulesPane.setText(type);
 		rulesPane.setCollapsible(true);
-		VBox content = boxFactory.createConditionVBox(getPolyglot(), type);
-		content.setAlignment(Pos.TOP_RIGHT);
+		UpdatableConditionVBox content = boxFactory.createConditionVBox(getPolyglot(), type);
+		content.getVBox().setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
-		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController(),getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
-		content.getChildren().add(addRemoveButton.getNode());
-
-		rulesPane.setContent(new ScrollPane(content));
+		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(type, getController(), getPolyglot().getLanguage(),getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
+		subBoxes.add(content);
+		VBox outsideContent = new VBox(content.getVBox(), addRemoveButton.getNode());
+		rulesPane.setContent(outsideContent);
 		return rulesPane;
 	}
 }
