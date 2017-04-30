@@ -20,7 +20,7 @@ public class SoundHandler {
 			}
 		}
 		else {
-			System.out.println("Audio file must be in .wav format");
+			System.out.println("Audio file must be in .wav or .mp3 format");
 		}
 	}
 }

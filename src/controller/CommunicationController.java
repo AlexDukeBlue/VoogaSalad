@@ -202,8 +202,6 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void addTemplatesByCategory(String category, VoogaEntity... templates) {
-		System.out.println(category);
-		System.out.println(templates);
 		Arrays.stream(templates).map(VoogaEntity::getImgPath).forEach(this::sendFile);
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory(category)
@@ -432,10 +430,6 @@ public class CommunicationController implements Controller {
 	public void moveUnit(String unitName, CoordinateTuple unitLocation, CoordinateTuple targetLocation) {
 		sendModifier((GameplayState state) -> {
 			Unit unitToMove = state.getGrid().get(unitLocation).getOccupantByName(unitName);
-			System.out.println(unitToMove);
-			System.out.println(state);
-//			System.out.println(state.getGrid());
-			System.out.println(state.getGrid().get(targetLocation));
 			unitToMove.moveTo(state.getGrid().get(targetLocation), state);
 			return state;
 		});
