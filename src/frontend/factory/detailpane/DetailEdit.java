@@ -48,7 +48,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 	private Map<Terrain, TextField> moveCosts;
 	private Map<String, List<TextField>> unitStats;
 	private ComboBox<String> movePatternBox;
-	private ComboBox<String> playerNameBox;
+	private ComboBox<String> teamNameBox;
 	private Stage myStage;
 	private int rows = 0;
 
@@ -86,7 +86,12 @@ public class DetailEdit extends BaseUIManager<Node> {
 				.map(VoogaEntity::getName)
 				.collect(Collectors.toList()));
 		movePatternBox = createDropDown("Move Pattern", options, unit.getMovePattern().getName());
-		playerNameBox = createDropDown("Player", FXCollections.observableList(getController().getReadOnlyGameState().getOrderedPlayerNames()), unit.getOwner().isPresent() ? unit.getOwner().get().getName() : "");
+		ObservableList<String> teamNames = FXCollections.observableArrayList();
+		getController().getReadOnlyGameState().getTeams().forEach(e -> teamNames.add(e.getName()));
+		teamNameBox = createDropDown("Team", teamNames, unit.getOwner().isPresent() ? unit.getOwner().get().getName() : "");
+		
+		//teamNameBox = createDropDown("Team", FXCollections.observableList(new ArrayList(getController().getReadOnlyGameState().getTeams())), unit.getOwner().isPresent() ? unit.getOwner().get().getName() : "");
+		
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
 	}
@@ -140,7 +145,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 			String unitName = unit.getName();
 
 			String movePatternName = movePatternBox.getValue();
-			String playerName = playerNameBox.getValue();
+			String teamName = teamNameBox.getValue();
 			getController().sendModifier((AuthoringGameState state) -> {
 //				ModifiableUnit newUnit = (ModifiableUnit) getTemplateByCategory("Unit").getAll().stream()
 //						.filter(x -> x.getName().equals(unitName));
@@ -154,17 +159,11 @@ public class DetailEdit extends BaseUIManager<Node> {
 				newUnit.setMovePattern((GridPattern) state
 						.getTemplateByCategory("Grid Pattern")
 						.getByName(movePatternName));
-				newUnit.setOwner(state.getPlayerByName(playerName));
+				//newUnit.setOwner(state.getTeamByName(teamName));
 				return state;
 			});
 
 		});
-	}
-
-	private ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection> getTemplateByCategory(
-			String string) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
