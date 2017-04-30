@@ -97,6 +97,8 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 		});
 		vbox.getChildren().addAll(numWizardRow.getNode());
 		checkCanNext();
+		numWizardRow.setValue(2);
+		numWizardRow.setValue(1);
 	}
 
 	private void checkCanNext() {
