@@ -1,6 +1,7 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
+import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.HasLocation;
 import controller.Controller;
