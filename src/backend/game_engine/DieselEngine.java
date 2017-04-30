@@ -37,7 +37,6 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	public void checkGame(GameplayState state) {
-		System.out.println("check");
 		currentState = state;
 		checkTurnRules(state);
 		checkTurnEvents(state);
@@ -97,7 +96,6 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkObjectives(GameplayState state) {
-		System.out.println(state.getObjectives().toString());
 		state.getObjectives().parallelStream().forEach(e -> {
 //			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
 //			result.accept(state.getActiveTeam(), this);
@@ -106,7 +104,6 @@ public class DieselEngine implements GameEngine {
 
 	@Override
 	public void handleWin(ImmutablePlayer player) {
-		System.out.println("winner");
 		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName)).forEach(
 				aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
 	}

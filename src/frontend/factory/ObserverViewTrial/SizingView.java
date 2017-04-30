@@ -40,7 +40,6 @@ public class SizingView implements ObservingView {
 		double y = ((ArrayList<Double>) arg).get(1);
 		stage.setWidth(x);
 		stage.setHeight(y);
-		System.out.println(stage.getWidth());
 	}
 
 	@Override
