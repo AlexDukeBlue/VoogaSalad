@@ -460,7 +460,6 @@ public class CommunicationController implements Controller {
 					}
 					targetCell.add(templateCopy);
 				} else {
-					showGenericAlert();
 					e.printStackTrace();
 				}
 			}
@@ -509,6 +508,7 @@ public class CommunicationController implements Controller {
 			} catch (Serializer.SerializationException e) {
 				System.err.println("You're going TOO FAST!!!!");
 			} catch (IOException e) {
+				showGenericAlert();
 				e.printStackTrace();
 			}
 		});
@@ -527,4 +527,5 @@ public class CommunicationController implements Controller {
 		alert.setContentText("An error occurred");
 		alert.showAndWait();
 	}
+
 }
