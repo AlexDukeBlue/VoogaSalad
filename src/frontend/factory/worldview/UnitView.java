@@ -1,8 +1,5 @@
 package frontend.factory.worldview;
 
-import java.util.Collections;
-import java.util.Objects;
-
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.HasLocation;
@@ -26,10 +23,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
+import java.util.Collections;
+import java.util.Objects;
+
 /**
  * UnitView creates a UI manager that manipulates a Node to represent a Unit
  * object. It can be added to things like a GridView, CellView, WorldView, etc.
- * 
+ *
  * @author th174, Dylan Peters
  */
 class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
@@ -46,7 +46,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	 * Creates a new UnitView. Sets all values to default.
 	 */
 	public UnitView(String unitName, CoordinateTuple unitLocation, ReadOnlyObjectProperty<Bounds> boundsProperty,
-			Controller controller, ClickHandler clickHandler) {
+	                Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
@@ -87,8 +87,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void update() {
-		dropShadow.setColor(Color
-				.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
+		dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 		try {
 			double fractionRemaining = getEntity().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
@@ -141,12 +140,9 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler,
-			Event event) {
+	                               Event event) {
 		if (isValidMove(target)) {
-			getController().moveUnit(getUnitName(), getUnitLocation(),
-					((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
-			// playMedia(((HasSound) ((GameBoardObjectView)
-			// target).getEntity()).getSoundPath());
+			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
 		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE)
 				|| ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
 			getController().removeUnitFromGrid(getUnitName(), getUnitLocation());
@@ -156,7 +152,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler,
-			Event event) {
+	                              Event event) {
 		if (isValidMove(target)) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			if (canMove() && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
@@ -177,8 +173,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	}
 
 	private boolean canMove() {
-		return getController().isMyPlayerTurn() && getEntity().getOwner().isPresent()
-				&& getEntity().getOwner().get().equals(getController().getActivePlayer());
+		return getController().isMyTeam() && getEntity().getTeam().isPresent()
+				&& getEntity().getTeam().get().equals(getController().getActivePlayer());
 	}
 
 	private boolean isValidMove(ClickableUIComponent target) {

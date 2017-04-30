@@ -305,7 +305,7 @@ public class View extends ClickableUIComponent<Region> {
 	@Override
 	public void update() {
 		this.setViewEditable(getController().isAuthoringMode());
-		endTurnButton.setDisable(!getController().isMyPlayerTurn() || getController().isAuthoringMode());
+		endTurnButton.setDisable(!getController().isMyTeam() || getController().isAuthoringMode());
 		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()) {
 			joinTeam();
 		}

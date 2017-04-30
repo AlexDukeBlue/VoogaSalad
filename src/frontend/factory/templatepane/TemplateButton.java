@@ -42,7 +42,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
-		if (getController().isMyPlayerTurn()) {
+		if (getController().isMyTeam()) {
 			actInAuthoringMode(target, null, clickHandler, event);
 		}
 	}

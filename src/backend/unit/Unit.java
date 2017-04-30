@@ -4,7 +4,6 @@ import backend.cell.Cell;
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.grid.*;
-import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.properties.*;
 import backend.util.*;
@@ -179,13 +178,9 @@ public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation, H
 
 	void setVisible(boolean isVisible);
 
-	default Optional<Team> getTeam() {
-		return getOwner().isPresent() ? getOwner().get().getTeam() : Optional.empty();
-	}
+	Unit setTeam(Team player);
 
-	Unit setOwner(ImmutablePlayer player);
-
-	Optional<ImmutablePlayer> getOwner();
+	Optional<Team> getTeam();
 
 	default Unit add(VoogaEntity entity) {
 		DISPATCH_MAP.get(entity.getClass()).accept(entity, this);

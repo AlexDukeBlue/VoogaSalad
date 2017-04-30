@@ -3,7 +3,7 @@ package backend.unit;
 import backend.cell.Cell;
 import backend.cell.Terrain;
 import backend.grid.GridPattern;
-import backend.player.ImmutablePlayer;
+import backend.player.Team;
 import backend.unit.properties.*;
 import backend.util.*;
 
@@ -45,7 +45,7 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	private final UnitStats stats;
 	private GridPattern movePattern;
 	private Faction faction;
-	private ImmutablePlayer owner;
+	private Team owner;
 	private Cell currentCell;
 	private boolean isVisible;
 
@@ -105,14 +105,14 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 
 	@Override
 	public void startTurn(GameplayState gameState) {
-		if (!getOwner().isPresent() || gameState.getActivePlayer().equals(getOwner().get())) {
+		if (!getTeam().isPresent() || gameState.getActiveTeam().equals(getTeam().get())) {
 			processTriggers(Event.TURN_START, gameState);
 		}
 	}
 
 	@Override
 	public void endTurn(GameplayState gameState) {
-		if (!getOwner().isPresent() || gameState.getActivePlayer().equals(getOwner().get())) {
+		if (!getTeam().isPresent() || gameState.getActiveTeam().equals(getTeam().get())) {
 			processTriggers(Event.TURN_END, gameState);
 		}
 	}
@@ -316,13 +316,13 @@ public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implem
 	}
 
 	@Override
-	public ModifiableUnit setOwner(ImmutablePlayer owner) {
+	public ModifiableUnit setTeam(Team owner) {
 		this.owner = owner;
 		return this;
 	}
 
 	@Override
-	public Optional<ImmutablePlayer> getOwner() {
+	public Optional<Team> getTeam() {
 		return Optional.ofNullable(owner);
 	}
 

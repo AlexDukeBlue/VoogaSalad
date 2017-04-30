@@ -1,16 +1,9 @@
 package frontend.factory.detailpane;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GridPattern;
+import backend.player.Team;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
@@ -32,6 +25,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * @author Faith Rodriguez
  *         <p>
@@ -48,7 +44,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 	private Map<Terrain, TextField> moveCosts;
 	private Map<String, List<TextField>> unitStats;
 	private ComboBox<String> movePatternBox;
-	private ComboBox<String> playerNameBox;
+	private ComboBox<String> teamNameBox;
 	private Stage myStage;
 	private int rows = 0;
 
@@ -86,7 +82,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 				.map(VoogaEntity::getName)
 				.collect(Collectors.toList()));
 		movePatternBox = createDropDown("Move Pattern", options, unit.getMovePattern().getName());
-		playerNameBox = createDropDown("Player", FXCollections.observableList(getController().getReadOnlyGameState().getOrderedPlayerNames()), unit.getOwner().isPresent() ? unit.getOwner().get().getName() : "");
+		teamNameBox = createDropDown("Team", FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Tegam::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
 	}
@@ -140,7 +136,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 			String unitName = unit.getName();
 
 			String movePatternName = movePatternBox.getValue();
-			String playerName = playerNameBox.getValue();
+			String teamName = teamNameBox.getValue();
 			getController().sendModifier((AuthoringGameState state) -> {
 //				ModifiableUnit newUnit = (ModifiableUnit) getTemplateByCategory("Unit").getAll().stream()
 //						.filter(x -> x.getName().equals(unitName));
@@ -154,7 +150,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 				newUnit.setMovePattern((GridPattern) state
 						.getTemplateByCategory("Grid Pattern")
 						.getByName(movePatternName));
-				newUnit.setOwner(state.getPlayerByName(playerName));
+				newUnit.setTeam(state.getTeamByName(teamName));
 				return state;
 			});
 

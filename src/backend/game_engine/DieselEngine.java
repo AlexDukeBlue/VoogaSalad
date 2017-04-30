@@ -82,7 +82,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnRules(GameplayState state) {
-		if (!state.getTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActivePlayer(), state))
+		if (!state.getTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActiveTeam(), state))
 				&& state.turnRequirementsSatisfied())
 			state.endTurn();
 	}
@@ -95,7 +95,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getActivePlayer(), state)));
+//		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getActiveTeam(), state)));
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class DieselEngine implements GameEngine {
 	 */
 	private void checkObjectives(GameplayState state) {
 		state.getObjectives().parallelStream().forEach(e -> {
-			Result result = e.getResultQuad().determine(state.getActivePlayer(), state);
-			result.accept(state.getActivePlayer(), this);
+//			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
+//			result.accept(state.getActiveTeam(), this);
 		});
 	}
 
