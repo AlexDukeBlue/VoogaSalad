@@ -55,12 +55,7 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 
 	@Override
 	public void setLanguage(String language) {
-		try {
-			getPolyglot().setLanguage(language);
-		} catch (PolyglotException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		getPolyglot().setLanguage(language);
 	}
 
 	void setDescription(StringBinding description) {
