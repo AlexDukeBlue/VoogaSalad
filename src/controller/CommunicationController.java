@@ -201,8 +201,6 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void addTemplatesByCategory(String category, VoogaEntity... templates) {
-		System.out.println(category);
-		System.out.println(templates);
 		Arrays.stream(templates).map(VoogaEntity::getImgPath).forEach(this::sendFile);
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory(category)

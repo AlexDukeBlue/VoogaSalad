@@ -41,6 +41,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 	private Pane pane;
 	private Unit unit;
 	private GridPane sceneView;
+	private ResourceBundle resources;
 	private Map<Terrain, TextField> moveCosts;
 	private Map<String, List<TextField>> unitStats;
 	private ComboBox<String> movePatternBox;
@@ -50,6 +51,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 
 	public DetailEdit(VoogaEntity sprite, String spriteType, Controller controller) {
 		super(controller);
+		resources = ResourceBundle.getBundle("frontend/factory/detailpane/resources");
 		myStage = new Stage();
 		pane = new Pane();
 		unit = (Unit) sprite;
@@ -61,7 +63,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 
 	private void createUnitScene() {
 		sceneView = new GridPane();
-		Label label = addText("Move Costs");
+		Label label = addText(getPolyglot().get("MoveCost").getValueSafe());
 		sceneView.addRow(rows++, label);
 		Collection<Terrain> terrains = (Collection<Terrain>) getController().getAuthoringGameState().getTemplateByCategory("terrain").getAll();
 		moveCosts = new HashMap<>();
@@ -69,7 +71,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 			TextField feature = createUserInput(t.getFormattedName(), ((Integer) unit.getMoveCostByTerrain(t)).toString()).get(0);
 			moveCosts.put(t, feature);
 		}
-		sceneView.addRow(rows++, new Label("Stats"));
+		sceneView.addRow(rows++, new Label(getPolyglot().get("Stats").getValueSafe()));
 		unitStats = new HashMap<>();
 		for (UnitStat stat : unit.getUnitStats()) {
 			unitStats.put(stat.getName(), createUserInput(stat.getName(), stat.getMinValue(), stat.getCurrentValue(), stat.getMaxValue()));
@@ -81,8 +83,8 @@ public class DetailEdit extends BaseUIManager<Node> {
 				.filter(e -> e.getShape().equals(getController().getShape()))
 				.map(VoogaEntity::getName)
 				.collect(Collectors.toList()));
-		movePatternBox = createDropDown("Move Pattern", options, unit.getMovePattern().getName());
-		teamNameBox = createDropDown("Team", FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Team::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
+		movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options, unit.getMovePattern().getName());
+		teamNameBox = createDropDown(getPolyglot().get("Team").getValueSafe(), FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Team::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
 	}
@@ -113,7 +115,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 
 	@SuppressWarnings("unchecked")
 	private void createUnitSubmitBtn() {
-		Button submit = new Button("Submit Changes");
+		Button submit = new Button(getPolyglot().get("Submit").getValueSafe());
 		sceneView.addRow(rows++, submit);
 		Map<Terrain, Integer> finalCosts = new HashMap<>();
 		submit.setOnAction(e -> {
@@ -153,7 +155,6 @@ public class DetailEdit extends BaseUIManager<Node> {
 				newUnit.setTeam(state.getTeamByName(teamName));
 				return state;
 			});
-
 		});
 	}
 

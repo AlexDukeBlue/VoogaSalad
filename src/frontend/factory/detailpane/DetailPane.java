@@ -151,7 +151,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 			newSpriteInfo = new Label(content);
 		}
 		//TODO ResourceBundle and util.polyglot and shit
-		exportButton = new Button("Export");
+		exportButton = new Button(getPolyglot().get("Export").get());
 		exportButton.setOnAction(e -> {
 			try {
 				FileChooser chooser = new FileChooser();
@@ -190,7 +190,7 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private void createButton(VoogaEntity unit, String unitType) {
 		if (unit instanceof Unit) {
-			editBtn = new Button("Edit details");
+			editBtn = new Button(getPolyglot().get("Edit").get());
 			infoPane.getChildren().add(editBtn);
 			editBtn.setOnMouseClicked(e -> {
 				new DetailEdit(unit, unitType, getController());

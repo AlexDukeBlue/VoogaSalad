@@ -13,14 +13,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-
 public class LoadingScreen extends Group {
 	private double minWidth;
 	private double minHeight;
-	public LoadingScreen(double minWidth, double minHeight){
+
+	public LoadingScreen(double minWidth, double minHeight) {
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;
-//		System.out.println(minWidth + " "+ minHeight);
 		createCircles();
 	}
 
@@ -36,8 +35,6 @@ public class LoadingScreen extends Group {
 
 
 	public Text createText(Circle circle) {
-		double x = circle.getCenterX();
-		double y = circle.getCenterY();
 		Text loading = new Text();
 		loading.setText("Loading");
 		loading.setFont(Font.loadFont("file:resources/styles/PlaylistFF/Playlist Script.otf", 10));
@@ -59,8 +56,6 @@ public class LoadingScreen extends Group {
 
 		this.getChildren().add(circle);
 		circle.setOnMouseDragged(e -> run(circle));
-		//		wrap(circle);
-//		System.out.println(circle.getCenterX() + " " + circle.getCenterY());
 
 		Text loading = createText(circle);
 		this.getChildren().add(loading);
@@ -84,10 +79,6 @@ public class LoadingScreen extends Group {
 		linhaT.play();
 	}
 
-	//	public Group getGroup(){
-	//		return this;
-	//	}
-
 	public void drag(Circle circle, double x, double y) {
 		if (circle.contains(new Point2D(x, y))) {
 			circle.setCenterX(x);
@@ -103,14 +94,7 @@ public class LoadingScreen extends Group {
 
 		if (minX > 10 && maxX < minWidth - 10 && minY > 10 && maxY < minHeight - 10) {
 			circle.setOnMouseMoved(e -> drag(circle, e.getX(), e.getY()));
-//		TranslateTransition tt = new TranslateTransition(Duration.millis(80), circle);
-//	     tt.setToX(10f);
-//	     tt.setCycleCount((int) 5f);
-//	     tt.setAutoReverse(true);
-//	 
-//	     tt.play();
 		}
-
 
 	}
 
@@ -127,16 +111,4 @@ public class LoadingScreen extends Group {
 	    });
 	  }
 
-	//	public void wrap(Circle circle){
-	//		Circle c = new Circle();
-	//		//off right
-	//		System.out.println(circle.getCenterX() + circle.getBoundsInLocal().getWidth() / 2);
-	//		if (circle.getCenterX() + circle.getBoundsInLocal().getWidth() / 2 > minWidth){
-	//			System.out.println("crossed to right");
-	//			c.setCenterX(0);
-	//			c.setCenterY(circle.getCenterY());
-	//			c.translateXProperty().bind(circle.translateXProperty());
-	//			createCircle(circle);
-	//		}
-	//	}
 }
