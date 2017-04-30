@@ -5,14 +5,29 @@ import frontend.ClickHandler;
 import javafx.beans.value.ObservableValue;
 
 /**
- * A ConditionBox that holds a Turn Requirement by name. When the checkbox is activated,
- * the Controller is used to activate the Turn Requirement, and vice versa.
+ * A ConditionBox that holds a Turn Requirement by name. When the checkbox is
+ * activated, the Controller is used to activate the Turn Requirement. When the
+ * checkbox is deactivated, the Controller is used to deactivate the Turn
+ * Requirement.
  *
- * @author Stone Mathers
- * Created 4/25/2017
+ * @author Stone Mathers Created 4/25/2017
  */
 public class TurnRequirementBox extends ConditionBox {
 
+	/**
+	 * Constructs a TurnRequirementBox representing the Turn Requirement with
+	 * the passed turnRequirementName.
+	 * 
+	 * @param turnRequirementName
+	 *            The name that represents a Turn Requirement.
+	 * @param category
+	 *            Category that the Turn Requirement belongs to.
+	 * @param controller
+	 *            Controller through which the Turn Requirement is
+	 *            activated/deactivated.
+	 * @param clickHandler
+	 *            ClickHandler that the TurnRequirementBox belongs to.
+	 */
 	public TurnRequirementBox(String turnRequirementName, String category, Controller controller,
 			ClickHandler clickHandler) {
 		super(turnRequirementName, category, controller, clickHandler);
@@ -22,15 +37,9 @@ public class TurnRequirementBox extends ConditionBox {
 	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
 		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if (newValue) {
-			System.out.println("add req");
-			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 			getController().activateTurnRequirement(getName());
-			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 		} else {
-			System.out.println("remove req");
-			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 			getController().deactivateTurnRequirement(getName());
-			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 		}
 	}
 }
