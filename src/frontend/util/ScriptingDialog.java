@@ -80,7 +80,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		
 		quickCreateButton.setOnAction(evt -> {
 			try {
-				loadScript();
+				//loadScript();
 			} catch (VoogaScriptException e) {
 				handleException(e);
 			}
@@ -105,6 +105,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	}
 	
 	private String loadScript() {
+		System.out.println("got here");
 		String code = "";
 		final FileChooser filechooser = new FileChooser();
 		filechooser.setTitle("Open Script");
