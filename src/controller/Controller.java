@@ -107,34 +107,183 @@ public interface Controller {
 
 	void removeListener(UIComponentListener objectToUpdate);
 
+	/**
+	 * Informs the Model that the program has entered Authoring mode.
+	 */
 	void enterAuthoringMode();
 
+	/**
+	 * Informs the Model that the program has entered Gameplay mode.
+	 */
 	void enterGamePlayMode();
 
+	/**
+	 * Returns a boolean indicating whether or not the Model is currently in
+	 * Authoring mode.
+	 * 
+	 * @return true if the Model is in Authoring mode, false if not
+	 */
 	boolean isAuthoringMode();
 
+	/**
+	 * Returns a boolean indicating whether or not the Controller's active
+	 * Player has won.
+	 * 
+	 * @return true if the Player has won, false if not
+	 */
+	boolean activePlayerWon();
+
+	/**
+	 * Returns a boolean indicating whether or not the Controller's active
+	 * Player has lost.
+	 * 
+	 * @return true if the Player has lost, false if not
+	 */
+	boolean activePlayerLost();
+
+	/**
+	 * Returns a boolean indicating whether or not the Controller's active
+	 * Player has tied.
+	 * 
+	 * @return true if the Player has tied, false if not
+	 */
+	boolean activePlayerTied();
+
+	/**
+	 * Adds a turn requirement to the Model's list of turn requirements.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn requirement. Used for
+	 *            identification.
+	 * @param description
+	 *            String describing the turn requirement.
+	 * @param imgPath
+	 *            String used to access image which represents the turn
+	 *            requirement.
+	 * @param biPredicate
+	 *            SerializableBiPredicate which is used to determine if the turn
+	 *            requirement has been satisfied.
+	 */
 	void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate);
 
+	/**
+	 * Remove a turn requirement from the Model's list of turn requirements.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn requirement. Used to
+	 *            identify and remove the correct turn requirement.
+	 */
 	void removeTurnRequirement(String name);
 
+	/**
+	 * Activates a turn requirement held in the Model's list of turn
+	 * requirements. Does nothing if the turn requirement does not exist.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn requirement. Used to
+	 *            identify and activate the correct turn requirement.
+	 */
 	void activateTurnRequirement(String name);
 
+	/**
+	 * Deactivates a turn requirement held in the Model's list of turn
+	 * requirements. Does nothing if the turn requirement does not exist.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn requirement. Used to
+	 *            identify and deactivate the correct turn requirement.
+	 */
 	void deactivateTurnRequirement(String name);
 
-	void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer);
+	/**
+	 * Adds a turn action to the Model's list of turn actions.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn action. Used for
+	 *            identification.
+	 * @param description
+	 *            String describing the turn action.
+	 * @param imgPath
+	 *            String used to access image which represents the turn action.
+	 * @param biPredicate
+	 *            SerializableBiConsumer which is used to carry out the turn
+	 *            action.
+	 */
+	void addTurnAction(String name, String description, String imgPath, SerializableBiConsumer biConsumer);
 
-	void removeTurnAction(Event event, String name);
+	/**
+	 * Remove a turn action from the Model's list of turn actions.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn action. Used to identify
+	 *            and remove the correct turn action.
+	 */
+	void removeTurnAction(String name);
 
-	void activateTurnAction(Event event, String name);
+	/**
+	 * Activates a turn action held in the Model's list of turn actions. Does
+	 * nothing if the turn action does not exist.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn action. Used to identify
+	 *            and activate the correct turn action.
+	 */
+	void activateTurnAction(String name);
 
-	void deactivateTurnAction(Event event, String name);
+	/**
+	 * Deactivates a turn action held in the Model's list of turn actions. Does
+	 * nothing if the turn action does not exist.
+	 * 
+	 * @param name
+	 *            String holding the name of the turn action. Used to identify
+	 *            and deactivate the correct turn action.
+	 */
+	void deactivateTurnAction(String name);
 
+	/**
+	 * Adds an end condition to the Model's list of end conditions.
+	 * 
+	 * @param name
+	 *            String holding the name of the end condition. Used for
+	 *            identification.
+	 * @param description
+	 *            String describing the end condition.
+	 * @param imgPath
+	 *            String used to access image which represents the end
+	 *            condition.
+	 * @param biPredicate
+	 *            ResultQuadPredicate which is used to determine whether the end
+	 *            condition has been satisfied.
+	 */
 	void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate);
 
+	/**
+	 * Remove an end condition from the Model's list of end condition.
+	 * 
+	 * @param name
+	 *            String holding the name of the end condition. Used to identify
+	 *            and remove the correct end condition.
+	 */
 	void removeEndCondition(String name);
 
+	/**
+	 * Activates an end condition held in the Model's list of end conditions.
+	 * Does nothing if the end condition does not exist.
+	 * 
+	 * @param name
+	 *            String holding the name of the end condition. Used to identify
+	 *            and activate the correct end condition.
+	 */
 	void activateEndCondition(String name);
 
+	/**
+	 * Deactivates an end condition held in the Model's list of end conditions.
+	 * Does nothing if the end condition does not exist.
+	 * 
+	 * @param name
+	 *            String holding the name of the end condition. Used to identify
+	 *            and deactivate the correct end condition.
+	 */
 	void deactivateEndCondition(String name);
 
 	default Collection<? extends Team> getTeamTemplates() {
@@ -167,7 +316,8 @@ public interface Controller {
 
 	void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation);
 
-	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation);
+	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName,
+			CoordinateTuple targetLocation);
 
 	void updateAll();
 

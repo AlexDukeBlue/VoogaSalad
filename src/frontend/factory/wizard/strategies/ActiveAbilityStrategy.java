@@ -7,6 +7,7 @@ import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
 import javafx.beans.binding.StringBinding;
+import javafx.scene.paint.Color;
 
 /**
  * ActiveAbilityStrategy implements the SelectionStrategy interface in order to
@@ -44,7 +45,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	private void initialize() {
 		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription");
 		scriptingPage = new ScriptingPage(getController(),"ActiveAbilityScriptingDescription");
-		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription");
+		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
 		getPages().addAll(namePage, scriptingPage, gridPage);
 	}
 

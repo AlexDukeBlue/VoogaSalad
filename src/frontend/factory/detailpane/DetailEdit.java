@@ -82,7 +82,7 @@ public class DetailEdit extends BaseUIManager<Node> {
 				.map(VoogaEntity::getName)
 				.collect(Collectors.toList()));
 		movePatternBox = createDropDown("Move Pattern", options, unit.getMovePattern().getName());
-		teamNameBox = createDropDown("Team", FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Tegam::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
+		teamNameBox = createDropDown("Team", FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Team::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
 	}
@@ -155,12 +155,6 @@ public class DetailEdit extends BaseUIManager<Node> {
 			});
 
 		});
-	}
-
-	private ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection> getTemplateByCategory(
-			String string) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

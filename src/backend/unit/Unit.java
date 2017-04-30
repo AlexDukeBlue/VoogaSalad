@@ -74,6 +74,8 @@ public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation, H
 	}
 
 	GridPattern getMovePattern();
+	
+	GridPattern getRangePattern();
 
 	default CoordinateTuple getLocation() {
 		if (Objects.isNull(getCurrentCell())) {

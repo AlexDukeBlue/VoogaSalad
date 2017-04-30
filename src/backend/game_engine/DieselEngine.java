@@ -4,6 +4,7 @@ import backend.game_engine.ResultQuadPredicate.Result;
 import backend.player.ImmutablePlayer;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
+import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import util.net.ObservableServer;
 
@@ -11,8 +12,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -24,19 +23,12 @@ import java.util.stream.Collectors;
 // job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
-	private ObservableServer<GameplayState> myServer;
-	private Consumer<GameplayState> stateUpdateListener = this::checkGame;
+	private ObservableServer<ReadonlyGameplayState> myServer;
+	private GameplayState currentState;
 
-	/**
-	 * This constructor passes in the ObservableServer<GameplayState> that the
-	 * GameEngine will communicate with and add listeners to.
-	 *
-	 * @param server
-	 */
-	public DieselEngine(ObservableServer<GameplayState> server) {
-		myServer = server;
-		server.addListener(stateUpdateListener);
-		Executors.newSingleThreadExecutor().submit(server);
+	public DieselEngine(ObservableServer<ReadonlyGameplayState> gameServer) {
+		myServer = gameServer;
+		currentState = null;
 	}
 
 	/**
@@ -46,7 +38,9 @@ public class DieselEngine implements GameEngine {
 	 *
 	 * @param state
 	 */
-	private void checkGame(GameplayState state) {
+	public void checkGame(GameplayState state) {
+		System.out.println("check");
+		currentState = state;
 		checkTurnRules(state);
 		checkTurnEvents(state);
 		checkObjectives(state);
@@ -105,6 +99,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkObjectives(GameplayState state) {
+		System.out.println(state.getObjectives().toString());
 		state.getObjectives().parallelStream().forEach(e -> {
 //			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
 //			result.accept(state.getActiveTeam(), this);
@@ -112,47 +107,26 @@ public class DieselEngine implements GameEngine {
 	}
 
 	@Override
-	public Object handleWin(ImmutablePlayer player) {
-		// TODO Auto-generated method stub
-
-		myServer.sendAndApply((GameplayState state) -> {
-			state.getOrderedPlayerNames().stream().map(playerName -> state.getPlayerByName(playerName))
-					.forEach(aPlayer -> aPlayer
-							.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
-			return state;
-		});
-
-		return null;
+	public void handleWin(ImmutablePlayer player) {
+		System.out.println("winner");
+		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName)).forEach(
+				aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
 	}
 
 	@Override
-	public Object handleLoss(ImmutablePlayer player) {
-		// TODO Auto-generated method stub
-
-		myServer.sendAndApply((GameplayState state) -> {
-			state.getPlayerByName(player.getName()).setResult(Result.LOSE);
-			List<String> remainingPlayers = state.getOrderedPlayerNames().stream()
-					.filter(playerName -> state.getPlayerByName(playerName).getResult().equals(Result.NONE))
-					.collect(Collectors.toList());
-			if (remainingPlayers.size() == 1) {
-				state.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
-			}
-			return state;
-		});
-
-		return null;
+	public void handleLoss(ImmutablePlayer player) {
+		currentState.getPlayerByName(player.getName()).setResult(Result.LOSE);
+		List<String> remainingPlayers = currentState.getOrderedPlayerNames().stream()
+				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
+				.collect(Collectors.toList());
+		if (remainingPlayers.size() == 1) {
+			currentState.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
+		}
 	}
 
 	@Override
-	public Object handleTie() {
-		// TODO Auto-generated method stub
-
-		myServer.sendAndApply((GameplayState state) -> {
-			state.getOrderedPlayerNames().stream().forEach(name -> state.getPlayerByName(name).setResult(Result.TIE));
-			return state;
-		});
-
-		return null;
+	public void handleTie() {
+			currentState.getOrderedPlayerNames().stream().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
 	}
 
 }

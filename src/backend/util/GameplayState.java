@@ -16,7 +16,6 @@ import backend.unit.properties.ModifiableUnitStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Created by th174 on 4/10/2017.
@@ -36,12 +35,14 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 			BOUNDS_HANDLER = "boundshandler",
 			TERRAIN = "terrain",
 			OFFENSIVE_MODIFIER = "offensivemodifier",
-			DEFENSIVE_MODIFIER = "defensivemodifier";
+			DEFENSIVE_MODIFIER = "defensivemodifier",
+			TURN_REQUIREMENT = "turnrequirement",
+			TURN_EVENT = "turnaction",
+			END_CONDITION = "endcondition";
 	private final Random random;
 	private final Collection<Resultant> objectives;
 	private final TreeSet<ImmutablePlayer> players;
-
-	private final Map<Event, Collection<Actionable>> turnActions;
+	private final Collection<Actionable> turnActions;
 	private final Collection<Requirement> turnRequirements;
 	private final Map<String, ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection>> templates;
 	private boolean isAuthoringMode;
@@ -50,19 +51,19 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	private volatile GameBoard grid;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
-		this(name, grid, 0, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
+		this(name, grid, 0, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), description, imgPath, new Random(7));
 	}
 
 	private GameplayState(String name, GameBoard grid, int turnNumber, Collection<Team> teams,
 	                      Collection<Resultant> objectives,
-	                      Map<Event, Collection<Actionable>> turnActions,
+	                      Collection<Actionable> turnActions,
 	                      Collection<Requirement> turnRequirements,
 	                      String description, String imgPath, Random random) {
 		super(name, description, imgPath);
 		this.grid = grid;
 		this.random = random;
 		this.turnNumber = turnNumber;
-		this.turnActions = new HashMap<>(turnActions);
+		this.turnActions = new HashSet<>(turnActions);
 		this.objectives = new HashSet<>(objectives);
 		this.turnRequirements = new HashSet<>(turnRequirements);
 		this.players = new TreeSet<>((p1, p2) -> {
@@ -88,6 +89,10 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		getTemplates().put(ACTIVE_ABILITY, new ModifiableVoogaCollection<>("Active Abilities", "", "", ActiveAbility.getPredefinedActiveAbilities()));
 		getTemplates().put(OFFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Offensive Modifiers", "", "", InteractionModifier.getPredefinedOffensiveModifiers()));
 		getTemplates().put(DEFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Defensive Modifiers", "", "", InteractionModifier.getPredefinedDefensiveModifiers()));
+		getTemplates().put(TEAM, new ModifiableVoogaCollection<>("Teams", "", "", teams));
+		getTemplates().put(TURN_REQUIREMENT, new ModifiableVoogaCollection<>("Turn Requirements", "", "", turnRequirements));
+		getTemplates().put(TURN_EVENT, new ModifiableVoogaCollection<>("Turn Actions", "", "", turnActions));
+		getTemplates().put(END_CONDITION, new ModifiableVoogaCollection<>("Objectives", "", "", objectives));
 	}
 
 	@Override
@@ -185,8 +190,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
-	public Map<Event, Collection<Actionable>> getTurnActions() {
-		return Collections.unmodifiableMap(turnActions);
+	public Collection<Actionable> getTurnActions() {
+		return Collections.unmodifiableCollection(turnActions);
 	}
 
 	@Override
@@ -220,7 +225,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public GameplayState copy() {
-		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), objectives, turnActions.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ArrayList<>(e.getValue()))), turnRequirements, getDescription(), getImgPath(), random);
+		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), objectives, turnActions.stream().collect(Collectors.toList()), turnRequirements, getDescription(), getImgPath(), random);
 	}
 
 	GameplayState addObjectives(Resultant... objectives) {
@@ -241,17 +246,17 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, Collection<Actionable> actions) {
-		turnActions.merge(event, new ArrayList<>(actions), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
+	GameplayState addTurnActions(Collection<Actionable> actions) {
+		turnActions.addAll(actions);
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, Actionable... actions) {
-		return addTurnActions(event, Arrays.asList(actions));
+	GameplayState addTurnActions(Actionable... actions) {
+		return addTurnActions(Arrays.asList(actions));
 	}
 
 	GameplayState removeTurnActions(Event event, Collection<Actionable> actions) {
-		turnActions.get(event).removeIf(actions::contains);
+		turnActions.removeIf(actions::contains);
 		return this;
 	}
 
@@ -275,5 +280,10 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	GameplayState removeTurnRequirements(Requirement... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
+	}
+
+	public AuthoringGameState removeTurnActions(Actionable[] actions) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
