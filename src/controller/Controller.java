@@ -133,7 +133,7 @@ public interface Controller {
 	 * 
 	 * @return true if the Player has won, false if not
 	 */
-	boolean activePlayerWon();
+	boolean activeTeamWon();
 
 	/**
 	 * Returns a boolean indicating whether or not the Controller's active
@@ -141,7 +141,7 @@ public interface Controller {
 	 * 
 	 * @return true if the Player has lost, false if not
 	 */
-	boolean activePlayerLost();
+	boolean activeTeamLost();
 
 	/**
 	 * Returns a boolean indicating whether or not the Controller's active
@@ -149,7 +149,7 @@ public interface Controller {
 	 * 
 	 * @return true if the Player has tied, false if not
 	 */
-	boolean activePlayerTied();
+	boolean activeTeamTied();
 
 	/**
 	 * Adds a turn requirement to the Model's list of turn requirements.

@@ -307,11 +307,11 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	private void checkForCondition() {
-		if (getController().activePlayerWon()) {
+		if (getController().activeTeamWon()) {
 			displayEndPopup(getPolyglot().get("WinMessage"));
-		} else if (getController().activePlayerLost()) {
+		} else if (getController().activeTeamLost()) {
 			displayEndPopup(getPolyglot().get("LoseMessage"));
-		} else if (getController().activePlayerTied()) {
+		} else if (getController().activeTeamTied()) {
 			displayEndPopup(getPolyglot().get("TieMessage"));
 		}
 	}

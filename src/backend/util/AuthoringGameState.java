@@ -187,7 +187,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 
 	@Override
 	public AuthoringGameState removeTurnActions(Actionable... actions) {
-		return (AuthoringGameState) super.removeTurnActions(actions);
+		return super.removeTurnActions(actions);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package controller;
 import backend.cell.Cell;
 import backend.game_engine.DieselEngine;
 import backend.game_engine.ResultQuadPredicate;
-import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
@@ -127,11 +126,6 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public String getActivePlayerName() {
-		return getAuthoringGameState().getActiveTeam().getName();
-	}
-
-	@Override
 	public String getMyPlayerName() {
 		return playerName;
 	}
@@ -249,18 +243,21 @@ public class CommunicationController implements Controller {
 	}
 	
 	@Override
-	public boolean activePlayerWon(){
-		return getActivePlayer().getResult().equals(Result.WIN);
+	public boolean activeTeamWon(){
+//		return getActiveTeam().getResult().equals(Result.WIN);
+		return false;
 	}
-	
+
 	@Override
-	public boolean activePlayerLost(){
-		return getActivePlayer().getResult().equals(Result.LOSE);
+	public boolean activeTeamLost(){
+//		return getActiveTeam().getResult().equals(Result.LOSE);
+		return false;
 	}
-	
+
 	@Override
-	public boolean activePlayerTied(){
-		return getActivePlayer().getResult().equals(Result.TIE);
+	public boolean activeTeamTied(){
+//		return getActiveTeam().getResult().equals(Result.TIE);
+		return false;
 	}
 
 	@Override
