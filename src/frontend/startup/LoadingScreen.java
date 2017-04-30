@@ -17,9 +17,7 @@ import javafx.util.Duration;
 public class LoadingScreen extends Group {
 	private double minWidth;
 	private double minHeight;
-
-	public LoadingScreen(double minWidth, double minHeight) {
-//		System.out.println("here");
+	public LoadingScreen(double minWidth, double minHeight){
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;
 //		System.out.println(minWidth + " "+ minHeight);
@@ -117,20 +115,17 @@ public class LoadingScreen extends Group {
 	}
 
 	private void moveCircleOnMousePress(Scene scene, final Circle circle, final TranslateTransition transition) {
-		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				if (!event.isControlDown()) {
-					circle.setCenterX(event.getSceneX());
-					circle.setCenterY(event.getSceneY());
-				} else {
-					transition.setToX(event.getSceneX() - circle.getCenterX());
-					transition.setToY(event.getSceneY() - circle.getCenterY());
-					transition.playFromStart();
-				}
-			}
-		});
-	}
+	    scene.setOnMousePressed(event -> {
+	      if (!event.isControlDown()) {
+	        circle.setCenterX(event.getSceneX());
+	        circle.setCenterY(event.getSceneY());
+	      } else {
+	        transition.setToX(event.getSceneX() - circle.getCenterX());
+	        transition.setToY(event.getSceneY() - circle.getCenterY());
+	        transition.playFromStart();
+	      }
+	    });
+	  }
 
 	//	public void wrap(Circle circle){
 	//		Circle c = new Circle();
