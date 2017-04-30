@@ -369,22 +369,11 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void updateAll() {
-		executor.execute(() -> {
-			try {
-				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveState(autoSavePath);
-				saveHistory.push(autoSavePath);
-			} catch (Serializer.SerializationException e) {
-				System.err.println("You're going TOO FAST!!!!");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-		engine.checkGame(this.getGameplayState());
 		thingsToUpdate.forEach(e -> Platform.runLater(() -> {
 			try {
 				e.update();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				removeListener(e);
 			}
 		}));
@@ -462,7 +451,6 @@ public class CommunicationController implements Controller {
 			} catch (Exception e) {
 				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
-					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
 					if (templateCopy instanceof Unit) {
 						((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
 					}
@@ -508,6 +496,18 @@ public class CommunicationController implements Controller {
 	}
 
 	private synchronized void updateGameState() {
+		executor.execute(() -> {
+			try {
+				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
+				saveState(autoSavePath);
+				saveHistory.push(autoSavePath);
+			} catch (Serializer.SerializationException e) {
+				System.err.println("You're going TOO FAST!!!!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		engine.checkGame(this.getGameplayState());
 		updateAll();
 		if (Objects.nonNull(server) && getGameplayState().getOrderedPlayerNames().size() > playerCountCache) {
 			BaseUIManager.getResourcePaths().forEach(this::sendFile);
