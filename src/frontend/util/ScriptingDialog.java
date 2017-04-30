@@ -49,7 +49,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private VoogaScriptEngine scriptEngine;
 	private BooleanProperty hasCompiled;
 	private String strategy;
-	private final double SPACING = 20;
+	private final double SPACING = 5;
 	
 
 	public ScriptingDialog(Controller controller) {
@@ -63,6 +63,11 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		Button loadScriptButton = new Button();
 		Button quickCreateButton = new Button(); 
 		Button helpButton = new Button(); 
+		Button blankButton = new Button();
+		Button blankButton2 = new Button();
+
+		blankButton.setVisible(false);
+		blankButton2.setVisible(false);
 
 		compileButton.textProperty().bind(getPolyglot().get("Compile"));
 		loadScriptButton.textProperty().bind(getPolyglot().get("loadScript"));
@@ -101,6 +106,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		scriptingLabel.textProperty().bind(getPolyglot().get("chooseScriptingLang"));
 		HBox topBox = new HBox(scriptingLabel);
 		topBox.getChildren().add(languagesMenu);
+		topBox.getChildren().add(blankButton);
+		topBox.getChildren().add(blankButton2);
 		topBox.getChildren().add(quickCreateButton);
 		topBox.getChildren().add(helpButton);
 		topBox.setAlignment(Pos.CENTER);
