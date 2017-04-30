@@ -24,7 +24,7 @@ public abstract class ImmutableVoogaObject<T extends ImmutableVoogaObject<T>> im
 			try {
 				return e.get(null);
 			} catch (IllegalAccessException e1) {
-				throw new RuntimeException("This will never happen");
+				throw new RuntimeException("This should not happen because of the predefined classes.");
 			}
 		}).filter(clazz::isInstance).map(clazz::cast).collect(Collectors.toList());
 	}

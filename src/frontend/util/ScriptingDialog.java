@@ -25,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import util.AlertFactory;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 import util.scripting.VoogaScriptException;
@@ -133,7 +134,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		try {
 			br = new BufferedReader(new FileReader(myScript));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			loadError();
 		}
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -146,9 +147,13 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 			code = sb.toString();
 			br.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			loadError();
 		}
 		return code;
+	}
+	
+	private void loadError(){
+		AlertFactory.warningAlert("Could not load script.", "Try loading a different file.", "").showAndWait();
 	}
 	
 	private void configureFileChooser(final FileChooser filechooser) {

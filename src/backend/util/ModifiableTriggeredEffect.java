@@ -24,11 +24,6 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 			.setDescription("This unit heals nearby units for 6 HP at the run of each turn.")
 			.setImgPath("resources/images/redCross.png")
 			.addActivationTriggers(Event.TURN_START);
-	//	public transient static final ModifiableTriggeredEffect SHADOWSTALKER = new ModifiableTriggeredEffect("Shadowstalker")
-//			.setEffect((unit, event, game) -> unit.setVisible(event.equals(Event.UNIT_POST_ABILITY_USE) || game.getTurnNumber() % 6 != 4 || game.getTurnNumber() % 6 != 5))
-//			.setDescription("This unit hides in the shadows, rendering it invisible in nighttime")
-//			.setImgPath("resources/images/shadow.jpg")
-//			.addActivationTriggers(Event.values());
 	public transient static final ModifiableTriggeredEffect POISONED = new ModifiableTriggeredEffect("Poisoned")
 			.setEffect((unit, event, game) -> unit.getHitPoints().setCurrentValue(Math.min(1, unit.getHitPoints().getCurrentValue() - 4)))
 			.setDuration(6)

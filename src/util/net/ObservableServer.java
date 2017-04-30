@@ -163,7 +163,6 @@ public class ObservableServer<T> extends ObservableHost<T> {
 		 */
 		public ServerDelegate(Socket socket) throws IOException {
 			connection = new SocketConnection(socket, ObservableServer.this.getTimeout());
-			System.out.println("\nClient connected:\t" + connection);
 		}
 
 		@Override

@@ -19,7 +19,7 @@ import java.util.Objects;
  * @author Created by th174 on 4/27/2017.
  */
 public class PlayersView extends BaseUIManager<GridPane> {
-	// TODO ResourceBundlify
+	
 	private final SimpleObjectProperty<Color> DEFAULT_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 	private final GridPane gridPane;
 	private final Label playersHeader;

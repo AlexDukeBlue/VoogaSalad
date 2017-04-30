@@ -142,7 +142,6 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		Label newSpriteInfo;
 		if (sprite instanceof Unit) {
 			newSpriteInfo = new Label(setUnitContent((Unit) sprite));
-			//setAbilityPaneContent((ModifiableUnit) sprite);
 		} else if (sprite instanceof Cell) {
 			newSpriteInfo = new Label(setTerrainContent(((Cell) sprite).getTerrain()));
 		} else if (sprite instanceof ModifiableTerrain) {
@@ -150,7 +149,6 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 		} else {
 			newSpriteInfo = new Label(content);
 		}
-		//TODO ResourceBundle and util.polyglot and shit
 		exportButton = new Button(getPolyglot().get("Export").get());
 		exportButton.setOnAction(e -> {
 			try {

@@ -54,9 +54,8 @@ public class SocketConnection {
 				executor.execute(() -> requestHandler.accept(request));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ObservableHost.RemoteConnectionException(e);
 		} finally {
 			shutDown();
@@ -85,7 +84,6 @@ public class SocketConnection {
 		try {
 			socket.close();
 			executor.shutdown();
-			System.out.println("Connection closed: " + socket);
 		} catch (IOException e) {
 			throw new ObservableHost.RemoteConnectionException(e);
 		}

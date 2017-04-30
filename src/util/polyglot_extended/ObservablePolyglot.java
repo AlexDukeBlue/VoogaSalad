@@ -51,7 +51,6 @@ public class ObservablePolyglot extends Polyglot {
 			languageChangeHandlers.stream().forEach(handler -> handler.handle(new Event(LANGUAGE_CHANGE_EVENT)));
 		} catch (Exception e) {
 			PolyglotErrorDialogue.getInstance();
-			e.printStackTrace();
 		}
 	}
 
