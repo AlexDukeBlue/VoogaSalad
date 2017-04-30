@@ -281,16 +281,19 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	 *            the filepath to the sound to play.
 	 */
 	public final void playMedia(String mediaPath) {
-		if (!MEDIA_CACHE.containsKey(mediaPath)) {
-			try {
-				MEDIA_CACHE.put(mediaPath, new Media(Paths.get(mediaPath).toUri().toString()));
-				getController().sendFile(mediaPath);
-			} catch (Exception e) {
-				System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());
+		if (mediaPath != null && !mediaPath.isEmpty()){
+			if (!MEDIA_CACHE.containsKey(mediaPath)) {
+				try {
+					MEDIA_CACHE.put(mediaPath, new Media(Paths.get(mediaPath).toUri().toString()));
+					getController().sendFile(mediaPath);
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());
+				}
 			}
-		}
-		if (MEDIA_CACHE.containsKey(mediaPath)) {
-			new MediaPlayer(MEDIA_CACHE.get(mediaPath)).play();
+			if (MEDIA_CACHE.containsKey(mediaPath)) {
+				new MediaPlayer(MEDIA_CACHE.get(mediaPath)).play();
+			}
 		}
 	}
 
