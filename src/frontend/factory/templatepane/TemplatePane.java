@@ -53,6 +53,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		scrollPane.setContent(vbox);
 		scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+		vbox.prefWidthProperty().bind(scrollPane.widthProperty());
 		Arrays.stream(templateCategories)
 				.map(e -> new Pair<>(e, getController().getAuthoringGameState().getTemplateByCategory(e).getAll()))
 				.forEach(e -> createCollabsible(e.getKey(), e.getValue()));
@@ -104,5 +105,6 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		spritePane.setCollapsible(true);
 		spritePane.setExpanded(false);
 		vbox.getChildren().add(spritePane);
+		spritePane.prefWidthProperty().bind(vbox.widthProperty());
 	}
 }
