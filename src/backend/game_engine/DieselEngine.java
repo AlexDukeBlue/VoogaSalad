@@ -112,23 +112,17 @@ public class DieselEngine implements GameEngine {
 	}
 
 	@Override
-	public Object handleWin(ImmutablePlayer player) {
-		// TODO Auto-generated method stub
-
+	public void handleWin(ImmutablePlayer player) {
 		myServer.sendAndApply((GameplayState state) -> {
 			state.getOrderedPlayerNames().stream().map(playerName -> state.getPlayerByName(playerName))
 					.forEach(aPlayer -> aPlayer
 							.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
 			return state;
 		});
-
-		return null;
 	}
 
 	@Override
-	public Object handleLoss(ImmutablePlayer player) {
-		// TODO Auto-generated method stub
-
+	public void handleLoss(ImmutablePlayer player) {
 		myServer.sendAndApply((GameplayState state) -> {
 			state.getPlayerByName(player.getName()).setResult(Result.LOSE);
 			List<String> remainingPlayers = state.getOrderedPlayerNames().stream()
@@ -139,20 +133,14 @@ public class DieselEngine implements GameEngine {
 			}
 			return state;
 		});
-
-		return null;
 	}
 
 	@Override
-	public Object handleTie() {
-		// TODO Auto-generated method stub
-
+	public void handleTie() {
 		myServer.sendAndApply((GameplayState state) -> {
 			state.getOrderedPlayerNames().stream().forEach(name -> state.getPlayerByName(name).setResult(Result.TIE));
 			return state;
 		});
-
-		return null;
 	}
 
 }
