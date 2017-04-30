@@ -39,11 +39,11 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	public ActiveAbility<?> finish() {
 		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(),
 				(AbilityEffect<?>) (scriptingPage.getScriptEngine().get()), gridPage.getGridPattern(),
-				namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath()) : null;
+				namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath()).setSoundPath(namePage.getSoundPath()) : null;
 	}
 
 	private void initialize() {
-		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription");
+		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription", true);
 		scriptingPage = new ScriptingPage(getController(),"ActiveAbilityScriptingDescription");
 		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
 		getPages().addAll(namePage, scriptingPage, gridPage);
