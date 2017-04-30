@@ -446,7 +446,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void copyTemplateToGrid(VoogaEntity template, HasLocation destination) {
-		String templateName = template.getName();
+		String templateName = template.getFormattedName();
 		String targetUnitName = destination.getName();
 		CoordinateTuple gridLocation = destination.getLocation();
 		String playerName = getMyPlayerName();
