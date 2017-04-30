@@ -49,12 +49,14 @@ public class UnitStatsPage extends BaseWizardPage {
 	}
 
 	public Collection<UnitStat> getStats() {
-		return rowToStat.keySet().stream().map(unitRow -> {
-			ModifiableUnitStat stat = (ModifiableUnitStat) rowToStat.get(unitRow);
-			stat.setMinValue(unitRow.getNumberValue()).setMaxValue(unitRow.getNumberValue())
-					.setCurrentValue(unitRow.getNumberValue());
-			return stat;
-		}).collect(Collectors.toList());
+		return rowToStat.keySet().stream()
+				.map(unitRow -> rowToStat.get(unitRow).getName().equals(getResourceBundle().getObject("Ints"))
+						? ((ModifiableUnitStat<Integer>) rowToStat.get(unitRow)).setMinValue(0)
+								.setMaxValue(unitRow.getValue()).setCurrentValue(unitRow.getValue())
+						: ((ModifiableUnitStat<Double>) rowToStat.get(unitRow)).setMinValue(0.0)
+								.setMaxValue(unitRow.getValue().doubleValue())
+								.setCurrentValue(unitRow.getValue().doubleValue()))
+				.collect(Collectors.toList());
 	}
 
 }

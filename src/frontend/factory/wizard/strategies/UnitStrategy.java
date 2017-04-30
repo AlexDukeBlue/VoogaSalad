@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.InteractionModifier;
-import backend.unit.properties.ModifiableUnitStat;
 import backend.util.GameplayState;
 import backend.util.TriggeredEffect;
 import controller.Controller;
@@ -70,9 +69,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 				.addTriggeredAbilities(
 						passiveAbilitiesAdderPage.getPassiveAbilitiesByCategory(GameplayState.UNIT_TRIGGERED_EFFECT)
 								.stream().map(ability -> (TriggeredEffect) ability).collect(Collectors.toList()))
-//				.addUnitStats(statsPage.getStats()).setTerrainMoveCosts(terrainMovePointPage.getTerrainMovePoints())
-				.addUnitStats(ModifiableUnitStat.HITPOINTS)
-				.addUnitStats(ModifiableUnitStat.MOVEPOINTS)
+				.addUnitStats(statsPage.getStats()).setTerrainMoveCosts(terrainMovePointPage.getTerrainMovePoints())
 				.setMovePattern(gridPatternPage.getGridPattern());
 		return unit;
 	}
