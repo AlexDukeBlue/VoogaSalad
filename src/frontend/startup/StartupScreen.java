@@ -3,6 +3,7 @@ package frontend.startup;
 import frontend.util.BaseUIManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundRepeat;
@@ -20,7 +21,7 @@ import javafx.stage.Stage;
  *
  */
 public class StartupScreen extends BaseUIManager<Parent> {
-
+	private LoadingScreen ls;
 	private BorderPane primaryPane;
 
 	/**
@@ -135,9 +136,23 @@ public class StartupScreen extends BaseUIManager<Parent> {
 				getImg(getResourceBundle().getString("StartupBackgroundImage")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(width, height, false, false, true, true)));
 		primaryPane = new BorderPane();
-		primaryPane.setBottom(new StartupSelectionScreen(stage).getNode());
+		primaryPane.setBottom(new StartupSelectionScreen(stage, this).getNode());
 		primaryPane.setPrefWidth(width);
 		primaryPane.setPrefHeight(height);
 		primaryPane.setBackground(imgv);
 	}
+	
+	public void initLoadingScreen(){
+		double width = primaryPane.getBackground().getImages().get(0).getImage().getWidth();
+		double height = primaryPane.getBackground().getImages().get(0).getImage().getHeight();
+//		ls = new LoadingScreen(width, height);
+		Image img = getImg(getResourceBundle().getString("StartupBackgroundImage"));
+		ls = new LoadingScreen(img.getWidth(), img.getHeight());
+		primaryPane.getChildren().add(ls);
+	}
+	
+	public void removeLoadingScreen(){
+		primaryPane.getChildren().remove(ls);
+	}
+
 }

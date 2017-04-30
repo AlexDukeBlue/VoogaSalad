@@ -1,6 +1,7 @@
 package controller;
 
 import backend.cell.Cell;
+import backend.game_engine.DieselEngine;
 import backend.game_engine.ResultQuadPredicate;
 import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
@@ -59,6 +60,7 @@ public class CommunicationController implements Controller {
 	private ObservableServer<ReadonlyGameplayState> server;
 	private String playerName;
 	private Deque<Path> saveHistory;
+	private DieselEngine engine;
 
 	public CommunicationController(String username) {
 		this(username, Collections.emptyList());
@@ -90,6 +92,7 @@ public class CommunicationController implements Controller {
 			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
 			isHost = true;
+			this.engine = new DieselEngine(server);
 			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -200,9 +203,12 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public void addTemplatesByCategory(String category, VoogaEntity... templates) {
+		System.out.println(category);
+		System.out.println(templates);
 		Arrays.stream(templates).map(VoogaEntity::getImgPath).forEach(this::sendFile);
 		sendModifier((AuthoringGameState state) -> {
-			state.getTemplateByCategory(category).addAll(templates);
+			state.getTemplateByCategory(category)
+				 .addAll(templates);
 			return state;
 		});
 	}
@@ -305,33 +311,33 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
+	public void addTurnAction(String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
 		sendModifier((AuthoringGameState state) -> {
-			state.addAvailableTurnActions(event, new Actionable(biConsumer, name, description, imgPath));
+			state.addAvailableTurnActions(new Actionable(biConsumer, name, description, imgPath));
 			return state;
 		});
 	}
 
 	@Override
-	public void removeTurnAction(Event event, String name) {
+	public void removeTurnAction(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(event, act));
+			state.getAvailableTurnActions().stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(act));
 			return state;
 		});
 	}
 
 	@Override
-	public void activateTurnAction(Event event, String name) {
+	public void activateTurnAction(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(event, act));
+			state.getAvailableTurnActions().stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(act));
 			return state;
 		});
 	}
 
 	@Override
-	public void deactivateTurnAction(Event event, String name) {
+	public void deactivateTurnAction(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnActions().get(event).stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(event, act));
+			state.getAvailableTurnActions().stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(act));
 			return state;
 		});
 	}
@@ -381,6 +387,7 @@ public class CommunicationController implements Controller {
 				e.printStackTrace();
 			}
 		});
+		engine.checkGame(this.getGameplayState());
 		thingsToUpdate.forEach(e -> Platform.runLater(() -> {
 			try {
 				e.update();

@@ -4,6 +4,7 @@ import backend.game_engine.ResultQuadPredicate.Result;
 import backend.player.ImmutablePlayer;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
+import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
 import util.net.ObservableServer;
 
@@ -24,19 +25,12 @@ import java.util.stream.Collectors;
 // job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
-	private ObservableServer<GameplayState> myServer;
-	private Consumer<GameplayState> stateUpdateListener = this::checkGame;
+	private ObservableServer<ReadonlyGameplayState> myServer;
+	private GameplayState currentState;
 
-	/**
-	 * This constructor passes in the ObservableServer<GameplayState> that the
-	 * GameEngine will communicate with and add listeners to.
-	 *
-	 * @param server
-	 */
-	public DieselEngine(ObservableServer<GameplayState> server) {
-		myServer = server;
-		server.addListener(stateUpdateListener);
-		Executors.newSingleThreadExecutor().submit(server);
+	public DieselEngine(ObservableServer<ReadonlyGameplayState> gameServer) {
+		myServer = gameServer;
+		currentState = null;
 	}
 
 	/**
@@ -46,7 +40,9 @@ public class DieselEngine implements GameEngine {
 	 *
 	 * @param state
 	 */
-	private void checkGame(GameplayState state) {
+	public void checkGame(GameplayState state) {
+		System.out.println("check");
+		currentState = state;
 		checkTurnRules(state);
 		checkTurnEvents(state);
 		checkObjectives(state);
@@ -95,7 +91,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getActivePlayer(), state)));
+		state.getTurnActions().forEach((value) -> value.accept(state.getActivePlayer(), state));
 	}
 
 	/**
@@ -105,42 +101,35 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkObjectives(GameplayState state) {
+		System.out.println(state.getObjectives().toString());
 		state.getObjectives().parallelStream().forEach(e -> {
 			Result result = e.getResultQuad().determine(state.getActivePlayer(), state);
+			System.out.println(result.toString());
 			result.accept(state.getActivePlayer(), this);
 		});
 	}
 
 	@Override
 	public void handleWin(ImmutablePlayer player) {
-		myServer.sendAndApply((GameplayState state) -> {
-			state.getOrderedPlayerNames().stream().map(playerName -> state.getPlayerByName(playerName))
-					.forEach(aPlayer -> aPlayer
-							.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
-			return state;
-		});
+		System.out.println("winner");
+		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName)).forEach(
+				aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
 	}
 
 	@Override
 	public void handleLoss(ImmutablePlayer player) {
-		myServer.sendAndApply((GameplayState state) -> {
-			state.getPlayerByName(player.getName()).setResult(Result.LOSE);
-			List<String> remainingPlayers = state.getOrderedPlayerNames().stream()
-					.filter(playerName -> state.getPlayerByName(playerName).getResult().equals(Result.NONE))
-					.collect(Collectors.toList());
-			if (remainingPlayers.size() == 1) {
-				state.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
-			}
-			return state;
-		});
+		currentState.getPlayerByName(player.getName()).setResult(Result.LOSE);
+		List<String> remainingPlayers = currentState.getOrderedPlayerNames().stream()
+				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
+				.collect(Collectors.toList());
+		if (remainingPlayers.size() == 1) {
+			currentState.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
+		}
 	}
 
 	@Override
 	public void handleTie() {
-		myServer.sendAndApply((GameplayState state) -> {
-			state.getOrderedPlayerNames().stream().forEach(name -> state.getPlayerByName(name).setResult(Result.TIE));
-			return state;
-		});
+			currentState.getOrderedPlayerNames().stream().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
 	}
 
 }
