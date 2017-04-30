@@ -21,6 +21,8 @@ import backend.util.io.XMLSerializer;
 import frontend.util.BaseUIManager;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import util.io.Serializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
@@ -165,6 +167,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
+			showGenericAlert();
 			e.printStackTrace();
 		}
 		return (AuthoringGameState) getClient().getState();
@@ -185,6 +188,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
+			showGenericAlert();
 			e.printStackTrace();
 		}
 		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
@@ -381,6 +385,7 @@ public class CommunicationController implements Controller {
 			} catch (Serializer.SerializationException e) {
 				System.err.println("You're going TOO FAST!!!!");
 			} catch (IOException e) {
+				showGenericAlert();
 				e.printStackTrace();
 			}
 		});
@@ -472,6 +477,7 @@ public class CommunicationController implements Controller {
 					}
 					targetCell.add(templateCopy);
 				} else {
+					showGenericAlert();
 					e.printStackTrace();
 				}
 			}
@@ -518,5 +524,12 @@ public class CommunicationController implements Controller {
 		}
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
+	}
+	
+	private void showGenericAlert(){
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("No Place Like Home Error");
+		alert.setContentText("An error occurred");
+		alert.showAndWait();
 	}
 }
