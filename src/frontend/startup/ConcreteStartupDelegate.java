@@ -27,7 +27,10 @@ import util.net.ObservableHost;
  *
  */
 class ConcreteStartupDelegate implements StartupDelegate {
-
+	StartupScreen startup;
+	public ConcreteStartupDelegate(StartupScreen startup){
+		this.startup = startup;
+	}
 	/**
 	 * Creates a new game in edit mode. Can either create a whole new game or
 	 * load a game from a file.
@@ -38,8 +41,10 @@ class ConcreteStartupDelegate implements StartupDelegate {
 	@Override
 	public void create(Stage stage) {
 		try {
+			startup.initLoadingScreen();
 			create(stage, getPortNumber());
 		} catch (Exception e) {
+			startup.removeLoadingScreen();
 			throwServerAlert();
 		}
 	}
@@ -54,8 +59,10 @@ class ConcreteStartupDelegate implements StartupDelegate {
 	@Override
 	public void join(Stage stage) {
 		try {
+			startup.initLoadingScreen();
 			join(stage, getHost(), getPortNumber());
 		} catch (Exception e) {
+			startup.removeLoadingScreen();
 			throwServerAlert();
 		}
 	}
@@ -71,8 +78,10 @@ class ConcreteStartupDelegate implements StartupDelegate {
 	@Override
 	public void play(Stage stage) {
 		try {
+			startup.initLoadingScreen();
 			load(stage, getPortNumber());
 		} catch (Exception e) {
+			startup.removeLoadingScreen();
 			throwServerAlert();
 		}
 	}

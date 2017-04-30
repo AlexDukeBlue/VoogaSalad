@@ -23,6 +23,9 @@ import javafx.stage.Stage;
  */
 class StartupSelectionScreen extends BaseUIManager<Node> {
 	private static final Collection<String> buttonNames = new ArrayList<>(Arrays.asList("create", "join", "play"));
+	private int minWidth = 450;
+	private int minHeight = 400;
+	private StartupScreen startup;
 
 	private VBox vbox;
 
@@ -33,8 +36,9 @@ class StartupSelectionScreen extends BaseUIManager<Node> {
 	 * @param stage
 	 *            the stage on which the game will be placed.
 	 */
-	StartupSelectionScreen(Stage stage) {
+	StartupSelectionScreen(Stage stage, StartupScreen startup) {
 		super(null);
+		this.startup = startup;
 		initializePane(stage);
 	}
 
@@ -46,7 +50,7 @@ class StartupSelectionScreen extends BaseUIManager<Node> {
 	private void initializePane(Stage stage) {
 		vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
-		StartupDelegate delegate = new ConcreteStartupDelegate();
+		StartupDelegate delegate = new ConcreteStartupDelegate(startup);
 		buttonNames.stream().forEachOrdered(name -> {
 			Button button = ButtonFactory.newSpinningButton();
 			button.textProperty().bind(getPolyglot().get(name));
