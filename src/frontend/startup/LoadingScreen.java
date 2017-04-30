@@ -24,7 +24,6 @@ public class LoadingScreen extends Group {
 	private double minWidth;
 	private double minHeight;
 	public LoadingScreen(double minWidth, double minHeight){
-		System.out.println("here");
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;
 		System.out.println(minWidth + " "+ minHeight);

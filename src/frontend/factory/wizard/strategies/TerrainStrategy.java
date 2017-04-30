@@ -38,6 +38,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		ModifiableTerrain terrain = new ModifiableTerrain(imageNameDescriptionPage.getName());
 		terrain.setDescription(imageNameDescriptionPage.getDescriptionLabelBinding().getValue());
 		terrain.setImgPath(imageNameDescriptionPage.getImagePath());
+		terrain.setSoundPath(imageNameDescriptionPage.getSoundPath());
 		terrain.setDefaultMoveCost(unitMovePointPage.getValue());
 		return terrain;
 	}
@@ -48,7 +49,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	}
 
 	private void initialize() {
-		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription");
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription", true);
 		unitMovePointPage = new UnitMovePointPage(getController(), "TerrainMovePointDescription");
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
 	}

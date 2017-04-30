@@ -33,8 +33,8 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 			getController().setBoundsHandler(getEntity().getName());
 		} else if (target instanceof GameBoardObjectView && ((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
 			getController().copyTemplateToGrid(getEntity(), (HasLocation) ((GameBoardObjectView) target).getEntity());
-			if (((GameBoardObjectView) target).getEntity() instanceof CellViewExternal) {
-				playMedia(((HasSound) ((GameBoardObjectView) target).getEntity()).getSoundPath());
+			if (target instanceof CellViewExternal) {
+				playMedia(((CellViewExternal) target).getEntity().getTerrain().getSoundPath());
 			}
 		}
 		super.actInAuthoringMode(target, additionalInfo, clickHandler, event);
@@ -42,7 +42,7 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
-		if (getController().isMyPlayerTurn()) {
+		if (getController().isMyTeam()) {
 			actInAuthoringMode(target, null, clickHandler, event);
 		}
 	}
@@ -51,4 +51,10 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	public String toString() {
 		return getEntity().toString();
 	}
+//	
+//	@Override
+//	public void select(ClickHandler clickHandler){
+//		super.select(clickHandler);
+//		//playMedia(getEntity().get)
+//	}
 }

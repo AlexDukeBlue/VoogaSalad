@@ -98,8 +98,8 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		myNumericalInputField.setOnAction(eventHandler);
 	}
 
-	void setName(String name) {
-		myNameField.setText(name);
+	public void setName(String name) {
+		myNameField.textProperty().bind(getPolyglot().get(name));;
 	}
 
 	String getName() {
@@ -110,8 +110,8 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		return myNumericalInputField.getText().isEmpty() ? 0 : Integer.parseInt(myNumericalInputField.getText());
 	}
 
-	void setLabel(String label) {
-		myLabelField.setText(label);
+	public void setLabel(String label) {
+		myLabelField.textProperty().bind(getPolyglot().get(label));;
 	}
 
 	String getLabel() {
