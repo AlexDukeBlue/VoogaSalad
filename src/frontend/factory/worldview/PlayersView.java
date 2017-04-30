@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
  * @author Created by th174 on 4/27/2017.
  */
 public class PlayersView extends BaseUIManager<GridPane> {
-	//TODO ResourceBundlify
+	// TODO ResourceBundlify
 	private final SimpleObjectProperty<Color> DEFAULT_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 	private final GridPane gridPane;
 	private final Label playersHeader;
@@ -43,32 +43,31 @@ public class PlayersView extends BaseUIManager<GridPane> {
 	public void update() {
 		gridPane.getChildren().clear();
 		gridPane.add(playersHeader, 1, 0);
-		if (!getController().isAuthoringMode()) {
-			gridPane.add(teamsHeader, 2, 0);
-		}
+		gridPane.add(teamsHeader, 2, 0);
 		for (int i = 0; i < getController().getReadOnlyGameState().getOrderedPlayerNames().size(); i++) {
 			String playerName = getController().getReadOnlyGameState().getOrderedPlayerNames().get(i);
-			Label playerLabel = new Label(getController().getMyPlayerName().equals(playerName) ? "(You) " + playerName : "" + playerName);
+			Label playerLabel = new Label(
+					getController().getMyPlayerName().equals(playerName) ? "(You) " + playerName : "" + playerName);
 			playerLabel.setPadding(Insets.EMPTY);
 			GridPane.setHalignment(playerLabel, HPos.RIGHT);
 			playerLabel.textFillProperty().bind(DEFAULT_COLOR);
 			gridPane.add(playerLabel, 1, i + 1);
-			if (getController().getActiveTeam().equals(getController().getPlayer(playerName).getTeam().get()) && !getController().isAuthoringMode()) {
-				Label currentTurnLabel = new Label(">");
-				currentTurnLabel.textFillProperty().bind(DEFAULT_COLOR);
-				GridPane.setHalignment(currentTurnLabel, HPos.RIGHT);
-				gridPane.add(currentTurnLabel, 0, i + 1);
-			}
+//			if (getController().getActivePlayer().getName()
+//					.equals(getController().getPlayer(playerName).getTeam().get().getName())
+//					&& !getController().isAuthoringMode()) {
+//				Label currentTurnLabel = new Label(">");
+//				currentTurnLabel.textFillProperty().bind(DEFAULT_COLOR);
+//				GridPane.setHalignment(currentTurnLabel, HPos.RIGHT);
+//				gridPane.add(currentTurnLabel, 0, i + 1);
+//			}
 			int row = i;
 			getController().getPlayer(playerName).getTeam().ifPresent(team -> {
 				playerLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
-				if (!getController().isAuthoringMode()) {
-					Label teamLabel = new Label(team.getName());
-					teamLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
-					GridPane.setHalignment(teamLabel, HPos.RIGHT);
-					teamLabel.setPadding(Insets.EMPTY);
-					gridPane.add(teamLabel, 2, row + 1);
-				}
+				Label teamLabel = new Label(team.getName());
+				teamLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
+				GridPane.setHalignment(teamLabel, HPos.RIGHT);
+				teamLabel.setPadding(Insets.EMPTY);
+				gridPane.add(teamLabel, 2, row + 1);
 			});
 		}
 	}
