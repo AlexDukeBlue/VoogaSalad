@@ -1,15 +1,18 @@
 package frontend.factory.wizard.strategies;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import backend.cell.Terrain;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.unit.properties.ModifiableUnitStat;
+import backend.util.GameplayState;
 import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.AbilitiesAdderPage;
+import frontend.factory.wizard.strategies.wizard_pages.EntityMovePointPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
-import frontend.factory.wizard.strategies.wizard_pages.TerrainMovePointPage;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,7 +29,7 @@ class UnitStrategy extends BaseStrategy<Unit> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
 	private AbilitiesAdderPage abilitiesAdderPage;
-	private TerrainMovePointPage terrainMovePointPage;
+	private EntityMovePointPage terrainMovePointPage;
 	private GridPatternPage gridPatternPage;
 	private GridPatternPage gridPatternPageRange;
 
@@ -57,10 +60,10 @@ class UnitStrategy extends BaseStrategy<Unit> {
 		unit.addUnitStats(
 				ModifiableUnitStat.HITPOINTS.setMinValue(0.0).setMaxValue(new Double(abilitiesAdderPage.getHP()))
 						.setCurrentValue(new Double(abilitiesAdderPage.getHP())));
-		unit.setTerrainMoveCosts(terrainMovePointPage.getTerrainMovePoints());
-		unit.addUnitStats(
-				ModifiableUnitStat.MOVEPOINTS.setMinValue(0).setMaxValue(terrainMovePointPage.getUnitMovePoints())
-						.setCurrentValue(terrainMovePointPage.getUnitMovePoints()));
+		unit.setTerrainMoveCosts(terrainMovePointPage.getEntityMovePoints().keySet().stream()
+				.map(entity -> (Terrain) entity).collect(Collectors.toMap(entity -> entity,
+						entity -> terrainMovePointPage.getEntityMovePoints().get(entity))));
+		unit.addUnitStats(ModifiableUnitStat.MOVEPOINTS.setMinValue(0).setMaxValue(10).setCurrentValue(10));
 		unit.setMovePattern(gridPatternPage.getGridPattern());
 		unit.setRangePattern(gridPatternPageRange.getGridPattern());
 		return unit;
@@ -69,15 +72,16 @@ class UnitStrategy extends BaseStrategy<Unit> {
 	private void initialize() {
 		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "UnitNameDescription");
 		abilitiesAdderPage = new AbilitiesAdderPage(getController(), "UnitAbilitiesAdderDescription");
-		terrainMovePointPage = new TerrainMovePointPage(getController(), "UnitTerrainDescription");
+		terrainMovePointPage = new EntityMovePointPage(getController(), "UnitTerrainDescription", GameplayState.TERRAIN);
 		gridPatternPage = new GridPatternPage(getController(), "UnitGridPatternDescription", Color.WHITE, Color.GREEN);
-		gridPatternPageRange = new GridPatternPage(getController(), "UnitGridPatternRangeDescription", Color.WHITE, Color.YELLOW);
+		gridPatternPageRange = new GridPatternPage(getController(), "UnitGridPatternRangeDescription", Color.WHITE,
+				Color.YELLOW);
 		getPages().addAll(imageNameDescriptionPage, abilitiesAdderPage, terrainMovePointPage, gridPatternPage);
-		if(isARangedUnit()) getPages().add(gridPatternPageRange);
+		if (isARangedUnit())
+			getPages().add(gridPatternPageRange);
 	}
-	
-	private boolean isARangedUnit()
-	{
+
+	private boolean isARangedUnit() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Ranged");
 		alert.setHeaderText("Does this unit have a ranged attack?");

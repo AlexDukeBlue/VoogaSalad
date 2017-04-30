@@ -2,9 +2,11 @@ package frontend.factory.wizard.strategies;
 
 import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
+import backend.util.GameplayState;
+import backend.util.PassiveAbility;
 import controller.Controller;
+import frontend.factory.wizard.strategies.wizard_pages.EntityMovePointPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
-import frontend.factory.wizard.strategies.wizard_pages.UnitMovePointPage;
 import javafx.beans.binding.StringBinding;
 
 /**
@@ -16,7 +18,7 @@ import javafx.beans.binding.StringBinding;
 class TerrainStrategy extends BaseStrategy<Terrain> {
 
 	private ImageNameDescriptionPage imageNameDescriptionPage;
-	private UnitMovePointPage unitMovePointPage;
+	private EntityMovePointPage unitMovePointPage;
 
 	/**
 	 * Creates a new instance of TerrainStrategy.
@@ -39,7 +41,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 		terrain.setDescription(imageNameDescriptionPage.getDescriptionLabelBinding().getValue());
 		terrain.setImgPath(imageNameDescriptionPage.getImagePath());
 		terrain.setSoundPath(imageNameDescriptionPage.getSoundPath());
-		terrain.setDefaultMoveCost(unitMovePointPage.getValue());
+		terrain.setDefaultMoveCost(unitMovePointPage.getDefault());
 		return terrain;
 	}
 
@@ -50,7 +52,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 
 	private void initialize() {
 		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription", true);
-		unitMovePointPage = new UnitMovePointPage(getController(), "TerrainMovePointDescription");
+		unitMovePointPage = new EntityMovePointPage(getController(), "TerrainMovePointDescription", GameplayState.UNIT);
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
 	}
 
