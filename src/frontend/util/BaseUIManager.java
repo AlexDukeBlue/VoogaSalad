@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import util.AlertFactory;
 import util.polyglot.PolyglotException;
 import util.polyglot_extended.ObservablePolyglot;
 
@@ -67,14 +68,6 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 	private final Controller controller;
 	private final ResourceBundle resources;
 	private final String resourcePath;
-
-	/**
-	 * Creates a new BaseUIManager. Sets all values for the language and
-	 * stylesheet to default. The default language is English.
-	 */
-	// public BaseUIManager() {
-	// this(null);
-	// }
 
 	/**
 	 * Creates a new BaseUIManager with a reference to the controller passed in.
@@ -256,7 +249,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 				if (getController() != null)
 					getController().sendFile(imgPath);
 			} catch (Exception e) {
-				System.err.println("Error opening image: " + imgPath + "\t" + e.toString());
+				AlertFactory.warningAlert("Could not open image", "Error opening image.", "Check that the image is in the correct format (.jpg or .png)").showAndWait();
 			}
 		}
 		return IMAGE_CACHE.getOrDefault(imgPath, IMAGE_CACHE.get(""));
@@ -274,7 +267,7 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 					MEDIA_CACHE.put(mediaPath, new Media(Paths.get(mediaPath).toUri().toString()));
 					getController().sendFile(mediaPath);
 				} catch (Exception e) {
-					System.err.println("Error opening media: " + mediaPath + "\t" + e.toString());
+					AlertFactory.warningAlert("Could not open file", "Error opening file.", "Check that the sound file is in the correct format (.wav or .mp3)").showAndWait();
 				}
 			}
 			if (MEDIA_CACHE.containsKey(mediaPath)) {
@@ -299,7 +292,9 @@ public abstract class BaseUIManager<T extends Node> extends Observable implement
 		try {
 			IMAGE_CACHE.put("", new Image(new FileInputStream("resources/images/transparent.png")));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//should not throw an error here because it is loading a transparent image.
+			//if the transparent image does not load, the program will continue to run, and the 
+			//objects using the transparent image will simply take on their default backgrounds
 		}
 	}
 }

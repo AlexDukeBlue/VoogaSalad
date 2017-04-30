@@ -140,8 +140,6 @@ public class DetailEdit extends BaseUIManager<Node> {
 			String movePatternName = movePatternBox.getValue();
 			String teamName = teamNameBox.getValue();
 			getController().sendModifier((AuthoringGameState state) -> {
-//				ModifiableUnit newUnit = (ModifiableUnit) getTemplateByCategory("Unit").getAll().stream()
-//						.filter(x -> x.getName().equals(unitName));
 				ModifiableUnit newUnit = (ModifiableUnit) state.getGrid().get(unitLocation).getOccupantByName(unitName);
 				newUnit.setTerrainMoveCosts(finalCosts);
 				stats.forEach((names, values) -> ((ModifiableUnitStat) newUnit

@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 public class GridPattern extends ModifiableVoogaObject<GridPattern> implements VoogaEntity, HasShape {
 	private static final long serialVersionUID = 1L;
 
-	//TODO ResourceBundlify
 	public transient static final GridPattern NONE = new GridPattern("None", "This pattern contains no coordinates", "resources/images/blackScreen.png");
 	public transient static final GridPattern HEXAGONAL_SINGLE_CELL = new GridPattern("Hexagonal Single Cell", "This pattern contains single hexagonal cell at the origin", "resources/images/hexSingle.png", CoordinateTuple.getOrigin(3));
 	public transient static final GridPattern SQUARE_SINGLE_CELL = new GridPattern("Square Single Cell", "This pattern contains a single square cell at the origin", "resources/images/squareSingle.png", CoordinateTuple.getOrigin(2));

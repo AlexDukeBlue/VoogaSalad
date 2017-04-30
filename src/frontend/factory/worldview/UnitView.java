@@ -101,6 +101,9 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 				remainingHealthBar.setFill(Color.GREEN);
 			}
 		} catch (NullPointerException ignored) {
+			//this null pointer exception should be ignored because 
+			//it occurs when the unit is removed from the grid when the grid is being updated. 
+			//The issue fixes itself as soon as the update finishes
 		}
 	}
 

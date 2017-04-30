@@ -3,6 +3,7 @@ package backend.unit.properties;
 import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.ModifiableVoogaCollection;
+import util.AlertFactory;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -39,9 +40,7 @@ public class Faction extends ModifiableVoogaCollection<Unit, Faction> {
 		try {
 			elements.forEach(e -> ((ModifiableUnit) e).setFaction(this));
 		} catch (ClassCastException e) {
-			//faction class never used/not implemented by end of final sprint
-			//no need to worry about this try catch
-			e.printStackTrace();
+			AlertFactory.errorAlert("Unit Add Error", "Could not add units to the faction.", "Check if the faction is full or if it was really a unit you tried to add!").showAndWait();
 		}
 		return super.addAll(elements);
 	}

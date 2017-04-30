@@ -1,24 +1,22 @@
 package backend.game_engine;
 
-import backend.game_engine.ResultQuadPredicate.Result;
-import backend.player.ImmutablePlayer;
-import backend.util.AuthoringGameState;
-import backend.util.GameplayState;
-import backend.util.io.XMLSerializer;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import backend.game_engine.ResultQuadPredicate.Result;
+import backend.player.ImmutablePlayer;
+import backend.util.AuthoringGameState;
+import backend.util.GameplayState;
+import backend.util.io.XMLSerializer;
+import util.AlertFactory;
+
 /**
  * @author Alexander Zapata
  */
 
-// TODO: Implement some way to checkTurnState() to determine if it is the
-// beginning or end of a turn. Implement restart(), save() and load() (Tavo's
-// job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
 	private GameplayState currentState;
@@ -46,7 +44,7 @@ public class DieselEngine implements GameEngine {
 		try {
 			new XMLSerializer<>().doSerialize(gameState);
 		} catch (Exception e) {
-			// Something here.
+			saveFailAlert();
 		}
 	}
 
@@ -57,7 +55,7 @@ public class DieselEngine implements GameEngine {
 			newGameState = (AuthoringGameState) new XMLSerializer<>()
 					.unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
-			// Something here.
+			loadFailAlert();
 			newGameState = null;
 		}
 		return newGameState;
@@ -84,7 +82,8 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-//		state.getTurnActions().forEach((key, value) -> value.forEach(t -> t.accept(state.getActiveTeam(), state)));
+		// state.getTurnActions().forEach((key, value) -> value.forEach(t ->
+		// t.accept(state.getActiveTeam(), state)));
 	}
 
 	/**
@@ -95,15 +94,17 @@ public class DieselEngine implements GameEngine {
 	 */
 	private void checkObjectives(GameplayState state) {
 		state.getObjectives().parallelStream().forEach(e -> {
-//			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
-//			result.accept(state.getActiveTeam(), this);
+			// Result result =
+			// e.getResultQuad().determine(state.getActiveTeam(), state);
+			// result.accept(state.getActiveTeam(), this);
 		});
 	}
 
 	@Override
 	public void handleWin(ImmutablePlayer player) {
-		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName)).forEach(
-				aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
+		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName))
+				.forEach(aPlayer -> aPlayer
+						.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
 	}
 
 	@Override
@@ -119,7 +120,15 @@ public class DieselEngine implements GameEngine {
 
 	@Override
 	public void handleTie() {
-			currentState.getOrderedPlayerNames().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
+		currentState.getOrderedPlayerNames().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
+	}
+
+	private void saveFailAlert() {
+		AlertFactory.errorAlert("Could not save file", "An error occured. Try saving again?","").showAndWait();
+	}
+
+	private void loadFailAlert() {
+		AlertFactory.errorAlert("Could not load file", "An error occured. Try loading again?","").showAndWait();
 	}
 
 }

@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 public class ModifiableUnit extends ModifiableVoogaObject<ModifiableUnit> implements Unit {
 	private static final long serialVersionUID = 1L;
 
-	//TODO ResourceBundlify
 	public transient static final Unit SKELETON_WARRIOR = new ModifiableUnit("Skeleton Warrior")
 			.addUnitStats(ModifiableUnitStat.HITPOINTS.setMaxValue(39.0), ModifiableUnitStat.MOVEPOINTS.setMaxValue(5))
 			.setDescription("Once a noble knight in service of its kingdom, it once again takes up the blade for the lich king.")
