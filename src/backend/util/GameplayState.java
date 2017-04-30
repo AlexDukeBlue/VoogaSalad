@@ -22,6 +22,7 @@ import java.util.stream.Stream;
  * @author Created by th174 on 4/10/2017.
  */
 public class GameplayState extends ImmutableVoogaObject implements ReadonlyGameplayState {
+	private String sound;
 	private static final long serialVersionUID = 1L;
 
 	public transient static final String
@@ -274,5 +275,18 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	GameplayState removeTurnRequirements(Requirement... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
+	}
+
+	@Override
+	public String getSoundPath() {
+		// TODO Auto-generated method stub
+		return sound;
+	}
+
+	@Override
+	public <T extends HasSound> T setSoundPath(String path) {
+		// TODO Auto-generated method stub
+		this.sound = path;
+		return this;
 	}
 }
