@@ -97,12 +97,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		this.selectionStrategy = selectionStrategy;
 
 		getPolyglot().setOnLanguageChange(event -> {
-			try {
 				selectionStrategy.getPolyglot().setLanguage(getPolyglot().getLanguage());
-			} catch (PolyglotException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		});
 		dialog = new Dialog<>();
 		DialogPane dialogPane = new DialogPane();
