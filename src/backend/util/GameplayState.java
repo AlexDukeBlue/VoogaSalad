@@ -63,7 +63,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.grid = grid;
 		this.random = random;
 		this.turnNumber = turnNumber;
-		this.turnActions = new HashSet<>(turnActions);
+		this.turnActions = new HashSet<Actionable>(turnActions);
 		this.objectives = new HashSet<>(objectives);
 		this.turnRequirements = new HashSet<>(turnRequirements);
 		this.players = new TreeSet<>(new Comparator<ImmutablePlayer>() {
@@ -99,7 +99,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public Team getActiveTeam() {
-		return getTeams().get(currentTeamNumber);
+		return getTeams().isEmpty() ? null : getTeams().get(currentTeamNumber);
 	}
 
 	@Override

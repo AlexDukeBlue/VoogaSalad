@@ -4,9 +4,7 @@ import backend.game_engine.ResultQuadPredicate.Result;
 import backend.player.ImmutablePlayer;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
-import util.net.ObservableServer;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -121,7 +119,7 @@ public class DieselEngine implements GameEngine {
 
 	@Override
 	public void handleTie() {
-			currentState.getOrderedPlayerNames().stream().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
+			currentState.getOrderedPlayerNames().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
 	}
 
 }

@@ -131,8 +131,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void select(ClickHandler clickHandler) {
-		clickHandler.highlightRange(
-				canMove() ? getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
+		clickHandler.highlightRange(canMove() ? getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
 	}
 
 	@Override
@@ -177,8 +176,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	}
 
 	private boolean canMove() {
-		return getController().isMyTeam() && getEntity().getTeam().isPresent()
-				&& getEntity().getTeam().get().equals(getController().getActivePlayer());
+		return !getEntity().getTeam().isPresent() || getController().isMyTeam() && getEntity().getTeam().isPresent() && getEntity().getTeam().get().equals(getController().getActiveTeam());
 	}
 
 	private boolean isValidMove(ClickableUIComponent target) {

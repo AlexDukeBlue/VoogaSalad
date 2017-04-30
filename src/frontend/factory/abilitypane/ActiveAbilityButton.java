@@ -65,7 +65,7 @@ public class ActiveAbilityButton extends AbilityButton {
 	}
 
 	private boolean canUseAbility() {
-		return getAbilityOwner().getTeam().isPresent() || getController().isMyTeam() && getAbilityOwner().getTeam().get().equals(getController().getActiveTeam());
+		return !getAbilityOwner().getTeam().isPresent() || getController().isMyTeam() && getAbilityOwner().getTeam().get().equals(getController().getActiveTeam());
 	}
 
 	private boolean isThisLegalActiveAbility(ClickableUIComponent target) {

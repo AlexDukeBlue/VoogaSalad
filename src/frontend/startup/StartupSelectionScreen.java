@@ -59,6 +59,7 @@ class StartupSelectionScreen extends BaseUIManager<Node> {
 				try {
 					delegate.getClass().getDeclaredMethod(name, Stage.class).invoke(delegate, stage);
 				} catch (Exception e) {
+					e.printStackTrace();
 					vbox.getChildren().remove(button);
 				}
 			});
