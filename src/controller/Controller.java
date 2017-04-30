@@ -124,13 +124,13 @@ public interface Controller {
 
 	void deactivateTurnRequirement(String name);
 
-	void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer);
+	void addTurnAction(String name, String description, String imgPath, SerializableBiConsumer biConsumer);
 
-	void removeTurnAction(Event event, String name);
+	void removeTurnAction(String name);
 
-	void activateTurnAction(Event event, String name);
+	void activateTurnAction(String name);
 
-	void deactivateTurnAction(Event event, String name);
+	void deactivateTurnAction(String name);
 
 	void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate);
 

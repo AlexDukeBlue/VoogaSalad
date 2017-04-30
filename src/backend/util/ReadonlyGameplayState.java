@@ -31,7 +31,7 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 
 	Collection<Resultant> getObjectives();
 
-	Map<Event, Collection<Actionable>> getTurnActions();
+	Collection<Actionable> getTurnActions();
 
 	Collection<Requirement> getTurnRequirements();
 
