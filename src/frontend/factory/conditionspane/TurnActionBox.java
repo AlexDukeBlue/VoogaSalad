@@ -26,9 +26,15 @@ public class TurnActionBox extends ConditionBox {
 	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
 		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if(newValue){
+			System.out.println("add act");
+			System.out.println(getController().getAuthoringGameState().getActiveTurnActions().size());
 			getController().activateTurnAction(getName());
+			System.out.println(getController().getAuthoringGameState().getActiveTurnActions().size());
 		} else {
+			System.out.println("remove act");
+			System.out.println(getController().getAuthoringGameState().getActiveTurnActions().size());
 			getController().deactivateTurnAction(getName());
+			System.out.println(getController().getAuthoringGameState().getActiveTurnActions().size());
 		}
 	}
 

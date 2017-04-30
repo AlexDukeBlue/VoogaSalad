@@ -22,9 +22,15 @@ public class TurnRequirementBox extends ConditionBox {
 	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
 		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if (newValue) {
+			System.out.println("add req");
+			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 			getController().activateTurnRequirement(getName());
+			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 		} else {
+			System.out.println("remove req");
+			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 			getController().deactivateTurnRequirement(getName());
+			System.out.println(getController().getAuthoringGameState().getActiveTurnRequirements().size());
 		}
 	}
 }

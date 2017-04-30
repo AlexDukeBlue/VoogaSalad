@@ -1,6 +1,7 @@
 package backend.game_engine;
 
 import backend.player.ImmutablePlayer;
+import backend.player.Team;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 
@@ -36,9 +37,9 @@ public interface GameEngine {
 	 * implementation, this method will probably get passed to the server for it to control
 	 * what happens from the enclosed BiConsumer.
 	 *
-	 * @param player
+	 * @param team
 	 */
-	void handleWin(ImmutablePlayer player);
+	void handleWin(Team team);
 
 	/**
 	 * The handleLoss method is what gets called by a Result.LOSE.accept() call. This method
@@ -46,9 +47,9 @@ public interface GameEngine {
 	 * implementation, this method will probably get passed to the server for it to control
 	 * what happens from the enclosed BiConsumer.
 	 *
-	 * @param player
+	 * @param team
 	 */
-	void handleLoss(ImmutablePlayer player);
+	void handleLoss(Team team);
 
 	/**
 	 * The handleTie method is what gets called by a Result.TIE.accept() call. This method
