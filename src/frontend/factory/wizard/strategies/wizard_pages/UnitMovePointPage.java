@@ -1,7 +1,7 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
+import frontend.factory.wizard.strategies.wizard_pages.util.IntegerInputRow;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.layout.Region;
 
@@ -14,7 +14,7 @@ import javafx.scene.layout.Region;
  */
 public class UnitMovePointPage extends BaseWizardPage {
 
-	private NumericInputRow numericInputRow;
+	private IntegerInputRow numericInputRow;
 
 	/**
 	 * Creates a new instance of UnitMovePointPage
@@ -41,7 +41,7 @@ public class UnitMovePointPage extends BaseWizardPage {
 	}
 
 	private void initialize() {
-		numericInputRow = new NumericInputRow(null, getPolyglot().get("Default_UnitMovePoint_Title"),
+		numericInputRow = new IntegerInputRow(null, getPolyglot().get("Default_UnitMovePoint_Title"),
 				new StringBinding() {
 
 					@Override

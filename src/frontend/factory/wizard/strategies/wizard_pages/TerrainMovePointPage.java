@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import backend.cell.Terrain;
 import backend.util.GameplayState;
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
+import frontend.factory.wizard.strategies.wizard_pages.util.IntegerInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
 import javafx.scene.layout.Region;
@@ -21,8 +21,7 @@ import javafx.scene.layout.Region;
 public class TerrainMovePointPage extends BaseWizardPage {
 
 	private TableInputView table;
-	private Map<NumericInputRow, Terrain> rowToTerrain;
-	private NumericInputRow movePointInput;
+	private Map<IntegerInputRow, Terrain> rowToTerrain;
 
 	/**
 	 * Creates a new instance of TerrainMovePointPage
@@ -46,21 +45,14 @@ public class TerrainMovePointPage extends BaseWizardPage {
 
 	public Map<Terrain, Integer> getTerrainMovePoints() {
 		return rowToTerrain.keySet().stream()
-				.collect(Collectors.toMap(row -> rowToTerrain.get(row), NumericInputRow::getValue));
-	}
-
-	public Integer getUnitMovePoints() {
-		return movePointInput.getValue();
+				.collect(Collectors.toMap(row -> rowToTerrain.get(row), IntegerInputRow::getValue));
 	}
 
 	private void initialize() {
 		table = new VerticalTableInputView();
-		movePointInput = new NumericInputRow(null, getPolyglot().get("TerrainMovePoint_RowPrompt"),
-				getPolyglot().get("Move_Points"));
-		table.getChildren().add(movePointInput);
 		rowToTerrain = new HashMap<>();
 		getController().getAuthoringGameState().getTemplateByCategory(GameplayState.TERRAIN).forEach(terrain -> {
-			NumericInputRow row = new NumericInputRow(getImg(terrain.getImgPath()), terrain.getName(),
+			IntegerInputRow row = new IntegerInputRow(getImg(terrain.getImgPath()), terrain.getName(),
 					terrain.getDescription());
 			rowToTerrain.put(row, (Terrain) terrain);
 			table.getChildren().add(row);
