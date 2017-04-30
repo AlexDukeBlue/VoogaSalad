@@ -20,9 +20,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
 import util.scripting.VoogaScriptEngine;
 import util.scripting.VoogaScriptEngineManager;
 import util.scripting.VoogaScriptException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 /**
  * TODO: RESOUCE BUNDLE PLSSSS
@@ -37,6 +45,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private BooleanProperty hasCompiled;
 	private String strategy;
 	private final double SPACING = 20;
+	
 
 	public ScriptingDialog(Controller controller) {
 		super(controller);
@@ -63,7 +72,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		
 		loadScriptButton.setOnAction(evt -> {
 			try {
-				System.out.println("Loading script...");
+				scriptArea.setText(loadScript());
 			} catch (VoogaScriptException e) {
 				handleException(e);
 			}
@@ -71,7 +80,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		
 		quickCreateButton.setOnAction(evt -> {
 			try {
-				System.out.println("Loading quick add gui...");
+				loadScript();
 			} catch (VoogaScriptException e) {
 				handleException(e);
 			}
@@ -84,6 +93,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		topBox.getChildren().add(quickCreateButton);
 		topBox.setAlignment(Pos.CENTER);
 		topBox.setSpacing(SPACING);
+		
 		HBox bottomBox = new HBox(loadScriptButton);
 		bottomBox.getChildren().add(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
@@ -93,6 +103,41 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);
 	}
+	
+	private String loadScript() {
+		String code = "";
+		final FileChooser filechooser = new FileChooser();
+		filechooser.setTitle("Open Script");
+		this.configureFileChooser(filechooser);
+		File myScript = filechooser.showOpenDialog(null);
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(myScript));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			StringBuilder sb = new StringBuilder();
+			String line = br.readLine();
+			while (line != null) {
+				sb.append(line);
+				sb.append(System.lineSeparator());
+				line = br.readLine();
+			}
+			code = sb.toString();
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return code;
+	}
+	
+	private void configureFileChooser(final FileChooser filechooser) {
+		filechooser.setTitle("Load XML");
+		filechooser.setInitialDirectory(new File(System.getProperty("user.dir") + "/data/examples"));
+		filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JAVA", "*.java"));
+	}
+
 
 	public ReadOnlyBooleanProperty hasCompiled() {
 		return hasCompiled;
