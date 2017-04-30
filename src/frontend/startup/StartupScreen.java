@@ -147,8 +147,8 @@ public class StartupScreen extends BaseUIManager<Parent> {
 		double height = primaryPane.getBackground().getImages().get(0).getImage().getHeight();
 //		ls = new LoadingScreen(width, height);
 		Image img = getImg(getResourceBundle().getString("StartupBackgroundImage"));
-//		ls = new LoadingScreen(img.getWidth(), img.getHeight());
-//		primaryPane.getChildren().add(ls);
+		ls = new LoadingScreen(img.getWidth(), img.getHeight());
+		primaryPane.getChildren().add(ls);
 	}
 	
 	public void removeLoadingScreen(){
