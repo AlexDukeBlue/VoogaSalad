@@ -73,6 +73,7 @@ public class CommunicationController implements Controller {
 		this.executor = Executors.newCachedThreadPool();
 		this.playerCountCache = 1;
 		this.saveHistory = new ArrayDeque<>();
+		this.engine = new DieselEngine();
 	}
 
 	public void startClient(String host, int port, Duration timeout) {
@@ -92,7 +93,6 @@ public class CommunicationController implements Controller {
 			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
 			isHost = true;
-			this.engine = new DieselEngine(server);
 			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
