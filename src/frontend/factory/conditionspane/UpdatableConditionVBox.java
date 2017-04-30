@@ -6,6 +6,7 @@ package frontend.factory.conditionspane;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -31,7 +32,13 @@ public class UpdatableConditionVBox {
 	}
 	
 	public void update(){
+		System.out.println("before update box: " + conditionBoxes.size());
+		try{
 		updateOperation.accept(conditionBoxes);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("after update box: " + conditionBoxes.size());
 		initVBox();
 	}
 

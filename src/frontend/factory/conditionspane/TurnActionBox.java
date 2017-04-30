@@ -3,7 +3,6 @@
  */
 package frontend.factory.conditionspane;
 
-import backend.util.Event;
 import controller.Controller;
 import frontend.ClickHandler;
 import javafx.beans.value.ObservableValue;
@@ -19,12 +18,13 @@ public class TurnActionBox extends ConditionBox {
 	 * @param controller
 	 * @param clickHandler
 	 */
-	public TurnActionBox(String turnActionName, Controller controller, ClickHandler clickHandler) {
-		super(turnActionName, controller, clickHandler);
+	public TurnActionBox(String turnActionName, String category, Controller controller, ClickHandler clickHandler) {
+		super(turnActionName, category, controller, clickHandler);
 	}
 
 	@Override
 	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
+		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if(newValue){
 			getController().activateTurnAction(getName());
 		} else {

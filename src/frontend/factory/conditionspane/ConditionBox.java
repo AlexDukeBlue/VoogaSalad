@@ -21,6 +21,7 @@ import javafx.scene.layout.Region;
  */
 public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	private String myName;
+	private String myCategory;
 	private HBox myBox = new HBox();
 
 	/**
@@ -28,9 +29,10 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	 * @param controller
 	 * @param clickHandler
 	 */
-	public ConditionBox(String conditionName, Controller controller, ClickHandler clickHandler) {
+	public ConditionBox(String conditionName, String category, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		myName = conditionName;
+		myCategory = category;
 		initBox();
 	}
 
@@ -49,10 +51,12 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler, Event event) {
 		if (target instanceof AddRemoveButton) {
-			getController();//.removeRules(...)
+			getController().removeTemplatesByCategory(myCategory, myName);
+			clickHandler.cancel();
 		}
+		getClickHandler().setSelectedComponent(this);
 	}
 
 	@Override

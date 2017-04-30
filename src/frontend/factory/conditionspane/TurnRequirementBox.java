@@ -13,12 +13,13 @@ import javafx.beans.value.ObservableValue;
  */
 public class TurnRequirementBox extends ConditionBox {
 
-	public TurnRequirementBox(String turnRequirementName, Controller controller, ClickHandler clickHandler) {
-		super(turnRequirementName, controller, clickHandler);
+	public TurnRequirementBox(String turnRequirementName, String category, Controller controller, ClickHandler clickHandler) {
+		super(turnRequirementName, category, controller, clickHandler);
 	}
 
 	@Override
 	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
+		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if(newValue){
 			getController().activateTurnRequirement(getName());
 		} else {
