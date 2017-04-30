@@ -1,5 +1,5 @@
 /**
- * Implement the functional interface GridLayoutDelegate. Manages the placement of a Hexagonal CellView into a grid.
+ * Implements the functional interface GridLayoutDelegate. Manages the placement of a Hexagonal CellView into a grid.
  * Does so by translating the relative coordinates in the CellView's CoordinateTuple to absolute coordinate.
  * Absolute coordinates are calculated using the given scaling factor, minimum width, and maximum width.
  * These absolute coordinates are used to set the CellView's X and Y coordinates.

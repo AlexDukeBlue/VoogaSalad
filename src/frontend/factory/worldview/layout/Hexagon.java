@@ -15,6 +15,8 @@ class Hexagon extends Polygon {
 	private double myMinWidth, myMaxWidth;
 
 	/**
+	 * Constructs a Hexagon following the given dimensional attributes.
+	 * 
 	 * @param minWidth
 	 *            Minimum width
 	 * @param maxWidth
@@ -24,7 +26,7 @@ class Hexagon extends Polygon {
 	 *            0.0 and less than 1.0.
 	 */
 	Hexagon(double minWidth, double maxWidth, double scale) {
-		setPoints(minWidth, maxWidth, scale);
+		setPoints(scale, minWidth, maxWidth);
 	}
 
 	/**

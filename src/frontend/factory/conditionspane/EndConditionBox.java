@@ -21,9 +21,13 @@ public class EndConditionBox extends ConditionBox {
 	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
 		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if(newValue){
+			System.out.println(getController().getAuthoringGameState().getActiveObjectives().size());
 			getController().activateEndCondition(getName());
+			System.out.println(getController().getAuthoringGameState().getActiveObjectives().size());
 		} else {
+			System.out.println(getController().getAuthoringGameState().getActiveObjectives().size());
 			getController().deactivateEndCondition(getName());
+			System.out.println(getController().getAuthoringGameState().getActiveObjectives().size());
 		}
 	}
 }

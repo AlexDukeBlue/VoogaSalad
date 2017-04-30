@@ -40,10 +40,10 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 			TURN_EVENT = "turnaction",
 			END_CONDITION = "endcondition";
 	private final Random random;
-	private final Collection<Resultant> objectives;
+	private final Collection<Resultant> activeObjectives;
 	private final TreeSet<ImmutablePlayer> players;
-	private final Collection<Actionable> turnActions;
-	private final Collection<Requirement> turnRequirements;
+	private final Collection<Actionable> activeTurnActions;
+	private final Collection<Requirement> activeTurnRequirements;
 	private final Map<String, ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection>> templates;
 	private boolean isAuthoringMode;
 	private volatile int currentTeamNumber;
@@ -63,9 +63,9 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.grid = grid;
 		this.random = random;
 		this.turnNumber = turnNumber;
-		this.turnActions = new HashSet<>(turnActions);
-		this.objectives = new HashSet<>(objectives);
-		this.turnRequirements = new HashSet<>(turnRequirements);
+		this.activeTurnActions = new HashSet<>(turnActions);
+		this.activeObjectives = new HashSet<>(objectives);
+		this.activeTurnRequirements = new HashSet<>(turnRequirements);
 		this.players = new TreeSet<>(new Comparator<ImmutablePlayer>() {
 			public int compare (ImmutablePlayer p1, ImmutablePlayer p2) {
 				if (p1.getTeam().isPresent() && p2.getTeam().isPresent()) {
@@ -187,23 +187,23 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
-	public Collection<Resultant> getObjectives() {
-		return Collections.unmodifiableCollection(objectives);
+	public Collection<Resultant> getActiveObjectives() {
+		return Collections.unmodifiableCollection(activeObjectives);
 	}
 
 	@Override
-	public Collection<Actionable> getTurnActions() {
-		return Collections.unmodifiableCollection(turnActions);
+	public Collection<Actionable> getActiveTurnActions() {
+		return Collections.unmodifiableCollection(activeTurnActions);
 	}
 
 	@Override
-	public Collection<Requirement> getTurnRequirements() {
-		return Collections.unmodifiableCollection(turnRequirements);
+	public Collection<Requirement> getActiveTurnRequirements() {
+		return Collections.unmodifiableCollection(activeTurnRequirements);
 	}
 
 	@Override
 	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.test(getActiveTeam(), this));
+		return activeTurnRequirements.stream().allMatch(e -> e.test(getActiveTeam(), this));
 	}
 
 	public GameplayState messageAll(String message, ImmutablePlayer sender) {
@@ -227,61 +227,61 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public GameplayState copy() {
-		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), objectives, turnActions.stream().collect(Collectors.toList()), turnRequirements, getDescription(), getImgPath(), random);
+		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), activeObjectives, activeTurnActions.stream().collect(Collectors.toList()), activeTurnRequirements, getDescription(), getImgPath(), random);
 	}
 
-	GameplayState addObjectives(Resultant... objectives) {
-		return addObjectives(Arrays.asList(objectives));
+	GameplayState addActiveObjectives(Resultant... objectives) {
+		return addActiveObjectives(Arrays.asList(objectives));
 	}
 
-	GameplayState addObjectives(Collection<Resultant> objectives) {
-		this.objectives.addAll(objectives);
+	GameplayState addActiveObjectives(Collection<Resultant> objectives) {
+		this.activeObjectives.addAll(objectives);
 		return this;
 	}
 
-	GameplayState removeObjectives(Resultant... objectives) {
-		return removeObjectives(Arrays.asList(objectives));
+	GameplayState removeActiveObjectives(Resultant... objectives) {
+		return removeActiveObjectives(Arrays.asList(objectives));
 	}
 
-	GameplayState removeObjectives(Collection<Resultant> objectives) {
-		this.objectives.removeAll(objectives);
+	GameplayState removeActiveObjectives(Collection<Resultant> objectives) {
+		this.activeObjectives.removeAll(objectives);
 		return this;
 	}
 
-	GameplayState addTurnActions(Collection<Actionable> actions) {
-		turnActions.addAll(actions);
+	GameplayState addActiveTurnActions(Collection<Actionable> actions) {
+		activeTurnActions.addAll(actions);
 		return this;
 	}
 
-	GameplayState addTurnActions(Actionable... actions) {
-		return addTurnActions(Arrays.asList(actions));
+	GameplayState addActiveTurnActions(Actionable... actions) {
+		return addActiveTurnActions(Arrays.asList(actions));
 	}
 
-	GameplayState removeTurnActions(Event event, Collection<Actionable> actions) {
-		turnActions.removeIf(actions::contains);
+	GameplayState removeActiveTurnActions(Collection<Actionable> actions) {
+		activeTurnActions.removeIf(actions::contains);
 		return this;
 	}
 
-	GameplayState removeTurnActions(Event event, Actionable... actions) {
-		return removeTurnActions(event, Arrays.asList(actions));
+	GameplayState removeActiveTurnActions(Actionable... actions) {
+		return removeActiveTurnActions(Arrays.asList(actions));
 	}
 
-	GameplayState addTurnRequirements(Collection<Requirement> turnRequirements) {
-		this.turnRequirements.addAll(turnRequirements);
+	GameplayState addActiveTurnRequirements(Collection<Requirement> turnRequirements) {
+		this.activeTurnRequirements.addAll(turnRequirements);
 		return this;
 	}
 
-	GameplayState addTurnRequirements(Requirement... turnRequirements) {
-		return addTurnRequirements(Arrays.asList(turnRequirements));
+	GameplayState addActiveTurnRequirements(Requirement... turnRequirements) {
+		return addActiveTurnRequirements(Arrays.asList(turnRequirements));
 	}
 
-	GameplayState removeTurnRequirements(Collection<Requirement> turnRequirements) {
-		this.turnRequirements.removeAll(turnRequirements);
+	GameplayState removeActiveTurnRequirements(Collection<Requirement> turnRequirements) {
+		this.activeTurnRequirements.removeAll(turnRequirements);
 		return this;
 	}
 
-	GameplayState removeTurnRequirements(Requirement... turnRequirements) {
-		return removeTurnRequirements(Arrays.asList(turnRequirements));
+	GameplayState removeActiveTurnRequirements(Requirement... turnRequirements) {
+		return removeActiveTurnRequirements(Arrays.asList(turnRequirements));
 	}
 
 	public AuthoringGameState removeTurnActions(Actionable[] actions) {

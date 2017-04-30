@@ -55,7 +55,6 @@ public class ConditionsPane extends ClickableUIComponent<Region> implements Cond
 
 	@Override
 	public void update() {
-		System.out.println("Updating Pane");
 		subBoxes.forEach(box -> ((UpdatableConditionVBox) box).update());
 	}
 

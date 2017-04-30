@@ -15,7 +15,8 @@ import frontend.ClickHandler;
 import util.polyglot.Polyglot;
 
 /**
- * @author Stone Mathers Created 4/25/2017
+ * @author Stone Mathers 
+ * Created 4/25/2017
  */
 public class UpdatableConditionVBoxFactory {
 

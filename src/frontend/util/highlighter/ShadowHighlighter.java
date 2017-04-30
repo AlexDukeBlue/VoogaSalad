@@ -1,6 +1,3 @@
-/**
- *
- */
 package frontend.util.highlighter;
 
 import javafx.scene.Node;
@@ -9,7 +6,7 @@ import javafx.scene.paint.Color;
 
 /**
  * @author Stone Mathers
- *         Created 4/22/2017
+ * Created 4/22/2017
  */
 public class ShadowHighlighter implements Highlighter {
 

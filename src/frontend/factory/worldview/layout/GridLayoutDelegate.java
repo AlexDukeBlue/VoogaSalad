@@ -1,4 +1,3 @@
-
 package frontend.factory.worldview.layout;
 
 import backend.grid.CoordinateTuple;

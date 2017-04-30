@@ -70,6 +70,9 @@ public class View extends ClickableUIComponent<Region> {
 	private VBox rightPane;
 	private MinimapPane miniMap;
 
+	/**
+	 * @param controller
+	 */
 	public View(Controller controller) {
 		this(controller, new Stage());
 	}
