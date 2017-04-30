@@ -3,8 +3,10 @@ package frontend.factory.wizard.strategies.wizard_pages;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import backend.util.AuthoringGameState;
 import controller.Controller;
 import frontend.factory.wizard.Wizard;
+import frontend.factory.wizard.WizardFactory;
 import frontend.factory.wizard.strategies.wizard_pages.util.AdditionalWizardRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.IntegerInputRow;
 import javafx.collections.FXCollections;
@@ -42,9 +44,9 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 	 * @param clazz
 	 *            the class of wizard that this class will create
 	 */
-	public AdditionalWizardsPage(Controller controller, String descriptionKey, Class<? extends Wizard<T>> clazz) {
+	public AdditionalWizardsPage(String descriptionKey, String wizardType, Controller controller) {
 		super(controller, descriptionKey);
-		initialize(clazz);
+		initialize(wizardType);
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 		return wizardRows.stream().map(row -> row.getObjectProperty().getValue()).collect(Collectors.toList());
 	}
 
-	private void initialize(Class<? extends Wizard<T>> clazz) {
+	private void initialize(String wizardType) {
 		vbox = new VBox();
 		wizardRows = FXCollections.observableArrayList();
 		wizardRows.addListener((ListChangeListener<AdditionalWizardRow<T>>) listChange -> {
@@ -82,7 +84,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 			int numRows = (Integer) object;
 			try {
 				while (wizardRows.size() < numRows) {
-					Wizard<T> wizard = clazz.newInstance();
+					Wizard<T> wizard = (Wizard<T>) WizardFactory.newWizard(wizardType, getController());
 					wizard.hide();
 					wizardRows.add(new AdditionalWizardRow<>(getPolyglot().get("Description"), wizard));
 				}
@@ -112,6 +114,14 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 		alert.headerTextProperty().bind(getPolyglot().get("No_Instantiate_Wizard_Message"));
 		alert.contentTextProperty().bind(getPolyglot().get("No_Instantiate_Wizard_Content"));
 		alert.showAndWait();
+	}
+
+	public void setTitle(String title) {
+		numWizardRow.setName(title);
+	}
+	
+	public void setLabel(String label) {
+		numWizardRow.setLabel(label);
 	}
 
 }

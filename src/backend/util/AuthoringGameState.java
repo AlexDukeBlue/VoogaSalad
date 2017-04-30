@@ -14,14 +14,14 @@ import java.util.stream.Stream;
 public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
 	private static final long serialVersionUID = 1L;
 
-	private Map<Event, Collection<Actionable>> availableTurnActions;
+	private Collection<Actionable> availableTurnActions;
 	private Collection<Requirement> availableTurnRequirements;
 	private Collection<Resultant> availableObjectives;
 
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
 		this.setAuthoringMode(true);
-		availableTurnActions = new HashMap<>();
+		availableTurnActions = new HashSet<Actionable>();
 		availableTurnRequirements = new ArrayList<>();
 		availableObjectives = new ArrayList<>();
 	}
@@ -32,8 +32,8 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public Player getActivePlayer() {
-		return (Player) super.getActivePlayer();
+	public Team getActiveTeam() {
+		return super.getActiveTeam();
 	}
 
 	@Override
@@ -103,13 +103,13 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public AuthoringGameState addTurnActions(Event event, Collection<Actionable> actions) {
-		return (AuthoringGameState) super.addTurnActions(event, actions);
+	public AuthoringGameState addTurnActions(Collection<Actionable> actions) {
+		return (AuthoringGameState) super.addTurnActions(actions);
 	}
 
 	@Override
-	public AuthoringGameState addTurnActions(Event event, Actionable... actions) {
-		return (AuthoringGameState) super.addTurnActions(event, actions);
+	public AuthoringGameState addTurnActions(Actionable... actions) {
+		return (AuthoringGameState) super.addTurnActions(actions);
 	}
 
 	/**
@@ -125,8 +125,8 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	 * @return This AuthoringGameState
 	 * @author Stone Mathers
 	 */
-	public AuthoringGameState addAvailableTurnActions(Event event, Actionable... actions) {
-		availableTurnActions.merge(event, new ArrayList<Actionable>(Arrays.asList(actions)), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
+	public AuthoringGameState addAvailableTurnActions(Actionable... actions) {
+		availableTurnActions.addAll(Arrays.asList(actions));
 		return this;
 	}
 
@@ -188,8 +188,8 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public AuthoringGameState removeTurnActions(Event event, Collection<Actionable> actions) {
-		return (AuthoringGameState) super.removeTurnActions(event, actions);
+	public AuthoringGameState removeTurnActions(Actionable... actions) {
+		return (AuthoringGameState) super.removeTurnActions(actions);
 	}
 
 	@Override
@@ -209,9 +209,9 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	 * @return This AuthoringGameState
 	 * @author Stone Mathers
 	 */
-	public AuthoringGameState removeAvailableTurnActions(Event event, Actionable... actions) {
-		availableTurnActions.get(event).removeIf(Arrays.asList(actions)::contains);
-		return removeTurnActions(event, actions);
+	public AuthoringGameState removeAvailableTurnActions(Actionable... actions) {
+		availableTurnActions.removeIf(Arrays.asList(actions)::contains);
+		return removeTurnActions(actions);
 	}
 
 	@Override
@@ -240,7 +240,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 		return removeTurnRequirements(turnRequirements);
 	}
 
-	public Map<Event, Collection<Actionable>> getAvailableTurnActions() {
+	public Collection<Actionable> getAvailableTurnActions() {
 		return availableTurnActions;
 	}
 

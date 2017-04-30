@@ -7,12 +7,14 @@ import java.util.Set;
 
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
+import backend.grid.Shape;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.factory.worldview.layout.GridLayoutDelegate;
 import frontend.factory.worldview.layout.GridLayoutDelegateFactory;
 import frontend.interfaces.worldview.GridViewExternal;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
@@ -32,6 +34,7 @@ import javafx.scene.paint.ImagePattern;
 class GridView extends ClickableUIComponent<ScrollPane> implements GridViewExternal {
 
 	private static final double MIN = 10, MAX = 100, SCALE = 0.750;
+	public static final double FULL_CIRCLE = Math.PI * 2;
 	private final ScrollPane myScrollPane;
 	private final Pane cellViewObjects;
 	private final Map<CoordinateTuple, CellView> cellViews;
@@ -96,8 +99,15 @@ class GridView extends ClickableUIComponent<ScrollPane> implements GridViewExter
 	}
 
 	private void populateCellViews() {
-		cellViewObjects.setBackground(new Background(
-				new BackgroundFill(new ImagePattern(getImg(getController().getGrid().getImgPath())), null, null)));
+		double width = MIN + ((MAX - MIN) * SCALE);
+		double radius = width /(Math.cos(FULL_CIRCLE / 12) - Math.cos((FULL_CIRCLE / 12) * 5));
+		double xOffset = (getController().getGrid().getRows());
+		double inset = (0.7*xOffset)*radius;
+		if (getController().getShape().equals(Shape.SQUARE)){
+			cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(getImg(getController().getGrid().getImgPath())), null, null)));
+		} else {
+			cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(getImg(getController().getGrid().getImgPath())), null, new Insets(-1*inset, 0, inset, 0))));
+		}
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			CellView cl = new CellView(coordinate, getController(), getClickHandler(),
 					myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController().getGrid()));

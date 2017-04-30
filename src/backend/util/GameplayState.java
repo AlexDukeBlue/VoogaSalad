@@ -16,7 +16,6 @@ import backend.unit.properties.ModifiableUnitStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Created by th174 on 4/10/2017.
@@ -36,38 +35,49 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 			BOUNDS_HANDLER = "boundshandler",
 			TERRAIN = "terrain",
 			OFFENSIVE_MODIFIER = "offensivemodifier",
-			DEFENSIVE_MODIFIER = "defensivemodifier";
+			DEFENSIVE_MODIFIER = "defensivemodifier",
+			TURN_REQUIREMENT = "turnrequirement",
+			TURN_EVENT = "turnaction",
+			END_CONDITION = "endcondition";
 	private final Random random;
-	private final List<String> playerOrder;
-	private final Map<String, ImmutablePlayer> players;
 	private final Collection<Resultant> objectives;
-	private final Map<Event, Collection<Actionable>> turnActions;
+	private final TreeSet<ImmutablePlayer> players;
+	private final Collection<Actionable> turnActions;
 	private final Collection<Requirement> turnRequirements;
 	private final Map<String, ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection>> templates;
 	private boolean isAuthoringMode;
-	private volatile int currentPlayerNumber;
+	private volatile int currentTeamNumber;
 	private volatile int turnNumber;
 	private volatile GameBoard grid;
 
 	public GameplayState(String name, GameBoard grid, String description, String imgPath) {
-		this(name, grid, 0, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), description, imgPath, new Random(7));
+		this(name, grid, 0, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), description, imgPath, new Random(7));
 	}
 
 	private GameplayState(String name, GameBoard grid, int turnNumber, Collection<Team> teams,
 	                      Collection<Resultant> objectives,
-	                      Map<Event, Collection<Actionable>> turnActions,
+	                      Collection<Actionable> turnActions,
 	                      Collection<Requirement> turnRequirements,
 	                      String description, String imgPath, Random random) {
 		super(name, description, imgPath);
 		this.grid = grid;
 		this.random = random;
 		this.turnNumber = turnNumber;
-		this.turnActions = new HashMap<>(turnActions);
+		this.turnActions = new HashSet<>(turnActions);
 		this.objectives = new HashSet<>(objectives);
 		this.turnRequirements = new HashSet<>(turnRequirements);
-		this.players = new HashMap<>();
-		this.playerOrder = new ArrayList<>();
-		this.currentPlayerNumber = 0;
+		this.players = new TreeSet<>(new Comparator<ImmutablePlayer>() {
+			public int compare (ImmutablePlayer p1, ImmutablePlayer p2) {
+				if (p1.getTeam().isPresent() && p2.getTeam().isPresent()) {
+					return p1.getTeam().get().getName().compareTo(p2.getTeam().get().getName());
+				} else if (p1.getTeam().isPresent()) {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+		});
+		this.currentTeamNumber = 0;
 		this.isAuthoringMode = false;
 		this.templates = new HashMap<>();
 		getTemplates().put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards()));
@@ -82,21 +92,24 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		getTemplates().put(OFFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Offensive Modifiers", "", "", InteractionModifier.getPredefinedOffensiveModifiers()));
 		getTemplates().put(DEFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Defensive Modifiers", "", "", InteractionModifier.getPredefinedDefensiveModifiers()));
 		getTemplates().put(TEAM, new ModifiableVoogaCollection<>("Teams", "", "", teams));
+		getTemplates().put(TURN_REQUIREMENT, new ModifiableVoogaCollection<>("Turn Requirements", "", "", turnRequirements));
+		getTemplates().put(TURN_EVENT, new ModifiableVoogaCollection<>("Turn Actions", "", "", turnActions));
+		getTemplates().put(END_CONDITION, new ModifiableVoogaCollection<>("Objectives", "", "", objectives));
 	}
 
 	@Override
-	public ImmutablePlayer getActivePlayer() {
-		return getPlayerByName(playerOrder.get(currentPlayerNumber));
+	public Team getActiveTeam() {
+		return getTeams().get(currentTeamNumber);
 	}
 
 	@Override
 	public ImmutablePlayer getPlayerByName(String name) {
-		return players.get(name);
+		return players.stream().filter(e -> e.getName().equals(name)).findAny().orElse(null);
 	}
 
 	@Override
 	public List<String> getOrderedPlayerNames() {
-		return new ArrayList<>(playerOrder);
+		return players.stream().map(ImmutablePlayer::getName).collect(Collectors.toList());
 	}
 
 	@Override
@@ -115,15 +128,15 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
-	public Collection<Team> getTeams() {
-		return (Collection<Team>) templates.get(TEAM).getAll();
+	public List<Team> getTeams() {
+		return new ArrayList<>((Collection<Team>) getTemplates().get(TEAM).getAll());
 	}
 
 	public GameplayState endTurn() {
 		getGrid().endTurn(this);
-		if (++currentPlayerNumber >= playerOrder.size()) {
+		if (++currentTeamNumber >= getTeams().size()) {
 			++turnNumber;
-			currentPlayerNumber = 0;
+			currentTeamNumber = 0;
 		}
 		getGrid().startTurn(this);
 		return this;
@@ -135,27 +148,22 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public GameplayState addPlayer(ImmutablePlayer newPlayer) {
-		if (playerOrder.contains(newPlayer.getName())) {
-			players.get(newPlayer.getName());
-		} else {
-			playerOrder.add(newPlayer.getName());
-			players.put(newPlayer.getName(), newPlayer);
-		}
+		players.add(newPlayer);
 		return this;
 	}
 
 	public GameplayState joinTeam(String playerName, String teamName) {
-		players.get(playerName).setTeam(getTeamByName(teamName));
+		getPlayerByName(playerName).setTeam(getTeamByName(teamName));
 		return this;
 	}
 
 	public GameplayState removePlayer(String playerName) {
-		players.remove(playerName);
-		playerOrder.remove(playerName);
-		return this;
+		return removePlayer(getPlayerByName(playerName));
 	}
 
 	public GameplayState removePlayer(ImmutablePlayer player) {
+		player.getTeam().ifPresent(team -> team.removeAll(player));
+		players.remove(player);
 		return removePlayer(player.getName());
 	}
 
@@ -184,8 +192,8 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
-	public Map<Event, Collection<Actionable>> getTurnActions() {
-		return Collections.unmodifiableMap(turnActions);
+	public Collection<Actionable> getTurnActions() {
+		return Collections.unmodifiableCollection(turnActions);
 	}
 
 	@Override
@@ -195,12 +203,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.test(getActivePlayer(), this));
+		return turnRequirements.stream().allMatch(e -> e.test(getActiveTeam(), this));
 	}
 
 	public GameplayState messageAll(String message, ImmutablePlayer sender) {
 		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.ALL, sender, message);
-		players.values().forEach(player -> player.receiveMessage(chatMessage));
+		players.forEach(player -> player.receiveMessage(chatMessage));
 		return this;
 	}
 
@@ -219,7 +227,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public GameplayState copy() {
-		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), objectives, turnActions.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ArrayList<>(e.getValue()))), turnRequirements, getDescription(), getImgPath(), random);
+		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), objectives, turnActions.stream().collect(Collectors.toList()), turnRequirements, getDescription(), getImgPath(), random);
 	}
 
 	GameplayState addObjectives(Resultant... objectives) {
@@ -240,17 +248,17 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, Collection<Actionable> actions) {
-		turnActions.merge(event, new ArrayList<>(actions), (oldActions, newActions) -> Stream.of(oldActions, newActions).flatMap(Collection::stream).collect(Collectors.toList()));
+	GameplayState addTurnActions(Collection<Actionable> actions) {
+		turnActions.addAll(actions);
 		return this;
 	}
 
-	GameplayState addTurnActions(Event event, Actionable... actions) {
-		return addTurnActions(event, Arrays.asList(actions));
+	GameplayState addTurnActions(Actionable... actions) {
+		return addTurnActions(Arrays.asList(actions));
 	}
 
 	GameplayState removeTurnActions(Event event, Collection<Actionable> actions) {
-		turnActions.get(event).removeIf(actions::contains);
+		turnActions.removeIf(actions::contains);
 		return this;
 	}
 
@@ -274,5 +282,10 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	GameplayState removeTurnRequirements(Requirement... turnRequirements) {
 		return removeTurnRequirements(Arrays.asList(turnRequirements));
+	}
+
+	public AuthoringGameState removeTurnActions(Actionable[] actions) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

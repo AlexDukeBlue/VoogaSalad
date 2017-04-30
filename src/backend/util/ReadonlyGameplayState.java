@@ -13,7 +13,7 @@ import java.util.Map;
  * @author Created by th174 on 4/11/2017.
  */
 public interface ReadonlyGameplayState extends VoogaEntity {
-	ImmutablePlayer getActivePlayer();
+	Team getActiveTeam();
 
 	ImmutablePlayer getPlayerByName(String name);
 
@@ -31,7 +31,7 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 
 	Collection<Resultant> getObjectives();
 
-	Map<Event, Collection<Actionable>> getTurnActions();
+	Collection<Actionable> getTurnActions();
 
 	Collection<Requirement> getTurnRequirements();
 
