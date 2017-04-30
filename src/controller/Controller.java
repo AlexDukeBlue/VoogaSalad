@@ -16,7 +16,6 @@ import backend.util.Requirement.SerializableBiPredicate;
 import frontend.util.UIComponentListener;
 import util.net.Modifier;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -206,7 +205,7 @@ public interface Controller {
 	 *            SerializableBiConsumer which is used to carry out the turn
 	 *            action.
 	 */
-	void addTurnAction(Event event, String name, String description, String imgPath, SerializableBiConsumer biConsumer);
+	void addTurnAction(String name, String description, String imgPath, SerializableBiConsumer biConsumer);
 
 	/**
 	 * Remove a turn action from the Model's list of turn actions.
@@ -215,7 +214,7 @@ public interface Controller {
 	 *            String holding the name of the turn action. Used to identify
 	 *            and remove the correct turn action.
 	 */
-	void removeTurnAction(Event event, String name);
+	void removeTurnAction(String name);
 
 	/**
 	 * Activates a turn action held in the Model's list of turn actions. Does
@@ -225,7 +224,7 @@ public interface Controller {
 	 *            String holding the name of the turn action. Used to identify
 	 *            and activate the correct turn action.
 	 */
-	void activateTurnAction(Event event, String name);
+	void activateTurnAction(String name);
 
 	/**
 	 * Deactivates a turn action held in the Model's list of turn actions. Does
@@ -235,7 +234,7 @@ public interface Controller {
 	 *            String holding the name of the turn action. Used to identify
 	 *            and deactivate the correct turn action.
 	 */
-	void deactivateTurnAction(Event event, String name);
+	void deactivateTurnAction(String name);
 
 	/**
 	 * Adds an end condition to the Model's list of end conditions.
