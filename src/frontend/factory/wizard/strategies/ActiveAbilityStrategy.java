@@ -43,7 +43,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	}
 
 	private void initialize() {
-		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription");
+		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription", true);
 		scriptingPage = new ScriptingPage(getController(),"ActiveAbilityScriptingDescription");
 		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
 		getPages().addAll(namePage, scriptingPage, gridPage);

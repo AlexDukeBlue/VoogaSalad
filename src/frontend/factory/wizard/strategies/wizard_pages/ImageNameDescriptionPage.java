@@ -26,9 +26,10 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class ImageNameDescriptionPage extends BaseWizardPage {
 
 	private HBox hbox;
-	private Button uploadButton;
-	private ImageView imageView;
-	private String imagePath;
+	private VBox imageBox;
+	private Button uploadButton, soundButton;
+	private ImageView imageView, soundView;
+	private String imagePath, soundPath;
 	private TextField nameField;
 	private TextArea descriptionField;
 
@@ -39,9 +40,13 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public ImageNameDescriptionPage(Controller controller, String descriptionKey) {
+	public ImageNameDescriptionPage(Controller controller, String descriptionKey, Boolean sound) {
 		super(controller, descriptionKey);
-		initialize();
+		initialize(sound);
+	}
+	
+	public ImageNameDescriptionPage(Controller controller, String descriptionKey){
+		this(controller, descriptionKey, false);
 	}
 
 	@Override
@@ -51,6 +56,10 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 
 	public Image getImage() {
 		return imageView.getImage();
+	}
+	
+	public String getSoundPath(){
+		return soundPath;
 	}
 
 	/**
@@ -86,7 +95,7 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		return imagePath;
 	}
 
-	private void initialize() {
+	private void initialize(Boolean sound) {
 		imagePath = "";
 		hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
@@ -97,11 +106,13 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		imageView = new ImageView();
 		nameField = new TextField();
 		nameField.promptTextProperty().bind(getPolyglot().get("Name"));
-		;
 		descriptionField = new TextArea();
 		descriptionField.promptTextProperty().bind(getPolyglot().get("Description"));
-		VBox imageBox = new VBox();
+		imageBox = new VBox();
 		imageBox.getChildren().addAll(imageView, uploadButton);
+		if (sound){
+			initSound();
+		}
 		VBox nameAndDescription = new VBox();
 		nameAndDescription.getChildren().addAll(nameField, descriptionField);
 		hbox.getChildren().addAll(imageBox, nameAndDescription);
@@ -112,6 +123,31 @@ public class ImageNameDescriptionPage extends BaseWizardPage {
 		nameField.textProperty().addListener((observable, oldValue, newValue) -> checkIfCanNext());
 		descriptionField.textProperty().addListener((observable, oldValue, newValue) -> checkIfCanNext());
 		checkIfCanNext();
+	}
+
+	private void initSound() {
+		soundButton = new Button();
+		soundButton.textProperty().bind(getPolyglot().get("Upload_Sound"));
+		imageBox.getChildren().add(soundButton);
+		soundButton.setOnAction(e -> setSound());
+		
+	}
+
+	private void setSound() {
+		FileChooser choose = new FileChooser();
+		choose.setInitialDirectory(new File(System.getProperty("user.dir")));
+		choose.getExtensionFilters().setAll(new ExtensionFilter("Sound Files", "*.mp3", "*.wav"));
+		File file = choose.showOpenDialog(null);
+		if (file != null){
+			String soundViewPath = "img/sound-button-png-image-87151.png";
+			soundView = new ImageView(getImg(soundViewPath));
+			soundView.fitWidthProperty().bind(imageBox.widthProperty());
+			soundView.fitHeightProperty().bind(imageView.fitWidthProperty());
+			imageBox.getChildren().add(soundView);
+			
+			soundPath = Paths.get(System.getProperty("user.dir")).relativize(Paths.get(file.getPath())).toString();
+			soundView.setOnMouseClicked(e -> playMedia(soundPath));
+		}
 	}
 
 	private void setImage() {

@@ -48,7 +48,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	}
 
 	private void initialize() {
-		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription");
+		imageNameDescriptionPage = new ImageNameDescriptionPage(getController(), "TerrainNameDescription", true);
 		unitMovePointPage = new UnitMovePointPage(getController(), "TerrainMovePointDescription");
 		getPages().addAll(imageNameDescriptionPage, unitMovePointPage);
 	}
