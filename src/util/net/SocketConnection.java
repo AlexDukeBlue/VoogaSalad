@@ -70,7 +70,6 @@ public class SocketConnection {
 	 * @return Returns true if the request was sent successfully
 	 */
 	public synchronized boolean send(Request request) {
-//		System.out.println("Send " + request);
 		try {
 			outputStream.writeObject(request);
 			return isActive();
