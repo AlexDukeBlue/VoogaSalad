@@ -6,9 +6,11 @@ import java.util.Objects;
 import backend.grid.CoordinateTuple;
 import backend.unit.Unit;
 import backend.util.HasLocation;
+import backend.util.HasSound;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
+import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
@@ -145,8 +147,10 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 		if (isValidMove(target)) {
 			getController().moveUnit(getUnitName(), getUnitLocation(),
 					((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
-			// playMedia(((HasSound) ((GameBoardObjectView)
-			// target).getEntity()).getSoundPath());
+			//playMedia(((HasSound) ((GameBoardObjectView) target).getEntity()).getSoundPath());
+			if (target instanceof CellViewExternal) {
+				playMedia(((CellViewExternal) target).getEntity().getTerrain().getSoundPath());
+			}
 		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE)
 				|| ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
 			getController().removeUnitFromGrid(getUnitName(), getUnitLocation());
