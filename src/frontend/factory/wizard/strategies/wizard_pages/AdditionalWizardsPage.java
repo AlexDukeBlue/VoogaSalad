@@ -8,7 +8,7 @@ import controller.Controller;
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
 import frontend.factory.wizard.strategies.wizard_pages.util.AdditionalWizardRow;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
+import frontend.factory.wizard.strategies.wizard_pages.util.IntegerInputRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -31,7 +31,7 @@ import javafx.scene.layout.VBox;
 public class AdditionalWizardsPage<T> extends BaseWizardPage {
 
 	private VBox vbox;
-	private NumericInputRow numWizardRow;
+	private IntegerInputRow numWizardRow;
 	private ObservableList<AdditionalWizardRow<T>> wizardRows;
 
 	/**
@@ -79,7 +79,7 @@ public class AdditionalWizardsPage<T> extends BaseWizardPage {
 			});
 			checkCanNext();
 		});
-		numWizardRow = new NumericInputRow(null, getPolyglot().get("Number_of_Items"), getPolyglot().get("Items"));
+		numWizardRow = new IntegerInputRow(null, getPolyglot().get("Number_of_Items"), getPolyglot().get("Items"));
 		numWizardRow.addObserver((observable, object) -> {
 			int numRows = (Integer) object;
 			try {

@@ -1,15 +1,16 @@
 package frontend.factory.wizard.strategies.wizard_pages;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import backend.unit.properties.ActiveAbility;
+import backend.unit.properties.InteractionModifier;
+import backend.util.Ability;
 import backend.util.GameplayState;
-import backend.util.HasShape;
+import backend.util.TriggeredEffect;
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
@@ -20,14 +21,14 @@ import javafx.scene.layout.Region;
  *
  * @author Andreas
  */
-public class AbilitiesAdderPage extends BaseWizardPage {
+public class PassiveAbilitiesAdderPage extends BaseWizardPage {
 
 	private TableInputView table;
-	private Map<SelectableInputRow, ActiveAbility<?>> rowToAbility;
-	private NumericInputRow hprow;
+	private Map<SelectableInputRow, Ability> rowToAbility;
 
 	/**
-	 * Creates a new instance of AbilitiesAdderPage. Sets all values to default.
+	 * Creates a new instance of PassiveAbilitiesAdderPage. Sets all values to
+	 * default.
 	 * 
 	 * @param gameState
 	 *            the AuthoringGameState that the wizard will use to populate
@@ -36,9 +37,9 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	 *            a String that can be used as a key to a ResourceBundle to set
 	 *            the description of the page
 	 */
-	public AbilitiesAdderPage(Controller controller, String descriptionKey) {
+	public PassiveAbilitiesAdderPage(Controller controller, String descriptionKey, String... passiveAbilityTypes) {
 		super(controller, descriptionKey);
-		initialize(controller);
+		initialize(passiveAbilityTypes);
 	}
 
 	@Override
@@ -51,35 +52,28 @@ public class AbilitiesAdderPage extends BaseWizardPage {
 	 * 
 	 * @return a collection of ActiveAbility objects that the use has selected.
 	 */
-	public Collection<ActiveAbility> getSelectedAbilities() {
+	private Collection<Ability> getSelectedAbilities() {
 		return rowToAbility.keySet().stream().filter(SelectableInputRow::getSelected).map(row -> rowToAbility.get(row))
 				.collect(Collectors.toList());
 	}
 
-	/**
-	 * Returns the HP that the user has selected for the unit to have.
-	 * 
-	 * @return the HP that the user has selected for the unit to have.
-	 */
-	public Integer getHP() {
-		return hprow.getValue();
-	}
-
-	private void initialize(Controller controller) {
+	private void initialize(String... passiveAbilityTypes) {
 		table = new VerticalTableInputView();
 
-		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt"), getPolyglot().get("HP"));
-		table.getChildren().add(hprow);
-
 		rowToAbility = new HashMap<>();
-		controller.getAuthoringGameState().getTemplateByCategory(GameplayState.ACTIVE_ABILITY).stream()
-				.filter(e -> ((HasShape) e).getShape().equals(controller.getAuthoringGameState().getGrid().getShape())).forEach(ability -> {
+		Arrays.asList(passiveAbilityTypes).stream()
+				.forEach(category -> getController().getTemplatesByCategory(category).stream().forEach(ability -> {
 					SelectableInputRow row = new SelectableInputRow(getImg(ability.getImgPath()), ability.getName(),
 							ability.getDescription());
-					rowToAbility.put(row, (ActiveAbility<?>) ability);
+					rowToAbility.put(row, (Ability) ability);
 					table.getChildren().add(row);
-				});
+				}));
+
 		canNextWritable().setValue(true);
+	}
+	
+	public Collection<Ability> getPassiveAbilitiesByCategory(String category){
+		return getSelectedAbilities().stream().filter(ability -> getController().getTemplatesByCategory(category).contains(ability)).collect(Collectors.toList());
 	}
 
 }

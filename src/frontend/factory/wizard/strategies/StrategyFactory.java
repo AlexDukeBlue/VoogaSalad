@@ -57,6 +57,7 @@ public class StrategyFactory {
 			try {
 				return STRATEGY_MAP.get(categoryName).getConstructor().newInstance();
 			} catch (Exception e1) {
+				e.printStackTrace();
 				e1.printStackTrace();
 				return new WizardUnsupportedStrategy(controller);
 			}

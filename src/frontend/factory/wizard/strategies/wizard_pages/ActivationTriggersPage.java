@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import backend.util.Event;
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.util.NumericInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.SelectableInputRow;
 import frontend.factory.wizard.strategies.wizard_pages.util.TableInputView;
 import frontend.factory.wizard.strategies.wizard_pages.util.VerticalTableInputView;
@@ -26,7 +25,6 @@ public class ActivationTriggersPage extends BaseWizardPage {
 
 	private TableInputView table;
 	private Map<SelectableInputRow, Event> rowToTrigger;
-	private NumericInputRow hprow;
 
 	/**
 	 * Creates a new instance of ActivationTriggersPage. Sets all values to
@@ -61,9 +59,6 @@ public class ActivationTriggersPage extends BaseWizardPage {
 
 	private void initialize() {
 		table = new VerticalTableInputView();
-
-		hprow = new NumericInputRow(null, getPolyglot().get("HP_Prompt"), getPolyglot().get("HP"));
-		table.getChildren().add(hprow);
 
 		rowToTrigger = new HashMap<>();
 		Arrays.asList(Event.values()).stream().forEach(trigger -> {

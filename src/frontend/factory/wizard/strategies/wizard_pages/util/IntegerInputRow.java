@@ -14,21 +14,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
 /**
- * NumericInputRow extends the BaseUIManager and is a UI structure used in the
+ * IntegerInputRow extends the BaseUIManager and is a UI structure used in the
  * creation of many wizard pages used to create objects that allows users to
  * specify a numeric value of interaction between two objects "name" and "label"
  * 
  * @author Andreas
  *
  */
-public class NumericInputRow extends BaseUIManager<Region> {
+public class IntegerInputRow extends BaseUIManager<Region> {
 
 	private HBox myNumericInputRow;
 	private TextField myNumericalInputField;
 	Label myNameField, myLabelField;
 
 	/**
-	 * Creates a new instance of NumericInputRow with the given image, name, and
+	 * Creates a new instance of IntegerInputRow with the given image, name, and
 	 * label.
 	 * 
 	 * @param image
@@ -38,7 +38,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	 * @param label
 	 *            a string to use as the description for the row.
 	 */
-	public NumericInputRow(Image image, String name, String label) {
+	public IntegerInputRow(Image image, String name, String label) {
 		this(image, new StringBinding() {
 
 			@Override
@@ -56,7 +56,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	}
 
 	/**
-	 * Creates a new instance of NumericInputRow with the given image, name, and
+	 * Creates a new instance of IntegerInputRow with the given image, name, and
 	 * label.
 	 * 
 	 * @param image
@@ -66,20 +66,28 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	 * @param label
 	 *            a StringBinding to use as the description for the row.
 	 */
-	public NumericInputRow(Image image, StringBinding name, StringBinding label) {
+	public IntegerInputRow(Image image, StringBinding name, StringBinding label) {
 		super(null);
 		initialize(image, name, label);
 	}
 
 	/**
-	 * Sets the value of the NumericInputRow display object to the given
+	 * Sets the value of the IntegerInputRow display object to the given
 	 * integer.
 	 * 
 	 * @param value
-	 *            the integer value to set for the NumericInputRow.
+	 *            the integer value to set for the IntegerInputRow.
 	 */
 	public void setValue(Integer value) {
 		myNumericalInputField.setText(value.toString());
+	}
+
+	public void setValue(Double value) {
+		setValue(value.intValue());
+	}
+
+	public void setValue(Number value) {
+		setValue(value.intValue());
 	}
 
 	@Override
@@ -88,7 +96,7 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	}
 
 	/**
-	 * Sets the action that occurs when the value of the NumericInputRow
+	 * Sets the action that occurs when the value of the IntegerInputRow
 	 * changes.
 	 * 
 	 * @param eventHandler
@@ -99,7 +107,8 @@ public class NumericInputRow extends BaseUIManager<Region> {
 	}
 
 	public void setName(String name) {
-		myNameField.textProperty().bind(getPolyglot().get(name));;
+		myNameField.textProperty().bind(getPolyglot().get(name));
+		;
 	}
 
 	String getName() {
@@ -110,8 +119,12 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		return myNumericalInputField.getText().isEmpty() ? 0 : Integer.parseInt(myNumericalInputField.getText());
 	}
 
+	public Number getNumberValue() {
+		return getValue();
+	}
+
 	public void setLabel(String label) {
-		myLabelField.textProperty().bind(getPolyglot().get(label));;
+		myLabelField.textProperty().bind(getPolyglot().get(label));
 	}
 
 	String getLabel() {
@@ -142,7 +155,12 @@ public class NumericInputRow extends BaseUIManager<Region> {
 		});
 
 		myLabelField = new Label();
-		myLabelField.textProperty().bind(label);
+		myLabelField.textProperty().bind(label == null ? new StringBinding() {
+			@Override
+			protected String computeValue() {
+				return "";
+			}
+		} : label);
 
 		ImageView imageView = new ImageView(image);
 		if (image != null) {
