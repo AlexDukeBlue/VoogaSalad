@@ -32,8 +32,8 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public Player getActivePlayer() {
-		return (Player) super.getActivePlayer();
+	public Team getActiveTeam() {
+		return super.getActiveTeam();
 	}
 
 	@Override

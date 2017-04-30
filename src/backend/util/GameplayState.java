@@ -16,7 +16,6 @@ import backend.unit.properties.ModifiableUnitStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Created by th174 on 4/10/2017.
@@ -41,14 +40,13 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 			TURN_EVENT = "turnaction",
 			END_CONDITION = "endcondition";
 	private final Random random;
-	private final List<String> playerOrder;
-	private final Map<String, ImmutablePlayer> players;
 	private final Collection<Resultant> objectives;
+	private final TreeSet<ImmutablePlayer> players;
 	private final Collection<Actionable> turnActions;
 	private final Collection<Requirement> turnRequirements;
 	private final Map<String, ModifiableVoogaCollection<VoogaEntity, ? extends ModifiableVoogaCollection>> templates;
 	private boolean isAuthoringMode;
-	private volatile int currentPlayerNumber;
+	private volatile int currentTeamNumber;
 	private volatile int turnNumber;
 	private volatile GameBoard grid;
 
@@ -65,12 +63,19 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.grid = grid;
 		this.random = random;
 		this.turnNumber = turnNumber;
-		this.turnActions = new HashSet<Actionable>(turnActions);
+		this.turnActions = new HashSet<>(turnActions);
 		this.objectives = new HashSet<>(objectives);
 		this.turnRequirements = new HashSet<>(turnRequirements);
-		this.players = new HashMap<>();
-		this.playerOrder = new ArrayList<>();
-		this.currentPlayerNumber = 0;
+		this.players = new TreeSet<>((p1, p2) -> {
+			if (p1.getTeam().isPresent() && p2.getTeam().isPresent()) {
+				return p1.getTeam().get().getName().compareTo(p2.getTeam().get().getName());
+			} else if (p1.getTeam().isPresent()) {
+				return -1;
+			} else {
+				return 1;
+			}
+		});
+		this.currentTeamNumber = 0;
 		this.isAuthoringMode = false;
 		this.templates = new HashMap<>();
 		getTemplates().put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards()));
@@ -88,22 +93,21 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		getTemplates().put(TURN_REQUIREMENT, new ModifiableVoogaCollection<>("Turn Requirements", "", "", turnRequirements));
 		getTemplates().put(TURN_EVENT, new ModifiableVoogaCollection<>("Turn Actions", "", "", turnActions));
 		getTemplates().put(END_CONDITION, new ModifiableVoogaCollection<>("Objectives", "", "", objectives));
-
 	}
 
 	@Override
-	public ImmutablePlayer getActivePlayer() {
-		return getPlayerByName(playerOrder.get(currentPlayerNumber));
+	public Team getActiveTeam() {
+		return getTeams().get(currentTeamNumber);
 	}
 
 	@Override
 	public ImmutablePlayer getPlayerByName(String name) {
-		return players.get(name);
+		return players.stream().filter(e -> e.getName().equals(name)).findAny().orElse(null);
 	}
 
 	@Override
 	public List<String> getOrderedPlayerNames() {
-		return new ArrayList<>(playerOrder);
+		return players.stream().map(ImmutablePlayer::getName).collect(Collectors.toList());
 	}
 
 	@Override
@@ -122,15 +126,15 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	@Override
-	public Collection<Team> getTeams() {
-		return (Collection<Team>) templates.get(TEAM).getAll();
+	public List<Team> getTeams() {
+		return new ArrayList<>((Collection<Team>) getTemplates().get(TEAM).getAll());
 	}
 
 	public GameplayState endTurn() {
 		getGrid().endTurn(this);
-		if (++currentPlayerNumber >= playerOrder.size()) {
+		if (++currentTeamNumber >= getTeams().size()) {
 			++turnNumber;
-			currentPlayerNumber = 0;
+			currentTeamNumber = 0;
 		}
 		getGrid().startTurn(this);
 		return this;
@@ -142,27 +146,22 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public GameplayState addPlayer(ImmutablePlayer newPlayer) {
-		if (playerOrder.contains(newPlayer.getName())) {
-			players.get(newPlayer.getName());
-		} else {
-			playerOrder.add(newPlayer.getName());
-			players.put(newPlayer.getName(), newPlayer);
-		}
+		players.add(newPlayer);
 		return this;
 	}
 
 	public GameplayState joinTeam(String playerName, String teamName) {
-		players.get(playerName).setTeam(getTeamByName(teamName));
+		getPlayerByName(playerName).setTeam(getTeamByName(teamName));
 		return this;
 	}
 
 	public GameplayState removePlayer(String playerName) {
-		players.remove(playerName);
-		playerOrder.remove(playerName);
-		return this;
+		return removePlayer(getPlayerByName(playerName));
 	}
 
 	public GameplayState removePlayer(ImmutablePlayer player) {
+		player.getTeam().ifPresent(team -> team.removeAll(player));
+		players.remove(player);
 		return removePlayer(player.getName());
 	}
 
@@ -202,12 +201,12 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public boolean turnRequirementsSatisfied() {
-		return turnRequirements.stream().allMatch(e -> e.test(getActivePlayer(), this));
+		return turnRequirements.stream().allMatch(e -> e.test(getActiveTeam(), this));
 	}
 
 	public GameplayState messageAll(String message, ImmutablePlayer sender) {
 		ChatMessage chatMessage = new ChatMessage(ChatMessage.AccessLevel.ALL, sender, message);
-		players.values().forEach(player -> player.receiveMessage(chatMessage));
+		players.forEach(player -> player.receiveMessage(chatMessage));
 		return this;
 	}
 

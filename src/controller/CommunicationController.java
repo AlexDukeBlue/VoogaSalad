@@ -54,7 +54,6 @@ public class CommunicationController implements Controller {
 	private final Executor executor;
 	private final Collection<UIComponentListener> thingsToUpdate;
 	private final CountDownLatch waitForReady;
-	private boolean isHost;
 	private int playerCountCache;
 	private ObservableClient<ReadonlyGameplayState> client;
 	private ObservableServer<ReadonlyGameplayState> server;
@@ -73,6 +72,7 @@ public class CommunicationController implements Controller {
 		this.executor = Executors.newCachedThreadPool();
 		this.playerCountCache = 1;
 		this.saveHistory = new ArrayDeque<>();
+		this.engine = new DieselEngine();
 	}
 
 	public void startClient(String host, int port, Duration timeout) {
@@ -92,7 +92,6 @@ public class CommunicationController implements Controller {
 			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
 			isHost = true;
-			this.engine = new DieselEngine(server);
 			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -130,7 +129,7 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public String getActivePlayerName() {
-		return getAuthoringGameState().getActivePlayer().getName();
+		return getAuthoringGameState().getActiveTeam().getName();
 	}
 
 	@Override
@@ -471,10 +470,7 @@ public class CommunicationController implements Controller {
 				if (Objects.nonNull(targetCell)) {
 					//TODO: MAKE BETTER WAY OF SETTING OWNER OTHER THAN WHOEVER HAPPENS TO PUT IT DOWN
 					if (templateCopy instanceof Unit) {
-						((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName));
-						
-						//((Unit) templateCopy).setOwner(gameState.getPlayerByName(playerName).getTeam());
-						
+						((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
 					}
 					targetCell.add(templateCopy);
 				} else {
