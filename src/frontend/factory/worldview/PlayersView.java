@@ -67,6 +67,7 @@ public class PlayersView extends BaseUIManager<GridPane> {
 					teamLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 					GridPane.setHalignment(teamLabel, HPos.RIGHT);
 					teamLabel.setPadding(Insets.EMPTY);
+					teamLabel.textFillProperty().bind(DEFAULT_COLOR);
 					gridPane.add(teamLabel, 2, row + 1);
 				}
 			});

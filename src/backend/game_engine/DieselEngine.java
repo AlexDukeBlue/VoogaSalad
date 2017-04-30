@@ -4,9 +4,7 @@ import backend.game_engine.ResultQuadPredicate.Result;
 import backend.player.ImmutablePlayer;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
-import backend.util.ReadonlyGameplayState;
 import backend.util.io.XMLSerializer;
-import util.net.ObservableServer;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -37,7 +35,6 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	public void checkGame(GameplayState state) {
-		System.out.println("check");
 		currentState = state;
 		checkTurnRules(state);
 		checkTurnEvents(state);
@@ -97,7 +94,6 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkObjectives(GameplayState state) {
-		System.out.println(state.getObjectives().toString());
 		state.getObjectives().parallelStream().forEach(e -> {
 //			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
 //			result.accept(state.getActiveTeam(), this);
@@ -106,7 +102,6 @@ public class DieselEngine implements GameEngine {
 
 	@Override
 	public void handleWin(ImmutablePlayer player) {
-		System.out.println("winner");
 		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName)).forEach(
 				aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
 	}
@@ -124,7 +119,7 @@ public class DieselEngine implements GameEngine {
 
 	@Override
 	public void handleTie() {
-			currentState.getOrderedPlayerNames().stream().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
+			currentState.getOrderedPlayerNames().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
 	}
 
 }

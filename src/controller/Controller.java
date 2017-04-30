@@ -29,7 +29,7 @@ public interface Controller {
 
 	void save(Serializable obj, Path path) throws IOException;
 
-	abstract <T extends Serializable> T load(Path path) throws IOException;
+	<T extends Serializable> T load(Path path) throws IOException;
 
 	void saveState(Path path) throws IOException;
 
