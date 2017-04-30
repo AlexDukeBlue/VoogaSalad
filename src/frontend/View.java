@@ -24,7 +24,6 @@ import controller.Controller;
 import frontend.factory.abilitypane.AbilityPane;
 import frontend.factory.conditionspane.ConditionsPaneFactory;
 import frontend.factory.detailpane.DetailPaneFactory;
-import frontend.factory.statistics.StatsPane;
 import frontend.factory.templatepane.TemplatePaneFactory;
 import frontend.factory.worldview.MinimapPane;
 import frontend.factory.worldview.WorldViewFactory;
@@ -72,7 +71,6 @@ public class View extends ClickableUIComponent<Region> {
 	private VBox rightPane;
 	private ChoiceDialog<Team> teams;
 	private MinimapPane miniMap;
-	private StatsPane statsPane;
 
 	public View(Controller controller) {
 		this(controller, new Stage());
@@ -246,7 +244,6 @@ public class View extends ClickableUIComponent<Region> {
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
-		statsPane = new StatsPane(getController(), getClickHandler());
 		setClickHandler(new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		miniMap = new MinimapPane(worldView.getGridView().getNode(), getController());
@@ -259,7 +256,6 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane.getStyleSheet().bind(getStyleSheet());
 		tempPane.getStyleSheet().bind(getStyleSheet());
 		conditionsPane.getStyleSheet().bind(getStyleSheet());
-		statsPane.getStyleSheet().bind(getStyleSheet());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
 				worldView.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
@@ -267,7 +263,6 @@ public class View extends ClickableUIComponent<Region> {
 				abilityPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				tempPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				conditionsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
-				statsPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 			} catch (PolyglotException e) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setContentText(getPolyglot().get("LanguageError").getValue());
@@ -304,9 +299,6 @@ public class View extends ClickableUIComponent<Region> {
 		removeSidePanes();
 		getClickHandler().setMode(ClickHandler.Mode.GAMEPLAY);
 		detailPane.setPlayMode();
-		if (!rightPane.getChildren().contains(statsPane.getNode())){
-			rightPane.getChildren().add(statsPane.getNode());
-		}
 		setDividerPositions();
 	}
 
@@ -341,4 +333,5 @@ public class View extends ClickableUIComponent<Region> {
 		alert.showAndWait();
 		myStage.setScene(new Scene(new StartupScreen(myStage).getNode()));
 	}
+	
 }
