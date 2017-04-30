@@ -127,11 +127,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			getPolyglot().languages().stream().forEach(languageName -> {
 				MenuItem menuItem = new MenuItem(languageName);
 				menuItem.setOnAction(event -> {
-					try {
-						getPolyglot().setLanguage(languageName);
-					} catch (PolyglotException e1) {
-						menuItem.setVisible(false);
-					}
+					getPolyglot().setLanguage(languageName);
 				});
 				setLanguageItem.getItems().add(menuItem);
 			});
@@ -261,13 +257,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	private void create(String categoryName) {
 		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController(),getPolyglot().getLanguage(),getStyleSheet().getValue());
-		try {
-			wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
-		} catch (PolyglotException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		}
+		wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
 		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState()
 				.getTemplateByCategory(categoryName).addAll((VoogaEntity) template));
 	}

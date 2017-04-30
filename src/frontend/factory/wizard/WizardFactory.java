@@ -55,12 +55,7 @@ public class WizardFactory {
 	public static Wizard<?> newWizard(String categoryName, Controller controller, String language,
 			String stylesheet) {
 		Wizard<?> wizard = new Wizard<>(controller,StrategyFactory.newStrategy(categoryName, controller));
-		try {
-			wizard.getPolyglot().setLanguage(language);
-		} catch (PolyglotException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		wizard.getPolyglot().setLanguage(language);
 		wizard.getNode().getStylesheets().clear();
 		wizard.getNode().getStylesheets().add(stylesheet);
 		return wizard;
