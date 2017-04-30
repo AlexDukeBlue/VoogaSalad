@@ -39,6 +39,8 @@ public class Faction extends ModifiableVoogaCollection<Unit, Faction> {
 		try {
 			elements.forEach(e -> ((ModifiableUnit) e).setFaction(this));
 		} catch (ClassCastException e) {
+			//faction class never used/not implemented by end of final sprint
+			//no need to worry about this try catch
 			e.printStackTrace();
 		}
 		return super.addAll(elements);
