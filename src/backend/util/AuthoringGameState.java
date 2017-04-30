@@ -9,7 +9,6 @@ import backend.player.Team;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
 	private static final long serialVersionUID = 1L;
@@ -116,7 +115,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 
 	@Override
 	public AuthoringGameState removeTurnActions(Actionable... actions) {
-		return (AuthoringGameState) super.removeTurnActions(actions);
+		return super.removeTurnActions(actions);
 	}
 
 	@Override
@@ -143,7 +142,7 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 
 	public VoogaEntity getTemplateByName(String name) {
 		try {
-			return getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
+			return getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getFormattedName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
 		} catch (RuntimeException e) {
 			System.out.println(name);
 			System.out.println(getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).collect(Collectors.toList()));

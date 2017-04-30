@@ -44,10 +44,15 @@ public class ObservablePolyglot extends Polyglot {
 	}
 
 	@Override
-	public void setLanguage(String language) throws PolyglotException {
-		super.setLanguage(language);
-		this.language = language;
-		languageChangeHandlers.stream().forEach(handler -> handler.handle(new Event(LANGUAGE_CHANGE_EVENT)));
+	public void setLanguage(String language) {
+		try {
+			super.setLanguage(language);
+			this.language = language;
+			languageChangeHandlers.stream().forEach(handler -> handler.handle(new Event(LANGUAGE_CHANGE_EVENT)));
+		} catch (Exception e) {
+			PolyglotErrorDialogue.getInstance();
+			e.printStackTrace();
+		}
 	}
 
 	public String getLanguage() {
