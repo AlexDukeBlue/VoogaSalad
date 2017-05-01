@@ -1,18 +1,19 @@
-/**
- * Implement the functional interface GridLayoutDelegate. Manages the placement of a Hexagonal CellView into a grid.
- * Does so by translating the relative coordinates in the CellView's CoordinateTuple to absolute coordinate.
- * Absolute coordinates are calculated using the given scaling factor, minimum width, and maximum width.
- * These absolute coordinates are used to set the CellView's X and Y coordinates.
- *
- * @author Stone Mathers
- * Created 4/11/2017
- */
 package frontend.factory.worldview.layout;
 
 import backend.grid.CoordinateTuple;
 import backend.grid.GameBoard;
 import javafx.scene.shape.Polygon;
 
+/**
+ * Implements the functional interface GridLayoutDelegate. Manages the placement
+ * of a Hexagonal CellView into a grid. Does so by translating the relative
+ * coordinates in the CellView's CoordinateTuple to absolute coordinate.
+ * Absolute coordinates are calculated using the given scaling factor, minimum
+ * width, and maximum width. These absolute coordinates are used to set the
+ * CellView's X and Y coordinates.
+ *
+ * @author Stone Mathers Created 4/11/2017
+ */
 class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 
 	public static final int X_INDEX = 0;
@@ -20,7 +21,8 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 	public static final double FULL_CIRCLE = Math.PI * 2;
 
 	@Override
-	public Polygon layoutCell(double scaleFactor, double minWidth, double maxWidth, CoordinateTuple location, GameBoard gameBoard) {
+	public Polygon layoutCell(double scaleFactor, double minWidth, double maxWidth, CoordinateTuple location,
+			GameBoard gameBoard) {
 		if (scaleFactor <= 0 || scaleFactor > 1 || minWidth <= 0) {
 			throw new RuntimeException();
 		}

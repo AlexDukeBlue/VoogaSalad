@@ -1,12 +1,11 @@
-/**
- * An interface that visually highlights a Node to differentiate it from others. Most commonly, this is
- * used to visually indicate when the user selects a node. 
- */
 package frontend.util.highlighter;
 
 import javafx.scene.Node;
 
 /**
+ * An interface that visually highlights a Node to differentiate it from others. Most commonly, this is
+ * used to visually indicate when the user selects a node. 
+ * 
  * @author Stone Mathers
  * Created 4/22/2017
  */

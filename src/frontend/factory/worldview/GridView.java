@@ -108,6 +108,7 @@ class GridView extends ClickableUIComponent<ScrollPane> implements GridViewExter
 		} else {
 			cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(getImg(getController().getGrid().getImgPath())), null, new Insets(-1*inset, 0, inset, 0))));
 		}
+		//cellViewObjects.setBackground(new Background(new BackgroundFill(new ImagePattern(getImg(getController().getGrid().getImgPath())), null, null)));
 		getController().getGrid().getCells().keySet().forEach(coordinate -> {
 			CellView cl = new CellView(coordinate, getController(), getClickHandler(),
 					myLayoutManager.layoutCell(SCALE, MIN, MAX, coordinate, getController().getGrid()));
