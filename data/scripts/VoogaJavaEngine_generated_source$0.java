@@ -17,7 +17,7 @@ public class VoogaJavaEngine_generated_source$0 {
 		/*
 		 * Your Java code here
 		 */
-		target.takeDamage(1000);
+		System.out.println("hello world");
 		return null;
 	}
 }

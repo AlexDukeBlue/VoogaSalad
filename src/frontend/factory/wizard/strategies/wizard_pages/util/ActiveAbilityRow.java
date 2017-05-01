@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 
 public class ActiveAbilityRow extends BaseUIManager<Parent> {
 	private SelectableInputRow selectable;
-	private IntegerInputRow numeric;
+//	private IntegerInputRow numeric;
 	private HBox hbox;
 
 	public ActiveAbilityRow(ActiveAbility<?> ability) {
@@ -24,15 +24,14 @@ public class ActiveAbilityRow extends BaseUIManager<Parent> {
 		return selectable.getSelected();
 	}
 
-	public int getCost() {
-		return numeric.getValue();
-	}
+//	public int getCost() {
+//		return numeric.getValue();
+//	}
 
 	private void initialize(ActiveAbility<?> ability) {
-		selectable = new SelectableInputRow(getImg(ability.getImgPath()), ability.getFormattedName(),
-				ability.getDescription());
-		numeric = new IntegerInputRow(null, getPolyglot().get("AbilityPointCost"), null);
-		hbox = new HBox(selectable.getNode(), numeric.getNode());
+		selectable = new SelectableInputRow(getImg(ability.getImgPath()), ability.getFormattedName(), ability.getDescription());
+//		numeric = new IntegerInputRow(null, getPolyglot().get("AbilityPointCost"), null);
+		hbox = new HBox(selectable.getNode()/*, numeric.getNode()*/);
 	}
 
 }

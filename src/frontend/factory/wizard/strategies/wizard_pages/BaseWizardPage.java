@@ -7,15 +7,13 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Region;
-import util.polyglot.PolyglotException;
 
 /**
  * BaseWizardPage is an abstract class whose sub-classes implement the full UIs
  * of a single page dialogue in a specific wizard. It is composed with
  * wizards.util package classes and also knows if it can Next.
- * 
- * @author Andreas
  *
+ * @author Andreas
  */
 abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPage {
 
@@ -32,10 +30,9 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 
 	/**
 	 * Creates a new instance of BaseWizardPage
-	 * 
-	 * @param descriptionKey
-	 *            a String that can be used as a key to a ResourceBundle to set
-	 *            the description of the page
+	 *
+	 * @param descriptionKey a String that can be used as a key to a ResourceBundle to set
+	 *                       the description of the page
 	 */
 	public BaseWizardPage(Controller controller, String descriptionKey) {
 		super(controller);
