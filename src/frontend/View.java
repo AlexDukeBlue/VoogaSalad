@@ -263,7 +263,7 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void setMaxWidthsAndHeights() {
 		rightPane.maxWidthProperty()
-				.bind(outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("RightPaneWidthMultiplier")));
+		.bind(outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("RightPaneWidthMultiplier")));
 		conditionsPane.getNode().maxWidthProperty().bind(
 				outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("ConditionsPaneWidthMultiplier")));
 		bottomPane.maxHeightProperty().bind(
@@ -287,6 +287,7 @@ public class View extends ClickableUIComponent<Region> {
 				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		miniMap = new MinimapPane(worldView.getGridView().getNode(), getController());
+		tempPane.getNode().prefWidthProperty().bind(miniMap.getNode().widthProperty());
 		rightPane = new VBox(miniMap.getNode(), tempPane.getNode());
 		conditionsPane = ConditionsPaneFactory.newConditionsPane(getController(), getClickHandler());
 		getStyleSheet().bind(menuBar.getStyleSheet());
@@ -363,4 +364,5 @@ public class View extends ClickableUIComponent<Region> {
 		alert.showAndWait();
 		myStage.setScene(new Scene(new StartupScreen(myStage).getNode()));
 	}
+	
 }

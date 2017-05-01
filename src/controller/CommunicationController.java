@@ -445,23 +445,16 @@ public class CommunicationController implements Controller {
 		String playerName = getMyPlayerName();
 		sendModifier((AuthoringGameState gameState) -> {
 			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
+			Cell targetCell = gameState.getGrid().get(gridLocation);
 			try {
-				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
-				if (Objects.nonNull(targetUnit)) {
-					targetUnit.add(templateCopy);
-				} else {
-					throw new Exception();
-				}
-			} catch (Exception e) {
-				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
 					if (templateCopy instanceof Unit) {
 						((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
 					}
 					targetCell.add(templateCopy);
-				} else {
-					e.printStackTrace();
 				}
+			} catch (Exception e) {
+				System.out.print("Invalid location");
 			}
 			return gameState;
 		});
