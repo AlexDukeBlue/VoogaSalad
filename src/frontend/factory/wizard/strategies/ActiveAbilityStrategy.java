@@ -2,11 +2,16 @@ package frontend.factory.wizard.strategies;
 
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.ActiveAbility.AbilityEffect;
+import backend.unit.properties.Attack;
 import controller.Controller;
+import frontend.factory.wizard.strategies.wizard_pages.AttackPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
 import javafx.beans.binding.StringBinding;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 
 /**
@@ -20,6 +25,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	private ImageNameDescriptionPage namePage;
 	private ScriptingPage scriptingPage;
+	private AttackPage attackPage;
 	private GridPatternPage gridPage;
 
 	/**
@@ -37,16 +43,44 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 */
 	@Override
 	public ActiveAbility<?> finish() {
-		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(),
-				(AbilityEffect<?>) (scriptingPage.getScriptEngine().get()), gridPage.getGridPattern(),
-				namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath()).setSoundPath(namePage.getSoundPath()) : null;
+		if (getPages().contains(attackPage)) {
+			System.out.println(new ActiveAbility<>(namePage.getName(),
+					new Attack(attackPage.getDamage(), attackPage.getNumHits(), attackPage.getModifiers()),
+					gridPage.getGridPattern(), namePage.getDescriptionLabelBinding().getValueSafe(),
+					namePage.getImagePath()).setSoundPath(namePage.getSoundPath()));
+			return new ActiveAbility<>(namePage.getName(),
+					new Attack(attackPage.getDamage(), attackPage.getNumHits(), attackPage.getModifiers()),
+					gridPage.getGridPattern(), namePage.getDescriptionLabelBinding().getValueSafe(),
+					namePage.getImagePath()).setSoundPath(namePage.getSoundPath());
+		} else {
+			return scriptingPage.getScriptEngine()
+					.isPresent()
+							? new ActiveAbility<>(namePage.getName(),
+									(AbilityEffect<?>) (scriptingPage.getScriptEngine().get()),
+									gridPage.getGridPattern(),
+									namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath())
+											.setSoundPath(namePage.getSoundPath())
+							: null;
+		}
 	}
 
 	private void initialize() {
-		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription", true);
-		scriptingPage = new ScriptingPage(getController(),"ActiveAbilityScriptingDescription");
-		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
-		getPages().addAll(namePage, scriptingPage, gridPage);
+		namePage = new ImageNameDescriptionPage(getController(), "ActiveAbilityNameDescription", true);
+		scriptingPage = new ScriptingPage(getController(), "ActiveAbilityScriptingDescription");
+		attackPage = new AttackPage(getController(), "ActiveAbilityAttackDescription");
+		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE,
+				Color.GREEN);
+		getPages().addAll(namePage, getIsAttack() ? attackPage : scriptingPage, gridPage);
+	}
+
+	private boolean getIsAttack() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.getButtonTypes().add(ButtonType.YES);
+		alert.getButtonTypes().add(ButtonType.NO);
+		alert.getButtonTypes().remove(ButtonType.OK);
+		alert.titleProperty().bind(getPolyglot().get("IsAttackPrompt"));
+		alert.headerTextProperty().bind(getPolyglot().get("IsAttackHeader"));
+		return alert.showAndWait().get().equals(ButtonType.YES);
 	}
 
 	@Override
