@@ -163,6 +163,7 @@ public class ObservableServer<T> extends ObservableHost<T> {
 		 */
 		public ServerDelegate(Socket socket) throws IOException {
 			connection = new SocketConnection(socket, ObservableServer.this.getTimeout());
+			System.out.println("\nClient connected:\t" + connection);
 		}
 
 		@Override
@@ -172,7 +173,9 @@ public class ObservableServer<T> extends ObservableHost<T> {
 		}
 
 		private boolean handleRequest(Request request) {
-			if (!(request instanceof HeartbeatRequest) && !ObservableServer.this.handleRequest(request)) {
+			if (request instanceof HeartbeatRequest) {
+				return true;
+			} else if (!ObservableServer.this.handleRequest(request)) {
 				send(getRequest(getState()));
 			}
 			return true;

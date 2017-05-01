@@ -89,7 +89,7 @@ public class ObservableClient<T> extends ObservableHost<T> {
 			try {
 				send(outbox.take().setCommitIndex(getCommitIndex()));
 			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+				e.printStackTrace();
 			}
 		}
 		return true;
