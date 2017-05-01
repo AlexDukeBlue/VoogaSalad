@@ -3,6 +3,7 @@ package controller;
 import backend.cell.Cell;
 import backend.game_engine.DieselEngine;
 import backend.game_engine.ResultQuadPredicate;
+import backend.game_engine.ResultQuadPredicate.Result;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
 import backend.grid.CoordinateTuple;
@@ -244,20 +245,17 @@ public class CommunicationController implements Controller {
 	
 	@Override
 	public boolean activeTeamWon(){
-//		return getActiveTeam().getResult().equals(Result.WIN);
-		return false;
+		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
 	}
 
 	@Override
 	public boolean activeTeamLost(){
-//		return getActiveTeam().getResult().equals(Result.LOSE);
-		return false;
+		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
 	}
 
 	@Override
 	public boolean activeTeamTied(){
-//		return getActiveTeam().getResult().equals(Result.TIE);
-		return false;
+		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
 	}
 
 	@Override
