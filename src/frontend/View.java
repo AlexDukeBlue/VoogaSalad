@@ -190,7 +190,7 @@ public class View extends ClickableUIComponent<Region> {
 				&& (Objects.isNull(teams) || !teams.isShowing())) {
 			joinTeam();
 		}
-		checkForCondition();
+//		checkForCondition();
 	}
 
 	private void setViewEditable(boolean editable) {
