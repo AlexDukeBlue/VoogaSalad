@@ -6,6 +6,7 @@ import backend.grid.GridPattern;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
+import backend.unit.properties.ModifiableUnitStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -78,14 +79,14 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		getTemplates().put(UNIT, new ModifiableVoogaCollection<>("Units", "", ""));
 		getTemplates().put(UNIT_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Unit Passive/Triggered Abilities", "", ""));
 		getTemplates().put(CELL_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Cell Passive/Triggered Abilities", "", ""));
-		getTemplates().put(UNIT_STAT, new ModifiableVoogaCollection<>("Unit Stats", "", ""));
+		getTemplates().put(UNIT_STAT, new ModifiableVoogaCollection<>("Unit Stats", "", "", ModifiableUnitStat.getPredefinedUnitStats()));
 		getTemplates().put(GRID_PATTERN, new ModifiableVoogaCollection<>("Grid Patterns", "", "", GridPattern.getPredefinedGridPatterns()));
 		getTemplates().put(BOUNDS_HANDLER, new ModifiableVoogaCollection<>("Bounds Handlers", "", ""));
 		getTemplates().put(ACTIVE_ABILITY, new ModifiableVoogaCollection<>("Active Abilities", "", ""));
 		getTemplates().put(OFFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Offensive Modifiers", "", ""));
 		getTemplates().put(DEFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Defensive Modifiers", "", ""));
 		getTemplates().put(TEAM, new ModifiableVoogaCollection<>("Teams", "", "", teams));
-		getTemplates().put(TURN_REQUIREMENT, new ModifiableVoogaCollection<>("Turn Requirements", "", "", turnRequirements));
+		getTemplates().put(TURN_REQUIREMENT, new ModifiableVoogaCollection<>("gTurn Requirements", "", "", turnRequirements));
 		getTemplates().put(TURN_EVENT, new ModifiableVoogaCollection<>("Turn Actions", "", "", turnActions));
 		getTemplates().put(END_CONDITION, new ModifiableVoogaCollection<>("Objectives", "", "", objectives));
 	}

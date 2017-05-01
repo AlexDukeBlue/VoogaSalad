@@ -1,5 +1,6 @@
 package frontend.util;
 
+import backend.grid.GridPattern;
 import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.InteractionModifier;
@@ -19,7 +20,7 @@ import java.util.Collection;
  * @author Created by th174 on 4/21/17.
  */
 public class VoogaEntityButtonFactory {
-	private static final Collection<Class<? extends VoogaEntity>> INACTIVE_TEMPLATES = Arrays.asList(PassiveAbility.class, InteractionModifier.class);
+	private static final Collection<Class<? extends VoogaEntity>> INACTIVE_TEMPLATES = Arrays.asList(PassiveAbility.class, InteractionModifier.class, GridPattern.class);
 
 	public static VoogaEntityButton createVoogaEntityButton(VoogaEntity entity, int size, Controller controller, ClickHandler clickHandler) {
 		return new VoogaEntityButton(entity, size, controller, clickHandler);
