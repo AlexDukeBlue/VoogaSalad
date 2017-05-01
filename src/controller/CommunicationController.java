@@ -20,8 +20,6 @@ import backend.util.io.XMLSerializer;
 import frontend.util.BaseUIManager;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import util.AlertFactory;
 import util.io.Serializer;
 import util.net.Modifier;

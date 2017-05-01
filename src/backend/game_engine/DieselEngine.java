@@ -1,17 +1,17 @@
 package backend.game_engine;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import backend.game_engine.ResultQuadPredicate.Result;
 import backend.player.Team;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.io.XMLSerializer;
 import util.AlertFactory;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Alexander Zapata
@@ -85,7 +85,7 @@ public class DieselEngine implements GameEngine {
 	 */
 	private void checkTurnEvents(GameplayState state) {
 		state.getActiveTurnActions()
-				.forEach(action -> state.getActiveTeam().getAll().forEach(player -> action.accept(player, state)));
+				.forEach(action -> state.getTeams().forEach(team -> action.accept(team, state)));
 	}
 
 	/**
@@ -123,13 +123,13 @@ public class DieselEngine implements GameEngine {
 	}
 
 	private void loadFailAlert() {
-		AlertFactory.errorAlert("Could not load file", "An error occured. Try loading again?","").showAndWait();
+		AlertFactory.errorAlert("Could not load file", "An error occured. Try loading again?", "").showAndWait();
 	}
 
 	private void checkForOneRemainingTeam() {
 		Set<Team> remainingTeams = currentState.getOrderedPlayerNames().stream()
 				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
-				.map(playerName -> currentState.getPlayerByName(playerName).getTeam().get())
+				.map(playerName -> currentState.getPlayerByName(playerName).getTeam().orElse(null))
 				.collect(Collectors.toSet());
 		if (remainingTeams.size() == 1) {
 			remainingTeams.forEach(lastTeam -> lastTeam.getAll().forEach(player -> player.setResult(Result.WIN)));

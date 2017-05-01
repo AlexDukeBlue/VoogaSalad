@@ -66,8 +66,8 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	}
 
 	@Override
-	default boolean test(Team player, ReadonlyGameplayState gameState) {
-		Object nonBooleanValue = eval(createBindings("player", player, "gameState", gameState));
+	default boolean test(Team team, ReadonlyGameplayState gameState) {
+		Object nonBooleanValue = eval(createBindings("team", team, "gameState", gameState));
 		if (nonBooleanValue instanceof String) {
 			return !nonBooleanValue.equals("");
 		} else if (nonBooleanValue instanceof Boolean) {
@@ -78,8 +78,8 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	}
 
 	@Override
-	default void accept(ImmutablePlayer player, ReadonlyGameplayState gameState) {
-		eval(createBindings("player", player, "gameState", gameState));
+	default void accept(Team team, ReadonlyGameplayState gameState) {
+		eval(createBindings("team", team, "gameState", gameState));
 	}
 
 	static HashMap<String, Object> createBindings(Object... params) {
