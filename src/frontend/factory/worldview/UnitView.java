@@ -1,13 +1,11 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.HasLocation;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
@@ -146,8 +144,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (isValidMove(target)) {
 			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
-			if (target instanceof CellViewExternal) {
-				playMedia(((CellViewExternal) target).getEntity().getTerrain().getSoundPath());
+			if (((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
+				playMedia(getController().getCell(((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation()).getTerrain().getSoundPath());
 			}
 		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE)
 				|| ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
