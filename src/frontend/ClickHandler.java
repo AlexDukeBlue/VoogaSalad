@@ -86,11 +86,9 @@ public class ClickHandler {
 		SELECTED_HIGHLIGHTER.highlight(selectedComponent.getNode());
 		selectedComponent.select(this);
 		showDetail(selectedComponent);
-		//sound.playSound(false, "resources/click.wav");
 	}
 
 	protected void triggerAction(SelectableUIComponent selectedComponent, ClickableUIComponent actionTarget, Object additionalInfo, Event event) {
-		//sound.playSound(false, "resources/plop.wav");
 		if (currentMode.equals(Mode.AUTHORING)) {
 			selectedComponent.actInAuthoringMode(actionTarget, additionalInfo, this, event);
 		} else if (currentMode.equals(Mode.GAMEPLAY)) {

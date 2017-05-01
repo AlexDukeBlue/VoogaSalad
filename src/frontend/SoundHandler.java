@@ -19,8 +19,5 @@ public class SoundHandler {
 				clip.setCycleCount(MediaPlayer.INDEFINITE);
 			}
 		}
-		else {
-			System.out.println("Audio file must be in .wav or .mp3 format");
-		}
 	}
 }

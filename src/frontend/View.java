@@ -170,8 +170,6 @@ public class View extends ClickableUIComponent<Region> {
 				alert.headerTextProperty().bind(getPolyglot().get("NoTeamSelectedHeader"));
 				alert.showAndWait();
 				getController().enterAuthoringMode();
-			} else {
-				// Do nothing
 			}
 		}
 	}

@@ -26,7 +26,7 @@ public class Actionable extends ImmutableVoogaObject<Actionable> {
 	}
 
 	/**
-	 * Returns the Actionable's BiConsumer. //TODO make correct
+	 * Returns the Actionable's BiConsumer.
 	 *
 	 * @return BiConsumer<ImmutablePlayer, GameplayState>
 	 */

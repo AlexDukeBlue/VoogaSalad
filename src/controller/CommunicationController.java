@@ -22,6 +22,7 @@ import frontend.util.UIComponentListener;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import util.AlertFactory;
 import util.io.Serializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
@@ -49,7 +50,7 @@ import java.util.concurrent.Executors;
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
-	//TODO RESOURCE BUNDLE PLS
+	
 	private static final XMLSerializer XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
 	private final Executor executor;
@@ -92,7 +93,6 @@ public class CommunicationController implements Controller {
 		try {
 			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
-			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -160,8 +160,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
-			showGenericAlert();
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return (AuthoringGameState) getClient().getState();
 	}
@@ -181,8 +180,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
-			showGenericAlert();
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 	}
@@ -377,7 +375,6 @@ public class CommunicationController implements Controller {
 			try {
 				e.update();
 			} catch (Exception e1) {
-				e1.printStackTrace();
 				removeListener(e);
 			}
 		}));
@@ -454,7 +451,7 @@ public class CommunicationController implements Controller {
 					targetCell.add(templateCopy);
 				}
 			} catch (Exception e) {
-				System.out.print("Invalid location");
+				throw new RuntimeException(e);
 			}
 			return gameState;
 		});
@@ -484,6 +481,7 @@ public class CommunicationController implements Controller {
 			saveHistory.pop();
 			setGameState(this.load(saveHistory.pop()));
 		} catch (IOException ignored) {
+			AlertFactory.warningAlert("Could not undo action", "We are sorry, we could not undo the action.", "").showAndWait();
 		}
 	}
 
@@ -499,10 +497,9 @@ public class CommunicationController implements Controller {
 				saveState(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
-				System.err.println("You're going TOO FAST!!!!");
+				AlertFactory.warningAlert("Requests sent too fast.", "The server is receiving requests too quickly.", "").showAndWait();
 			} catch (IOException e) {
-				showGenericAlert();
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		});
 		engine.checkGame(this.getGameplayState());
@@ -512,13 +509,6 @@ public class CommunicationController implements Controller {
 		}
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
-	}
-	
-	private void showGenericAlert(){
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("No Place Like Home Error");
-		alert.setContentText("An error occurred");
-		alert.showAndWait();
 	}
 
 }

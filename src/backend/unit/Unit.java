@@ -65,12 +65,16 @@ public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation, H
 	ActiveAbility<VoogaEntity> getActiveAbilityByName(String name);
 
 	default Collection<CoordinateTuple> getLegalMoves(GameBoard grid) {
-		return getMovePattern().getCoordinates().parallelStream()
-				.map(e -> grid.get(e.sum(this.getLocation())))
-				.filter(Objects::nonNull)
-				.filter(e -> getMoveCostByTerrain(e.getTerrain()) <= getMovePoints().getCurrentValue())
-				.map(Cell::getLocation)
-				.collect(Collectors.toSet());
+		try {
+			return getMovePattern().getCoordinates().parallelStream()
+					.map(e -> grid.get(e.sum(this.getLocation())))
+					.filter(Objects::nonNull)
+					.filter(e -> getMoveCostByTerrain(e.getTerrain()) <= getMovePoints().getCurrentValue())
+					.map(Cell::getLocation)
+					.collect(Collectors.toSet());
+		} catch (Exception e){
+			return Collections.emptyList();
+		}
 	}
 
 	GridPattern getMovePattern();

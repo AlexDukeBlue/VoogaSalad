@@ -189,7 +189,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		try {
 			Desktop.getDesktop().browse(getClass().getClassLoader().getResource(url).toURI());
 		} catch (URISyntaxException | IOException e) {
-			System.err.print("Invalid url: " + url);
 			WebView browser = new WebView();
 			WebEngine webEngine = browser.getEngine();
 			Stage s = new Stage();
@@ -214,7 +213,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		edit.getItems().add(newTerrainItem);
 		edit.getItems().add(newActiveAbilityItem);
 		edit.getItems().add(newGridItem);
-		// edit.getItems().add(newTeamItem);
 
 		language = factory.getMenu(getPolyglot().get("Language"));
 		language.getItems().add(setLanguageItem);
@@ -228,7 +226,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		view.getItems().add(detailsPaneItem);
 		view.getItems().add(statsPaneItem);
 		play = factory.getMenu(getPolyglot().get("Play"));
-		// play.getItems().add(joinTeam);
 		play.getItems().add(editModeItem);
 		play.getItems().add(playModeItem);
 
@@ -250,7 +247,6 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			File file = chooser.showSaveDialog(null);
 			getController().saveState(Paths.get(file.getPath()));
 		} catch (Exception i) {
-			i.printStackTrace();
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
 			alert.headerTextProperty().bind(getPolyglot().get("CurrentGameWillNotSave"));
@@ -268,10 +264,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
 			getController()
 					.setGameState(getController().load(Paths.get(fileChooser.showOpenDialog(null).getAbsolutePath())));
-		} catch (IOException i) {
-			i.printStackTrace();
-		} catch (NullPointerException e) {
-			e.printStackTrace();
+		} catch (NullPointerException | IOException e) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.titleProperty().bind(getPolyglot().get("NoFileSelected"));
 			alert.headerTextProperty().bind(getPolyglot().get("FailedToLoad"));

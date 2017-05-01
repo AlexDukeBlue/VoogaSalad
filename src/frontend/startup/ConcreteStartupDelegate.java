@@ -147,7 +147,7 @@ class ConcreteStartupDelegate implements StartupDelegate {
 
 	private void throwServerAlert() {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setContentText("Invalid Port Number"); // TODO: ResourceBundle
+		alert.setContentText("Invalid Port Number");
 		alert.show();
 	}
 

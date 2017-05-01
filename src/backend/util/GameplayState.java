@@ -285,7 +285,6 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public AuthoringGameState removeTurnActions(Actionable[] actions) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

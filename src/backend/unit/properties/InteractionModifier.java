@@ -18,7 +18,7 @@ import java.util.List;
 public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModifier<T>> implements PassiveAbility, Serializable {
 	public static final String DEFENSIVE = "defense";
 	public static final String OFFENSIVE = "offensive";
-	//TODO: ResourceBundlify all this shit
+	
 	public transient static final InteractionModifier<?> DUMMY = new InteractionModifier<>("Dummy", (originalValue, agent, target, game) -> originalValue, "Dummy modifier that doesn't change anything", "resources/images/blackScreen.png", DEFENSIVE),
 			NO_EFFECT = new InteractionModifier<>("No effect", (originalValue, agent, target, game) -> 0.0, "Literally nothing", "resources/images/blackScreen.png", DEFENSIVE);
 	//Offensive modifiers, can go on units or attacks

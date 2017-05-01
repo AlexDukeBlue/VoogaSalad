@@ -51,10 +51,5 @@ public class TemplateButton extends VoogaEntityButton implements GameBoardObject
 	public String toString() {
 		return getEntity().toString();
 	}
-//	
-//	@Override
-//	public void select(ClickHandler clickHandler){
-//		super.select(clickHandler);
-//		//playMedia(getEntity().get)
-//	}
+	
 }

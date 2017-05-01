@@ -1,26 +1,22 @@
 package backend.game_engine;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import backend.game_engine.ResultQuadPredicate.Result;
-import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.io.XMLSerializer;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import util.AlertFactory;
 
 /**
  * @author Alexander Zapata
  */
 
-// TODO: Implement some way to checkTurnState() to determine if it is the
-// beginning or end of a turn. Implement restart(), save() and load() (Tavo's
-// job). Also implement a messagePlayer(Player from, Player to, String message).
 public class DieselEngine implements GameEngine {
 
 	private GameplayState currentState;
@@ -50,7 +46,7 @@ public class DieselEngine implements GameEngine {
 		try {
 			new XMLSerializer<>().doSerialize(gameState);
 		} catch (Exception e) {
-			// Something here.
+			saveFailAlert();
 		}
 	}
 
@@ -61,7 +57,7 @@ public class DieselEngine implements GameEngine {
 			newGameState = (AuthoringGameState) new XMLSerializer<>()
 					.unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
-			// Something here.
+			loadFailAlert();
 			newGameState = null;
 		}
 		return newGameState;
@@ -121,8 +117,16 @@ public class DieselEngine implements GameEngine {
 	public void handleTie() {
 		currentState.getOrderedPlayerNames().forEach(name -> currentState.getPlayerByName(name).setResult(Result.TIE));
 	}
-	
-	private void checkForOneRemainingTeam(){
+
+	private void saveFailAlert() {
+		AlertFactory.errorAlert("Could not save file", "An error occured. Try saving again?", "").showAndWait();
+	}
+
+	private void loadFailAlert() {
+		AlertFactory.errorAlert("Could not load file", "An error occured. Try loading again?","").showAndWait();
+	}
+
+	private void checkForOneRemainingTeam() {
 		Set<Team> remainingTeams = currentState.getOrderedPlayerNames().stream()
 				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
 				.map(playerName -> currentState.getPlayerByName(playerName).getTeam().get())
