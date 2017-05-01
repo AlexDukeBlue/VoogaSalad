@@ -94,7 +94,7 @@ public class View extends ClickableUIComponent<Region> {
 		myStage = stage;
 		placePanes();
 		menuBar.getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DarkTheme"));
-		menuBar.getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
+//		menuBar.getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 	}
 
 	/**

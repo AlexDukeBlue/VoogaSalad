@@ -1,11 +1,5 @@
 package frontend.menubar;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Optional;
 import backend.grid.GameBoard;
 import backend.player.Team;
 import backend.util.VoogaEntity;
@@ -17,9 +11,8 @@ import frontend.startup.StartupScreen;
 import frontend.util.BaseUIManager;
 import frontend.util.ComponentFactory;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -31,6 +24,13 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * A VoogaMenuBar object creates a MenuBar with the functionality necessary for
@@ -71,7 +71,7 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 		menuBar.setUseSystemMenuBar(SYSTEM_MENU_BAR);
 		factory = new ComponentFactory();
 		populateMenuBar();
-		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("NoTheme"));
 	}
 
 	/**

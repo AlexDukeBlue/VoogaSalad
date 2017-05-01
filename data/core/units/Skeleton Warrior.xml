@@ -133,7 +133,7 @@
         <backend.unit.properties.InteractionModifier>
           <name>Chaotic</name>
           <description>Attacks do more damage in nighttime, but less damage in daytime.</description>
-          <imgPath>resources/images/undead.png</imgPath>
+          <imgPath>resources/images/chaotic.png</imgPath>
           <modifier resolves-to="serialized-lambda">
             <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
             <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
