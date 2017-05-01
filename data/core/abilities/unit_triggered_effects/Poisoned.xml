@@ -3,8 +3,8 @@
   <description>This unit is poisoned, and will lose 4 damage at the run and end of each turn, to a minimum of 1 HP. Lasts for 6 turns</description>
   <imgPath>resources/images/poison.png</imgPath>
   <activationTriggers class="set">
-    <backend.util.Event>TURN_START</backend.util.Event>
     <backend.util.Event>TURN_END</backend.util.Event>
+    <backend.util.Event>TURN_START</backend.util.Event>
   </activationTriggers>
   <effect resolves-to="serialized-lambda">
     <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>

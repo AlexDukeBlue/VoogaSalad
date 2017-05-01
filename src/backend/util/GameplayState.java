@@ -1,18 +1,11 @@
 package backend.util;
 
-import backend.cell.Terrain;
 import backend.game_engine.Resultant;
-import backend.grid.BoundsHandler;
 import backend.grid.GameBoard;
 import backend.grid.GridPattern;
-import backend.grid.ModifiableGameBoard;
 import backend.player.ChatMessage;
 import backend.player.ImmutablePlayer;
 import backend.player.Team;
-import backend.unit.ModifiableUnit;
-import backend.unit.properties.ActiveAbility;
-import backend.unit.properties.InteractionModifier;
-import backend.unit.properties.ModifiableUnitStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,7 +60,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.activeObjectives = new HashSet<>(objectives);
 		this.activeTurnRequirements = new HashSet<>(turnRequirements);
 		this.players = new TreeSet<>(new Comparator<ImmutablePlayer>() {
-			public int compare (ImmutablePlayer p1, ImmutablePlayer p2) {
+			public int compare(ImmutablePlayer p1, ImmutablePlayer p2) {
 				if (p1.getTeam().isPresent() && p2.getTeam().isPresent()) {
 					return p1.getTeam().get().getName().compareTo(p2.getTeam().get().getName());
 				} else if (p1.getTeam().isPresent()) {
@@ -80,17 +73,17 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.currentTeamNumber = 0;
 		this.isAuthoringMode = false;
 		this.templates = new HashMap<>();
-		getTemplates().put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards()));
-		getTemplates().put(TERRAIN, new ModifiableVoogaCollection<>("Terrain", "", "", Terrain.getPredefinedTerrain()));
-		getTemplates().put(UNIT, new ModifiableVoogaCollection<>("Units", "", "", ModifiableUnit.getPredefinedUnits()));
-		getTemplates().put(UNIT_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Unit Passive/Triggered Abilities", "", "", ModifiableTriggeredEffect.getPredefinedTriggeredUnitAbilities()));
-		getTemplates().put(CELL_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Cell Passive/Triggered Abilities", "", "", ModifiableTriggeredEffect.getPredefinedTriggeredCellAbilities()));
-		getTemplates().put(UNIT_STAT, new ModifiableVoogaCollection<>("Unit Stats", "", "", ModifiableUnitStat.getPredefinedUnitStats()));
+		getTemplates().put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", ""));
+		getTemplates().put(TERRAIN, new ModifiableVoogaCollection<>("Terrain", "", ""));
+		getTemplates().put(UNIT, new ModifiableVoogaCollection<>("Units", "", ""));
+		getTemplates().put(UNIT_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Unit Passive/Triggered Abilities", "", ""));
+		getTemplates().put(CELL_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Cell Passive/Triggered Abilities", "", ""));
+		getTemplates().put(UNIT_STAT, new ModifiableVoogaCollection<>("Unit Stats", "", ""));
 		getTemplates().put(GRID_PATTERN, new ModifiableVoogaCollection<>("Grid Patterns", "", "", GridPattern.getPredefinedGridPatterns()));
-		getTemplates().put(BOUNDS_HANDLER, new ModifiableVoogaCollection<>("Bounds Handlers", "", "", BoundsHandler.getPredefinedBoundsHandlers()));
-		getTemplates().put(ACTIVE_ABILITY, new ModifiableVoogaCollection<>("Active Abilities", "", "", ActiveAbility.getPredefinedActiveAbilities()));
-		getTemplates().put(OFFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Offensive Modifiers", "", "", InteractionModifier.getPredefinedOffensiveModifiers()));
-		getTemplates().put(DEFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Defensive Modifiers", "", "", InteractionModifier.getPredefinedDefensiveModifiers()));
+		getTemplates().put(BOUNDS_HANDLER, new ModifiableVoogaCollection<>("Bounds Handlers", "", ""));
+		getTemplates().put(ACTIVE_ABILITY, new ModifiableVoogaCollection<>("Active Abilities", "", ""));
+		getTemplates().put(OFFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Offensive Modifiers", "", ""));
+		getTemplates().put(DEFENSIVE_MODIFIER, new ModifiableVoogaCollection<>("Defensive Modifiers", "", ""));
 		getTemplates().put(TEAM, new ModifiableVoogaCollection<>("Teams", "", "", teams));
 		getTemplates().put(TURN_REQUIREMENT, new ModifiableVoogaCollection<>("Turn Requirements", "", "", turnRequirements));
 		getTemplates().put(TURN_EVENT, new ModifiableVoogaCollection<>("Turn Actions", "", "", turnActions));

@@ -36,7 +36,7 @@ public class ActiveAbilityButton extends AbilityButton {
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
 		if (isThisUsableActiveAbility(target)) {
 			HasLocation abilityTarget = (HasLocation) ((GameBoardObjectView) target).getEntity();
-			getController().useUnitActiveAbility(getEntity().getName(), getAbilityOwner().getName(), getAbilityOwner().getLocation(), abilityTarget.getName(), abilityTarget.getLocation());
+			getController().useActiveAbility(getEntity().getName(), getAbilityOwner().getName(), getAbilityOwner().getLocation(), abilityTarget.getName(), abilityTarget.getLocation());
 			playMedia(getEntity().getSoundPath());
 		}
 		clickHandler.cancel();

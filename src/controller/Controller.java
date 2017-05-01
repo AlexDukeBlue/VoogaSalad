@@ -312,8 +312,8 @@ public interface Controller {
 
 	void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation);
 
-	void useUnitActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName,
-			CoordinateTuple targetLocation);
+	void useActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName,
+	                      CoordinateTuple targetLocation);
 
 	void updateAll();
 

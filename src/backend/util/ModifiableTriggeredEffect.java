@@ -12,7 +12,6 @@ import java.util.Objects;
  */
 public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableTriggeredEffect> implements TriggeredEffect {
 	private static final long serialVersionUID = 1L;
-
 	//Unit passive abilities
 	public transient static final ModifiableTriggeredEffect REGENERATION = new ModifiableTriggeredEffect("Regeneration")
 			.setEffect((unit, event, game) -> unit.takeDamage(-6))
@@ -25,7 +24,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 			.setImgPath("resources/images/redCross.png")
 			.addActivationTriggers(Event.TURN_START);
 	public transient static final ModifiableTriggeredEffect POISONED = new ModifiableTriggeredEffect("Poisoned")
-			.setEffect((unit, event, game) -> unit.getHitPoints().setCurrentValue(Math.min(1, unit.getHitPoints().getCurrentValue() - 4)))
+			.setEffect((unit, event, game) -> unit.getHitPoints().setCurrentValue(Math.max(1, unit.getHitPoints().getCurrentValue() - 4)))
 			.setDuration(6)
 			.setDescription("This unit is poisoned, and will lose 4 damage at the run and end of each turn, to a minimum of 1 HP. Lasts for 6 turns")
 			.setImgPath("resources/images/poison.png")
@@ -114,6 +113,7 @@ public class ModifiableTriggeredEffect extends ModifiableVoogaObject<ModifiableT
 		return duration;
 	}
 
+	@Override
 	public ModifiableTriggeredEffect setDuration(int duration) {
 		this.duration = duration;
 		return this;

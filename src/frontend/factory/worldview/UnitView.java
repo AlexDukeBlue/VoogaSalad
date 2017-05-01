@@ -142,7 +142,6 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
-		System.err.println("authoring or gameplay");
 		if (isValidMove(target)) {
 			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
 			if (((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
@@ -158,7 +157,6 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler,
 	                              Event event) {
-		System.err.println("this is gameplay mode");
 		if (isValidMove(target)) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			if (canMove() && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {

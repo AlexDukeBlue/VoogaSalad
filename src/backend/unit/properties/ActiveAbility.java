@@ -1,12 +1,12 @@
 package backend.unit.properties;
 
 import backend.cell.Cell;
-import backend.cell.Terrain;
 import backend.grid.CoordinateTuple;
 import backend.grid.GridPattern;
 import backend.grid.Shape;
 import backend.unit.Unit;
 import backend.util.*;
+import javafx.application.Platform;
 import util.AlertFactory;
 
 import java.io.Serializable;
@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Timmy
@@ -40,8 +39,8 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 	}, GridPattern.SQUARE_ADJACENT, "The attacker sacrifices itself to deal massive damage to all neighboring enemy units.", "resources/images/explosion.png");
 	public transient static final ActiveAbility<Unit> FULL_HEAL = new ActiveAbility<>("Full Heal", (user, target, game) -> target.getHitPoints().resetValue(), GridPattern.SQUARE_ADJACENT, "The attacker fully heals any neighboring unit", "resources/images/redCross.png");
 	public transient static final ActiveAbility<Unit> BLIND = new ActiveAbility<>("Blind", (user, target, game) -> target.addOffensiveModifiers(InteractionModifier.BLINDED), GridPattern.SQUARE_ADJACENT, "The attacker gives any neighboring unit the Blinded modifier", "resources/images/blind.png");
-	public transient static final ActiveAbility<Unit> SILENCE = new ActiveAbility<>("Silence", (user, target, game) -> Stream.of(target.getOffensiveModifiers(), target.getDefensiveModifiers(), target.getTriggeredAbilities()).forEach(Collection::clear), GridPattern.HEXAGONAL_ADJACENT, "Removes all offensive, defensive, and passive modifiers from any neighboring unit", "resources/images/silence.png");
-	public transient static final ActiveAbility<Terrain> DROP_MIXTAPE = new ActiveAbility<>("Set Fire to Cell", (user, target, game) -> target.addTriggeredAbilities(ModifiableTriggeredEffect.ON_FIRE), GridPattern.HEXAGONAL_SINGLE_CELL, "The attacker sets fire to the cell they are occupying.", "resources/images/mixtape.png");
+	public transient static final ActiveAbility<Unit> SILENCE = new ActiveAbility<>("Silence", (user, target, game) -> target.getTriggeredAbilities().forEach(e -> e.setDuration(e.getRemainingTurns() - 1000)), GridPattern.SQUARE_ADJACENT, "Removes all temporary abilities from any neighboring unit", "resources/images/silence.png");
+	public transient static final ActiveAbility<HasLocation> DROP_MIXTAPE = new ActiveAbility<>("Set Fire to Cell", (user, target, game) -> game.getGrid().get(target.getLocation()).addTriggeredAbilities(ModifiableTriggeredEffect.ON_FIRE), GridPattern.SQUARE_SINGLE_CELL, "The attacker sets fire to the cell they are occupying.", "resources/images/mixtape.png");
 
 	public transient static final double DEFAULT_ABILITY_COST = 1;
 	private final AbilityEffect<T> effect;
@@ -91,7 +90,7 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 			effect.useAbility(user, target, game);
 			user.getAbilityPoints().setCurrentValue(user.getAbilityPoints().getCurrentValue() - cost);
 		} catch (Exception e) {
-			AlertFactory.warningAlert("Illegal Move", "Attempted illegal move was ignored.", "The user attempted to make an illegal move, so it was ignored.").showAndWait();
+			Platform.runLater(() -> AlertFactory.warningAlert("Illegal Move", "Attempted illegal move was ignored.", "The user attempted to make an illegal move, so it was ignored.").showAndWait());
 		}
 	}
 

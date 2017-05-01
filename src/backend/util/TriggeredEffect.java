@@ -9,6 +9,8 @@ import java.util.Collection;
  * @author Created by th174 on 4/5/17.
  */
 public interface TriggeredEffect extends PassiveAbility, HasSound {
+	ModifiableTriggeredEffect setDuration(int duration);
+
 	@Override
 	TriggeredEffect copy();
 
