@@ -1,0 +1,34 @@
+<backend.unit.properties.ActiveAbility>
+  <name>Set Fire to Cell</name>
+  <description>The attacker sets fire to the cell they are occupying.</description>
+  <imgPath>resources/images/mixtape.png</imgPath>
+  <effect resolves-to="serialized-lambda">
+    <capturingClass>backend.unit.properties.ActiveAbility</capturingClass>
+    <functionalInterfaceClass>backend/unit/properties/ActiveAbility$AbilityEffect</functionalInterfaceClass>
+    <functionalInterfaceMethodName>useAbility</functionalInterfaceMethodName>
+    <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/VoogaEntity;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+    <implClass>backend/unit/properties/ActiveAbility</implClass>
+    <implMethodName>lambda$static$e02eb1da$1</implMethodName>
+    <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/HasLocation;Lbackend/util/GameplayState;)V</implMethodSignature>
+    <implMethodKind>6</implMethodKind>
+    <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/HasLocation;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+    <capturedArgs/>
+  </effect>
+  <range>
+    <name>Square Single Cell</name>
+    <description>This pattern contains a single square cell at the origin</description>
+    <imgPath>resources/images/squareSingle.png</imgPath>
+    <relativeCoordinates class="set">
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+    </relativeCoordinates>
+  </range>
+  <cost>1.0</cost>
+</backend.unit.properties.ActiveAbility>
