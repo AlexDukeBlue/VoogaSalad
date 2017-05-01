@@ -46,7 +46,7 @@ public class DieselEngine implements GameEngine {
 		try {
 			new XMLSerializer<>().doSerialize(gameState);
 		} catch (Exception e) {
-			saveFailAlert();
+//			saveFailAlert();
 		}
 	}
 
@@ -57,7 +57,7 @@ public class DieselEngine implements GameEngine {
 			newGameState = (AuthoringGameState) new XMLSerializer<>()
 					.unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
-			loadFailAlert();
+//			loadFailAlert();
 			newGameState = null;
 		}
 		return newGameState;

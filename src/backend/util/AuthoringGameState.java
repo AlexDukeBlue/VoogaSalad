@@ -141,7 +141,14 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	public VoogaEntity getTemplateByName(String name) {
-		return getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getFormattedName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
+		try {
+			return getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getFormattedName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
+		} catch (RuntimeException e) {
+			System.out.println(name);
+			System.out.println(getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).collect(Collectors.toList()));
+			throw e;
+		}
+//		return getTemplates().values().stream().flatMap(ImmutableVoogaCollection::stream).filter(e -> e.getFormattedName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Template not found"));
 	}
 
 	public AuthoringGameState removeTemplateByName(String name) {
