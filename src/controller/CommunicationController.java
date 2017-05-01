@@ -371,6 +371,7 @@ public class CommunicationController implements Controller {
 			try {
 				e.update();
 			} catch (Exception e1) {
+				System.err.println(e1.toString());
 				System.err.println(e1.getStackTrace()[0]);
 				removeListener(e);
 			}
