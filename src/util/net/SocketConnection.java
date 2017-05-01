@@ -54,8 +54,9 @@ public class SocketConnection {
 				executor.execute(() -> requestHandler.accept(request));
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ObservableHost.RemoteConnectionException(e);
 		} finally {
 			shutDown();
@@ -69,6 +70,7 @@ public class SocketConnection {
 	 * @return Returns true if the request was sent successfully
 	 */
 	public synchronized boolean send(Request request) {
+//		System.out.println("Send " + request);
 		try {
 			outputStream.writeObject(request);
 			return isActive();
@@ -84,6 +86,7 @@ public class SocketConnection {
 		try {
 			socket.close();
 			executor.shutdown();
+			System.out.println("Connection closed: " + socket);
 		} catch (IOException e) {
 			throw new ObservableHost.RemoteConnectionException(e);
 		}
