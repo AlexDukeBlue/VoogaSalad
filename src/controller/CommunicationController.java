@@ -440,6 +440,9 @@ public class CommunicationController implements Controller {
 		String playerName = getMyPlayerName();
 		sendModifier((AuthoringGameState gameState) -> {
 			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
+			if (templateCopy instanceof Unit) {
+				((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
+			}
 			try {
 				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
 				if (Objects.nonNull(targetUnit)) {
@@ -450,9 +453,6 @@ public class CommunicationController implements Controller {
 			} catch (Exception e) {
 				Cell targetCell = gameState.getGrid().get(gridLocation);
 				if (Objects.nonNull(targetCell)) {
-					if (templateCopy instanceof Unit) {
-						((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
-					}
 					targetCell.add(templateCopy);
 				}
 			}
