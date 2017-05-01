@@ -160,7 +160,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
-			showGenericAlert();
+			throw new RuntimeException(e);
 		}
 		return (AuthoringGameState) getClient().getState();
 	}
@@ -180,7 +180,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
-			showGenericAlert();
+			throw new RuntimeException(e);
 		}
 		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 	}
@@ -451,7 +451,7 @@ public class CommunicationController implements Controller {
 					targetCell.add(templateCopy);
 				}
 			} catch (Exception e) {
-				showGenericAlert();
+				throw new RuntimeException(e);
 			}
 			return gameState;
 		});
@@ -499,7 +499,7 @@ public class CommunicationController implements Controller {
 			} catch (Serializer.SerializationException e) {
 				AlertFactory.warningAlert("Requests sent too fast.", "The server is receiving requests too quickly.", "").showAndWait();
 			} catch (IOException e) {
-				showGenericAlert();
+				throw new RuntimeException(e);
 			}
 		});
 		engine.checkGame(this.getGameplayState());
@@ -509,10 +509,6 @@ public class CommunicationController implements Controller {
 		}
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
-	}
-	
-	private void showGenericAlert(){
-		AlertFactory.warningAlert("The game could not process the request.", "Please try again.", "").showAndWait();
 	}
 
 }
