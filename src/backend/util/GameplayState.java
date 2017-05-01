@@ -1,6 +1,5 @@
 package backend.util;
 
-import backend.cell.ModifiableTerrain;
 import backend.cell.Terrain;
 import backend.game_engine.Resultant;
 import backend.grid.BoundsHandler;
@@ -81,7 +80,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.currentTeamNumber = 0;
 		this.isAuthoringMode = false;
 		this.templates = new HashMap<>();
-		getTemplates().put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards());
+		getTemplates().put(GAMEBOARD, new ModifiableVoogaCollection<>("GameBoards", "", "", ModifiableGameBoard.getPredefinedGameBoards()));
 		getTemplates().put(TERRAIN, new ModifiableVoogaCollection<>("Terrain", "", "", Terrain.getPredefinedTerrain()));
 		getTemplates().put(UNIT, new ModifiableVoogaCollection<>("Units", "", "", ModifiableUnit.getPredefinedUnits()));
 		getTemplates().put(UNIT_TRIGGERED_EFFECT, new ModifiableVoogaCollection<>("Unit Passive/Triggered Abilities", "", "",ModifiableTriggeredEffect.getPredefinedTriggeredUnitAbilities()));
