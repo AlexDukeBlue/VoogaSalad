@@ -91,7 +91,8 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 			effect.useAbility(user, target, game);
 			user.getAbilityPoints().setCurrentValue(user.getAbilityPoints().getCurrentValue() - cost);
 		} catch (Exception e) {
-			AlertFactory.warningAlert("Illegal Move", "Attempted illegal move was ignored.", "The user attempted to make an illegal move, so it was ignored.").showAndWait();
+			System.out.println("Illegal Move Ignored: " + e);
+//			AlertFactory.warningAlert("Illegal Move", "Attempted illegal move was ignored.", "The user attempted to make an illegal move, so it was ignored.").showAndWait();
 		}
 	}
 

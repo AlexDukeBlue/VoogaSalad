@@ -92,6 +92,7 @@ public class CommunicationController implements Controller {
 		try {
 			server = new ObservableServer<>(gameState, port, XML, XML, timeout);
 			executor.execute(server);
+			System.out.println("Server started successfully on port: " + port);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -159,7 +160,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
 		return (AuthoringGameState) getClient().getState();
 	}
@@ -179,7 +180,7 @@ public class CommunicationController implements Controller {
 		try {
 			waitForReady.await();
 		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
 		client.addToOutbox((Modifier<ReadonlyGameplayState>) modifier);
 	}
@@ -371,6 +372,7 @@ public class CommunicationController implements Controller {
 			try {
 				e.update();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				System.err.println(e1.toString());
 				System.err.println(e1.getStackTrace()[0]);
 				removeListener(e);
@@ -484,7 +486,7 @@ public class CommunicationController implements Controller {
 			saveHistory.pop();
 			setGameState(this.load(saveHistory.pop()));
 		} catch (IOException ignored) {
-			AlertFactory.warningAlert("Could not undo action", "We are sorry, we could not undo the action.", "").showAndWait();
+//			AlertFactory.warningAlert("Could not undo action", "We are sorry, we could not undo the action.", "").showAndWait();
 		}
 	}
 
@@ -500,9 +502,10 @@ public class CommunicationController implements Controller {
 				saveState(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
-				AlertFactory.warningAlert("Requests sent too fast.", "The server is receiving requests too quickly.", "").showAndWait();
+				System.err.println("You're going TOO FAST!!!!");
+//				AlertFactory.warningAlert("Requests sent too fast.", "The server is receiving requests too quickly.", "").showAndWait();
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				e.printStackTrace();
 			}
 		});
 		engine.checkGame(this.getGameplayState());
