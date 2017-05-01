@@ -63,13 +63,12 @@ public class PlayersView extends BaseUIManager<GridPane> {
 			}
 			int row = i;
 			getController().getPlayer(playerName).getTeam().ifPresent(team -> {
-				playerLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 				if (!getController().isAuthoringMode()) {
 					Label teamLabel = new Label(team.getName());
+					playerLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 					teamLabel.textFillProperty().bind(new SimpleObjectProperty<>(Color.web(team.getColorString())));
 					GridPane.setHalignment(teamLabel, HPos.RIGHT);
 					teamLabel.setPadding(Insets.EMPTY);
-					teamLabel.textFillProperty().bind(DEFAULT_COLOR);
 					gridPane.add(teamLabel, 2, row + 1);
 				}
 			});

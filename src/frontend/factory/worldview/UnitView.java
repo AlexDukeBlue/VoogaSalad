@@ -1,13 +1,11 @@
 package frontend.factory.worldview;
 
 import backend.grid.CoordinateTuple;
-import backend.unit.ModifiableUnit;
 import backend.unit.Unit;
 import backend.util.HasLocation;
 import controller.Controller;
 import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
-import frontend.interfaces.worldview.CellViewExternal;
 import frontend.interfaces.worldview.UnitViewExternal;
 import frontend.util.GameBoardObjectView;
 import frontend.util.SelectableUIComponent;
@@ -144,10 +142,11 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
+		System.err.println("authoring or gameplay");
 		if (isValidMove(target)) {
 			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
-			if (target instanceof CellViewExternal) {
-				playMedia(((CellViewExternal) target).getEntity().getTerrain().getSoundPath());
+			if (((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
+				playMedia(getController().getCell(((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation()).getTerrain().getSoundPath());
 			}
 		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE)
 				|| ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
@@ -159,6 +158,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler,
 	                              Event event) {
+		System.err.println("this is gameplay mode");
 		if (isValidMove(target)) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			if (canMove() && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {

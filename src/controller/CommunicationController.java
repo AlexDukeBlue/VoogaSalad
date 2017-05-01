@@ -49,7 +49,7 @@ import java.util.concurrent.Executors;
  *         our networking works and how the GameState is structured.
  */
 public class CommunicationController implements Controller {
-	
+
 	private static final XMLSerializer XML = new XMLSerializer<>();
 	private static final String AUTOSAVE_DIRECTORY = System.getProperty("user.dir") + "/data/saved_game_data/autosaves/";
 	private final Executor executor;
@@ -199,7 +199,7 @@ public class CommunicationController implements Controller {
 		Arrays.stream(templates).map(VoogaEntity::getImgPath).forEach(this::sendFile);
 		sendModifier((AuthoringGameState state) -> {
 			state.getTemplateByCategory(category)
-				 .addAll(templates);
+					.addAll(templates);
 			return state;
 		});
 	}
@@ -242,19 +242,19 @@ public class CommunicationController implements Controller {
 	public boolean isAuthoringMode() {
 		return getGameplayState().isAuthoringMode();
 	}
-	
+
 	@Override
-	public boolean activeTeamWon(){
+	public boolean activeTeamWon() {
 		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
 	}
 
 	@Override
-	public boolean activeTeamLost(){
+	public boolean activeTeamLost() {
 		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
 	}
 
 	@Override
-	public boolean activeTeamTied(){
+	public boolean activeTeamTied() {
 		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
 	}
 
@@ -371,6 +371,8 @@ public class CommunicationController implements Controller {
 			try {
 				e.update();
 			} catch (Exception e1) {
+				System.err.println(e1.toString());
+				System.err.println(e1.getStackTrace()[0]);
 				removeListener(e);
 			}
 		}));
@@ -438,16 +440,21 @@ public class CommunicationController implements Controller {
 		String playerName = getMyPlayerName();
 		sendModifier((AuthoringGameState gameState) -> {
 			VoogaEntity templateCopy = gameState.getTemplateByName(templateName).copy();
-			Cell targetCell = gameState.getGrid().get(gridLocation);
+			if (templateCopy instanceof Unit) {
+				((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
+			}
 			try {
-				if (Objects.nonNull(targetCell)) {
-					if (templateCopy instanceof Unit) {
-						((Unit) templateCopy).setTeam(gameState.getPlayerByName(playerName).getTeam().orElse(null));
-					}
-					targetCell.add(templateCopy);
+				Unit targetUnit = gameState.getGrid().get(gridLocation).getOccupantByName(targetUnitName);
+				if (Objects.nonNull(targetUnit)) {
+					targetUnit.add(templateCopy);
+				} else {
+					throw new Exception();
 				}
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				Cell targetCell = gameState.getGrid().get(gridLocation);
+				if (Objects.nonNull(targetCell)) {
+					targetCell.add(templateCopy);
+				}
 			}
 			return gameState;
 		});
@@ -506,5 +513,4 @@ public class CommunicationController implements Controller {
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
 	}
-
 }

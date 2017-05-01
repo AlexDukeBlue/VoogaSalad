@@ -49,21 +49,6 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	}
 
 	@Override
-	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
-		return grid.getUnits().parallelStream().filter(e -> e.getTeam().equals(this)).collect(Collectors.toSet());
-	}
-
-	@Override
-	public Collection<Cell> getVisibleCells() {
-		throw new RuntimeException("Not yet implemented");
-	}
-
-	@Override
-	public Collection<Cell> getExploredCells() {
-		throw new RuntimeException("Not yet implemented");
-	}
-
-	@Override
 	public void receiveMessage(ChatMessage message) {
 		chatLog.add(message);
 	}

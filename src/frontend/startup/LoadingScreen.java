@@ -1,12 +1,10 @@
 package frontend.startup;
 
 import javafx.animation.*;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -24,7 +22,7 @@ public class LoadingScreen extends Group {
 	}
 
 	public void createCircles() {
-		for (int cont = 0; cont < 60; cont++) {
+		for (int cont = 0; cont < Math.random() * 10; cont++) {
 			Circle circle = new Circle();
 			circle.setCenterX(Math.random() * minWidth);
 			circle.setCenterY(Math.random() * minHeight);
@@ -71,7 +69,7 @@ public class LoadingScreen extends Group {
 		KeyValue color = new KeyValue(circle.fillProperty(), Color.color(Math.random(), Math.random(), Math.random()));
 		KeyFrame kFrame = new KeyFrame(Duration.millis(5000 + (Math.random() * 5000)), kValueX, kValueY, color, loadingkValueX, loadingkValueY);
 
-		Timeline linhaT = new Timeline();
+		Timeline linhaT = new Timeline(30);
 
 		linhaT.getKeyFrames().add(kFrame);
 		linhaT.setAutoReverse(true);
@@ -99,16 +97,16 @@ public class LoadingScreen extends Group {
 	}
 
 	private void moveCircleOnMousePress(Scene scene, final Circle circle, final TranslateTransition transition) {
-	    scene.setOnMousePressed(event -> {
-	      if (!event.isControlDown()) {
-	        circle.setCenterX(event.getSceneX());
-	        circle.setCenterY(event.getSceneY());
-	      } else {
-	        transition.setToX(event.getSceneX() - circle.getCenterX());
-	        transition.setToY(event.getSceneY() - circle.getCenterY());
-	        transition.playFromStart();
-	      }
-	    });
-	  }
+		scene.setOnMousePressed(event -> {
+			if (!event.isControlDown()) {
+				circle.setCenterX(event.getSceneX());
+				circle.setCenterY(event.getSceneY());
+			} else {
+				transition.setToX(event.getSceneX() - circle.getCenterX());
+				transition.setToY(event.getSceneY() - circle.getCenterY());
+				transition.playFromStart();
+			}
+		});
+	}
 
 }

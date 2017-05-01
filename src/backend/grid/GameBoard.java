@@ -113,4 +113,10 @@ public interface GameBoard extends Iterable<Entry<CoordinateTuple, Cell>>, Vooga
 	default Shape getShape() {
 		return getTemplateCell().getShape();
 	}
+
+	default GameBoard setMaxOccupantsPerCell(int maxOccupantsPerCell) {
+		getTemplateCell().setMaxOccupants(maxOccupantsPerCell);
+		getCells().values().forEach(e -> e.setMaxOccupants(maxOccupantsPerCell));
+		return this;
+	}
 }
