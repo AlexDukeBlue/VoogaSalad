@@ -1,6 +1,5 @@
 package backend.player;
 
-import backend.cell.Cell;
 import backend.grid.ModifiableGameBoard;
 import backend.unit.Unit;
 import backend.util.ModifiableVoogaCollection;
@@ -53,15 +52,7 @@ public class Team extends ModifiableVoogaCollection<ImmutablePlayer, Team> imple
 	}
 
 	public Collection<Unit> getOwnedUnits(ModifiableGameBoard grid) {
-		return getAll().parallelStream().map(e -> e.getOwnedUnits(grid)).flatMap(Collection::stream).collect(Collectors.toSet());
-	}
-
-	public Collection<Cell> getVisibleCells() {
-		return getAll().parallelStream().map(ImmutablePlayer::getVisibleCells).flatMap(Collection::stream).collect(Collectors.toSet());
-	}
-
-	public Collection<Cell> getExploredCells() {
-		return getAll().parallelStream().map(ImmutablePlayer::getExploredCells).flatMap(Collection::stream).collect(Collectors.toSet());
+		return grid.getUnits().stream().filter(e -> e.getTeam().isPresent()).filter(e -> this.equals(e.getTeam().orElse(null))).collect(Collectors.toSet());
 	}
 
 	@Override
