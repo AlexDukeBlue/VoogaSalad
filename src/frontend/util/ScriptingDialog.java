@@ -4,8 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
-import javax.imageio.ImageIO;
-
 import controller.Controller;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -26,11 +24,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import util.AlertFactory;
-import util.scripting.VoogaScriptEngine;
-import util.scripting.VoogaScriptEngineManager;
-import util.scripting.VoogaScriptException;
+import scripting.VoogaScriptEngine;
+import scripting.VoogaScriptEngineManager;
+import scripting.VoogaScriptException;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;

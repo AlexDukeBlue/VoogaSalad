@@ -3,7 +3,7 @@ package frontend.factory.wizard.strategies;
 import controller.Controller;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
-import util.scripting.VoogaScriptEngine;
+import scripting.VoogaScriptEngine;
 
 /**
  * NameScriptBaseStrategy is an abstract class that starts out a Wizard with a

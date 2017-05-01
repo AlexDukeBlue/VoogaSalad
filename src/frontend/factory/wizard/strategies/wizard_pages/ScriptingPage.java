@@ -5,7 +5,7 @@ import java.util.Optional;
 import controller.Controller;
 import frontend.util.ScriptingDialog;
 import javafx.scene.layout.Region;
-import util.scripting.VoogaScriptEngine;
+import scripting.VoogaScriptEngine;
 
 /**
  * A WizardPage that allows the user to script in different scripting languages.

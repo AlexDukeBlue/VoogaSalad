@@ -5,4 +5,4 @@
  * @author Dylan Peters
  *
  */
-package util.scripting;
+package scripting;
