@@ -13,7 +13,12 @@ import java.util.regex.*;
  * @author th174
  */
 public class VoogaJavaEngine_generated_source$0 {
-	public static Object voogaFunction(backend.player.Team team, backend.util.AuthoringGameState gameState) {
-		return "NONE";
+
+	public static Object voogaFunction(backend.unit.ModifiableUnit user, backend.unit.ModifiableUnit target, backend.util.AuthoringGameState gameState) {
+		/*
+		 * Your Java code here
+		 */
+		System.out.println("hello world");
+		return null;
 	}
 }
