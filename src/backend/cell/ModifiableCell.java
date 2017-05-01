@@ -27,6 +27,7 @@ public class ModifiableCell implements Cell {
 	}
 
 	private final Map<String, Unit> occupants;
+	private int maxOccupants;
 	private Shape shape;
 	private Terrain terrain;
 	private CoordinateTuple coordinates;
@@ -39,6 +40,7 @@ public class ModifiableCell implements Cell {
 		this.shape = shape;
 		this.terrain = terrain;
 		this.coordinates = location;
+		this.maxOccupants = Integer.MAX_VALUE;
 		occupants = new HashMap<>();
 	}
 
@@ -198,6 +200,17 @@ public class ModifiableCell implements Cell {
 			DISPATCH_MAP.get(voogaEntity.getClass()).accept(voogaEntity, this);
 		}
 		return this;
+	}
+
+	@Override
+	public Cell setMaxOccupants(int maxOccupants) {
+		this.maxOccupants = maxOccupants;
+		return this;
+	}
+
+	@Override
+	public int getMaxOccupants() {
+		return maxOccupants;
 	}
 
 	static class IncompleteCellException extends RuntimeException {

@@ -70,15 +70,16 @@ public interface Unit extends VoogaEntity, HasTriggeredAbilities, HasLocation, H
 					.map(e -> grid.get(e.sum(this.getLocation())))
 					.filter(Objects::nonNull)
 					.filter(e -> getMoveCostByTerrain(e.getTerrain()) <= getMovePoints().getCurrentValue())
+					.filter(e -> e.getOccupants().size() < e.getMaxOccupants())
 					.map(Cell::getLocation)
 					.collect(Collectors.toSet());
-		} catch (Exception e){
+		} catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
 
 	GridPattern getMovePattern();
-	
+
 	GridPattern getRangePattern();
 
 	default CoordinateTuple getLocation() {

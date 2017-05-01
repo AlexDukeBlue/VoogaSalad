@@ -57,6 +57,8 @@ public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, 
 
 	Cell add(VoogaEntity voogaEntity);
 
+	Cell setMaxOccupants(int maxOccupants);
+
 	@Override
 	default List<? extends InteractionModifier> getOffensiveModifiers() {
 		return getTerrain().getOffensiveModifiers();
@@ -66,4 +68,6 @@ public interface Cell extends Serializable, HasTriggeredAbilities, HasLocation, 
 	default List<? extends InteractionModifier> getDefensiveModifiers() {
 		return getTerrain().getDefensiveModifiers();
 	}
+
+	int getMaxOccupants();
 }

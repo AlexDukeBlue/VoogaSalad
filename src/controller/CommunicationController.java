@@ -512,5 +512,4 @@ public class CommunicationController implements Controller {
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
 	}
-
 }
