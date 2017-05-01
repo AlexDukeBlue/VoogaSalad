@@ -13,16 +13,9 @@ import java.util.stream.Collectors;
 public class AuthoringGameState extends GameplayState implements VoogaEntity, ReadonlyGameplayState {
 	private static final long serialVersionUID = 1L;
 
-	private Collection<Actionable> availableTurnActions;
-	private Collection<Requirement> availableTurnRequirements;
-	private Collection<Resultant> availableObjectives;
-
 	public AuthoringGameState(String name) {
 		super(name, null, "", "");
 		this.setAuthoringMode(true);
-		availableTurnActions = new HashSet<Actionable>();
-		availableTurnRequirements = new ArrayList<>();
-		availableObjectives = new ArrayList<>();
 	}
 
 	@Override
@@ -76,82 +69,33 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public AuthoringGameState addObjectives(Resultant... objectives) {
-		return (AuthoringGameState) super.addObjectives(objectives);
+	public AuthoringGameState addActiveObjectives(Resultant... objectives) {
+		return (AuthoringGameState) super.addActiveObjectives(objectives);
 	}
 
 	@Override
-	public AuthoringGameState addObjectives(Collection<Resultant> objectives) {
-		return (AuthoringGameState) super.addObjectives(objectives);
-	}
-
-	/**
-	 * Adds the passed Resultants to the AuthoringGameState's Collection of available Resultants.
-	 * <p>
-	 * Available Resultants differ from active objective (which are added with addObjectives()) in that
-	 * they may or may not be active. This is for the sake of UX, so that the user can activate and
-	 * deactivate Resultants without deleting them and having to remake them.
-	 *
-	 * @param objectives Resultants to be added to the available Resultant Collection
-	 * @return This AuthoringGameState
-	 * @author Stone Mathers
-	 */
-	public AuthoringGameState addAvailableObjectives(Resultant... objectives) {
-		availableObjectives.addAll(Arrays.asList(objectives));
-		return this;
+	public AuthoringGameState addActiveObjectives(Collection<Resultant> objectives) {
+		return (AuthoringGameState) super.addActiveObjectives(objectives);
 	}
 
 	@Override
-	public AuthoringGameState addTurnActions(Collection<Actionable> actions) {
-		return (AuthoringGameState) super.addTurnActions(actions);
+	public AuthoringGameState addActiveTurnActions(Collection<Actionable> actions) {
+		return (AuthoringGameState) super.addActiveTurnActions(actions);
 	}
 
 	@Override
-	public AuthoringGameState addTurnActions(Actionable... actions) {
-		return (AuthoringGameState) super.addTurnActions(actions);
-	}
-
-	/**
-	 * Maps the passed Event to the passed Actionables in the AuthoringGameState's Map of available Actionables.
-	 * This is done without replacing the Actionables that the Event already maps to.
-	 * <p>
-	 * Available Actionables differ from active Actionables (which are added with addTurnActions()) in that
-	 * they may or may not be active. This is for the sake of UX, so that the user can activate and
-	 * deactivate Actionables without deleting them and having to remake them.
-	 *
-	 * @param actions Actionables triggered by the passed Event
-	 * @return This AuthoringGameState
-	 * @author Stone Mathers
-	 */
-	public AuthoringGameState addAvailableTurnActions(Actionable... actions) {
-		availableTurnActions.addAll(Arrays.asList(actions));
-		return this;
+	public AuthoringGameState addActiveTurnActions(Actionable... actions) {
+		return (AuthoringGameState) super.addActiveTurnActions(actions);
 	}
 
 	@Override
-	public AuthoringGameState addTurnRequirements(Collection<Requirement> turnRequirements) {
-		return (AuthoringGameState) super.addTurnRequirements(turnRequirements);
+	public AuthoringGameState addActiveTurnRequirements(Collection<Requirement> turnRequirements) {
+		return (AuthoringGameState) super.addActiveTurnRequirements(turnRequirements);
 	}
 
 	@Override
-	public AuthoringGameState addTurnRequirements(Requirement... turnRequirements) {
-		return (AuthoringGameState) super.addTurnRequirements(turnRequirements);
-	}
-
-	/**
-	 * Adds the passed Requirements to the AuthoringGameState's Collection of available Requirements.
-	 * <p>
-	 * Available Requirements differ from active Requirements (which are added with addTurnRequirements()) in that
-	 * they may or may not be active. This is for the sake of UX, so that the user can activate and
-	 * deactivate Requirements without deleting them and having to remake them.
-	 *
-	 * @param turnRequirements Requirements to be added to the available Requirement Collection
-	 * @return This AuthoringGameState
-	 * @author Stone Mathers
-	 */
-	public AuthoringGameState addAvailableTurnRequirements(Requirement... turnRequirements) {
-		availableTurnRequirements.addAll(Arrays.asList(turnRequirements));
-		return this;
+	public AuthoringGameState addActiveTurnRequirements(Requirement... turnRequirements) {
+		return (AuthoringGameState) super.addActiveTurnRequirements(turnRequirements);
 	}
 
 	public AuthoringGameState removeTeamByName(String name) {
@@ -160,29 +104,13 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public AuthoringGameState removeObjectives(Resultant... objectives) {
-		return (AuthoringGameState) super.removeObjectives(objectives);
+	public AuthoringGameState removeActiveObjectives(Resultant... objectives) {
+		return (AuthoringGameState) super.removeActiveObjectives(objectives);
 	}
 
 	@Override
-	public AuthoringGameState removeObjectives(Collection<Resultant> objectives) {
-		return (AuthoringGameState) super.removeObjectives(objectives);
-	}
-
-	/**
-	 * Removes the passed Resultants from the AuthoringGameState's Collection of available Resultants.
-	 * <p>
-	 * Available Resultants differ from active turn requirements (which are removed with removeObjectives()) in that
-	 * they may or may not be active. This is for the sake of UX, so that the user can activate and
-	 * deactivate Resultants without deleting them and having to remake them.
-	 *
-	 * @param objectives Resultants to be removed from the available Resultant Collection
-	 * @return This AuthoringGameState
-	 * @author Stone Mathers
-	 */
-	public AuthoringGameState removeAvailableObjectives(Resultant... objectives) {
-		availableObjectives.removeAll(Arrays.asList(objectives));
-		return removeObjectives(objectives);
+	public AuthoringGameState removeActiveObjectives(Collection<Resultant> objectives) {
+		return (AuthoringGameState) super.removeActiveObjectives(objectives);
 	}
 
 	@Override
@@ -191,65 +119,18 @@ public class AuthoringGameState extends GameplayState implements VoogaEntity, Re
 	}
 
 	@Override
-	public AuthoringGameState removeTurnActions(Event event, Actionable... actions) {
-		return (AuthoringGameState) super.removeTurnActions(event, actions);
-	}
-
-	/**
-	 * Removes the passed Actionables the map to the given Event from the AuthoringGameState's Map of available turn actions.
-	 * <p>
-	 * Available Actionables differ from active Actionables (which are removed to with removeTurnActions()) in that
-	 * they may or may not be active. This is for the sake of UX, so that the user can activate and
-	 * deactivate Actionables without deleting them and having to remake them.
-	 *
-	 * @param actions Actionables triggered by the passed Event
-	 * @return This AuthoringGameState
-	 * @author Stone Mathers
-	 */
-	public AuthoringGameState removeAvailableTurnActions(Actionable... actions) {
-		availableTurnActions.removeIf(Arrays.asList(actions)::contains);
-		return removeTurnActions(actions);
+	public AuthoringGameState removeActiveTurnActions(Actionable... actions) {
+		return (AuthoringGameState) super.removeActiveTurnActions(actions);
 	}
 
 	@Override
-	public AuthoringGameState removeTurnRequirements(Collection<Requirement> turnRequirements) {
-		return (AuthoringGameState) super.removeTurnRequirements(turnRequirements);
+	public AuthoringGameState removeActiveTurnRequirements(Collection<Requirement> turnRequirements) {
+		return (AuthoringGameState) super.removeActiveTurnRequirements(turnRequirements);
 	}
 
 	@Override
-	public AuthoringGameState removeTurnRequirements(Requirement... turnRequirements) {
-		return (AuthoringGameState) super.removeTurnRequirements(turnRequirements);
-	}
-
-	/**
-	 * Removes the passed Requirements from the AuthoringGameState's Collection of available turn requirements.
-	 * <p>
-	 * Available Requirements differ from active Requirements (which are removed with removeTurnRequirements()) in that
-	 * they may or may not be active. This is for the sake of UX, so that the user can activate and
-	 * deactivate Requirements without deleting them and having to remake them.
-	 *
-	 * @param turnRequirements Requirements to be removed from the available Requirement Collection
-	 * @return This AuthoringGameState
-	 * @author Stone Mathers
-	 */
-	public AuthoringGameState removeAvailableTurnRequirements(Requirement... turnRequirements) {
-		availableTurnRequirements.removeAll(Arrays.asList(turnRequirements));
-		return removeTurnRequirements(turnRequirements);
-	}
-
-	public Collection<Actionable> getAvailableTurnActions() {
-		return availableTurnActions;
-	}
-
-	public Collection<Requirement> getAvailableTurnRequirements() {
-		return availableTurnRequirements;
-	}
-
-	/**
-	 * @return Collection<Resultant> of available Resultants
-	 */
-	public Collection<Resultant> getAvailableObjectives() {
-		return availableObjectives;
+	public AuthoringGameState removeActiveTurnRequirements(Requirement... turnRequirements) {
+		return (AuthoringGameState) super.removeActiveTurnRequirements(turnRequirements);
 	}
 
 	//Name can be Terrain, OffensiveModifier, DefensiveModifier, Cell, CellTriggeredEffect, UnitTriggeredEffect, ActiveAbility, Unit, UnitStat, GridPattern, GameBoard

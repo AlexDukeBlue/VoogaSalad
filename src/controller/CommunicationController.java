@@ -276,7 +276,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void addTurnRequirement(String name, String description, String imgPath, SerializableBiPredicate biPredicate) {
 		sendModifier((AuthoringGameState state) -> {
-			state.addAvailableTurnRequirements(new Requirement(biPredicate, name, description, imgPath));
+			state.getTemplateByCategory(GameplayState.TURN_REQUIREMENT).addAll(new Requirement(biPredicate, name, description, imgPath));
 			return state;
 		});
 	}
@@ -284,7 +284,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void removeTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(req -> state.removeAvailableTurnRequirements(req));
+			state.removeTemplateByName(name);
 			return state;
 		});
 	}
@@ -292,7 +292,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void activateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(state::addTurnRequirements);
+			state.addActiveTurnRequirements((Requirement) state.getTemplateByName(name));
 			return state;
 		});
 	}
@@ -300,7 +300,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void deactivateTurnRequirement(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnRequirements().stream().filter(req -> req.getName().equals(name)).forEach(state::removeTurnRequirements);
+			state.removeActiveTurnRequirements((Requirement) state.getTemplateByName(name));
 			return state;
 		});
 	}
@@ -308,7 +308,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void addTurnAction(String name, String description, String imgPath, SerializableBiConsumer biConsumer) {
 		sendModifier((AuthoringGameState state) -> {
-			state.addAvailableTurnActions(new Actionable(biConsumer, name, description, imgPath));
+			state.getTemplateByCategory(GameplayState.TURN_EVENT).addAll(new Actionable(biConsumer, name, description, imgPath));
 			return state;
 		});
 	}
@@ -316,7 +316,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void removeTurnAction(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnActions().stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeAvailableTurnActions(act));
+			state.removeTemplateByName(name);
 			return state;
 		});
 	}
@@ -324,7 +324,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void activateTurnAction(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnActions().stream().filter(act -> act.getName().equals(name)).forEach(act -> state.addTurnActions(act));
+			state.addActiveTurnActions((Actionable) state.getTemplateByName(name));
 			return state;
 		});
 	}
@@ -332,7 +332,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void deactivateTurnAction(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableTurnActions().stream().filter(act -> act.getName().equals(name)).forEach(act -> state.removeTurnActions(act));
+			state.removeActiveTurnActions((Actionable) state.getTemplateByName(name));
 			return state;
 		});
 	}
@@ -340,7 +340,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void addEndCondition(String name, String description, String imgPath, ResultQuadPredicate resultQuadPredicate) {
 		sendModifier((AuthoringGameState state) -> {
-			state.addObjectives(new Resultant(resultQuadPredicate, name, description, imgPath));
+			state.getTemplateByCategory(GameplayState.END_CONDITION).addAll(new Resultant(resultQuadPredicate, name, description, imgPath));
 			return state;
 		});
 	}
@@ -348,7 +348,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void removeEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
+			state.removeTemplateByName(name);
 			return state;
 		});
 	}
@@ -356,7 +356,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void activateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
+			state.addActiveObjectives((Resultant) state.getTemplateByName(name));
 			return state;
 		});
 	}
@@ -364,7 +364,7 @@ public class CommunicationController implements Controller {
 	@Override
 	public void deactivateEndCondition(String name) {
 		sendModifier((AuthoringGameState state) -> {
-			state.getAvailableObjectives().removeIf(obj -> obj.getName().equals(name));
+			state.removeActiveObjectives((Resultant) state.getTemplateByName(name));
 			return state;
 		});
 	}

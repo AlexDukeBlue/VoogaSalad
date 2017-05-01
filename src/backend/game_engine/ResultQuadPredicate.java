@@ -1,6 +1,7 @@
 package backend.game_engine;
 
 import backend.player.ImmutablePlayer;
+import backend.player.Team;
 import backend.util.GameplayState;
 
 import java.io.Serializable;
@@ -15,17 +16,17 @@ public interface ResultQuadPredicate extends Serializable {
 	 * @param state
 	 * @return
 	 */
-	Result determine(ImmutablePlayer player, GameplayState state);
+	Result determine(Team team, GameplayState state);
 
 	enum Result {
-		WIN((player, engine) -> engine.handleWin(player)),
-		LOSE((player, engine) -> engine.handleLoss(player)),
-		TIE((player, engine) -> engine.handleTie()),
-		NONE((player, engine) -> doNothing());
+		WIN((team, engine) -> engine.handleWin(team)),
+		LOSE((team, engine) -> engine.handleLoss(team)),
+		TIE((team, engine) -> engine.handleTie()),
+		NONE((team, engine) -> doNothing());
 
-		private BiConsumer<ImmutablePlayer, GameEngine> toExecute;
+		private BiConsumer<Team, GameEngine> toExecute;
 
-		Result(BiConsumer<ImmutablePlayer, GameEngine> executeThis) {
+		Result(BiConsumer<Team, GameEngine> executeThis) {
 			toExecute = executeThis;
 		}
 
@@ -41,8 +42,8 @@ public interface ResultQuadPredicate extends Serializable {
 		 * @param player
 		 * @param engine
 		 */
-		public void accept(ImmutablePlayer player, GameEngine engine) {
-			toExecute.accept(player, engine);
+		public void accept(Team team, GameEngine engine) {
+			toExecute.accept(team, engine);
 		}
 	}
 }

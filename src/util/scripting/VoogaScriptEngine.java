@@ -24,9 +24,9 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	Object eval(Map<String, Object> bindings) throws VoogaScriptException;
 
 	@Override
-	default ResultQuadPredicate.Result determine(ImmutablePlayer player, GameplayState gameState) {
+	default ResultQuadPredicate.Result determine(Team team, GameplayState gameState) {
 		try {
-			return ResultQuadPredicate.Result.valueOf((String) eval(createBindings("player", player, "gameState", gameState)));
+			return ResultQuadPredicate.Result.valueOf((String) eval(createBindings("team", team, "gameState", gameState)));
 		} catch (ClassCastException e) {
 			throw new VoogaScriptException(e);
 		}

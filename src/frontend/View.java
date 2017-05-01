@@ -1,21 +1,3 @@
-/**
- * The View is responsible for displaying the data held within the Model. It is also responsible
- * for providing an interface with which the user can interact to change the GameState.
- * View does not do so directly, instead sending modifiers and getting updated through the Controller.
- * <p>
- * The View organizes the GUI, instantiating and placing all of the necessary panes. Requests are made through a
- * Modifier class, a wrapper holding lambda expressions. The panes are expected to extend BaseUIManager, so that
- * View can access getObject(), the pane can send Modifiers, and the pane can update itself. They are all given
- * an instance of Controller to do so, specifically by adding itself as an observer (so that it’s update method
- * is called whenever a change in the GameState occurs) and calling a method from the controller to send Modifiers.
- * <p>
- * The View also has a boolean editable that determines which mode it is in, edit or play. This determines which
- * GUI components are made available to the user. The methods that instantiate the GUI should use this boolean to
- * determine which components are displayed.
- *
- * @author Stone Mathers
- * Created 4/3/2017
- */
 package frontend;
 
 import backend.player.Team;
@@ -49,10 +31,27 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import util.polyglot.PolyglotException;
-
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * The View is responsible for displaying the data held within the Model. It is also responsible
+ * for providing an interface with which the user can interact to change the GameState.
+ * View does not do so directly, instead sending modifiers and getting updated through the Controller.
+ * <p>
+ * The View organizes the GUI, instantiating and placing all of the necessary panes. Requests are made through a
+ * Modifier class, a wrapper holding lambda expressions. The panes are expected to extend BaseUIManager, so that
+ * View can access getObject(), the pane can send Modifiers, and the pane can update itself. They are all given
+ * an instance of Controller to do so, specifically by adding itself as an observer (so that it’s update method
+ * is called whenever a change in the GameState occurs) and calling a method from the controller to send Modifiers.
+ * <p>
+ * The View also has a boolean editable that determines which mode it is in, edit or play. This determines which
+ * GUI components are made available to the user. The methods that instantiate the GUI should use this boolean to
+ * determine which components are displayed.
+ *
+ * @author Stone Mathers
+ * Created 4/3/2017
+ */
 public class View extends ClickableUIComponent<Region> {
 	private static final int CONDITIONS_PANE_POS = 0;
 	private final Stage myStage;
@@ -72,10 +71,24 @@ public class View extends ClickableUIComponent<Region> {
 	private ChoiceDialog<Team> teams;
 	private MinimapPane miniMap;
 
+	/**
+	 * Constructs a View using the passed Controller and a new Stage.
+	 * 
+	 * @param controller
+	 *            Controller that is used to communicate with the Model.
+	 */
 	public View(Controller controller) {
 		this(controller, new Stage());
 	}
 
+	/**
+	 * Constructs a View using the passed parameters.
+	 * 
+	 * @param controller
+	 *            Controller that is used to communicate with the Model.
+	 * @param stage
+	 *            Stage on which the View is displayed.
+	 */
 	public View(Controller controller, Stage stage) {
 		super(controller, null);
 		myStage = stage;
@@ -84,32 +97,36 @@ public class View extends ClickableUIComponent<Region> {
 		menuBar.getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 	}
 
-	private void setViewEditable(boolean editable) {
-		if (editable) {
-			enterAuthorMode();
-		} else {
-			enterPlayMode();
-		}
-	}
-
+	/**
+	 * Toggles whether or not the ConditionsPane is visible.
+	 */
 	public void toggleConditionsPane() {
 		if (!innerSplitPane.getItems().remove(conditionsPane.getNode())) {
 			innerSplitPane.getItems().add(CONDITIONS_PANE_POS, conditionsPane.getNode());
 		}
 	}
 
+	/**
+	 * Toggles whether or not the TemplatePane is visible.
+	 */
 	public void toggleTemplatePane() {
 		if (!innerSplitPane.getItems().remove(rightPane)) {
 			innerSplitPane.getItems().add(rightPane);
 		}
 	}
 
+	/**
+	 * Toggles whether or not the DetailsPane is visible.
+	 */
 	public void toggleDetailsPane() {
 		if (!worldAndDetailPane.getItems().remove(bottomPane)) {
 			worldAndDetailPane.getItems().add(bottomPane);
 		}
 	}
 
+	/**
+	 * Toggles whether or not the StatsPane is visible.
+	 */
 	public void toggleStatsPane() {
 		// TODO
 	}
@@ -120,16 +137,19 @@ public class View extends ClickableUIComponent<Region> {
 	}
 
 	/**
-	 * @return The Stage that the View is being displayed on
+	 * Return the Stage on which the View is being displayed.
+	 * 
+	 * @return Stage
 	 */
 	public Stage getStage() {
 		return myStage;
 	}
 
 	/**
-	 * Sets the GameState that the View accesses its data from.
+	 * Sets the GameState from which the View accesses its data.
 	 *
-	 * @param newGameState GameplayState that the View will now access its data from
+	 * @param newGameState
+	 *            GameplayState from which the View will now access its data.
 	 */
 	public void setGameState(GameplayState newGameState) {
 		getController().setGameState(newGameState);
@@ -160,6 +180,25 @@ public class View extends ClickableUIComponent<Region> {
 		abilityPane.setClickHandler(clickHandler);
 		worldView.setClickHandler(clickHandler);
 		detailPane.setClickHandler(clickHandler);
+	}
+
+	@Override
+	public void update() {
+		this.setViewEditable(getController().isAuthoringMode());
+		endTurnButton.setDisable(!getController().isMyTeam() || getController().isAuthoringMode());
+		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode()
+				&& (Objects.isNull(teams) || !teams.isShowing())) {
+			joinTeam();
+		}
+		checkForCondition();
+	}
+
+	private void setViewEditable(boolean editable) {
+		if (editable) {
+			enterAuthorMode();
+		} else {
+			enterPlayMode();
+		}
 	}
 
 	private void placePanes() {
@@ -225,8 +264,8 @@ public class View extends ClickableUIComponent<Region> {
 		.bind(outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("RightPaneWidthMultiplier")));
 		conditionsPane.getNode().maxWidthProperty().bind(
 				outerSplitPane.widthProperty().multiply(getDoubleFromResourceBundle("ConditionsPaneWidthMultiplier")));
-		bottomPane.maxHeightProperty()
-		.bind(outerSplitPane.heightProperty().multiply(getDoubleFromResourceBundle("BottomPaneHeightMultiplier")));
+		bottomPane.maxHeightProperty().bind(
+				outerSplitPane.heightProperty().multiply(getDoubleFromResourceBundle("BottomPaneHeightMultiplier")));
 	}
 
 	private double getDoubleFromResourceBundle(String key) {
@@ -242,7 +281,8 @@ public class View extends ClickableUIComponent<Region> {
 		worldView = WorldViewFactory.newWorldView(getController(), getClickHandler());
 		detailPane = DetailPaneFactory.newDetailPane(getController(), getClickHandler());
 		abilityPane = new AbilityPane(getController(), getClickHandler());
-		setClickHandler(new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
+		setClickHandler(
+				new ClickHandler(detailPane, abilityPane, worldView.getGridView(), ClickHandler.Mode.AUTHORING));
 		tempPane = TemplatePaneFactory.newTemplatePane(getController(), getClickHandler());
 		miniMap = new MinimapPane(worldView.getGridView().getNode(), getController());
 		tempPane.getNode().prefWidthProperty().bind(miniMap.getNode().widthProperty());
@@ -312,15 +352,6 @@ public class View extends ClickableUIComponent<Region> {
 			displayEndPopup(getPolyglot().get("LoseMessage"));
 		} else if (getController().activeTeamTied()) {
 			displayEndPopup(getPolyglot().get("TieMessage"));
-		}
-	}
-
-	@Override
-	public void update() {
-		this.setViewEditable(getController().isAuthoringMode());
-		endTurnButton.setDisable(!getController().isMyTeam() || getController().isAuthoringMode());
-		if (!getController().getMyPlayer().getTeam().isPresent() && !getController().isAuthoringMode() && (Objects.isNull(teams) || !teams.isShowing())) {
-			joinTeam();
 		}
 	}
 

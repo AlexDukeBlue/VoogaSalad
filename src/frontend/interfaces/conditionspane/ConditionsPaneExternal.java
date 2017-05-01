@@ -1,6 +1,3 @@
-/**
- * 
- */
 package frontend.interfaces.conditionspane;
 
 import javafx.beans.property.ObjectProperty;
@@ -27,10 +24,10 @@ public interface ConditionsPaneExternal {
 	Region getNode();
 
 	/**
-	 * Returns the polyglot object that is used by this ConditionsPane to translate
+	 * Returns the Polyglot that is used by this ConditionsPane to translate
 	 * its text.
 	 * 
-	 * @return the polyglot object that is used by this ConditionsPane to translate
+	 * @return the Polyglot object that is used by this ConditionsPane to translate
 	 *         its text.
 	 */
 	Polyglot getPolyglot();

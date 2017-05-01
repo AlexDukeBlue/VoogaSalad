@@ -29,11 +29,11 @@ public interface ReadonlyGameplayState extends VoogaEntity {
 
 	double random();
 
-	Collection<Resultant> getObjectives();
+	Collection<Resultant> getActiveObjectives();
 
-	Collection<Actionable> getTurnActions();
+	Collection<Actionable> getActiveTurnActions();
 
-	Collection<Requirement> getTurnRequirements();
+	Collection<Requirement> getActiveTurnRequirements();
 
 	boolean turnRequirementsSatisfied();
 

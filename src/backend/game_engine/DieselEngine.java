@@ -3,11 +3,11 @@ package backend.game_engine;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import backend.game_engine.ResultQuadPredicate.Result;
-import backend.player.ImmutablePlayer;
+import backend.player.Team;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.io.XMLSerializer;
@@ -34,9 +34,11 @@ public class DieselEngine implements GameEngine {
 	 */
 	public void checkGame(GameplayState state) {
 		currentState = state;
-		checkTurnRules(state);
-		checkTurnEvents(state);
-		checkObjectives(state);
+		if (!state.isAuthoringMode()) {
+			checkTurnRules(state);
+			checkTurnEvents(state);
+			checkObjectives(state);
+		}
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnRules(GameplayState state) {
-		if (!state.getTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActiveTeam(), state))
+		if (!state.getActiveTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActiveTeam(), state))
 				&& state.turnRequirementsSatisfied())
 			state.endTurn();
 	}
@@ -82,8 +84,8 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnEvents(GameplayState state) {
-		// state.getTurnActions().forEach((key, value) -> value.forEach(t ->
-		// t.accept(state.getActiveTeam(), state)));
+		state.getActiveTurnActions()
+				.forEach(action -> state.getActiveTeam().getAll().forEach(player -> action.accept(player, state)));
 	}
 
 	/**
@@ -93,29 +95,22 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkObjectives(GameplayState state) {
-		state.getObjectives().parallelStream().forEach(e -> {
-			// Result result =
-			// e.getResultQuad().determine(state.getActiveTeam(), state);
-			// result.accept(state.getActiveTeam(), this);
+		state.getActiveObjectives().parallelStream().forEach(e -> {
+			Result result = e.getResultQuad().determine(state.getActiveTeam(), state);
+			result.accept(state.getActiveTeam(), this);
 		});
 	}
 
 	@Override
-	public void handleWin(ImmutablePlayer player) {
+	public void handleWin(Team team) {
 		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName))
-				.forEach(aPlayer -> aPlayer
-						.setResult(aPlayer.getTeam().equals(aPlayer.getTeam()) ? Result.WIN : Result.LOSE));
+				.forEach(aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(team) ? Result.WIN : Result.LOSE));
 	}
 
 	@Override
-	public void handleLoss(ImmutablePlayer player) {
-		currentState.getPlayerByName(player.getName()).setResult(Result.LOSE);
-		List<String> remainingPlayers = currentState.getOrderedPlayerNames().stream()
-				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
-				.collect(Collectors.toList());
-		if (remainingPlayers.size() == 1) {
-			currentState.getPlayerByName(remainingPlayers.get(0)).setResult(Result.WIN);
-		}
+	public void handleLoss(Team team) {
+		team.getAll().forEach(player -> player.setResult(Result.LOSE));
+		checkForOneRemainingTeam();
 	}
 
 	@Override
@@ -124,11 +119,21 @@ public class DieselEngine implements GameEngine {
 	}
 
 	private void saveFailAlert() {
-		AlertFactory.errorAlert("Could not save file", "An error occured. Try saving again?","").showAndWait();
+		AlertFactory.errorAlert("Could not save file", "An error occured. Try saving again?", "").showAndWait();
 	}
 
 	private void loadFailAlert() {
 		AlertFactory.errorAlert("Could not load file", "An error occured. Try loading again?","").showAndWait();
+	}
+
+	private void checkForOneRemainingTeam() {
+		Set<Team> remainingTeams = currentState.getOrderedPlayerNames().stream()
+				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
+				.map(playerName -> currentState.getPlayerByName(playerName).getTeam().get())
+				.collect(Collectors.toSet());
+		if (remainingTeams.size() == 1) {
+			remainingTeams.forEach(lastTeam -> lastTeam.getAll().forEach(player -> player.setResult(Result.WIN)));
+		}
 	}
 
 }
