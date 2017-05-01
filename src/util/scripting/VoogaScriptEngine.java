@@ -1,7 +1,6 @@
 package util.scripting;
 
 import backend.game_engine.ResultQuadPredicate;
-import backend.player.ImmutablePlayer;
 import backend.player.Team;
 import backend.unit.Unit;
 import backend.unit.properties.ActiveAbility;
@@ -69,7 +68,11 @@ public interface VoogaScriptEngine extends Serializer, Unserializer, Interaction
 	default boolean test(Team team, ReadonlyGameplayState gameState) {
 		Object nonBooleanValue = eval(createBindings("team", team, "gameState", gameState));
 		if (nonBooleanValue instanceof String) {
-			return !nonBooleanValue.equals("");
+			try {
+				return Boolean.valueOf((String) nonBooleanValue);
+			} catch (Exception e) {
+				return !((String) nonBooleanValue).isEmpty();
+			}
 		} else if (nonBooleanValue instanceof Boolean) {
 			return (Boolean) nonBooleanValue;
 		} else {
