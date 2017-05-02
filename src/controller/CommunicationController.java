@@ -61,6 +61,16 @@ public class CommunicationController implements Controller {
 	private String playerName;
 	private Deque<Path> saveHistory;
 	private DieselEngine engine;
+	
+	//These three fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
+		//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages. So basically,
+		//it allows one end of the frontend to communicate with the other end. Although this is not the main
+		//purpose of the CommunicationController, it makes a difficult and complicated action very simple,
+		//and thus I conclude that it is a good design.
+		private String quickName;
+		private String quickDescription;
+		private String quickImagePath;
+
 
 	public CommunicationController(String username) {
 		this(username, Collections.emptyList());
