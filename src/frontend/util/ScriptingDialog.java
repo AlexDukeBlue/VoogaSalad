@@ -4,41 +4,59 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+
+import backend.grid.GameBoard;
+import backend.util.VoogaEntity;
 import controller.Controller;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import util.AlertFactory;
+import javafx.stage.Stage;
+import util.polyglot.PolyglotException;
 import scripting.VoogaScriptEngine;
 import scripting.VoogaScriptEngineManager;
 import scripting.VoogaScriptException;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import frontend.factory.wizard.Wizard;
+import frontend.factory.wizard.WizardFactory;
+import frontend.factory.wizard.strategies.*;
+
+
+
 
 /**
  * TODO: RESOUCE BUNDLE PLSSSS
  *
- * @author Created by th174 on 4/11/2017.
+ * @author Created by th174 and ncp14
  */
 public class ScriptingDialog extends BaseUIManager<Region> {
 	private final BorderPane pane;
@@ -52,6 +70,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 
 	public ScriptingDialog(Controller controller) {
 		super(controller);
+		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 		hasCompiled = new SimpleBooleanProperty(false);
 		languagesMenu = new ChoiceBox<>(
 				FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
@@ -94,7 +113,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		
 		quickCreateButton.setOnAction(evt -> {
 			try {
-				//loadScript();
+				create("quickability");
+				
 			} catch (VoogaScriptException e) {
 				handleException(e);
 			}
@@ -121,6 +141,17 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		pane.setCenter(scriptArea);
 	}
 	
+	private void create(String categoryName) {
+		System.out.println("creating quickAbility wizard");
+		Wizard<?> wiz = WizardFactory.newWizard(categoryName, getController(),getPolyglot().getLanguage(),getStyleSheet().getValue());
+
+		wiz.getPolyglot().setLanguage(getPolyglot().getLanguage());
+		//categoryName = "activeability";
+		wiz.addObserver((wizard, template) -> getController().getAuthoringGameState()
+				.getTemplateByCategory("activeability").addAll((VoogaEntity) template));
+
+	}
+	
 	private String loadScript() {
 		String code = "";
 		final FileChooser filechooser = new FileChooser();
@@ -131,7 +162,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		try {
 			br = new BufferedReader(new FileReader(myScript));
 		} catch (FileNotFoundException e) {
-			loadError();
+			e.printStackTrace();
 		}
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -144,13 +175,9 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 			code = sb.toString();
 			br.close();
 		} catch (IOException e) {
-			loadError();
+			e.printStackTrace();
 		}
 		return code;
-	}
-	
-	private void loadError(){
-		AlertFactory.warningAlert("Could not load script.", "Try loading a different file.", "").showAndWait();
 	}
 	
 	private void configureFileChooser(final FileChooser filechooser) {
