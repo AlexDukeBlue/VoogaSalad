@@ -48,3 +48,60 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		initialize();
 	}
 	
+	/**
+	 * Returns a fully instantiated ActiveAbility instance
+	 */
+	@Override
+	public ActiveAbility<?> finish() {
+		System.out.println("got here");
+		name = myController.getQuickName();
+		description = myController.getQuickDescription();
+		imagePath = myController.getQuickImagePath();
+		
+		double damage = quickAbility.getDamage();
+		int numHits = quickAbility.numHits();
+		System.out.println("Name: " + name);
+		System.out.println("description: " + description);
+		System.out.println("imagePath: " +imagePath);
+		
+		ActiveAbility<Unit> newUnit = new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath);	
+		System.out.println("new unit: " + newUnit);
+		return newUnit;
+		
+		/**
+		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(),
+				(AbilityEffect<?>) (scriptingPage.getScriptEngine().get()), gridPage.getGridPattern(),
+				namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath()) : null;
+				***/
+	}
+	
+
+	private void initialize() {
+		quickAbility = new QuickAbilityPage(getController(),"QuickAbilityTypeDescription");
+		gridPage = new GridPatternPage(getController(), "QuickGridPatternRangeDescription", Color.WHITE, Color.GREEN);
+		getPages().addAll(quickAbility,gridPage);
+
+	}
+
+	@Override
+	public StringBinding getTitle() {
+		return getPolyglot().get("ActiveAbilityWizardTitle");
+	}
+	
+	private boolean isARangedUnit()
+	{
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Ranged");
+		alert.setHeaderText("Will this ability affect other units in addition to the one it is attached to?");
+		alert.setContentText("Select yes if this active ability has a range.");
+
+		ButtonType buttonTypeOne = new ButtonType("Yes");
+		ButtonType buttonTypeTwo = new ButtonType("No");
+
+		alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+		Optional<ButtonType> result = alert.showAndWait();
+		return (result.get() == buttonTypeOne);
+	}
+
+	
