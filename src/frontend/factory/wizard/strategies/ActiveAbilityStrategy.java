@@ -2,34 +2,39 @@ package frontend.factory.wizard.strategies;
 
 import backend.unit.properties.ActiveAbility;
 import backend.unit.properties.ActiveAbility.AbilityEffect;
-import backend.unit.properties.Attack;
+import controller.CommunicationController;
 import controller.Controller;
-import frontend.factory.wizard.strategies.wizard_pages.*;
+import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
+import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
+import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
 import javafx.beans.binding.StringBinding;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 
 /**
  * ActiveAbilityStrategy implements the SelectionStrategy interface in order to
  * allow the user to instantiate new Attacks.
- *
+ * 
  * @author Dylan Peters
+ *
  */
 class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	private ImageNameDescriptionPage namePage;
 	private ScriptingPage scriptingPage;
-	private AttackPage attackPage;
 	private GridPatternPage gridPage;
-	private AbilityCostPage abilityCostPage;
+	
+	private boolean counter; //Used to do a certain action between pages. Please do not remove
+	CommunicationController myController;
 
 	/**
 	 * Creates a new instance of ActiveAbilityStrategy
+	 * 
+	 * @param gameState
 	 */
 	public ActiveAbilityStrategy(Controller controller) {
 		super(controller);
+		counter = false; //Initialization
+		myController = (CommunicationController) controller;
 		initialize();
 	}
 
@@ -38,44 +43,28 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 */
 	@Override
 	public ActiveAbility<?> finish() {
-		if (getPages().contains(attackPage)) {
-			return new ActiveAbility<>(
-					namePage.getName(),
-					new Attack(attackPage.getDamage(), attackPage.getNumHits(), attackPage.getModifiers()),
-					abilityCostPage.getCost(),
-					gridPage.getGridPattern(),
-					namePage.getDescriptionLabelBinding().getValueSafe(),
-					namePage.getImagePath()).setSoundPath(namePage.getSoundPath());
-		} else {
-			return scriptingPage.getScriptEngine().isPresent() ?
-					new ActiveAbility<>(
-							namePage.getName(),
-							(AbilityEffect<?>) (scriptingPage.getScriptEngine().get()),
-							abilityCostPage.getCost(),
-							gridPage.getGridPattern(),
-							namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath())
-							.setSoundPath(namePage.getSoundPath())
-					: null;
+		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(),
+				(AbilityEffect<?>) (scriptingPage.getScriptEngine().get()), gridPage.getGridPattern(),
+				namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath()) : null;
+	}
+	
+	@Override
+	public void next()
+	{
+		super.next();
+		if(!counter)
+		{
+			myController.setQuickName(namePage.getName());
+			myController.setQuickDescription(namePage.getDescriptionBoxText());
+			myController.setQuickImagePath(namePage.getImagePath());
 		}
 	}
 
 	private void initialize() {
-		namePage = new ImageNameDescriptionPage(getController(), "ActiveAbilityNameDescription", true);
-		scriptingPage = new ScriptingPage(getController(), "ActiveAbilityScriptingDescription");
-		abilityCostPage = new AbilityCostPage(getController());
-		attackPage = new AttackPage(getController(), "ActiveAbilityAttackDescription");
+		namePage = new ImageNameDescriptionPage(getController(),"ActiveAbilityNameDescription");
+		scriptingPage = new ScriptingPage(getController(),"ActiveAbilityScriptingDescription");
 		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
-		getPages().addAll(namePage, getIsAttack() ? attackPage : scriptingPage, gridPage, abilityCostPage);
-	}
-
-	private boolean getIsAttack() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.getButtonTypes().add(ButtonType.YES);
-		alert.getButtonTypes().add(ButtonType.NO);
-		alert.getButtonTypes().remove(ButtonType.OK);
-		alert.titleProperty().bind(getPolyglot().get("IsAttackPrompt"));
-		alert.headerTextProperty().bind(getPolyglot().get("IsAttackHeader"));
-		return ButtonType.YES.equals(alert.showAndWait().orElse(null));
+		getPages().addAll(namePage, scriptingPage, gridPage);
 	}
 
 	@Override
