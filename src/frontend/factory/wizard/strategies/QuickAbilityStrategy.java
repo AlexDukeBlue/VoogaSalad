@@ -103,5 +103,26 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		Optional<ButtonType> result = alert.showAndWait();
 		return (result.get() == buttonTypeOne);
 	}
+	
+	//Perhaps not needed
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+		
+		public void setDescription(String description)
+		{
+			this.description = description;
+		}
+		
+		public void setImagePath(String imagePath)
+		{
+			this.imagePath = imagePath;
+		}
+
+
+
+	}
+
 
 	
