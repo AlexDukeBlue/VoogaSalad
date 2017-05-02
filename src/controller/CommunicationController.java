@@ -526,4 +526,20 @@ public class CommunicationController implements Controller {
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		waitForReady.countDown();
 	}
+	
+	//See instance variables section at the top of this class for discussion about purpose of these methods.
+		//getters
+		public String getQuickName(){return quickName;}
+		public String getQuickDescription(){return quickDescription;}
+		public String getQuickImagePath()
+		{
+			//return quickImagePath;
+			return "resources/images/sword.png";
+		}
+		
+		//setters
+		public void setQuickName(String quickName){this.quickName = quickName;}
+		public void setQuickDescription(String quickDescription){this.quickDescription = quickDescription;}
+		public void setQuickImagePath(String quickImagePath){this.quickImagePath = quickImagePath;}
+
 }
