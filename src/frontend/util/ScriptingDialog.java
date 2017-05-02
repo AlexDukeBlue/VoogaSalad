@@ -114,8 +114,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		HBox bottomBox = new HBox(loadScriptButton);
 		bottomBox.getChildren().add(compileButton);
 		bottomBox.setAlignment(Pos.TOP_RIGHT);
-		languagesMenu.setOnAction(
-				event -> scriptArea.setText(VoogaScriptEngineManager.getDefaultText(languagesMenu.getValue())));
+		//languagesMenu.setOnAction(
+			//	event -> scriptArea.setText(VoogaScriptEngineManager.getDefaultText(languagesMenu.getValue())));
 		pane.setTop(topBox);
 		pane.setBottom(bottomBox);
 		pane.setCenter(scriptArea);
