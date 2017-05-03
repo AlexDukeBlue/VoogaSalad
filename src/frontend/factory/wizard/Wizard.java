@@ -1,5 +1,6 @@
 package frontend.factory.wizard;
 
+import controller.CommunicationController;
 import controller.Controller;
 import frontend.factory.wizard.strategies.WizardStrategy;
 import frontend.util.BaseUIManager;
@@ -37,6 +38,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	private WizardStrategy<T> selectionStrategy;
 	private Dialog<Scene> dialog;
 	private BorderPane borderPane;
+	private CommunicationController myController;
 
 	/**
 	 * Creates a new Wizard object using the SelectionStrategy specified and
@@ -49,6 +51,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 	 */
 	Wizard(Controller controller,WizardStrategy<T> selectionStrategy) {
 		super(controller);
+		this.myController = (CommunicationController) controller;
 		initialize(selectionStrategy);
 	}
 
@@ -92,6 +95,7 @@ public class Wizard<T> extends BaseUIManager<Region> {
 		clearChanged();
 		dialog.close();
 	}
+
 
 	private void initialize(WizardStrategy<T> selectionStrategy) {
 		this.selectionStrategy = selectionStrategy;

@@ -60,6 +60,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	CommunicationController myController;
 	
 
+
 	public ScriptingDialog(Controller controller) {
 		super(controller);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
@@ -107,8 +108,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		quickCreateButton.setOnAction(evt -> {
 			try {
 				ObservableList<WizardPage> pages = myController.getPages();
-				pages.clear(); //clear the old pages
-				myController.getDialog().deleteObservers();
+				pages.clear(); //clear the old pages	
 				create("quickability");
 				
 			} catch (VoogaScriptException e) {

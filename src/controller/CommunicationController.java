@@ -18,6 +18,8 @@ import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
+import frontend.factory.wizard.Wizard;
+import frontend.factory.wizard.strategies.WizardStrategy;
 import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
 import frontend.util.ScriptingDialog;
@@ -76,6 +78,7 @@ public class CommunicationController implements Controller {
 		private String quickSoundPath;
 		private ObservableList<WizardPage> pages;
 		private ScriptingDialog dialog;
+		private Wizard strategy;
 
 
 
@@ -542,6 +545,7 @@ public class CommunicationController implements Controller {
 		public String getQuickSoundPath(){return quickSoundPath;};
 		public ObservableList<WizardPage> getPages(){return pages;};
 		public ScriptingDialog getDialog(){return dialog;};
+		public Wizard getStrategy(){return strategy;};
 	
 		//setters
 		public void setQuickName(String quickName){this.quickName = quickName;}
@@ -550,6 +554,7 @@ public class CommunicationController implements Controller {
 		public void setQuickSoundPath(String quickSoundPath){this.quickSoundPath = quickSoundPath;}
 		public void setPages(ObservableList<WizardPage> pages){this.pages = pages;}
 		public void setDialog(ScriptingDialog dialog){this.dialog = dialog;};
+		public void setStrategy(Wizard strategy){this.strategy = strategy;};
 		
 
 }

@@ -27,7 +27,7 @@ abstract class BaseWizardPage extends BaseUIManager<Region> implements WizardPag
 	public BaseWizardPage(Controller controller) {
 		this(controller, "");
 	}
-
+	
 	/**
 	 * Creates a new instance of BaseWizardPage
 	 *
