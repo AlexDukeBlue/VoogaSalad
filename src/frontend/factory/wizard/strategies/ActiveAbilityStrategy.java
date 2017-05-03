@@ -80,6 +80,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 			myController.setQuickName(namePage.getName());
 			myController.setQuickDescription(namePage.getDescriptionBoxText());
 			myController.setQuickImagePath(namePage.getImagePath());
+			
 		}
 	}
 

@@ -70,6 +70,8 @@ public class CommunicationController implements Controller {
 		private String quickName;
 		private String quickDescription;
 		private String quickImagePath;
+		private String quickSoundPath;
+
 
 
 	public CommunicationController(String username) {
@@ -536,10 +538,15 @@ public class CommunicationController implements Controller {
 			return quickImagePath;
 			//return "resources/images/sword.png";
 		}
+		public String getQuickSoundPath()
+		{
+			return quickSoundPath;
+		}
 		
 		//setters
 		public void setQuickName(String quickName){this.quickName = quickName;}
 		public void setQuickDescription(String quickDescription){this.quickDescription = quickDescription;}
 		public void setQuickImagePath(String quickImagePath){this.quickImagePath = quickImagePath;}
+		public void setQuickSoundPath(String quickSoundPath){this.quickSoundPath = quickSoundPath;}
 
 }

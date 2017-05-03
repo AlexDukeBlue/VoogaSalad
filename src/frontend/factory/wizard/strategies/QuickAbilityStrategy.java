@@ -34,6 +34,8 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	private String name;
 	private String description;
 	private String imagePath;
+	private String soundPath;
+
 	
 	CommunicationController myController;
 
@@ -53,9 +55,13 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 */
 	@Override
 	public ActiveAbility<?> finish() {
+		System.out.println("Here");
+		
 		name = myController.getQuickName();
 		description = myController.getQuickDescription();
 		imagePath = myController.getQuickImagePath();
+		soundPath = myController.getQuickSoundPath();
+		
 		
 		double damage = quickAbility.getDamage();
 		int numHits = quickAbility.numHits();
@@ -63,6 +69,7 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		
 		ActiveAbility<Unit> newUnit = new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath);	
 		System.out.println("new unit: " + newUnit);
+		newUnit.setSoundPath(soundPath);
 		return newUnit;
 		
 		/**
