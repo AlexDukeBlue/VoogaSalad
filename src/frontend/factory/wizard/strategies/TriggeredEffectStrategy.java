@@ -41,6 +41,7 @@ class TriggeredEffectStrategy extends NameScriptBaseStrategy<TriggeredEffect> {
 	}
 
 	private void initialize() {
+		System.out.println("in initialize!!");
 		numTurnsPage = new NumTurnsPage(getController(), "TriggeredEffectNumTurnsPageDescription");
 		getPages().add(numTurnsPage);
 		activationTriggersPage = new ActivationTriggersPage(getController(),

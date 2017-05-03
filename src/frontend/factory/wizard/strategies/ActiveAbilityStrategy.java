@@ -50,6 +50,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	@Override
 	public ActiveAbility<?> finish() {
 
+		/**
 		if (getPages().contains(attackPage)) {
 			return new ActiveAbility<>(
 					namePage.getName(),
@@ -59,6 +60,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 					namePage.getDescriptionLabelBinding().getValueSafe(),
 					namePage.getImagePath()).setSoundPath(namePage.getSoundPath());
 		} else {
+		****/
 			return scriptingPage.getScriptEngine().isPresent() ?
 					new ActiveAbility<>(
 							namePage.getName(),
@@ -68,7 +70,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 							namePage.getDescriptionLabelBinding().getValueSafe(), namePage.getImagePath())
 							.setSoundPath(namePage.getSoundPath())
 					: null;
-		}
+		//}
 	}
 
 	
