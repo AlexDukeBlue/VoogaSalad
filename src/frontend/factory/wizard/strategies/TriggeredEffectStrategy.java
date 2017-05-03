@@ -32,7 +32,7 @@ class TriggeredEffectStrategy extends NameScriptBaseStrategy<TriggeredEffect> {
 	}
 
 	/**
-	 * Returns a fully instnatiated TriggeredEffect object
+	 * Returns a fully instantiated TriggeredEffect object
 	 */
 	@Override
 	public TriggeredEffect finish() {
