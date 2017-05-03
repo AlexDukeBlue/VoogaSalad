@@ -80,6 +80,7 @@ public class CommunicationController implements Controller {
 		private ObservableList<WizardPage> pages;
 		private ScriptingDialog dialog;
 		private BaseStrategy strategy;
+		private String quickType;
 
 
 
@@ -547,6 +548,7 @@ public class CommunicationController implements Controller {
 		public ObservableList<WizardPage> getPages(){return pages;};
 		public ScriptingDialog getDialog(){return dialog;};
 		public BaseStrategy getStrategy(){return strategy;};
+		public String getQuickType(){return quickType;};
 	
 		//setters
 		public void setQuickName(String quickName){this.quickName = quickName;}
@@ -556,6 +558,9 @@ public class CommunicationController implements Controller {
 		public void setPages(ObservableList<WizardPage> pages){this.pages = pages;}
 		public void setDialog(ScriptingDialog dialog){this.dialog = dialog;};
 		public void setStrategy(BaseStrategy strategy){this.strategy = strategy;};
+		public void setQuickType(String quickType){this.quickType = quickType;};
+
+		
 		
 
 }
