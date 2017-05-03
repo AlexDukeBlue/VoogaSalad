@@ -108,6 +108,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 			try {
 				ObservableList<WizardPage> pages = myController.getPages();
 				pages.clear(); //clear the old pages
+				myController.getDialog().deleteObservers();
 				create("quickability");
 				
 			} catch (VoogaScriptException e) {

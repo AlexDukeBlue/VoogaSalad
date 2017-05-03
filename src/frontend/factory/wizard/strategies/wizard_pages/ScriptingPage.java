@@ -2,6 +2,7 @@ package frontend.factory.wizard.strategies.wizard_pages;
 
 import java.util.Optional;
 
+import controller.CommunicationController;
 import controller.Controller;
 import frontend.util.ScriptingDialog;
 import javafx.scene.layout.Region;
@@ -30,7 +31,8 @@ public class ScriptingPage extends BaseWizardPage {
 		super(controller, descriptionKey);
 		dialog = new ScriptingDialog(controller);
 		canNextWritable().bind(dialog.hasCompiled());
-		
+		CommunicationController myController = (CommunicationController) controller;
+		myController.setDialog(dialog);
 	}
 
 	public Optional<VoogaScriptEngine> getScriptEngine() {
