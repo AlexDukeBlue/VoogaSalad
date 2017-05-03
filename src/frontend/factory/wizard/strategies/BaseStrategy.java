@@ -30,7 +30,7 @@ import javafx.scene.layout.VBox;
  * @param <T>
  *            type of Object instantiated by BaseStrategy
  */
-abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
+public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
 	private BooleanProperty canPrevious, canNext, canFinish;
 	private BorderPane borderPane;

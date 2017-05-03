@@ -60,6 +60,7 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	@Override
 	public ActiveAbility<?> finish() {
 		
+		System.out.println("Finished!!");
 		name = myController.getQuickName();
 		description = myController.getQuickDescription();
 		imagePath = myController.getQuickImagePath();

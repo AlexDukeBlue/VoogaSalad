@@ -107,8 +107,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		
 		quickCreateButton.setOnAction(evt -> {
 			try {
-				ObservableList<WizardPage> pages = myController.getPages();
-				pages.clear(); //clear the old pages	
+				//ObservableList<WizardPage> pages = myController.getPages();
 				create("quickability");
 				
 			} catch (VoogaScriptException e) {

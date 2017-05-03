@@ -75,7 +75,6 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	@Override
 	public void next()
 	{
-		System.out.println("Size is " + myController.getPages().size());
 		super.next();
 		if(!counter)
 		{
@@ -95,7 +94,8 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
 		//getPages().addAll(namePage, getIsAttack() ? attackPage : scriptingPage, gridPage, abilityCostPage);
 		getPages().addAll(namePage, scriptingPage,gridPage);
-		myController.setPages(getPages());
+		//myController.setPages(getPages());
+		//myController.setStrategy(this);
 	}
 	
 	private boolean getIsAttack() {
