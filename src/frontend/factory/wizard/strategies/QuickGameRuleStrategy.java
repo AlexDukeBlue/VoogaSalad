@@ -32,9 +32,6 @@ class QuickGameRuleStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	//private ImageNameDescriptionPage namePage;
 	private QuickAbilityPage quickAbility;
-	private GridPatternPage gridPage;
-	private AbilityCostPage abilityCostPage;
-	private AttackPage attackPage;
 	private String name;
 	private String description;
 	private String imagePath;

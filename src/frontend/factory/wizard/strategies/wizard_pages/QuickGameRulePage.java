@@ -38,6 +38,7 @@ public class QuickGameRulePage extends BaseWizardPage {
 	//private int minHits = 0; //TODO Add this to resource file
 	//private int maxHits  = 50; //TODO Add this to resource file
 	List<String> typesOfEndConditions;
+	HBox hb1,hb2,hb3,hb4;
 
 	/**
 	 * Creates a new instance of GridInstantiationPage
@@ -78,14 +79,43 @@ public class QuickGameRulePage extends BaseWizardPage {
 		typesOfEndConditions.add(getResourceBundle().getString("EndTypeOne"));
 		typesOfEndConditions.add(getResourceBundle().getString("EndTypeTwo"));
 		typesOfEndConditions.add(getResourceBundle().getString("EndTypeThree"));
-
+		typesOfEndConditions.add(getResourceBundle().getString("EndTypeFour"));
 	}
 
 	private void changeNames(String type)
 	{
-		String[] newValues = typesOfAbilities.get(type);
-		rows.setName(newValues[0]);
-		cols.setName(newValues[1]);
+		if(type.equals(typesOfEndConditions.add(getResourceBundle().getString("EndTypeOne")))) typeOne();
+		else if(type.equals(typesOfEndConditions.add(getResourceBundle().getString("EndTypeTwo")))) typeTwo();
+		else if(type.equals(typesOfEndConditions.add(getResourceBundle().getString("EndTypeThree")))) typeThree();
+		else if(type.equals(typesOfEndConditions.add(getResourceBundle().getString("EndTypeFour")))) typeFour();
+	}
+	
+	public void typeOne()
+	{
+		hb1.setVisible(true);
+		hb2.setVisible(false);
+		hb3.setVisible(false);
+	}
+	
+	public void typeTwo()
+	{
+		hb1.setVisible(false);
+		hb2.setVisible(false);
+		hb3.setVisible(false);
+	}
+	
+	public void typeThree()
+	{
+		hb1.setVisible(false);
+		hb2.setVisible(true);
+		hb3.setVisible(false);
+	}
+	
+	public void typeFour()
+	{
+		hb1.setVisible(false);
+		hb2.setVisible(false);
+		hb3.setVisible(true);
 	}
 
 	private void initialize() {
@@ -93,10 +123,7 @@ public class QuickGameRulePage extends BaseWizardPage {
 		vbox = new VBox();
 		vbox.setAlignment(Pos.CENTER);
 		ObservableList<String> abilityNames = FXCollections.observableArrayList();
-		for (String key : typesOfAbilities.keySet())
-		{
-			abilityNames.add(key);
-		}
+		abilityNames.addAll(typesOfEndConditions);
 		cellShapeChooser = new ComboBox<>(abilityNames);
 		cellShapeChooser.setValue(abilityNames.get(0));
 		cellShapeChooser.setOnAction(event -> changeNames(cellShapeChooser.getValue()));
@@ -107,15 +134,21 @@ public class QuickGameRulePage extends BaseWizardPage {
 		
 		Label label1 = new Label(getResourceBundle().getString("Enter_NumPoints"));
 		TextField numPointsField = new TextField();
-		HBox hb = new HBox();
-		hb.getChildren().addAll(label1, numPointsField);
-		hb.setSpacing(10);
+		hb1 = new HBox();
+		hb1.getChildren().addAll(label1, numPointsField);
+		hb1.setSpacing(10);
 		
-		Label label2 = new Label(getResourceBundle().getString("Enter_NumPoints"));
+		Label label3 = new Label(getResourceBundle().getString("Enter_Unit"));
 		TextField unitNameField = new TextField();
-		HBox hb2 = new HBox();
-		hb2.getChildren().addAll(label2, unitNameField);
+		hb2 = new HBox();
+		hb2.getChildren().addAll(label3, unitNameField);
 		hb2.setSpacing(10);
+		
+		Label label4 = new Label(getResourceBundle().getString("Enter_Terrain"));
+		TextField terrainNameField = new TextField();
+		hb3 = new HBox();
+		hb3.getChildren().addAll(label4, terrainNameField);
+		hb3.setSpacing(10);
 		
 		/**
 		Button blankButtonOne = new Button();
@@ -125,7 +158,7 @@ public class QuickGameRulePage extends BaseWizardPage {
 		***/
 		
 		
-		vbox.getChildren().addAll(cellShapeBox, blankButtonOne, damageBox, blankButtonTwo, hitBox);
+		vbox.getChildren().addAll(cellShapeBox, hb1, hb2, hb3);
 		System.out.println("end initialize");
 		canNextWritable().setValue(true);
 	}
