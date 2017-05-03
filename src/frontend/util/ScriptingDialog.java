@@ -27,6 +27,7 @@ import javafx.stage.FileChooser;
 import scripting.VoogaScriptEngine;
 import scripting.VoogaScriptEngineManager;
 import scripting.VoogaScriptException;
+import util.AlertFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -149,7 +150,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		try {
 			br = new BufferedReader(new FileReader(myScript));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			loadError();
 		}
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -162,7 +163,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 			code = sb.toString();
 			br.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			loadError();
 		}
 		return code;
 	}
@@ -187,6 +188,11 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		scriptArea.setPromptText(getResourceBundle().getString(strat + languagesMenu.getValue()));
 		strategy = strat;
 	}
+	
+	private void loadError(){
+		AlertFactory.warningAlert("Could not load script.", "Try loading a different file.", "").showAndWait();
+	}
+
 
 	private void handleException(Exception e) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -231,5 +237,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	public Optional<VoogaScriptEngine> getScriptEngine() {
 		return Optional.ofNullable(scriptEngine);
 	}
+	
+	
 }
 
