@@ -267,18 +267,18 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public boolean activeTeamWon() {
-		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
+	public boolean myTeamWon() {
+		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
 	}
 
 	@Override
-	public boolean activeTeamLost() {
-		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
+	public boolean myTeamLost() {
+		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
 	}
 
 	@Override
-	public boolean activeTeamTied() {
-		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
+	public boolean myTeamTied() {
+		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
 	}
 
 	@Override

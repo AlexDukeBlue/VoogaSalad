@@ -128,28 +128,25 @@ public interface Controller {
 	boolean isAuthoringMode();
 
 	/**
-	 * Returns a boolean indicating whether or not the Controller's active
-	 * Player has won.
+	 * Returns a boolean indicating whether or not the Controller's Team has won.
 	 * 
 	 * @return true if the Player has won, false if not
 	 */
-	boolean activeTeamWon();
+	boolean myTeamWon();
 
 	/**
-	 * Returns a boolean indicating whether or not the Controller's active
-	 * Player has lost.
+	 * Returns a boolean indicating whether or not the Controller's Team has lost.
 	 * 
 	 * @return true if the Player has lost, false if not
 	 */
-	boolean activeTeamLost();
+	boolean myTeamLost();
 
 	/**
-	 * Returns a boolean indicating whether or not the Controller's active
-	 * Player has tied.
+	 * Returns a boolean indicating whether or not the Controller's Team has tied.
 	 * 
 	 * @return true if the Player has tied, false if not
 	 */
-	boolean activeTeamTied();
+	boolean myTeamTied();
 
 	/**
 	 * Adds a turn requirement to the Model's list of turn requirements.
