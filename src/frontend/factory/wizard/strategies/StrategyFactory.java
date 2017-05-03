@@ -25,6 +25,7 @@ public class StrategyFactory {
 		STRATEGY_MAP.put("terrain", TerrainStrategy.class);
 		STRATEGY_MAP.put("unit", UnitStrategy.class);
 		STRATEGY_MAP.put("activeability", ActiveAbilityStrategy.class);
+		STRATEGY_MAP.put("quickability", QuickAbilityStrategy.class);
 		STRATEGY_MAP.put("unittriggeredeffect", TriggeredEffectStrategy.class);
 		STRATEGY_MAP.put("celltriggeredeffect", TriggeredEffectStrategy.class);
 		STRATEGY_MAP.put("offensivemodifier", InteractionModifierStrategy.class);

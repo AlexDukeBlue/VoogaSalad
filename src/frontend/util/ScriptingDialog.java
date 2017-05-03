@@ -232,3 +232,4 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		return Optional.ofNullable(scriptEngine);
 	}
 }
+
