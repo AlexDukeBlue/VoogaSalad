@@ -96,18 +96,19 @@ public final class CoordinateTuple implements Iterable<Integer>, Serializable {
 		if (dimension() == 2) {
 			return this;
 		}
-		int col = get(0);
-		int row = get(2) + (get(0) + (get(0) & 1)) / 2;
-		return new CoordinateTuple(row, col);
+		int col = get(0) + ( get(2) - ( get(2) & 1 ) ) / 2;
+		int row = get(2);
+		return new CoordinateTuple(col, row);
 	}
 
 	private CoordinateTuple convertToHexagonal() {
 		if (dimension() == 3) {
 			return this;
 		}
-		int x = get(1);
-		int z = get(0) - (get(1) + (get(1) & 1)) / 2;
-		return new CoordinateTuple(x, -(x + z), z);
+		int x = get(0) - ( get(1) - ( get(1) & 1 ) ) / 2;
+		int z = get(1);
+		int y = - x - z;
+		return new CoordinateTuple(x, y, z);
 	}
 
 	public Stream<Integer> stream() {
