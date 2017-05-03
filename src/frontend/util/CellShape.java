@@ -5,5 +5,5 @@ package frontend.util;
  * Created 4/5/2017
  */
 public enum CellShape {
-	Square, Hexagon, Triangle
+	Square, Hexagon
 }

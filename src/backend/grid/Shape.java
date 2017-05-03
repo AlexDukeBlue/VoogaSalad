@@ -21,13 +21,7 @@ public enum Shape {
 			new CoordinateTuple(1, 0, -1),
 			new CoordinateTuple(-1, 0, 1),
 			new CoordinateTuple(1, -1, 0),
-			new CoordinateTuple(-1, 1, 0)),
-	
-	Triangular(
-			"Triangle",
-			new CoordinateTuple(0,1),
-			new CoordinateTuple(-1,1),
-			new CoordinateTuple(1,-1));
+			new CoordinateTuple(-1, 1, 0));
 
 
 	private static final long serialVersionUID = 1L;
