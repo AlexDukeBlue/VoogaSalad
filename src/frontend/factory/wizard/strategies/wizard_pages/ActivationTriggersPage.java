@@ -66,7 +66,8 @@ public class ActivationTriggersPage extends BaseWizardPage {
 			rowToTrigger.put(row, (Event) trigger);
 			table.getChildren().add(row);
 		});
-		canNextWritable().setValue(true);
+		canNextWritable().setValue(true); 
+		
 	}
 
 }

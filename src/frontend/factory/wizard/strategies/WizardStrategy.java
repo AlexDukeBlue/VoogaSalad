@@ -45,6 +45,14 @@ public interface WizardStrategy<T> {
 	 *         strategy has all the information needed to instantiate an object.
 	 */
 	ReadOnlyBooleanProperty canFinish();
+	
+	/**
+	 * Returns a boolean property that tells other classes whether the strategy
+	 * requests the wizard to cancel.
+	 * 
+	 * @return true if the wizard should cancel
+	 */
+	ReadOnlyBooleanProperty requestsCancel();
 
 	/**
 	 * Returns a boolean property that tells other classes whether the strategy

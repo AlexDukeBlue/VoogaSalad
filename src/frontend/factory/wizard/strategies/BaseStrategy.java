@@ -30,7 +30,7 @@ import javafx.scene.layout.VBox;
  * @param <T>
  *            type of Object instantiated by BaseStrategy
  */
-abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
+public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
 	private BooleanProperty canPrevious, canNext, canFinish, requestsCancel;
 	private BorderPane borderPane;
@@ -53,6 +53,16 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		super(controller);
 		initialize(pages);
 	}
+	
+	@Override
+	public ReadOnlyBooleanProperty requestsCancel() {
+		return BooleanProperty.readOnlyBooleanProperty(requestsCancel);
+	}
+
+	public BooleanProperty requestsCancelWritable() {
+		return requestsCancel;
+	}
+
 
 	@Override
 	public ReadOnlyBooleanProperty canPrevious() {

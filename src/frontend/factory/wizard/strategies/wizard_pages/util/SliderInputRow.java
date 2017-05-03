@@ -102,7 +102,8 @@ public class SliderInputRow extends BaseUIManager<Region> {
 		myNumericInputRow = new HBox();
 
 		myNameField = new Label();
-		myNameField.textProperty().bind(name);
+		//myNameField.textProperty().bind(name);
+		myNameField.textProperty().set(name.get());
 
 		mySlider = new Slider();
 		mySlider.setMajorTickUnit(1);
@@ -121,7 +122,7 @@ public class SliderInputRow extends BaseUIManager<Region> {
 		myNumericInputRow.getChildren().addAll(imageView, myNameField, mySlider, myLabelField);
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		myNameField.setText(name);
 	}
 
