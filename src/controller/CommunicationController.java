@@ -533,8 +533,8 @@ public class CommunicationController implements Controller {
 		public String getQuickDescription(){return quickDescription;}
 		public String getQuickImagePath()
 		{
-			//return quickImagePath;
-			return "resources/images/sword.png";
+			return quickImagePath;
+			//return "resources/images/sword.png";
 		}
 		
 		//setters

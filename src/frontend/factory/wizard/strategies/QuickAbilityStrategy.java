@@ -53,16 +53,13 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 */
 	@Override
 	public ActiveAbility<?> finish() {
-		System.out.println("got here");
 		name = myController.getQuickName();
 		description = myController.getQuickDescription();
 		imagePath = myController.getQuickImagePath();
 		
 		double damage = quickAbility.getDamage();
 		int numHits = quickAbility.numHits();
-		System.out.println("Name: " + name);
-		System.out.println("description: " + description);
-		System.out.println("imagePath: " +imagePath);
+
 		
 		ActiveAbility<Unit> newUnit = new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath);	
 		System.out.println("new unit: " + newUnit);
