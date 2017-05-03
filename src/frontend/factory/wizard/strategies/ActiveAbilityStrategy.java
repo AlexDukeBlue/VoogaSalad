@@ -44,7 +44,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 					new Attack(attackPage.getDamage(), attackPage.getNumHits(), attackPage.getModifiers()),
 					abilityCostPage.getCost(),
 					gridPage.getGridPattern(),
-					namePage.getDescriptionLabelBinding().getValueSafe(),
+					namePage.getDescriptionBoxText(),
 					namePage.getImagePath()).setSoundPath(namePage.getSoundPath());
 		} else {
 			return scriptingPage.getScriptEngine().isPresent() ?
