@@ -32,7 +32,7 @@ import javafx.scene.layout.VBox;
  */
 abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
-	private BooleanProperty canPrevious, canNext, canFinish;
+	private BooleanProperty canPrevious, canNext, canFinish, requestsCancel;
 	private BorderPane borderPane;
 	private ScrollPane scrollPane;
 	private VBox descriptionBox;
@@ -43,13 +43,13 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	 * Instantiates the BaseStrategy with an empty set of pages.
 	 */
 	BaseStrategy(Controller controller) {
-		this(controller,new ArrayList<>());
+		this(controller, new ArrayList<>());
 	}
 
 	/**
 	 * Instantiates the BaseStrategy with the pages specified.
 	 */
-	BaseStrategy(Controller controller,Collection<WizardPage> pages) {
+	BaseStrategy(Controller controller, Collection<WizardPage> pages) {
 		super(controller);
 		initialize(pages);
 	}
@@ -70,6 +70,11 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	}
 
 	@Override
+	public ReadOnlyBooleanProperty requestsCancel() {
+		return BooleanProperty.readOnlyBooleanProperty(requestsCancel);
+	}
+
+	@Override
 	final public Region getNode() {
 		return borderPane;
 	}
@@ -82,6 +87,10 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 	@Override
 	public void next() {
 		tryToGoToPageNum(getCurrentPageNum() + 1);
+	}
+
+	protected BooleanProperty requestsCancelWritable() {
+		return requestsCancel;
 	}
 
 	protected ObservableList<WizardPage> getPages() {
@@ -138,6 +147,7 @@ abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardSt
 		canPrevious = new SimpleBooleanProperty(false);
 		canNext = new SimpleBooleanProperty(false);
 		canFinish = new SimpleBooleanProperty(false);
+		requestsCancel = new SimpleBooleanProperty(false);
 		borderPane = new BorderPane();
 		scrollPane = new ScrollPane();
 		descriptionLabel = new Label();
