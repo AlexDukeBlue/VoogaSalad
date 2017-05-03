@@ -32,7 +32,7 @@ import javafx.scene.layout.VBox;
  */
 public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements WizardStrategy<T> {
 
-	private BooleanProperty canPrevious, canNext, canFinish;
+	private BooleanProperty canPrevious, canNext, canFinish, requestsCancel;
 	private BorderPane borderPane;
 	private ScrollPane scrollPane;
 	private VBox descriptionBox;
@@ -53,6 +53,16 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 		super(controller);
 		initialize(pages);
 	}
+	
+	@Override
+	public ReadOnlyBooleanProperty requestsCancel() {
+		return BooleanProperty.readOnlyBooleanProperty(requestsCancel);
+	}
+
+	public BooleanProperty requestsCancelWritable() {
+		return requestsCancel;
+	}
+
 
 	@Override
 	public ReadOnlyBooleanProperty canPrevious() {
@@ -138,6 +148,7 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 		canPrevious = new SimpleBooleanProperty(false);
 		canNext = new SimpleBooleanProperty(false);
 		canFinish = new SimpleBooleanProperty(false);
+		requestsCancel = new SimpleBooleanProperty(false);
 		borderPane = new BorderPane();
 		scrollPane = new ScrollPane();
 		descriptionLabel = new Label();

@@ -82,8 +82,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		{
 			myController.setQuickName(namePage.getName());
 			myController.setQuickDescription(namePage.getDescriptionBoxText());
-			myController.setQuickImagePath(namePage.getImagePath());
-			
+			myController.setQuickImagePath(namePage.getImagePath());			
 		}
 	}
 
@@ -97,7 +96,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		//getPages().addAll(namePage, getIsAttack() ? attackPage : scriptingPage, gridPage, abilityCostPage);
 		getPages().addAll(namePage, scriptingPage,gridPage);
 		//myController.setPages(getPages());
-		//myController.setStrategy(this);
+		myController.setStrategy(this);
 	}
 	
 	private boolean getIsAttack() {

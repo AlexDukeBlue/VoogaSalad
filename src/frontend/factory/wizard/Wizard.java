@@ -169,6 +169,13 @@ public class Wizard<T> extends BaseUIManager<Region> {
 			((Button) (dialog.getDialogPane().lookupButton(ButtonType.FINISH))).getStylesheets()
 					.add(getStyleSheet().getValue());
 		});
+		
+		selectionStrategy.requestsCancel().addListener((observable,oldValue,newValue) -> {
+			if (newValue){
+				cancel();
+			}
+		});
+
 
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
 		show();

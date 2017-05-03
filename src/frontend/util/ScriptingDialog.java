@@ -39,6 +39,7 @@ import java.io.IOException;
 
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
+import frontend.factory.wizard.strategies.BaseStrategy;
 import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 
 
@@ -108,6 +109,9 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		quickCreateButton.setOnAction(evt -> {
 			try {
 				//ObservableList<WizardPage> pages = myController.getPages();
+				BaseStrategy myStrategy = myController.getStrategy();
+				myStrategy.requestsCancelWritable().setValue(true);
+				myStrategy.requestsCancelWritable().setValue(false);
 				create("quickability");
 				
 			} catch (VoogaScriptException e) {
