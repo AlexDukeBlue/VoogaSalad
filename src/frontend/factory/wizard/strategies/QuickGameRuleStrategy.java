@@ -14,6 +14,7 @@ import frontend.factory.wizard.strategies.wizard_pages.AttackPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.QuickAbilityPage;
+import frontend.factory.wizard.strategies.wizard_pages.QuickGameRulePage;
 import frontend.factory.wizard.strategies.wizard_pages.ScriptingPage;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.control.Alert;
@@ -31,7 +32,7 @@ import javafx.scene.paint.Color;
 class QuickGameRuleStrategy extends BaseStrategy<ActiveAbility<?>> {
 
 	//private ImageNameDescriptionPage namePage;
-	private QuickAbilityPage quickAbility;
+	private QuickGameRulePage quickRule;
 	private String name;
 	private String description;
 	private String imagePath;
@@ -62,12 +63,13 @@ class QuickGameRuleStrategy extends BaseStrategy<ActiveAbility<?>> {
 		description = myController.getQuickDescription();
 		imagePath = myController.getQuickImagePath();
 		soundPath = myController.getQuickSoundPath();
+		return null;
 		
 		
-		double damage = quickAbility.getDamage();
-		int numHits = quickAbility.numHits();
+		// damage = quickAbility.getDamage();
+		//int numHits = quickAbility.numHits();
 
-		return new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath).setSoundPath(soundPath);
+		//return new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath).setSoundPath(soundPath);
 		
 		/**
 		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(),
@@ -78,12 +80,9 @@ class QuickGameRuleStrategy extends BaseStrategy<ActiveAbility<?>> {
 	
 
 	private void initialize() {
-		quickAbility = new QuickAbilityPage(getController(),"QuickAbilityTypeDescription");
-		gridPage = new GridPatternPage(getController(), "QuickGridPatternRangeDescription", Color.WHITE, Color.GREEN);
-		abilityCostPage = new AbilityCostPage(getController());
-		attackPage = new AttackPage(getController(), "ActiveAbilityAttackDescription");
+		quickRule = new QuickGameRulePage(getController(),"QuickGameRuleTypeDescription");
 		getPages().clear();
-		getPages().addAll(quickAbility,gridPage,attackPage,abilityCostPage);
+		getPages().addAll(quickRule);
 	}
 
 	@Override
@@ -91,21 +90,6 @@ class QuickGameRuleStrategy extends BaseStrategy<ActiveAbility<?>> {
 		return getPolyglot().get("ActiveAbilityWizardTitle");
 	}
 	
-	private boolean isARangedUnit()
-	{
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Ranged");
-		alert.setHeaderText("Will this ability affect other units in addition to the one it is attached to?");
-		alert.setContentText("Select yes if this active ability has a range.");
-
-		ButtonType buttonTypeOne = new ButtonType("Yes");
-		ButtonType buttonTypeTwo = new ButtonType("No");
-
-		alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
-
-		Optional<ButtonType> result = alert.showAndWait();
-		return (result.get() == buttonTypeOne);
-	}
 	
 	//Perhaps not needed
 		public void setName(String name)
