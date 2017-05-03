@@ -104,7 +104,7 @@ public class ChatLogView extends BaseUIManager<BorderPane> {
 		to.setMouseTransparent(true);
 		TextField messageRecipientField = new TextField();
 		messageRecipientField.setMinWidth(80);
-		chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, to, messageRecipientField));
+		//chatModeChooser.setOnAction(event -> showOrHideRecipientField(bottomBox, chatModeChooser, to, messageRecipientField));
 		TextField textContentInputField = new TextField();
 		textContentInputField.setMinWidth(200);
 		textContentInputField.setPrefWidth(1000);
