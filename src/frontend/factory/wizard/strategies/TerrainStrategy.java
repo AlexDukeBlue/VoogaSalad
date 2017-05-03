@@ -43,7 +43,7 @@ class TerrainStrategy extends BaseStrategy<Terrain> {
 	@Override
 	public Terrain finish() {
 		ModifiableTerrain terrain = new ModifiableTerrain(imageNameDescriptionPage.getName());
-		terrain.setDescription(imageNameDescriptionPage.getDescriptionLabelBinding().getValue());
+		terrain.setDescription(imageNameDescriptionPage.getDescriptionBoxText());
 		terrain.setImgPath(imageNameDescriptionPage.getImagePath());
 		terrain.setSoundPath(imageNameDescriptionPage.getSoundPath());
 		terrain.setDefaultMoveCost(unitMovePointPage.getDefault());

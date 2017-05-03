@@ -43,13 +43,13 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	 * Instantiates the BaseStrategy with an empty set of pages.
 	 */
 	BaseStrategy(Controller controller) {
-		this(controller,new ArrayList<>());
+		this(controller, new ArrayList<>());
 	}
 
 	/**
 	 * Instantiates the BaseStrategy with the pages specified.
 	 */
-	BaseStrategy(Controller controller,Collection<WizardPage> pages) {
+	BaseStrategy(Controller controller, Collection<WizardPage> pages) {
 		super(controller);
 		initialize(pages);
 	}
@@ -80,6 +80,11 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	}
 
 	@Override
+	public ReadOnlyBooleanProperty requestsCancel() {
+		return BooleanProperty.readOnlyBooleanProperty(requestsCancel);
+	}
+
+	@Override
 	final public Region getNode() {
 		return borderPane;
 	}
@@ -92,6 +97,10 @@ public abstract class BaseStrategy<T> extends BaseUIManager<Region> implements W
 	@Override
 	public void next() {
 		tryToGoToPageNum(getCurrentPageNum() + 1);
+	}
+
+	protected BooleanProperty requestsCancelWritable() {
+		return requestsCancel;
 	}
 
 	protected ObservableList<WizardPage> getPages() {

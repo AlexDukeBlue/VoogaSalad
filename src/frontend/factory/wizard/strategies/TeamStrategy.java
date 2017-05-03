@@ -32,7 +32,7 @@ class TeamStrategy extends BaseStrategy<Team> {
 	 */
 	@Override
 	public Team finish() {
-		return new Team(namePage.getName(), namePage.getDescriptionLabelBinding().getValueSafe(),
+		return new Team(namePage.getName(), namePage.getDescriptionBoxText(),
 				colorPage.getColorString(), namePage.getImagePath(), Collections.emptyList());
 	}
 

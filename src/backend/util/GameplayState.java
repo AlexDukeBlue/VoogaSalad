@@ -68,13 +68,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 		this.activeTurnRequirements = new HashSet<>(turnRequirements);
 		this.players = new TreeSet<>(new Comparator<ImmutablePlayer>() {
 			public int compare(ImmutablePlayer p1, ImmutablePlayer p2) {
-				if (p1.getTeam().isPresent() && p2.getTeam().isPresent()) {
-					return p1.getTeam().get().getName().compareTo(p2.getTeam().get().getName());
-				} else if (p1.getTeam().isPresent()) {
-					return -1;
-				} else {
-					return 1;
-				}
+				return p1.getName().compareTo(p2.getName());
 			}
 		});
 		this.currentTeamNumber = 0;
@@ -162,9 +156,11 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 	}
 
 	public GameplayState removePlayer(ImmutablePlayer player) {
-		player.getTeam().ifPresent(team -> team.removeAll(player));
-		players.remove(player);
-		return removePlayer(player.getName());
+		if (player != null){
+			player.getTeam().ifPresent(team -> team.removeAll(player));
+			players.remove(player);
+		}
+		return this;
 	}
 
 	@Override

@@ -519,6 +519,7 @@ public class CommunicationController implements Controller {
 
 	private synchronized void updateGameState() {
 		executor.execute(() -> {
+			waitForReady.countDown();
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
 				saveState(autoSavePath);
@@ -536,7 +537,7 @@ public class CommunicationController implements Controller {
 			BaseUIManager.getResourcePaths().forEach(this::sendFile);
 		}
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
-		waitForReady.countDown();
+		//waitForReady.countDown();
 	}
 	
 	//See instance variables section at the top of this class for discussion about purpose of these methods.
