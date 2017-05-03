@@ -31,7 +31,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	
 	private boolean counter; //Used to do a certain action between pages. Please do not remove
 	CommunicationController myController;
-
+	
 	/**
 	 * Creates a new instance of ActiveAbilityStrategy
 	 * 
@@ -49,6 +49,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 */
 	@Override
 	public ActiveAbility<?> finish() {
+
 		if (getPages().contains(attackPage)) {
 			return new ActiveAbility<>(
 					namePage.getName(),
@@ -74,6 +75,7 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	@Override
 	public void next()
 	{
+		System.out.println("Size is " + myController.getPages().size());
 		super.next();
 		if(!counter)
 		{
@@ -91,7 +93,9 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		abilityCostPage = new AbilityCostPage(getController());
 		attackPage = new AttackPage(getController(), "ActiveAbilityAttackDescription");
 		gridPage = new GridPatternPage(getController(), "ActiveAbilityGridPatternDescription", Color.WHITE, Color.GREEN);
-		getPages().addAll(namePage, getIsAttack() ? attackPage : scriptingPage, gridPage, abilityCostPage);
+		//getPages().addAll(namePage, getIsAttack() ? attackPage : scriptingPage, gridPage, abilityCostPage);
+		getPages().addAll(namePage, scriptingPage,gridPage);
+		myController.setPages(getPages());
 	}
 	
 	private boolean getIsAttack() {
@@ -109,7 +113,6 @@ class ActiveAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	public StringBinding getTitle() {
 		return getPolyglot().get("ActiveAbilityWizardTitle");
 	}
-	
 	
 
 }

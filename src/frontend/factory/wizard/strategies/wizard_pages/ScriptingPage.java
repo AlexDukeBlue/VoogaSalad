@@ -30,6 +30,7 @@ public class ScriptingPage extends BaseWizardPage {
 		super(controller, descriptionKey);
 		dialog = new ScriptingDialog(controller);
 		canNextWritable().bind(dialog.hasCompiled());
+		
 	}
 
 	public Optional<VoogaScriptEngine> getScriptEngine() {
@@ -43,7 +44,9 @@ public class ScriptingPage extends BaseWizardPage {
 	public ScriptingDialog getDialog() {
 		return dialog;
 	}
-
+	
+	
+	
 	@Override
 	public Region getNode() {
 		return dialog.getNode();

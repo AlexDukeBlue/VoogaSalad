@@ -5,11 +5,13 @@ import java.io.StringWriter;
 import java.util.Optional;
 
 import backend.util.VoogaEntity;
+import controller.CommunicationController;
 import controller.Controller;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -37,6 +39,7 @@ import java.io.IOException;
 
 import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.WizardFactory;
+import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 
 
 
@@ -54,11 +57,13 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 	private BooleanProperty hasCompiled;
 	private String strategy;
 	private final double SPACING = 5;
+	CommunicationController myController;
 	
 
 	public ScriptingDialog(Controller controller) {
 		super(controller);
 		getStyleSheet().setValue(getPossibleStyleSheetNamesAndFileNames().get("DefaultTheme"));
+		this.myController = (CommunicationController) controller;
 		hasCompiled = new SimpleBooleanProperty(false);
 		languagesMenu = new ChoiceBox<>(
 				FXCollections.observableArrayList(VoogaScriptEngineManager.getAllSupportedScriptingLanguages()));
@@ -70,7 +75,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		Button helpButton = new Button(); 
 		Button blankButton = new Button();
 		Button blankButton2 = new Button();
-
+		
 		blankButton.setVisible(false);
 		blankButton2.setVisible(false);
 
@@ -101,6 +106,8 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 		
 		quickCreateButton.setOnAction(evt -> {
 			try {
+				ObservableList<WizardPage> pages = myController.getPages();
+				pages.clear(); //clear the old pages
 				create("quickability");
 				
 			} catch (VoogaScriptException e) {
@@ -139,6 +146,7 @@ public class ScriptingDialog extends BaseUIManager<Region> {
 				.getTemplateByCategory("activeability").addAll((VoogaEntity) template));
 
 	}
+	
 	
 	private String loadScript() {
 		String code = "";

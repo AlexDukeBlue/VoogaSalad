@@ -9,6 +9,8 @@ import backend.unit.properties.Attack;
 import backend.unit.properties.ActiveAbility.AbilityEffect;
 import controller.CommunicationController;
 import controller.Controller;
+import frontend.factory.wizard.strategies.wizard_pages.AbilityCostPage;
+import frontend.factory.wizard.strategies.wizard_pages.AttackPage;
 import frontend.factory.wizard.strategies.wizard_pages.GridPatternPage;
 import frontend.factory.wizard.strategies.wizard_pages.ImageNameDescriptionPage;
 import frontend.factory.wizard.strategies.wizard_pages.QuickAbilityPage;
@@ -31,6 +33,8 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	//private ImageNameDescriptionPage namePage;
 	private QuickAbilityPage quickAbility;
 	private GridPatternPage gridPage;
+	private AbilityCostPage abilityCostPage;
+	private AttackPage attackPage;
 	private String name;
 	private String description;
 	private String imagePath;
@@ -55,7 +59,6 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	 */
 	@Override
 	public ActiveAbility<?> finish() {
-		System.out.println("Here");
 		
 		name = myController.getQuickName();
 		description = myController.getQuickDescription();
@@ -66,11 +69,7 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 		double damage = quickAbility.getDamage();
 		int numHits = quickAbility.numHits();
 
-		
-		ActiveAbility<Unit> newUnit = new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath);	
-		System.out.println("new unit: " + newUnit);
-		newUnit.setSoundPath(soundPath);
-		return newUnit;
+		return new ActiveAbility<>(name, new Attack(damage, numHits),gridPage.getGridPattern(), description, imagePath).setSoundPath(soundPath);
 		
 		/**
 		return scriptingPage.getScriptEngine().isPresent() ? new ActiveAbility<>(namePage.getName(),
@@ -83,8 +82,10 @@ class QuickAbilityStrategy extends BaseStrategy<ActiveAbility<?>> {
 	private void initialize() {
 		quickAbility = new QuickAbilityPage(getController(),"QuickAbilityTypeDescription");
 		gridPage = new GridPatternPage(getController(), "QuickGridPatternRangeDescription", Color.WHITE, Color.GREEN);
-		getPages().addAll(quickAbility,gridPage);
-
+		abilityCostPage = new AbilityCostPage(getController());
+		attackPage = new AttackPage(getController(), "ActiveAbilityAttackDescription");
+		getPages().clear();
+		getPages().addAll(quickAbility,gridPage,attackPage,abilityCostPage);
 	}
 
 	@Override

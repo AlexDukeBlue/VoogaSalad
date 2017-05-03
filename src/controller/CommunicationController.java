@@ -18,9 +18,12 @@ import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
+import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
+import frontend.util.ScriptingDialog;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import util.AlertFactory;
 import util.io.Serializer;
 import util.net.Modifier;
@@ -62,7 +65,7 @@ public class CommunicationController implements Controller {
 	private Deque<Path> saveHistory;
 	private DieselEngine engine;
 	
-	//These three fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
+		//These five fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
 		//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages. So basically,
 		//it allows one end of the frontend to communicate with the other end. Although this is not the main
 		//purpose of the CommunicationController, it makes a difficult and complicated action very simple,
@@ -71,6 +74,8 @@ public class CommunicationController implements Controller {
 		private String quickDescription;
 		private String quickImagePath;
 		private String quickSoundPath;
+		private ObservableList<WizardPage> pages;
+		private ScriptingDialog dialog;
 
 
 
@@ -533,20 +538,18 @@ public class CommunicationController implements Controller {
 		//getters
 		public String getQuickName(){return quickName;}
 		public String getQuickDescription(){return quickDescription;}
-		public String getQuickImagePath()
-		{
-			return quickImagePath;
-			//return "resources/images/sword.png";
-		}
-		public String getQuickSoundPath()
-		{
-			return quickSoundPath;
-		}
-		
+		public String getQuickImagePath(){return quickImagePath;};
+		public String getQuickSoundPath(){return quickSoundPath;};
+		public ObservableList<WizardPage> getPages(){return pages;};
+		public ScriptingDialog getDialog(){return dialog;};
+	
 		//setters
 		public void setQuickName(String quickName){this.quickName = quickName;}
 		public void setQuickDescription(String quickDescription){this.quickDescription = quickDescription;}
 		public void setQuickImagePath(String quickImagePath){this.quickImagePath = quickImagePath;}
 		public void setQuickSoundPath(String quickSoundPath){this.quickSoundPath = quickSoundPath;}
+		public void setPages(ObservableList<WizardPage> pages){this.pages = pages;}
+		public void setDialog(ScriptingDialog dialog){this.dialog = dialog;};
+		
 
 }
