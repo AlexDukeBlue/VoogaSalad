@@ -55,14 +55,6 @@ public interface WizardStrategy<T> {
 	ReadOnlyBooleanProperty requestsCancel();
 
 	/**
-	 * Returns a boolean property that tells other classes whether the strategy
-	 * requests the wizard to cancel.
-	 * 
-	 * @return true if the wizard should cancel
-	 */
-	ReadOnlyBooleanProperty requestsCancel();
-
-	/**
 	 * Returns the object that displays to the user to allow the user to input
 	 * settings.
 	 * 
