@@ -2,6 +2,7 @@ package backend.game_engine;
 
 import backend.game_engine.ResultQuadPredicate.Result;
 import backend.player.Team;
+import backend.unit.Unit;
 import backend.util.AuthoringGameState;
 import backend.util.GameplayState;
 import backend.util.io.XMLSerializer;
@@ -39,6 +40,7 @@ public class DieselEngine implements GameEngine {
 			checkTurnEvents(state);
 			checkObjectives(state);
 		}
+		
 	}
 
 	@Override
@@ -57,7 +59,7 @@ public class DieselEngine implements GameEngine {
 			newGameState = (AuthoringGameState) new XMLSerializer<>()
 					.unserialize(new String(Files.readAllBytes(Paths.get(gameStateFile.getPath()))));
 		} catch (Exception e) {
-//			loadFailAlert();
+		//	loadFailAlert();
 			newGameState = null;
 		}
 		return newGameState;
@@ -71,7 +73,7 @@ public class DieselEngine implements GameEngine {
 	 * @param state
 	 */
 	private void checkTurnRules(GameplayState state) {
-		if (!state.getActiveTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActiveTeam(), state))
+		if (state.getActiveTurnRequirements().parallelStream().allMatch(e -> e.test(state.getActiveTeam(), state))
 				&& state.turnRequirementsSatisfied())
 			state.endTurn();
 	}

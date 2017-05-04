@@ -1,0 +1,230 @@
+int xmin = 100000;
+int ymin = 100000;
+int xmax = -100000;
+int ymax = -100000;
+
+for (backend.grid.CoordinateTuple tuple : gameState.getGrid().getCells().keySet()) {
+xmin = tuple.get(0) < xmin ? tuple.get(0) : xmin;
+xmax = tuple.get(0) > xmax ? tuple.get(0) : xmax;
+ymin = tuple.get(1) < ymin ? tuple.get(0) : ymin;
+ymax = tuple.get(1) > ymax ? tuple.get(0) : ymax;
+}
+for (int x = xmin; x < xmax; x++) { // < max because it should not do
+// the rightmost column
+for (int y = ymax - 1; y >= ymin; y--) { // starts at max-1 because
+// it should not do the
+// bottom row (because
+// those are already at
+// the bottom). Ends at
+// = min because it
+// should do the top row
+// try to move piece down column (to higher y values)
+backend.grid.ModifiableGameBoard grid = gameState.getGrid();
+backend.grid.CoordinateTuple currentLocation = new backend.grid.CoordinateTuple(x, y);
+backend.cell.Cell currentCell = grid.get(currentLocation);
+if (currentCell != null && currentCell.getOccupants() != null
+&& currentCell.getOccupants().size() > 0) {
+java.util.ArrayList<backend.unit.Unit> occupants = new java.util.ArrayList<>();
+occupants.addAll(currentCell.getOccupants());
+if (occupants.get(0) != null) {
+backend.unit.Unit unit = occupants.get(0);
+backend.player.Team unitsTeam = unit.getTeam().isPresent() ? unit.getTeam().get() : null;
+boolean didWin = false;
+
+// check up
+backend.cell.Cell[] aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0), currentLocation.get(1) - i));
+}
+boolean canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check down
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0), currentLocation.get(1) + i));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check left
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0) - i, currentLocation.get(1)));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check right
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0) + i, currentLocation.get(1)));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check left up
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0) - i, currentLocation.get(1) - i));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check right up
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0) + i, currentLocation.get(1) - i));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check left down
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0) - i, currentLocation.get(1) + i));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+// check right down
+aboves = new backend.cell.Cell[3];
+for (int i = 1; i <= 3; i++) {
+aboves[i-1] = grid
+.get(new backend.grid.CoordinateTuple(currentLocation.get(0) + i, currentLocation.get(1) + i));
+}
+canContinue = true;
+for (int i = 0; i < aboves.length; i++) {
+canContinue = aboves[i] != null && aboves[i].getOccupants() != null
+&& aboves[i].getOccupants().size() > 0 ? canContinue : false;
+}
+if (canContinue) {
+java.util.ArrayList<backend.unit.Unit> units = new java.util.ArrayList<>();
+for (int i = 0; i < aboves.length; i++) {
+units.addAll(aboves[i].getOccupants());
+}
+boolean allSame = true;
+for (backend.unit.Unit theUnit : units) {
+allSame = theUnit.getTeam().isPresent() && theUnit.getTeam().get().equals(unitsTeam) ? allSame : false;
+}
+didWin = allSame ? true : didWin;
+}
+
+if (didWin) {
+if (unitsTeam.equals(team)) {
+return "WIN";
+} else {
+return "LOSE";
+}
+}
+}
+}
+
+}
+}
+return "NONE";
