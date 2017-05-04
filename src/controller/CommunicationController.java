@@ -524,8 +524,8 @@ public class CommunicationController implements Controller {
 	}
 
 	private synchronized void updateGameState() {
-		executor.execute(() -> {
-			waitForReady.countDown();
+		waitForReady.countDown();
+		executor.execute(() -> {	
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
 				saveState(autoSavePath);
