@@ -1,0 +1,52 @@
+1. Cell Triggered Effect (Mountain) - Frostbite
+
+2. Cell Triggered Effect (Fort) - Solace
+	- Any soldier on this terrain gains full health
+
+3. Active Ability (Soldiers) - Sprint (1 point)
+	- MP doubles for one turn
+
+4. Active Ability (Soldiers) - Armor (2 points)
+	- Only take half damage for next 2 turns
+
+5. Turn Action - Move Point Restore
+	- All units' MP return to max at the beginning of their turn
+
+6. Turn Action - Ability Point Restore
+	All towers' ability points return to max at the start of their turn (so they can attack again)
+
+7. Turn Requirement - All Move
+	- All pieces must have 0 move points left (forces game progress)
+
+8. End Condition - Annnihilation (Towers WIN)
+	- Towers win if they kill all soldiers
+
+9. End Condition - 10 Home (Soldiers WIN)
+	- Soldiers win if they get 10 units to the Castle
+
+Attacks:
+Quick - 5HP, 1 cell
+Range - 5HP, 4 cells
+Basic - 10HP, 2 cells
+Power - 20HP, 1 cell
+Boss - 25 HP, 2 cells
+
+Towers:
+Quick - 4 MP, 4AP
+Range - 1 MP, 5AP
+Basic - 2 MP, 3AP
+Power - 1 MP, 2AP
+Boss - 3 MP, 2AP
+
+Soldiers:
+Light - 20 HP, 5 MP, 2 AP
+Basic - 50 HP, 4 MP, 3 AP
+Heavy - 100 HP, 3 MP, 4 AP
+
+Terrains:
+Grass - 1 MP for all
+Water - 2 MP for soldiers, impassable for towers
+Mountain - 3 MP for soldiers, impassable for towers (Frostbite)
+Fort - 1 MP for soldiers, inaccessible to towers (Solace)
+Castle - 1 MP for soldiers, inaccessible to towers
+
