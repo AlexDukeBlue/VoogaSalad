@@ -83,7 +83,11 @@ public class DetailEdit extends BaseUIManager<Node> {
 				.filter(e -> e.getShape().equals(getController().getShape()))
 				.map(VoogaEntity::getName)
 				.collect(Collectors.toList()));
-		movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options, unit.getMovePattern().getName());
+		if(unit.getMovePattern() != null){
+			movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options, unit.getMovePattern().getName());
+		} else {
+			movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options, "");
+		}
 		teamNameBox = createDropDown(getPolyglot().get("Team").getValueSafe(), FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Team::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
