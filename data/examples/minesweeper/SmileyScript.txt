@@ -1,0 +1,8 @@
+end conditions:
+if all bombs have flags on them return WIN
+if any smily faces are on top of a bomb return LOSE
+else return NONE
+
+turn actions:
+loop through every cell with units, and if it’s not a bomb, then make sure that the units get copied until the number of units is the same as number of bombs around it.
+
