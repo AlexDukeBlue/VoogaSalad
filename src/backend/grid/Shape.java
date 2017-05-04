@@ -23,6 +23,7 @@ public enum Shape {
 			new CoordinateTuple(1, -1, 0),
 			new CoordinateTuple(-1, 1, 0));
 
+
 	private static final long serialVersionUID = 1L;
 	private static final Map<Integer, Shape> DIMENSION_SHAPE_MAP = new HashMap<>();
 

@@ -18,9 +18,15 @@ import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
+import frontend.factory.wizard.Wizard;
+import frontend.factory.wizard.strategies.BaseStrategy;
+import frontend.factory.wizard.strategies.WizardStrategy;
+import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
+import frontend.util.ScriptingDialog;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import util.AlertFactory;
 import util.io.Serializer;
 import util.net.Modifier;
@@ -61,6 +67,22 @@ public class CommunicationController implements Controller {
 	private String playerName;
 	private Deque<Path> saveHistory;
 	private DieselEngine engine;
+	
+		//These five fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
+		//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages. So basically,
+		//it allows one end of the frontend to communicate with the other end. Although this is not the main
+		//purpose of the CommunicationController, it makes a difficult and complicated action very simple,
+		//and thus I conclude that it is a good design.
+		private String quickName;
+		private String quickDescription;
+		private String quickImagePath;
+		private String quickSoundPath;
+		private ObservableList<WizardPage> pages;
+		private ScriptingDialog dialog;
+		private BaseStrategy strategy;
+		private String quickType;
+
+
 
 	public CommunicationController(String username) {
 		this(username, Collections.emptyList());
@@ -245,18 +267,18 @@ public class CommunicationController implements Controller {
 	}
 
 	@Override
-	public boolean activeTeamWon() {
-		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
+	public boolean myTeamWon() {
+		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
 	}
 
 	@Override
-	public boolean activeTeamLost() {
-		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
+	public boolean myTeamLost() {
+		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
 	}
 
 	@Override
-	public boolean activeTeamTied() {
-		return getActiveTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
+	public boolean myTeamTied() {
+		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
 	}
 
 	@Override
@@ -517,4 +539,29 @@ public class CommunicationController implements Controller {
 		playerCountCache = getGameplayState().getOrderedPlayerNames().size();
 		//waitForReady.countDown();
 	}
+	
+	//See instance variables section at the top of this class for discussion about purpose of these methods.
+		//getters
+		public String getQuickName(){return quickName;}
+		public String getQuickDescription(){return quickDescription;}
+		public String getQuickImagePath(){return quickImagePath;};
+		public String getQuickSoundPath(){return quickSoundPath;};
+		public ObservableList<WizardPage> getPages(){return pages;};
+		public ScriptingDialog getDialog(){return dialog;};
+		public BaseStrategy getStrategy(){return strategy;};
+		public String getQuickType(){return quickType;};
+	
+		//setters
+		public void setQuickName(String quickName){this.quickName = quickName;}
+		public void setQuickDescription(String quickDescription){this.quickDescription = quickDescription;}
+		public void setQuickImagePath(String quickImagePath){this.quickImagePath = quickImagePath;}
+		public void setQuickSoundPath(String quickSoundPath){this.quickSoundPath = quickSoundPath;}
+		public void setPages(ObservableList<WizardPage> pages){this.pages = pages;}
+		public void setDialog(ScriptingDialog dialog){this.dialog = dialog;};
+		public void setStrategy(BaseStrategy strategy){this.strategy = strategy;};
+		public void setQuickType(String quickType){this.quickType = quickType;};
+
+		
+		
+
 }

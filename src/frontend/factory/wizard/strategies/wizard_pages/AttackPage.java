@@ -35,23 +35,24 @@ public class AttackPage extends BaseWizardPage {
 		vbox = new VBox();
 		passiveAbilityPage = new PassiveAbilitiesAdderPage(getController(), "AttackPassiveAbilitiesAdderPage",
 				GameplayState.OFFENSIVE_MODIFIER);
-		numHits = new IntegerInputRow(null, getPolyglot().get("NumHits"), new StringBinding() {
-			@Override
-			protected String computeValue() {
-				return "";
-			}
-		});
-		vbox.getChildren().add(numHits.getNode());
-		HBox damageHBox = new HBox();
-		damageField = new TextField();
-		Label damageLabel = new Label();
-		damageLabel.textProperty().bind(getPolyglot().get("DamagePerHit"));
-		damageHBox.getChildren().addAll(damageLabel, damageField);
-		vbox.getChildren().add(damageHBox);
+		//numHits = new IntegerInputRow(null, getPolyglot().get("NumHits"), new StringBinding() {
+			//@Override
+			//protected String computeValue() {
+				//return "";
+			//}
+		//});
+		//ovbox.getChildren().add(numHits.getNode());
+		//HBox damageHBox = new HBox();
+		//damageField = new TextField();
+		//Label damageLabel = new Label();
+		//damageLabel.textProperty().bind(getPolyglot().get("DamagePerHit"));
+		//damageHBox.getChildren().addAll(damageLabel, damageField);
+		//vbox.getChildren().add(damageHBox);
 		vbox.getChildren().add(passiveAbilityPage.getNode());
 		canNextWritable().setValue(true);
 	}
 
+	/**
 	public double getDamage() {
 		try {
 			return Double.parseDouble(damageField.getText());
@@ -60,9 +61,11 @@ public class AttackPage extends BaseWizardPage {
 		}
 	}
 
+
 	public int getNumHits() {
 		return numHits.getValue();
 	}
+	**/
 
 	public Collection<InteractionModifier<Double>> getModifiers() {
 		return passiveAbilityPage.getPassiveAbilitiesByCategory(GameplayState.OFFENSIVE_MODIFIER).stream()

@@ -106,7 +106,7 @@ public class DieselEngine implements GameEngine {
 	@Override
 	public void handleWin(Team team) {
 		currentState.getOrderedPlayerNames().stream().map(playerName -> currentState.getPlayerByName(playerName))
-				.forEach(aPlayer -> aPlayer.setResult(aPlayer.getTeam().equals(team) ? Result.WIN : Result.LOSE));
+				.forEach(aPlayer -> aPlayer.setResult(aPlayer.getTeam().orElseThrow(() -> new RuntimeException()).equals(team) ? Result.WIN : Result.LOSE));
 	}
 
 	@Override
@@ -129,12 +129,14 @@ public class DieselEngine implements GameEngine {
 	}
 
 	private void checkForOneRemainingTeam() {
-		Set<Team> remainingTeams = currentState.getOrderedPlayerNames().stream()
-				.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
-				.map(playerName -> currentState.getPlayerByName(playerName).getTeam().orElse(null))
-				.collect(Collectors.toSet());
-		if (remainingTeams.size() == 1) {
-			remainingTeams.forEach(lastTeam -> lastTeam.getAll().forEach(player -> player.setResult(Result.WIN)));
+		if(currentState.getOrderedPlayerNames().size() > 1){
+			Set<Team> remainingTeams = currentState.getOrderedPlayerNames().stream()
+					.filter(playerName -> currentState.getPlayerByName(playerName).getResult().equals(Result.NONE))
+					.map(playerName -> currentState.getPlayerByName(playerName).getTeam().orElse(null))
+					.collect(Collectors.toSet());
+			if (remainingTeams.size() == 1) {
+				remainingTeams.forEach(lastTeam -> lastTeam.getAll().forEach(player -> player.setResult(Result.WIN)));
+			}
 		}
 	}
 
