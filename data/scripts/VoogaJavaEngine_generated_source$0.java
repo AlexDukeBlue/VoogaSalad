@@ -13,12 +13,12 @@ import java.util.regex.*;
  * @author th174
  */
 public class VoogaJavaEngine_generated_source$0 {
-
-	public static Object voogaFunction(backend.unit.ModifiableUnit user, backend.unit.ModifiableUnit target, backend.util.AuthoringGameState gameState) {
-		/*
-		 * Your Java code here
-		 */
-		System.out.println("hello world");
-		return null;
+	public static Object voogaFunction(backend.player.Team team, backend.util.AuthoringGameState gameState) {
+		gameState.getActiveTeam().getOwnedUnits(gameState.getGrid()).stream()
+		.filter(unit -> (unit.getCurrentCell().getOccupants().size() > 1))
+		.filter(un -> !un.getTeam().equals(team))
+		.forEach(u -> u.getCurrentCell().removeOccupants(u));
+		
+		return gameState;
 	}
 }
