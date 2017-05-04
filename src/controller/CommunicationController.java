@@ -268,7 +268,13 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public boolean myTeamWon() {
-		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
+		return getMyTeam()
+				.getAll()
+				.stream()
+				.allMatch(player -> 
+				player
+				.getResult()
+				.equals(Result.WIN));
 	}
 
 	@Override
