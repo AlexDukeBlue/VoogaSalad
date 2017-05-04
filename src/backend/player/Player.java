@@ -67,4 +67,5 @@ public class Player extends ModifiableVoogaObject<Player> implements ImmutablePl
 	public void setResult(Result result) {
 		myResult = result;
 	}
+
 }

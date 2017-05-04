@@ -1,5 +1,11 @@
 package frontend.startup;
 
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Collection;
+import java.util.Optional;
+
+import backend.util.AuthoringGameState;
 import backend.util.ReadonlyGameplayState;
 import controller.CommunicationController;
 import controller.Controller;
@@ -14,10 +20,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.net.ObservableHost;
 
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.Optional;
-
 /**
  * This ConcreteStartupDelegate is a concrete implementation of the
  * StartupDelegate interface. It implements the methods required to startup
@@ -27,10 +29,14 @@ import java.util.Optional;
  *
  */
 class ConcreteStartupDelegate implements StartupDelegate {
+	private static final int PLAYER_MOD = 1000;
+
 	StartupScreen startup;
-	public ConcreteStartupDelegate(StartupScreen startup){
+
+	public ConcreteStartupDelegate(StartupScreen startup) {
 		this.startup = startup;
 	}
+
 	/**
 	 * Creates a new game in edit mode. Can either create a whole new game or
 	 * load a game from a file.
@@ -88,7 +94,7 @@ class ConcreteStartupDelegate implements StartupDelegate {
 
 	private void create(Stage stage, int port) {
 		Controller control = new CommunicationController(
-				System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
+				System.getProperty("user.name") + "-" + System.currentTimeMillis() % PLAYER_MOD);
 		WizardFactory.newWizard("gamestate", null).addObserver((o, arg) -> {
 			control.startServer((ReadonlyGameplayState) arg, port, Duration.ofSeconds(30));
 			control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
@@ -98,14 +104,14 @@ class ConcreteStartupDelegate implements StartupDelegate {
 
 	private void join(Stage stage, String host, int port) {
 		Controller control = new CommunicationController(
-				System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
+				System.getProperty("user.name") + "-" + System.currentTimeMillis() % PLAYER_MOD);
 		control.startClient(host, port, Duration.ofSeconds(30));
 		createGame(control, stage);
 	}
 
 	private void load(Stage stage, int port) {
 		Controller control = new CommunicationController(
-				System.getProperty("user.name") + "-" + System.currentTimeMillis() % 100);
+				System.getProperty("user.name") + "-" + System.currentTimeMillis() % PLAYER_MOD);
 		control.startServer(loadFile(control), port, Duration.ofSeconds(30));
 		control.startClient(ObservableHost.LOCALHOST, port, Duration.ofSeconds(30));
 		createGame(control, stage);
@@ -134,7 +140,14 @@ class ConcreteStartupDelegate implements StartupDelegate {
 		try {
 			FileChooser chooser = new FileChooser();
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(".xml Files", "*.xml"));
-			return control.load(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()));
+			AuthoringGameState state = control.load(Paths.get(chooser.showOpenDialog(null).getAbsolutePath()));
+			Collection<String> playerNames = state.getOrderedPlayerNames();
+			while (state.getOrderedPlayerNames().size() > 0) {
+				playerNames.stream()
+						.forEachOrdered(playerName -> state.removePlayer(state.getPlayerByName(playerName)));
+			}
+			state.setAuthoringMode(true);
+			return state;
 		} catch (Exception e) {
 			Platform.exit();
 			return null;

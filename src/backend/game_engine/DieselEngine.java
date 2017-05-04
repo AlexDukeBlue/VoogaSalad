@@ -40,6 +40,7 @@ public class DieselEngine implements GameEngine {
 			checkTurnEvents(state);
 			checkObjectives(state);
 		}
+		
 	}
 
 	@Override

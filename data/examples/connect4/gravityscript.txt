@@ -1,0 +1,40 @@
+int xmin = 100000;
+int ymin = 100000;
+int xmax = -100000;
+int ymax = -100000;
+
+for (backend.grid.CoordinateTuple tuple : gameState.getGrid().getCells().keySet()){
+	xmin = tuple.get(0) < xmin ? tuple.get(0) : xmin;
+	xmax = tuple.get(0) > xmax ? tuple.get(0) : xmax;
+	ymin = tuple.get(1) < ymin ? tuple.get(0) : ymin;
+	ymax = tuple.get(1) > ymax ? tuple.get(0) : ymax;
+}
+for (int x = xmin; x < xmax; x++){ // < max because it should not do the rightmost column
+	for (int y = ymax-1; y >= ymin; y--){ // starts at max-1 because it should not do the bottom row (because those are already at the bottom). Ends at = min because it should do the top row
+		//try to move piece down column (to higher y values)
+		backend.grid.ModifiableGameBoard grid = gameState.getGrid();
+		backend.grid.CoordinateTuple currentLocation = new backend.grid.CoordinateTuple(x,y);
+		backend.cell.Cell currentCell = grid.get(currentLocation);
+		if (currentCell != null && currentCell.getOccupants() != null && currentCell.getOccupants().size() > 0){
+			java.util.ArrayList<backend.unit.Unit> occupants = new java.util.ArrayList<>();
+			occupants.addAll(currentCell.getOccupants());
+			if (occupants.get(0) != null) {
+				backend.cell.Cell toMoveTo = null;
+				for (int row = y; row <= ymax; row++){
+					backend.cell.Cell cellAtLoc = grid.get(new backend.grid.CoordinateTuple(x, row));
+					if (cellAtLoc != null && cellAtLoc.getOccupants() != null && cellAtLoc.getOccupants().size() == 0) { //cell at x, row does not have any non null occupants
+                        toMoveTo = grid.get(new backend.grid.CoordinateTuple(x, row));
+					}
+				}
+				if (toMoveTo != null){
+					//move unit to toMoveTo;
+					currentCell.removeOccupants(occupants.get(0));
+					toMoveTo.addOccupants(occupants.get(0));
+					occupants.get(0).setCurrentCell(toMoveTo);
+				}
+			}
+		}
+		
+	}
+}
+return gameState;
