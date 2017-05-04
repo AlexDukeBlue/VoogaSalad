@@ -205,7 +205,8 @@ public class View extends ClickableUIComponent<Region> {
 
 	private void placePanes() {
 		initPanes();
-		endTurnButton = new Button(getPolyglot().get("EndTurn").getValueSafe());
+		endTurnButton = new Button();
+		endTurnButton.textProperty().bind(getPolyglot().get("EndTurn"));
 		endTurnButton.setOnMouseClicked(e -> {
 			getClickHandler().cancel();
 			getController().endTurn();
@@ -298,6 +299,7 @@ public class View extends ClickableUIComponent<Region> {
 		conditionsPane.getStyleSheet().bind(getStyleSheet());
 		menuBar.getPolyglot().setOnLanguageChange(event -> {
 			try {
+				this.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				worldView.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				detailPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
 				abilityPane.getPolyglot().setLanguage(menuBar.getPolyglot().getLanguage());
