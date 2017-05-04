@@ -22,7 +22,7 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 
 	@Override
 	public Polygon layoutCell(double scaleFactor, double minWidth, double maxWidth, CoordinateTuple location,
-			GameBoard gameBoard) {
+	                          GameBoard gameBoard) {
 		if (scaleFactor <= 0 || scaleFactor > 1 || minWidth <= 0) {
 			throw new RuntimeException();
 		}
@@ -38,7 +38,7 @@ class HexagonalGridLayoutDelegate implements GridLayoutDelegate {
 		} else {
 			hexagon.setLayoutX((xOffset + rectCoord.get(X_INDEX) + 1) * width);
 		}
-		hexagon.setLayoutY(yOffset + rectCoord.get(Y_INDEX) * (1.5 * radius) + radius);
+		hexagon.setLayoutY(yOffset + rectCoord.get(Y_INDEX) * (1.5 * radius));
 		return hexagon;
 	}
 }
