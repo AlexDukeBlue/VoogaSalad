@@ -6,11 +6,13 @@ import frontend.ClickHandler;
 import frontend.ClickableUIComponent;
 import frontend.util.AddRemoveButton;
 import frontend.util.SelectableUIComponent;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+
+import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * A ConditionBox serves to visually represent a condition, such as a
@@ -23,26 +25,23 @@ import javafx.scene.layout.Region;
  * Activation/deactivation is done through the use of a CheckBox. The behavior
  * of this CheckBox is defined by the checkBoxAction() method. This method must
  * be implemented by any concrete subclasses.
- * 
+ *
  * @author Stone Mathers Created 4/25/2017
  */
 public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	private String myName;
 	private String myCategory;
 	private HBox myBox = new HBox();
+	private CheckBox cb;
 
 	/**
 	 * Constructs a ConditionBox using the passed parameters.
-	 * 
-	 * @param conditionName
-	 *            Name used to identify the condition being represented.
-	 * @param category
-	 *            Category that the condition belongs to.
-	 * @param controller
-	 *            Controller through which the condition is
-	 *            activated/deactivated.
-	 * @param clickHandler
-	 *            ClickHandler that the ConditionBox belongs to.
+	 *
+	 * @param conditionName Name used to identify the condition being represented.
+	 * @param category      Category that the condition belongs to.
+	 * @param controller    Controller through which the condition is
+	 *                      activated/deactivated.
+	 * @param clickHandler  ClickHandler that the ConditionBox belongs to.
 	 */
 	public ConditionBox(String conditionName, String category, Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
@@ -58,7 +57,7 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 
 	/**
 	 * Return name of condition held.
-	 * 
+	 *
 	 * @return String name
 	 */
 	public String getName() {
@@ -67,7 +66,7 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 
 	@Override
 	public void actInAuthoringMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler,
-			Event event) {
+	                               Event event) {
 		if (target instanceof AddRemoveButton) {
 			getController().removeTemplatesByCategory(myCategory, myName);
 			clickHandler.cancel();
@@ -77,7 +76,7 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler,
-			Event event) {
+	                              Event event) {
 		actInAuthoringMode(target, additionalInfo, clickHandler, event);
 	}
 
@@ -89,21 +88,21 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	/**
 	 * Carries out actions when the state of the CheckBox is changed, generally
 	 * dependent on the value of newValue.
-	 * 
-	 * @param o
-	 *            ObservableValue which is produced when the state of the
-	 *            CheckBox is changed.
-	 * @param oldValue
-	 *            Previous state of the CheckBox.
-	 * @param newValue
-	 *            New state of the CheckBox
+	 *
+	 * @param newValue New state of the CheckBox
 	 */
-	protected abstract void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue);
+	protected abstract void checkBoxAction(Boolean newValue);
 
 	private void initBox() {
-		CheckBox cb = new CheckBox(myName);
-		cb.selectedProperty().addListener((o, oldVal, newVal) -> checkBoxAction(o, oldVal, newVal));
+		cb = new CheckBox(myName);
+		cb.setOnAction(event -> checkBoxAction(cb.isSelected()));
 		myBox.getChildren().add(cb);
 		myBox.setOnMouseClicked(event -> handleClick(event, null));
+	}
+
+	@Override
+	public void update() {
+		super.update();
+		cb.setSelected(Stream.of(getController().getAuthoringGameState().getActiveObjectives(), getController().getAuthoringGameState().getActiveTurnActions(), getController().getAuthoringGameState().getActiveTurnRequirements()).flatMap(Collection::stream).map(VoogaEntity::getName).anyMatch(myName::contains));
 	}
 }

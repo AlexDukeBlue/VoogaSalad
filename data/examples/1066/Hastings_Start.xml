@@ -36,7 +36,7 @@ import java.util.regex.*;
  */
 public class VoogaJavaEngine_generated_source$0 {
 	public static Object voogaFunction(%s) {
-		if (team.getOwnedUnits.stream().allMatch(e -&gt; e.getHitPoints().isEmpty())){
+		if (team.getOwnedUnits(gameState.getGrid()).stream().allMatch(e -&gt; e.getHitPoints().isEmpty())){
 		return &quot;LOSE&quot;;
 		} else {
 		return &quot;NONE&quot;;
