@@ -1,0 +1,364 @@
+<backend.unit.ModifiableUnit>
+  <name>Housecarl</name>
+  <description>Clad in a heavy mail hauberk, brandishing a Danish axe, these professional soldiers formed Harold Godwinson&apos;s elite heavy infantry. Harold and his Housecarls marched 185 miles in four days under heavy armour to reach Hastings in time to meet William the conqueror.
+
+This unit is very strong in defensive lines, but are slow and easily outmaneuvered in the open.</description>
+  <imgPath>resources/images/housecarl.png</imgPath>
+  <activeAbilities>
+    <name>Active Abilities</name>
+    <description>Each unit has a set of active abilities which the user can use on the users&apos; own turn.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Danish Axe</string>
+        <backend.unit.properties.ActiveAbility>
+          <name>Danish Axe</name>
+          <description>The prime armament of the Housecarls. Simple, durable, and effective at taking down enemies of the King.</description>
+          <imgPath>resources/images/Danish Axe.png</imgPath>
+          <effect class="backend.unit.properties.Attack">
+            <damage>9.0</damage>
+            <numHits>2</numHits>
+            <damageModifiers/>
+          </effect>
+          <range>
+            <name></name>
+            <description></description>
+            <imgPath></imgPath>
+            <relativeCoordinates class="set">
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-1</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>-1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>1</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>0</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>0</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+            </relativeCoordinates>
+          </range>
+          <cost>1.0</cost>
+        </backend.unit.properties.ActiveAbility>
+      </entry>
+    </gameObjects>
+  </activeAbilities>
+  <triggeredAbilities>
+    <name>Triggered abilities</name>
+    <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Reset Ability Points</string>
+        <backend.util.ModifiableTriggeredEffect>
+          <name>Reset Ability Points</name>
+          <description>This unit regains full ability points at the beginning of each turn.</description>
+          <imgPath>resources/images/ability_points.png</imgPath>
+          <activationTriggers class="set">
+            <backend.util.Event>TURN_START</backend.util.Event>
+          </activationTriggers>
+          <effect resolves-to="serialized-lambda">
+            <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+            <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+            <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+            <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+            <implMethodName>lambda$static$6a5ec18f$1</implMethodName>
+            <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+            <capturedArgs/>
+          </effect>
+          <duration>2147483647</duration>
+          <turnsRemaining>2147483647</turnsRemaining>
+        </backend.util.ModifiableTriggeredEffect>
+      </entry>
+      <entry>
+        <string>Reset Move Points</string>
+        <backend.util.ModifiableTriggeredEffect>
+          <name>Reset Move Points</name>
+          <description>This unit regains full movepoints at the beginning of each turn.</description>
+          <imgPath>resources/images/timbs.png</imgPath>
+          <activationTriggers class="set">
+            <backend.util.Event>TURN_START</backend.util.Event>
+          </activationTriggers>
+          <effect resolves-to="serialized-lambda">
+            <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+            <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+            <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+            <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+            <implMethodName>lambda$static$14969982$1</implMethodName>
+            <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+            <capturedArgs/>
+          </effect>
+          <duration>2147483647</duration>
+          <turnsRemaining>2147483647</turnsRemaining>
+        </backend.util.ModifiableTriggeredEffect>
+      </entry>
+    </gameObjects>
+  </triggeredAbilities>
+  <offensiveModifiers>
+    <name>Offensive Modifiers</name>
+    <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Lawful</string>
+        <backend.unit.properties.InteractionModifier>
+          <name>Lawful</name>
+          <description>Attacks do more damage in daytime, but less damage in nighttime</description>
+          <imgPath>resources/images/sherrif.png</imgPath>
+          <modifier resolves-to="serialized-lambda">
+            <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
+            <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+            <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+            <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
+            <implMethodName>lambda$static$361ddfa4$1</implMethodName>
+            <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+            <capturedArgs/>
+          </modifier>
+          <type>offensive</type>
+        </backend.unit.properties.InteractionModifier>
+      </entry>
+    </gameObjects>
+  </offensiveModifiers>
+  <defensiveModifiers>
+    <name>Defensive modifiers</name>
+    <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Formation</string>
+        <backend.unit.properties.InteractionModifier>
+          <name>Formation</name>
+          <description>This unit takes less damage when near an allied unit of the same type.</description>
+          <imgPath>resources/images/phalanx.jpg</imgPath>
+          <modifier resolves-to="serialized-lambda">
+            <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
+            <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+            <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+            <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
+            <implMethodName>lambda$static$49adedea$1</implMethodName>
+            <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+            <capturedArgs/>
+          </modifier>
+          <type>defense</type>
+        </backend.unit.properties.InteractionModifier>
+      </entry>
+    </gameObjects>
+  </defensiveModifiers>
+  <terrainMoveCosts>
+    <entry>
+      <string>Water</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>Empty</string>
+      <int>0</int>
+    </entry>
+    <entry>
+      <string>Mountain</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>Fortified</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Flat</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Forest</string>
+      <int>2</int>
+    </entry>
+  </terrainMoveCosts>
+  <stats>
+    <name>Unit stats</name>
+    <description>Each unit has its own set of numerical stats, such as hitpoints or movement points.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Ability Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Ability Points</name>
+          <description>Most active abilities use ability points. They limit the number of actions a unit can do each turn.</description>
+          <imgPath>resources/images/ability_points.png</imgPath>
+          <maxValue class="double">1.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">1.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Gold</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Gold</name>
+          <description>Players have a limited amount of gold to spend on their units.</description>
+          <imgPath>resources/images/gold.png</imgPath>
+          <maxValue class="double">2.147483647E9</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">2.147483647E9</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Energy</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Energy</name>
+          <description>Energy points are required for and consumed by some powerful abilities.</description>
+          <imgPath>resources/images/energy.png</imgPath>
+          <maxValue class="double">10.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">10.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Hit Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Hit Points</name>
+          <description>Units lose HP when taking damage. When a unit&apos;s hitpoints reach 0, the unit dies.</description>
+          <imgPath>resources/images/heart.png</imgPath>
+          <maxValue class="double">50.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">50.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Move Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Move Points</name>
+          <description>Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.</description>
+          <imgPath>resources/images/timbs.png</imgPath>
+          <maxValue class="int">4</maxValue>
+          <minValue class="int">0</minValue>
+          <currentValue class="int">4</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+    </gameObjects>
+  </stats>
+  <movePattern>
+    <name></name>
+    <description></description>
+    <imgPath></imgPath>
+    <relativeCoordinates class="set">
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>-1</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>-1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>1</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>0</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>0</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+    </relativeCoordinates>
+  </movePattern>
+  <isVisible>false</isVisible>
+</backend.unit.ModifiableUnit>

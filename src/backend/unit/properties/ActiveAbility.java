@@ -12,6 +12,7 @@ import util.AlertFactory;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  *
  * @author Created by th174 on 3/29/2017.
  */
-public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable, HasShape, HasSound {
+public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<ActiveAbility<T>> implements Ability, Serializable, HasShape, HasSound, HasPassiveModifiers {
 	public transient static final ActiveAbility<Unit> CONSUME = new ActiveAbility<>("Consume", (user, target, game) -> {
 		Cell targetCell = target.getCurrentCell();
 		double damage = target.applyAllDefensiveModifiers(user.applyAllOffensiveModifiers(10.0, user, game), user, game);
@@ -117,6 +118,16 @@ public class ActiveAbility<T extends VoogaEntity> extends ImmutableVoogaObject<A
 
 	public double getCost() {
 		return cost;
+	}
+
+	@Override
+	public List<? extends InteractionModifier> getOffensiveModifiers() {
+		return effect instanceof Attack ? ((Attack) effect).getOffensiveModifiers() : Collections.emptyList();
+	}
+
+	@Override
+	public List<? extends InteractionModifier> getDefensiveModifiers() {
+		return Collections.emptyList();
 	}
 
 	@FunctionalInterface

@@ -1,0 +1,24 @@
+<backend.cell.ModifiableTerrain>
+  <name>Grass</name>
+  <description>Set the name, image, and description of the new terrain.</description>
+  <imgPath>../../../Desktop/VOOGA/Images/Terrains/Grass.jpg</imgPath>
+  <triggeredAbilities>
+    <name>Triggered abilities</name>
+    <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </triggeredAbilities>
+  <offensiveModifiers>
+    <name>Offensive Modifiers</name>
+    <description>Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </offensiveModifiers>
+  <defensiveModifiers>
+    <name>Defensive Modifiers</name>
+    <description>Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </defensiveModifiers>
+  <defaultMoveCost>1</defaultMoveCost>
+</backend.cell.ModifiableTerrain>

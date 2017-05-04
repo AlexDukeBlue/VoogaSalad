@@ -268,17 +268,29 @@ public class CommunicationController implements Controller {
 
 	@Override
 	public boolean myTeamWon() {
-		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
+		if(Objects.nonNull(getMyTeam())){
+			return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.WIN));
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean myTeamLost() {
-		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
+		if(Objects.nonNull(getMyTeam())){
+			return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.LOSE));
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean myTeamTied() {
-		return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
+		if(Objects.nonNull(getMyTeam())){
+			return getMyTeam().getAll().stream().allMatch(player -> player.getResult().equals(Result.TIE));
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -518,17 +530,17 @@ public class CommunicationController implements Controller {
 	}
 
 	private synchronized void updateGameState() {
-		executor.execute(() -> {
-			waitForReady.countDown();
+		waitForReady.countDown();
+		executor.execute(() -> {	
 			try {
 				Path autoSavePath = Paths.get(String.format("%s/%s/autosave_turn-%d_%s.xml", AUTOSAVE_DIRECTORY, getAuthoringGameState().getName().length() < 1 ? "Untitled" : getAuthoringGameState().getName(), getAuthoringGameState().getTurnNumber(), Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SS"))));
-				saveState(autoSavePath);
+				//saveState(autoSavePath);
 				saveHistory.push(autoSavePath);
 			} catch (Serializer.SerializationException e) {
 				System.err.println("You're going TOO FAST!!!!");
 //				AlertFactory.warningAlert("Requests sent too fast.", "The server is receiving requests too quickly.", "").showAndWait();
-			} catch (IOException e) {
-				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
 			}
 		});
 		engine.checkGame(this.getGameplayState());

@@ -1,12 +1,5 @@
 package frontend.factory.templatepane;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import backend.util.HasShape;
 import backend.util.VoogaEntity;
 import controller.Controller;
 import frontend.ClickHandler;
@@ -25,6 +18,12 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Faith Rodriguez, Timmy Huang Created 3/29/2017
@@ -68,7 +67,7 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 			if (!newTemplateNames.equals(templateNamesCache.get(key))) {
 				templateNamesCache.put(key, newTemplateNames);
 				value.getChildren().clear();
-				createButtons(getController().getAuthoringGameState().getTemplateByCategory(key).stream().filter(e -> !(e instanceof HasShape) || ((HasShape) e).getShape().equals(getController().getShape())).collect(Collectors.toList()), key, value.getChildren());
+				createButtons(getController().getAuthoringGameState().getTemplateByCategory(key).stream().collect(Collectors.toList()), key, value.getChildren());
 			}
 		});
 	}
