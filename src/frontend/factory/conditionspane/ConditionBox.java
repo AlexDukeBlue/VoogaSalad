@@ -11,9 +11,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
-import java.util.Collection;
-import java.util.stream.Stream;
-
 /**
  * A ConditionBox serves to visually represent a condition, such as a
  * requirement to end a turn, an event that happens at the beginning of a turn,
@@ -103,6 +100,6 @@ public abstract class ConditionBox extends SelectableUIComponent<Region> {
 	@Override
 	public void update() {
 		super.update();
-		cb.setSelected(Stream.of(getController().getAuthoringGameState().getActiveObjectives(), getController().getAuthoringGameState().getActiveTurnActions(), getController().getAuthoringGameState().getActiveTurnRequirements()).flatMap(Collection::stream).map(VoogaEntity::getName).anyMatch(myName::contains));
+//		cb.setSelected(Stream.of(getController().getAuthoringGameState().getActiveObjectives(), getController().getAuthoringGameState().getActiveTurnActions(), getController().getAuthoringGameState().getActiveTurnRequirements()).flatMap(Collection::stream).map(VoogaEntity::getName).anyMatch(myName::contains));
 	}
 }
