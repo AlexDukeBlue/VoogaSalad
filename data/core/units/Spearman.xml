@@ -1,0 +1,4008 @@
+<backend.unit.ModifiableUnit>
+  <name>Spearman_02</name>
+  <description>Spear and pike carrying infantry were very popular before the advent of the gunpowerder age. Spears required little training to use effectively, and could be cheaply produced in large numbers and supplied to peasant soldiers. Organized pikemen were remakably effective in stopping or outright repelling calvary charges by all but the best trained horses.</description>
+  <imgPath>resources/images/Spearman.png</imgPath>
+  <activeAbilities>
+    <name>Active Abilities</name>
+    <description>Each unit has a set of active abilities which the user can use on the users&apos; own turn.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Spear</string>
+        <backend.unit.properties.ActiveAbility>
+          <name>Spear</name>
+          <description>This simple, reliable, easy to use thrusting weapon has been a favorite of infantry everywhere</description>
+          <imgPath>resources/images/spear.png</imgPath>
+          <effect class="backend.unit.properties.Attack">
+            <damage>6.0</damage>
+            <numHits>3</numHits>
+            <damageModifiers/>
+          </effect>
+          <range>
+            <name></name>
+            <description></description>
+            <imgPath></imgPath>
+            <relativeCoordinates class="set">
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>-1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-1</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>1</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>0</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>0</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+            </relativeCoordinates>
+          </range>
+          <cost>1.0</cost>
+        </backend.unit.properties.ActiveAbility>
+      </entry>
+      <entry>
+        <string>Bow</string>
+        <backend.unit.properties.ActiveAbility>
+          <name>Bow</name>
+          <description>The attacker hits 2 times for 7 dmage on any unit in a straight line away from the attacker</description>
+          <imgPath>resources/images/bow.png</imgPath>
+          <effect class="backend.unit.properties.Attack">
+            <damage>7.0</damage>
+            <numHits>2</numHits>
+            <damageModifiers/>
+          </effect>
+          <range>
+            <name>Square Rays</name>
+            <description>This pattern of square coordinates is composed of all square coordinates on 4 rays centered at the origin</description>
+            <imgPath>resources/images/squareRays.png</imgPath>
+            <relativeCoordinates class="set">
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>63</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-31</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>64</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>65</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>66</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>67</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>68</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>69</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>70</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>71</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>72</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>73</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>74</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>75</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>76</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>77</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>78</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>79</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>80</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>81</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>82</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>83</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>84</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>85</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>86</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>87</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>88</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>89</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>90</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>69</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>91</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-98</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>36</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>92</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-65</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>3</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>93</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-32</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>94</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-30</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>95</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>96</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>97</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>98</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>99</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>70</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-99</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>37</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-66</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>4</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-33</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-29</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>71</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>38</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-67</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>5</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-34</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-28</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>72</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>39</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-68</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>6</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-35</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-27</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>73</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>40</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-69</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>7</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-36</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-26</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>74</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>41</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-70</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>8</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-37</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-25</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>75</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>42</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-71</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>9</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-38</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-24</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>76</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>43</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-72</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>10</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-39</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-23</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>77</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>44</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-73</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>11</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-40</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-22</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>78</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>45</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-74</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>12</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-41</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-21</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>79</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>46</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-75</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>13</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-42</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-20</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>80</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>47</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-76</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>14</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-43</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-19</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>81</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>48</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-77</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>15</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-44</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-18</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>82</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>49</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-78</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>16</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-45</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-17</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>83</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>50</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-79</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>17</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-46</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-16</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>84</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>51</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-80</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>18</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-47</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-15</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>85</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>52</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-81</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>19</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-48</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-14</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>86</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>53</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-82</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>20</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-49</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-13</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>87</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>54</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-83</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>21</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-50</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-12</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>88</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>55</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-84</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>22</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-51</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-11</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>89</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>56</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-85</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>23</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-52</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-10</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>90</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>57</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-86</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>24</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-53</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-9</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>91</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>58</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-87</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>25</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-54</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-8</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>92</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>59</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-88</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>26</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-55</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-7</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>93</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>60</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-89</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>27</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-56</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-6</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>94</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>61</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-90</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>28</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-57</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-5</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>95</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>62</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-91</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>29</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-58</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-4</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-99</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-98</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-97</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>96</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-96</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>63</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-95</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-92</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>30</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-94</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-59</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-93</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-3</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-92</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-91</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-90</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-89</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-88</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-87</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-86</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-85</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-84</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-83</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-82</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-81</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-80</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-79</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-78</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-77</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-76</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-75</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-74</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-73</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-72</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-71</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-70</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-69</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-68</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-67</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-66</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>97</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-65</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>64</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-64</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-93</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>31</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-63</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-60</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-62</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-2</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-61</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-60</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-59</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-58</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-57</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-56</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-55</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-54</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-53</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-52</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-51</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-50</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-49</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-48</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-47</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-46</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-45</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-44</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-43</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-42</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-41</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-40</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-39</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-38</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-37</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-36</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-35</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>98</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-34</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>65</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-33</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-94</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>32</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-32</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-61</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-31</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-30</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-29</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-28</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-27</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-26</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-25</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-24</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-23</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-22</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-21</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-20</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-19</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-18</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-17</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-16</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-15</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-14</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-13</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-12</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-11</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-10</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-9</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-8</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-7</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-6</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-5</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-4</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>99</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-3</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>66</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-2</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-95</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>33</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-62</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>2</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>3</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>4</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>5</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>6</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>7</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>8</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>9</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>10</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>11</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>12</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>13</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>14</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>15</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>16</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>17</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>18</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>19</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>20</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>21</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>22</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>23</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>24</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>25</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>26</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>27</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>28</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>67</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>29</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-96</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>34</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>30</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-63</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>31</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>32</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>33</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>34</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>35</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>36</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>37</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>38</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>39</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>40</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>41</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>42</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>43</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>44</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>45</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>46</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>47</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>48</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>49</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>50</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>51</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>52</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>53</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>54</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>55</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>56</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>57</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>58</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>59</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>68</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>60</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-97</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>35</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>61</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-64</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>2</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>62</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+            </relativeCoordinates>
+          </range>
+          <cost>1.0</cost>
+        </backend.unit.properties.ActiveAbility>
+      </entry>
+    </gameObjects>
+  </activeAbilities>
+  <triggeredAbilities>
+    <name>Triggered abilities</name>
+    <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Reset Ability Points</string>
+        <backend.util.ModifiableTriggeredEffect>
+          <name>Reset Ability Points</name>
+          <description>This unit regains full ability points at the beginning of each turn.</description>
+          <imgPath>resources/images/ability_points.png</imgPath>
+          <activationTriggers class="set">
+            <backend.util.Event>TURN_START</backend.util.Event>
+          </activationTriggers>
+          <effect resolves-to="serialized-lambda">
+            <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+            <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+            <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+            <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+            <implMethodName>lambda$static$6a5ec18f$1</implMethodName>
+            <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+            <capturedArgs/>
+          </effect>
+          <duration>2147483647</duration>
+          <turnsRemaining>2147483647</turnsRemaining>
+        </backend.util.ModifiableTriggeredEffect>
+      </entry>
+      <entry>
+        <string>Reset Move Points</string>
+        <backend.util.ModifiableTriggeredEffect>
+          <name>Reset Move Points</name>
+          <description>This unit regains full movepoints at the beginning of each turn.</description>
+          <imgPath>resources/images/timbs.png</imgPath>
+          <activationTriggers class="set">
+            <backend.util.Event>TURN_START</backend.util.Event>
+          </activationTriggers>
+          <effect resolves-to="serialized-lambda">
+            <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+            <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+            <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+            <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+            <implMethodName>lambda$static$14969982$1</implMethodName>
+            <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+            <capturedArgs/>
+          </effect>
+          <duration>2147483647</duration>
+          <turnsRemaining>2147483647</turnsRemaining>
+        </backend.util.ModifiableTriggeredEffect>
+      </entry>
+    </gameObjects>
+  </triggeredAbilities>
+  <offensiveModifiers>
+    <name>Offensive Modifiers</name>
+    <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Lawful</string>
+        <backend.unit.properties.InteractionModifier>
+          <name>Lawful</name>
+          <description>Attacks do more damage in daytime, but less damage in nighttime</description>
+          <imgPath>resources/images/sherrif.png</imgPath>
+          <modifier resolves-to="serialized-lambda">
+            <capturingClass>backend.unit.properties.InteractionModifier$Modifier</capturingClass>
+            <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+            <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+            <implClass>backend/unit/properties/InteractionModifier$Modifier</implClass>
+            <implMethodName>lambda$static$361ddfa4$1</implMethodName>
+            <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+            <capturedArgs/>
+          </modifier>
+          <type>offensive</type>
+        </backend.unit.properties.InteractionModifier>
+      </entry>
+    </gameObjects>
+  </offensiveModifiers>
+  <defensiveModifiers>
+    <name>Defensive modifiers</name>
+    <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </defensiveModifiers>
+  <terrainMoveCosts>
+    <entry>
+      <string>Water</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>Hilly Terrain</string>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>Dirt Road</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Empty</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Mountain</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Fortified</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Flat</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Forest</string>
+      <int>1</int>
+    </entry>
+  </terrainMoveCosts>
+  <stats>
+    <name>Unit stats</name>
+    <description>Each unit has its own set of numerical stats, such as hitpoints or movement points.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Ability Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Ability Points</name>
+          <description>Most active abilities use ability points. They limit the number of actions a unit can do each turn.</description>
+          <imgPath>resources/images/ability_points.png</imgPath>
+          <maxValue class="double">1.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">1.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Gold</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Gold</name>
+          <description>Players have a limited amount of gold to spend on their units.</description>
+          <imgPath>resources/images/gold.png</imgPath>
+          <maxValue class="double">2.147483647E9</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">2.147483647E9</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Energy</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Energy</name>
+          <description>Energy points are required for and consumed by some powerful abilities.</description>
+          <imgPath>resources/images/energy.png</imgPath>
+          <maxValue class="double">100.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">100.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Hit Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Hit Points</name>
+          <description>Units lose HP when taking damage. When a unit&apos;s hitpoints reach 0, the unit dies.</description>
+          <imgPath>resources/images/heart.png</imgPath>
+          <maxValue class="double">43.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">43.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Move Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Move Points</name>
+          <description>Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.</description>
+          <imgPath>resources/images/timbs.png</imgPath>
+          <maxValue class="int">5</maxValue>
+          <minValue class="int">0</minValue>
+          <currentValue class="int">2</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+    </gameObjects>
+  </stats>
+  <movePattern>
+    <name></name>
+    <description></description>
+    <imgPath></imgPath>
+    <relativeCoordinates class="set">
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>-1</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>-1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>1</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>0</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>0</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+    </relativeCoordinates>
+  </movePattern>
+  <currentCell class="backend.cell.ModifiableCell">
+    <occupants>
+      <entry>
+        <string>Spearman_02</string>
+        <backend.unit.ModifiableUnit reference="../../../.."/>
+      </entry>
+    </occupants>
+    <maxOccupants>2147483647</maxOccupants>
+    <shape>HEXAGONAL</shape>
+    <terrain class="backend.cell.ModifiableTerrain">
+      <name>Flat</name>
+      <description>Open, flat, land that offers little defensive cover, but allows for easy movement.</description>
+      <imgPath>resources/images/kansas.png</imgPath>
+      <triggeredAbilities>
+        <name>Triggered abilities</name>
+        <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+        <imgPath></imgPath>
+        <gameObjects class="linked-hash-map"/>
+      </triggeredAbilities>
+      <offensiveModifiers>
+        <name>Offensive Modifiers</name>
+        <description>Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain</description>
+        <imgPath></imgPath>
+        <gameObjects class="linked-hash-map"/>
+      </offensiveModifiers>
+      <defensiveModifiers>
+        <name>Defensive Modifiers</name>
+        <description>Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain</description>
+        <imgPath></imgPath>
+        <gameObjects class="linked-hash-map">
+          <entry>
+            <string>Default Flat Terrain Defense</string>
+            <backend.unit.properties.InteractionModifier>
+              <name>Default Flat Terrain Defense</name>
+              <description>Units have 30% evasion on Flat terrain by default.</description>
+              <imgPath>resources/images/kansas.png</imgPath>
+              <modifier resolves-to="serialized-lambda">
+                <capturingClass>backend.unit.properties.InteractionModifier</capturingClass>
+                <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+                <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+                <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+                <implClass>backend/unit/properties/InteractionModifier</implClass>
+                <implMethodName>lambda$static$10421f91$1</implMethodName>
+                <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+                <implMethodKind>6</implMethodKind>
+                <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+                <capturedArgs/>
+              </modifier>
+              <type>defense</type>
+            </backend.unit.properties.InteractionModifier>
+          </entry>
+        </gameObjects>
+      </defensiveModifiers>
+      <defaultMoveCost>1</defaultMoveCost>
+    </terrain>
+    <coordinates>
+      <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+        <c class="list">
+          <int>-1</int>
+          <int>-2</int>
+          <int>3</int>
+        </c>
+        <list reference="../c"/>
+      </coordinates>
+    </coordinates>
+  </currentCell>
+  <isVisible>false</isVisible>
+</backend.unit.ModifiableUnit>

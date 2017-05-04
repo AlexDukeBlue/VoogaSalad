@@ -41,6 +41,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	private final Rectangle healthBar;
 	private final Rectangle remainingHealthBar;
 	private final DropShadow dropShadow;
+	private final ImageView imageView;
+	private String unitImgPath;
 
 	/**
 	 * Creates a new UnitView. Sets all values to default.
@@ -50,7 +52,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
-		ImageView imageView = new ImageView(getImg(getEntity().getImgPath()));
+		imageView = new ImageView(getImg(getEntity().getImgPath()));
 		imageView.setManaged(true);
 		imageView.setPickOnBounds(true);
 		imageView.setPreserveRatio(true);
@@ -88,6 +90,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	@Override
 	public void update() {
 		try {
+
 			dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 			double fractionRemaining = getEntity().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));

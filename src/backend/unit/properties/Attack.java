@@ -39,6 +39,10 @@ public final class Attack implements ActiveAbility.AbilityEffect<Unit>, Serializ
 		return damage;
 	}
 
+	public List<InteractionModifier<Double>> getOffensiveModifiers(){
+		return Collections.unmodifiableList(damageModifiers);
+	}
+
 	@Override
 	public void useAbility(Unit user, Unit target, GameplayState game) {
 		Optional<? extends Attack> retaliationAttack = target.getActiveAbilities().stream()
