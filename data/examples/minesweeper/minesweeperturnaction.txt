@@ -1,0 +1,23 @@
+Collection<backend.cell.Cell> cellsWithUnits = gameState.getGrid().getCells().values().stream().filter(cell -> cell.getOccupants().size() > 0).collect(java.util.stream.Collectors.toList());
+for (backend.cell.Cell cell : cellsWithUnits){
+java.util.ArrayList<backend.unit.Unit> smileys = new java.util.ArrayList<>();
+smileys.addAll(cell.getOccupants().stream().filter(unit -> unit.getName().startsWith("Minecraft Safe Space Unit")).collect(java.util.stream.Collectors.toList()));
+int bombs = 0;
+for (int i = -1; i <= 1; i++){
+for (int j = -1; j <= 1; j++){
+backend.cell.Cell theCell = gameState.getGrid().get(new backend.grid.CoordinateTuple(cell.getLocation().get(0)+i, cell.getLocation().get(1)+j));
+if (!(i == 0 && j == 0) && theCell != null){
+bombs += theCell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain") ? 1 : 0;
+}
+}
+}
+if (smileys.size() != 0 && bombs != 0){
+while (smileys.size() < bombs){
+backend.unit.Unit newSmiley = smileys.get(0).copy();
+smileys.add(newSmiley);
+cell.arrive(newSmiley,gameState);
+newSmiley.setCurrentCell(cell);
+}
+}
+}
+return gameState;
