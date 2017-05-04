@@ -1,0 +1,50 @@
+<backend.cell.ModifiableTerrain>
+  <name>Fort</name>
+  <description>Set the name, image, and description of the new terrain.</description>
+  <imgPath>resources/images/castle.png</imgPath>
+  <triggeredAbilities>
+    <name>Triggered abilities</name>
+    <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Full Heal</string>
+        <backend.util.ModifiableTriggeredEffect>
+          <name>Full Heal</name>
+          <description>Units occupying this cell have their HP fully restored at the run of each turn.</description>
+          <imgPath>resources/images/redCross.png</imgPath>
+          <activationTriggers class="set">
+            <backend.util.Event>TURN_START</backend.util.Event>
+          </activationTriggers>
+          <effect resolves-to="serialized-lambda">
+            <capturingClass>backend.util.ModifiableTriggeredEffect</capturingClass>
+            <functionalInterfaceClass>backend/util/TriggeredEffect$Effect</functionalInterfaceClass>
+            <functionalInterfaceMethodName>affect</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</functionalInterfaceMethodSignature>
+            <implClass>backend/util/ModifiableTriggeredEffect</implClass>
+            <implMethodName>lambda$6</implMethodName>
+            <implMethodSignature>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Lbackend/unit/Unit;Lbackend/util/Event;Lbackend/util/GameplayState;)V</instantiatedMethodType>
+            <capturedArgs/>
+          </effect>
+          <duration>2147483647</duration>
+          <turnsRemaining>2147483647</turnsRemaining>
+        </backend.util.ModifiableTriggeredEffect>
+      </entry>
+    </gameObjects>
+  </triggeredAbilities>
+  <offensiveModifiers>
+    <name>Offensive Modifiers</name>
+    <description>Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </offensiveModifiers>
+  <defensiveModifiers>
+    <name>Defensive Modifiers</name>
+    <description>Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </defensiveModifiers>
+  <defaultMoveCost>1</defaultMoveCost>
+</backend.cell.ModifiableTerrain>
