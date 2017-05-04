@@ -1,19 +1,21 @@
 package frontend.factory.conditionspane;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Stream;
+
 import backend.util.VoogaEntity;
 import controller.Controller;
-import frontend.ClickableUIComponent;
 import frontend.ClickHandler;
+import frontend.ClickableUIComponent;
 import frontend.factory.wizard.WizardFactory;
 import frontend.interfaces.conditionspane.ConditionsPaneExternal;
 import frontend.util.AddRemoveButton;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 /**
  * A ConditionsPane displays the various rules of the game such as requirements
@@ -61,20 +63,20 @@ public class ConditionsPane extends ClickableUIComponent<Region>implements Condi
 	}
 
 	private void initPane() {
-		Stream.of(getPolyglot().get("TurnRequirements").get(), getPolyglot().get("TurnActions").get(),
-				getPolyglot().get("EndConditions").get()).map(this::createPane).forEach(myBox.getChildren()::add);
+		Stream.of(getPolyglot().get("TurnRequirements"), getPolyglot().get("TurnActions"),
+				getPolyglot().get("EndConditions")).map(this::createPane).forEach(myBox.getChildren()::add);
 	}
 
-	private TitledPane createPane(String type) {
+	private TitledPane createPane(StringBinding type) {
 		TitledPane rulesPane = new TitledPane();
-		rulesPane.setText(type);
+		rulesPane.textProperty().bind(type);
 		rulesPane.setCollapsible(true);
-		UpdatableVBox<ConditionBox> content = boxFactory.createConditionVBox(getPolyglot(), type);
+		UpdatableVBox<ConditionBox> content = boxFactory.createConditionVBox(getPolyglot(), type.getValueSafe());
 		content.getVBox().setAlignment(Pos.TOP_RIGHT);
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
 		addRemoveButton.setOnAddClicked(e -> WizardFactory
-				.newWizard(type, getController(), getPolyglot().getLanguage(), getStyleSheet().getValue())
-				.addObserver((o, arg) -> getController().addTemplatesByCategory(type, (VoogaEntity) arg)));
+				.newWizard(type.getValueSafe(), getController(), getPolyglot().getLanguage(), getStyleSheet().getValue())
+				.addObserver((o, arg) -> getController().addTemplatesByCategory(type.getValueSafe(), (VoogaEntity) arg)));
 		subBoxes.add(content);
 		VBox outsideContent = new VBox(content.getVBox(), addRemoveButton.getNode());
 		rulesPane.setContent(outsideContent);
