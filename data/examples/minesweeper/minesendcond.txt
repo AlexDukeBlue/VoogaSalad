@@ -1,0 +1,55 @@
+//bombs
+/*
+gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList())
+*/
+
+//bombsWithUnits
+/*
+gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList())
+.stream().filter(cell -> cell.getOccupants().size() > 0).collect(java.util.stream.Collectors.toList())
+*/
+
+//bombsWithFlags
+/*
+gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList())
+.stream().filter(cell -> cell.getOccupants().size() > 0).collect(java.util.stream.Collectors.toList())
+.stream().filter(bomb -> {
+java.util.ArrayList<backend.unit.Unit> occupants = new java.util.ArrayList<>();
+occupants.addAll(((backend.cell.Cell)bomb).getOccupants());
+return occupants.stream().filter(occupant -> occupant.getName().startsWith("Minesweeper Flag Unit")).collect(java.util.stream.Collectors.toList()).size() > 0;
+}).collect(Collectors.toList())
+*/
+
+//bombsWithSmileys
+/*
+gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList())
+.stream().filter(cell -> cell.getOccupants().size() > 0).collect(java.util.stream.Collectors.toList())
+.stream().filter(bomb -> {
+java.util.ArrayList<backend.unit.Unit> occupants = new java.util.ArrayList<>();
+occupants.addAll(((backend.cell.Cell)bomb).getOccupants());
+return occupants.stream().filter(occupant -> occupant.getName().startsWith("Minesweeper Flag Unit")).collect(java.util.stream.Collectors.toList()).size() > 0;
+}).collect(Collectors.toList())
+*/
+
+if (gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList())
+.stream().filter(cell -> cell.getOccupants().size() > 0).collect(java.util.stream.Collectors.toList())
+.stream().filter(bomb -> {
+java.util.ArrayList<backend.unit.Unit> occupants = new java.util.ArrayList<>();
+occupants.addAll(((backend.cell.Cell)bomb).getOccupants());
+return occupants.stream().filter(occupant -> occupant.getName().startsWith("Minesweeper Flag Unit")).collect(java.util.stream.Collectors.toList()).size() > 0;
+}).collect(Collectors.toList()).size() == gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList()).size())
+{
+return "WIN";
+}
+else if (gameState.getGrid().getCells().values().stream().filter(cell -> cell.getTerrain().getName().startsWith("Minesweeper Invisible Bomb Terrain")).collect(Collectors.toList())
+.stream().filter(cell -> cell.getOccupants().size() > 0).collect(java.util.stream.Collectors.toList())
+.stream().filter(bomb -> {
+java.util.ArrayList<backend.unit.Unit> occupants = new java.util.ArrayList<>();
+occupants.addAll(((backend.cell.Cell)bomb).getOccupants());
+return occupants.stream().filter(occupant -> occupant.getName().startsWith("Minecraft Safe Space Unit")).collect(java.util.stream.Collectors.toList()).size() > 0;
+}).collect(Collectors.toList()).size() > 0){
+return "LOSE";
+}
+else{
+return "NONE";
+}

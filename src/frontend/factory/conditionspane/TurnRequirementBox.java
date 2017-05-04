@@ -2,7 +2,6 @@ package frontend.factory.conditionspane;
 
 import controller.Controller;
 import frontend.ClickHandler;
-import javafx.beans.value.ObservableValue;
 
 /**
  * A ConditionBox that holds a Turn Requirement by name. When the checkbox is
@@ -34,7 +33,7 @@ public class TurnRequirementBox extends ConditionBox {
 	}
 
 	@Override
-	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
+	protected void checkBoxAction(Boolean newValue) {
 		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if (newValue) {
 			getController().activateTurnRequirement(getName());

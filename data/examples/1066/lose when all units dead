@@ -1,0 +1,5 @@
+if (team.getOwnedUnits.stream().allMatch(e -> e.getHitPoints().isEmpty())){
+return "LOSE";
+} else {
+return "NONE";
+}

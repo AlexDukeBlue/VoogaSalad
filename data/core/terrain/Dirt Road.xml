@@ -1,0 +1,46 @@
+<backend.cell.ModifiableTerrain>
+  <name>Dirt Road</name>
+  <description>A well worn path, but still in good condition.</description>
+  <imgPath>resources/images/dirt.jpg</imgPath>
+  <triggeredAbilities>
+    <name>Triggered abilities</name>
+    <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </triggeredAbilities>
+  <offensiveModifiers>
+    <name>Offensive Modifiers</name>
+    <description>Terrains may have offensive modifiers that confer advantages or disadvantages to attacking units occupying the terrain</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </offensiveModifiers>
+  <defensiveModifiers>
+    <name>Defensive Modifiers</name>
+    <description>Terrains may have defensive modifiers that confer advantages or disadvantages to defending units occupying the terrain</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Default Flat Terrain Defense</string>
+        <backend.unit.properties.InteractionModifier>
+          <name>Default Flat Terrain Defense</name>
+          <description>Units have 30% evasion on Flat terrain by default.</description>
+          <imgPath>resources/images/kansas.png</imgPath>
+          <modifier resolves-to="serialized-lambda">
+            <capturingClass>backend.unit.properties.InteractionModifier</capturingClass>
+            <functionalInterfaceClass>backend/unit/properties/InteractionModifier$Modifier</functionalInterfaceClass>
+            <functionalInterfaceMethodName>modify</functionalInterfaceMethodName>
+            <functionalInterfaceMethodSignature>(Ljava/lang/Object;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Object;</functionalInterfaceMethodSignature>
+            <implClass>backend/unit/properties/InteractionModifier</implClass>
+            <implMethodName>lambda$static$10421f91$1</implMethodName>
+            <implMethodSignature>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</implMethodSignature>
+            <implMethodKind>6</implMethodKind>
+            <instantiatedMethodType>(Ljava/lang/Double;Lbackend/unit/Unit;Lbackend/unit/Unit;Lbackend/util/GameplayState;)Ljava/lang/Double;</instantiatedMethodType>
+            <capturedArgs/>
+          </modifier>
+          <type>defense</type>
+        </backend.unit.properties.InteractionModifier>
+      </entry>
+    </gameObjects>
+  </defensiveModifiers>
+  <defaultMoveCost>1</defaultMoveCost>
+</backend.cell.ModifiableTerrain>

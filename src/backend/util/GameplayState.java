@@ -223,7 +223,7 @@ public class GameplayState extends ImmutableVoogaObject implements ReadonlyGamep
 
 	@Override
 	public GameplayState copy() {
-		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), activeObjectives, activeTurnActions.stream().collect(Collectors.toList()), activeTurnRequirements, getDescription(), getImgPath(), random);
+		return new GameplayState(getName(), getGrid(), turnNumber, getTeams().stream().map(Team::copy).collect(Collectors.toList()), activeObjectives, new ArrayList<>(activeTurnActions), activeTurnRequirements, getDescription(), getImgPath(), random);
 	}
 
 	GameplayState addActiveObjectives(Resultant... objectives) {

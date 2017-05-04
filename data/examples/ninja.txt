@@ -3,3 +3,13 @@
  */
 System.out.println("I'm a NINJA");
 return null;
+
+if (target.getDefensiveModifiers().stream().map(InteractionModifier::getName).anyMatch(e -> e.equals("Mounted"))){
+    return originalValue;
+} else {
+    return gameState.random() < .5 ? originalValue : 0;
+}
+
+
+
+return gameState.random() < .2 ? originalValue : 0;

@@ -2,7 +2,6 @@ package frontend.factory.conditionspane;
 
 import controller.Controller;
 import frontend.ClickHandler;
-import javafx.beans.value.ObservableValue;
 
 /**
  * A ConditionBox that holds a. End Condition by name. When the checkbox is
@@ -33,12 +32,17 @@ public class EndConditionBox extends ConditionBox {
 	}
 
 	@Override
-	protected void checkBoxAction(ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) {
+	protected void checkBoxAction(Boolean newValue) {
 		this.actInAuthoringMode(this, null, getClickHandler(), null);
 		if (newValue) {
 			getController().activateEndCondition(getName());
 		} else {
 			getController().deactivateEndCondition(getName());
 		}
+	}
+
+	@Override
+	public void update() {
+		super.update();
 	}
 }

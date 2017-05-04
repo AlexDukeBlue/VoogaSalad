@@ -18,7 +18,7 @@ import java.util.List;
 public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModifier<T>> implements PassiveAbility, Serializable {
 	public static final String DEFENSIVE = "defense";
 	public static final String OFFENSIVE = "offensive";
-	
+
 	public transient static final InteractionModifier<?> DUMMY = new InteractionModifier<>("Dummy", (originalValue, agent, target, game) -> originalValue, "Dummy modifier that doesn't change anything", "resources/images/blackScreen.png", DEFENSIVE),
 			NO_EFFECT = new InteractionModifier<>("No effect", (originalValue, agent, target, game) -> 0.0, "Literally nothing", "resources/images/blackScreen.png", DEFENSIVE);
 	//Offensive modifiers, can go on units or attacks
@@ -102,7 +102,7 @@ public class InteractionModifier<T> extends ImmutableVoogaObject<InteractionModi
 	public interface Modifier<T> extends Serializable {
 		//Defensive Modifiers
 		Modifier<Double> INVULNERABILITY = (incomingDamage, agent, target, game) -> 0.0;
-		Modifier<Double> FORMATION = (incomingDamage, agent, target, game) -> incomingDamage * (target.getNeighboringUnits(game.getGrid()).values().parallelStream().flatMap(Collection::stream).anyMatch(e -> e.getTeam().equals(target.getTeam()) && e.getName().equals(target.getName())) ? .6 : 1);
+		Modifier<Double> FORMATION = (incomingDamage, agent, target, game) -> incomingDamage * (target.getNeighboringUnits(game.getGrid()).values().parallelStream().flatMap(Collection::stream).anyMatch(e -> e.getTeam().equals(target.getTeam()) && e.getName().equals(target.getFormattedName())) ? .6 : 1);
 		Modifier<Double> EVASIVE = (incomingDamage, agent, target, game) -> incomingDamage * game.random() < .5 ? 0 : 1.5;
 		Modifier<Double> STALWART = (incomingDamage, agent, target, game) -> incomingDamage * (target.getMovePoints().isFull() ? .5 : 1);
 		Modifier<Double> HARDENED_SHIELDS = (incomingDamage, agent, target, game) -> incomingDamage > 5 ? 5 : incomingDamage;
