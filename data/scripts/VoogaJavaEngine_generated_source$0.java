@@ -14,6 +14,8 @@ import java.util.regex.*;
  */
 public class VoogaJavaEngine_generated_source$0 {
 	public static Object voogaFunction(backend.player.Team team, backend.util.AuthoringGameState gameState) {
+
+
 		if (team.getOwnedUnits().stream().allMatch(e -> e.getHitPoints().isEmpty())){
 		return "LOSE";
 		} else {
