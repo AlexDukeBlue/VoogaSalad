@@ -1,3 +1,10 @@
+// This entire file is part of my masterpiece.
+// Sam Schwaller
+/*
+ * Although I didn't write this class, I included it to show how and where the loadingScreen is used. 
+ * In this version, it initializes the loading screen when create(), join(), or play() is called, and removes it upon failure (catch block)
+ * One important factor was that the StartupDelegate did not have access to the functions of StartupScreen, which is where the pane LoadingScreen was placed in, so StartupScreen had to be passed as a parameter. 
+ */
 package frontend.startup;
 
 import java.nio.file.Paths;
