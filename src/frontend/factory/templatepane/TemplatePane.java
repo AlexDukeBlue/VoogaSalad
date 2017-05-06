@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//This entire file is part of my masterpiece.
+//Faith Rodriguez
+
 /**
  * @author Faith Rodriguez, Timmy Huang Created 3/29/2017
  *         <p>
@@ -36,6 +39,9 @@ import java.util.stream.Collectors;
  *         <p>
  *         This class is dependent on the DetailPane.java class and the
  *         CellView.java classes to make the clicking and dragging features work
+ *         <p>
+ *         This class is my masterpiece because it shows off many of the skills that I've learned this semester.
+ *         It has been flexible enough to withstand all of the features that have been added and modified to this project.  
  */
 
 class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneExternal {
