@@ -48,7 +48,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	 * Creates a new UnitView. Sets all values to default.
 	 */
 	public UnitView(String unitName, CoordinateTuple unitLocation, ReadOnlyObjectProperty<Bounds> boundsProperty,
-	                Controller controller, ClickHandler clickHandler) {
+			Controller controller, ClickHandler clickHandler) {
 		super(controller, clickHandler);
 		this.unitName = unitName;
 		this.unitLocation = unitLocation;
@@ -91,7 +91,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	public void update() {
 		try {
 
-			dropShadow.setColor(Color.web(getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
+			dropShadow.setColor(Color.web(
+					getEntity().getTeam().isPresent() ? getEntity().getTeam().get().getColorString() : DEFAULT_COLOR));
 			double fractionRemaining = getEntity().getHitPoints().getFractionRemaining();
 			remainingHealthBar.heightProperty().bind(healthBar.heightProperty().multiply(fractionRemaining));
 			if (fractionRemaining < 1 / 3.0) {
@@ -102,9 +103,10 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 				remainingHealthBar.setFill(Color.GREEN);
 			}
 		} catch (NullPointerException ignored) {
-			//this null pointer exception should be ignored because 
-			//it occurs when the unit is removed from the grid when the grid is being updated. 
-			//The issue fixes itself as soon as the update finishes
+			// this null pointer exception should be ignored because
+			// it occurs when the unit is removed from the grid when the grid is
+			// being updated.
+			// The issue fixes itself as soon as the update finishes
 		}
 	}
 
@@ -135,7 +137,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void select(ClickHandler clickHandler) {
-		clickHandler.highlightRange(canMove() ? getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
+		clickHandler.highlightRange(
+				canMove() ? getEntity().getLegalMoves(getController().getGrid()) : Collections.emptyList());
 	}
 
 	@Override
@@ -144,11 +147,15 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	}
 
 	@Override
-	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler, Event event) {
+	public void actInAuthoringMode(ClickableUIComponent target, Object additonalInfo, ClickHandler clickHandler,
+			Event event) {
 		if (isValidMove(target)) {
-			getController().moveUnit(getUnitName(), getUnitLocation(), ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
+			getController().moveUnit(getUnitName(), getUnitLocation(),
+					((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation());
 			if (((GameBoardObjectView) target).getEntity() instanceof HasLocation) {
-				playMedia(getController().getCell(((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation()).getTerrain().getSoundPath());
+				playMedia(getController()
+						.getCell(((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation()).getTerrain()
+						.getSoundPath());
 			}
 		} else if (event instanceof KeyEvent && (((KeyEvent) event).getCode().equals(KeyCode.DELETE)
 				|| ((KeyEvent) event).getCode().equals(KeyCode.BACK_SPACE))) {
@@ -159,7 +166,7 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 
 	@Override
 	public void actInGameplayMode(ClickableUIComponent target, Object additionalInfo, ClickHandler clickHandler,
-	                              Event event) {
+			Event event) {
 		if (isValidMove(target)) {
 			CoordinateTuple targetLocation = ((HasLocation) ((GameBoardObjectView) target).getEntity()).getLocation();
 			if (canMove() && getEntity().getLegalMoves(getController().getGrid()).contains(targetLocation)) {
@@ -180,7 +187,8 @@ class UnitView extends SelectableUIComponent<Pane> implements UnitViewExternal {
 	}
 
 	private boolean canMove() {
-		return !getEntity().getTeam().isPresent() || getController().isMyTeam() && getEntity().getTeam().isPresent() && getEntity().getTeam().get().equals(getController().getActiveTeam());
+		return !getEntity().getTeam().isPresent() || getController().isMyTeam() && getEntity().getTeam().isPresent()
+				&& getEntity().getTeam().get().equals(getController().getActiveTeam());
 	}
 
 	private boolean isValidMove(ClickableUIComponent target) {

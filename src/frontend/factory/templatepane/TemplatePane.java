@@ -63,17 +63,21 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 	@Override
 	public void update() {
 		contents.forEach((key, value) -> {
-			Collection<String> newTemplateNames = getController().getAuthoringGameState().getTemplateByCategory(key).getAll().stream().map(VoogaEntity::getName).collect(Collectors.toSet());
+			Collection<String> newTemplateNames = getController().getAuthoringGameState().getTemplateByCategory(key)
+					.getAll().stream().map(VoogaEntity::getName).collect(Collectors.toSet());
 			if (!newTemplateNames.equals(templateNamesCache.get(key))) {
 				templateNamesCache.put(key, newTemplateNames);
 				value.getChildren().clear();
-				createButtons(getController().getAuthoringGameState().getTemplateByCategory(key).stream().collect(Collectors.toList()), key, value.getChildren());
+				createButtons(getController().getAuthoringGameState().getTemplateByCategory(key).stream()
+						.collect(Collectors.toList()), key, value.getChildren());
 			}
 		});
 	}
 
-	private void createButtons(Collection<? extends VoogaEntity> voogaEntities, String entityType, Collection<Node> parent) {
-		voogaEntities.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, entityType, 70, getController(), getClickHandler())).map(VoogaEntityButton::getNode).forEach(parent::add);
+	private void createButtons(Collection<? extends VoogaEntity> voogaEntities, String entityType,
+			Collection<Node> parent) {
+		voogaEntities.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, entityType, 70,
+				getController(), getClickHandler())).map(VoogaEntityButton::getNode).forEach(parent::add);
 	}
 
 	@Override
@@ -89,14 +93,16 @@ class TemplatePane extends ClickableUIComponent<Region> implements TemplatePaneE
 		contentPane.setAlignment(Pos.CENTER_RIGHT);
 		contentPane.setSpacing(0);
 		createButtons(sprites, label, contentPane.getChildren());
-		sprites.stream()
-				.map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, label, 50, getController(), getClickHandler()))
-				.map(VoogaEntityButton::getNode).forEach(contentPane.getChildren()::add);
+		sprites.stream().map(entity -> VoogaEntityButtonFactory.createVoogaEntityButton(entity, label, 50,
+				getController(), getClickHandler())).map(VoogaEntityButton::getNode)
+				.forEach(contentPane.getChildren()::add);
 		contents.put(label, contentPane);
 		ScrollPane scroller = new ScrollPane();
 		scroller.setContent(contents.get(label));
 		AddRemoveButton addRemoveButton = new AddRemoveButton(getClickHandler());
-		addRemoveButton.setOnAddClicked(e -> WizardFactory.newWizard(label, getController(), getPolyglot().getLanguage(), getStyleSheet().getValue()).addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
+		addRemoveButton.setOnAddClicked(e -> WizardFactory
+				.newWizard(label, getController(), getPolyglot().getLanguage(), getStyleSheet().getValue())
+				.addObserver((o, arg) -> getController().addTemplatesByCategory(label, (VoogaEntity) arg)));
 		VBox box = new VBox(scroller, addRemoveButton.getNode());
 		box.setSpacing(2);
 		box.setPadding(new Insets(2, 2, 2, 2));
