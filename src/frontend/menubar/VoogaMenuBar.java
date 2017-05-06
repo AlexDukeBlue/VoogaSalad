@@ -185,6 +185,13 @@ public class VoogaMenuBar extends BaseUIManager<MenuBar> {
 
 	}
 
+	/**
+	 * @author Faith Rodriguez
+	 * Browser for loading help and about screens from menu bar
+	 * @param url
+	 * A string value that represents the url of the page to be loaded
+	 */
+	
 	private void showBrowser(String url) {
 		try {
 			Desktop.getDesktop().browse(getClass().getClassLoader().getResource(url).toURI());

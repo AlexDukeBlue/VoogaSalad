@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 /**
  * @author Faith Rodriguez
  *         <p>
- *         This class displays details about any sprite that the user selects from the template pane,
- *         as well as lets the user change aspects of a sprite and activate a unit or terrain's
- *         abilities.
+ *         This class displays details about any sprite that the user selects
+ *         from the template pane, as well as lets the user change aspects of a
+ *         sprite and activate a unit or terrain's abilities.
  *         <p>
  *         This class is dependent on TemplatePane and CellView classes for its
  *         ActionEvents to work effectively
@@ -96,7 +96,8 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 	 * Updates the content of the detail pane to information relating to the
 	 * VoogaEntity sprite
 	 *
-	 * @param sprite A sprite that has just been clicked on in the TemplatePane
+	 * @param sprite
+	 *            A sprite that has just been clicked on in the TemplatePane
 	 */
 	public void setContent(VoogaEntity sprite) {
 		currentSprite = sprite;
@@ -172,17 +173,22 @@ class DetailPane extends ClickableUIComponent<Region> implements DetailPaneExter
 
 	private String setUnitContent(Unit unit) {
 		addMoveCosts(unit);
-		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(), content);
+		content = addCollection(getPolyglot().get("DefensiveModifiers").getValueSafe(), unit.getDefensiveModifiers(),
+				content);
 		unit.getUnitStats().forEach(e -> addString(e.getName(), e.getCurrentValue().toString()));
-		addString("Move Pattern", Objects.nonNull(unit.getMovePattern())?unit.getMovePattern().toString():"");
-		if (authorMode) createButton(unit, resources.getString("Unit"));
+		addString("Move Pattern", Objects.nonNull(unit.getMovePattern()) ? unit.getMovePattern().toString() : "");
+		if (authorMode)
+			createButton(unit, resources.getString("Unit"));
 		return content;
 	}
 
 	private String setTerrainContent(Terrain terrain) {
-		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(), ((Integer) terrain.getDefaultMoveCost()).toString());
-		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream().map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
-		if (authorMode) createButton(terrain, "Terrain");
+		addString(getPolyglot().get("DefaultMoveCosts").getValueSafe(),
+				((Integer) terrain.getDefaultMoveCost()).toString());
+		addString(getPolyglot().get("DefenseModifiers").getValueSafe(), "\n" + terrain.getDefensiveModifiers().stream()
+				.map(Object::toString).collect(Collectors.joining("\n")).replaceAll("(?m)^", "\t"));
+		if (authorMode)
+			createButton(terrain, "Terrain");
 		return content;
 	}
 
