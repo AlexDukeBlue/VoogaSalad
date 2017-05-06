@@ -31,7 +31,8 @@ import java.util.stream.Collectors;
 /**
  * @author Faith Rodriguez
  *         <p>
- *         This class allows the user to edit details and characteristics of a unit existing on the board.
+ *         This class allows the user to edit details and characteristics of a
+ *         unit existing on the board.
  *         <p>
  *         This class is dependent on DetailPane to work effectively.
  */
@@ -65,30 +66,34 @@ public class DetailEdit extends BaseUIManager<Node> {
 		sceneView = new GridPane();
 		Label label = addText(getPolyglot().get("MoveCost").getValueSafe());
 		sceneView.addRow(rows++, label);
-		Collection<Terrain> terrains = (Collection<Terrain>) getController().getAuthoringGameState().getTemplateByCategory("terrain").getAll();
+		Collection<Terrain> terrains = (Collection<Terrain>) getController().getAuthoringGameState()
+				.getTemplateByCategory("terrain").getAll();
 		moveCosts = new HashMap<>();
 		for (Terrain t : terrains) {
-			TextField feature = createUserInput(t.getFormattedName(), ((Integer) unit.getMoveCostByTerrain(t)).toString()).get(0);
+			TextField feature = createUserInput(t.getFormattedName(),
+					((Integer) unit.getMoveCostByTerrain(t)).toString()).get(0);
 			moveCosts.put(t, feature);
 		}
 		sceneView.addRow(rows++, new Label(getPolyglot().get("Stats").getValueSafe()));
 		unitStats = new HashMap<>();
 		for (UnitStat stat : unit.getUnitStats()) {
-			unitStats.put(stat.getName(), createUserInput(stat.getName(), stat.getMinValue(), stat.getCurrentValue(), stat.getMaxValue()));
+			unitStats.put(stat.getName(),
+					createUserInput(stat.getName(), stat.getMinValue(), stat.getCurrentValue(), stat.getMaxValue()));
 		}
-		ObservableList<String> options = FXCollections.observableList(getController()
-				.getAuthoringGameState()
-				.getTemplateByCategory("Grid Pattern").getAll().stream()
-				.map(GridPattern.class::cast)
-				.filter(e -> e.getShape().equals(getController().getShape()))
-				.map(VoogaEntity::getName)
-				.collect(Collectors.toList()));
-		if(unit.getMovePattern() != null){
-			movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options, unit.getMovePattern().getName());
+		ObservableList<String> options = FXCollections.observableList(
+				getController().getAuthoringGameState().getTemplateByCategory("Grid Pattern").getAll().stream()
+						.map(GridPattern.class::cast).filter(e -> e.getShape().equals(getController().getShape()))
+						.map(VoogaEntity::getName).collect(Collectors.toList()));
+		if (unit.getMovePattern() != null) {
+			movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options,
+					unit.getMovePattern().getName());
 		} else {
 			movePatternBox = createDropDown(getPolyglot().get("MovePattern").getValueSafe(), options, "");
 		}
-		teamNameBox = createDropDown(getPolyglot().get("Team").getValueSafe(), FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream().map(Team::getName).collect(Collectors.toList())), unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
+		teamNameBox = createDropDown(getPolyglot().get("Team").getValueSafe(),
+				FXCollections.observableList(getController().getReadOnlyGameState().getTeams().stream()
+						.map(Team::getName).collect(Collectors.toList())),
+				unit.getTeam().isPresent() ? unit.getTeam().get().getName() : "");
 		pane.getChildren().add(sceneView);
 		createUnitSubmitBtn();
 	}
@@ -97,7 +102,8 @@ public class DetailEdit extends BaseUIManager<Node> {
 		Label label = addText(feature);
 		List<Node> featureInfo = new ArrayList<>();
 		featureInfo.add(label);
-		List<TextField> featureValues = Arrays.stream(values).map(e -> new TextField(e.toString())).collect(Collectors.toList());
+		List<TextField> featureValues = Arrays.stream(values).map(e -> new TextField(e.toString()))
+				.collect(Collectors.toList());
 		featureInfo.addAll(featureValues);
 		sceneView.addRow(rows++, featureInfo.toArray(new Node[0]));
 		return featureValues;
@@ -129,14 +135,13 @@ public class DetailEdit extends BaseUIManager<Node> {
 			myStage.close();
 
 			Map<String, List<? extends Number>> stats = unitStats.entrySet().stream()
-					.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream()
-							.map(field -> {
-								try {
-									return Integer.parseInt(field.getText());
-								} catch (NumberFormatException nfe) {
-									return Double.parseDouble(field.getText());
-								}
-							}).collect(Collectors.toList())));
+					.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(field -> {
+						try {
+							return Integer.parseInt(field.getText());
+						} catch (NumberFormatException nfe) {
+							return Double.parseDouble(field.getText());
+						}
+					}).collect(Collectors.toList())));
 
 			CoordinateTuple unitLocation = unit.getLocation();
 			String unitName = unit.getName();
@@ -146,14 +151,10 @@ public class DetailEdit extends BaseUIManager<Node> {
 			getController().sendModifier((AuthoringGameState state) -> {
 				ModifiableUnit newUnit = (ModifiableUnit) state.getGrid().get(unitLocation).getOccupantByName(unitName);
 				newUnit.setTerrainMoveCosts(finalCosts);
-				stats.forEach((names, values) -> ((ModifiableUnitStat) newUnit
-						.getUnitStat(names))
-						.setMinValue(values.get(0))
-						.setCurrentValue(values.get(1))
-						.setMaxValue(values.get(2)));
-				newUnit.setMovePattern((GridPattern) state
-						.getTemplateByCategory("Grid Pattern")
-						.getByName(movePatternName));
+				stats.forEach((names, values) -> ((ModifiableUnitStat) newUnit.getUnitStat(names))
+						.setMinValue(values.get(0)).setCurrentValue(values.get(1)).setMaxValue(values.get(2)));
+				newUnit.setMovePattern(
+						(GridPattern) state.getTemplateByCategory("Grid Pattern").getByName(movePatternName));
 				newUnit.setTeam(state.getTeamByName(teamName));
 				return state;
 			});
