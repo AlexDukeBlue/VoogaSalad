@@ -1,3 +1,12 @@
+// This entire file is part of my masterpiece.
+// Sam Schwaller
+/*
+ * This class creates the loading bubbles that appear when a user selects whether they want to create a new game, join an existing game, or load an existing game
+ * I chose this as my masterpiece because, while it might not be the most impressive design-wise, I had never used timelines before and I felt like I solidly understood it after my exploration
+ * One important design decision that I made was to have LoadingScreen extend Group. As we had not decided exactly when the loading screen would display, I felt that a group was the most flexible way to have all of the pieces together, but be able to place them in any pane. 
+ *  It was also important that the text resizes to match the size of the circle, thus the loading .xProperty and .yProperty was bound to the same for the circle it was attached to.
+ *   
+ */
 package frontend.startup;
 
 import javafx.animation.*;
@@ -38,10 +47,9 @@ public class LoadingScreen extends Group {
 		loading.setFont(Font.loadFont("file:resources/styles/PlaylistFF/Playlist Script.otf", 10));
 		loading.setFont(Font.font(javafx.scene.text.Font.getFamilies().get((int) (Math.random() * javafx.scene.text.Font.getFamilies().size()))));
 		double lsWidth = (loading.getLayoutBounds().getMaxX() - loading.getLayoutBounds().getMinX());
+		
 		loading.xProperty().bind(circle.centerXProperty().subtract(lsWidth / 2));
-
 		loading.yProperty().bind(circle.centerYProperty());
-
 
 		return loading;
 	}
@@ -53,7 +61,6 @@ public class LoadingScreen extends Group {
 		circle.setRadius(20);
 
 		this.getChildren().add(circle);
-		circle.setOnMouseDragged(e -> run(circle));
 
 		Text loading = createText(circle);
 		this.getChildren().add(loading);
@@ -65,7 +72,6 @@ public class LoadingScreen extends Group {
 		KeyValue loadingkValueX = new KeyValue(loading.scaleXProperty(), randScale - 1);
 		KeyValue loadingkValueY = new KeyValue(loading.scaleYProperty(), randScale - 1);
 
-
 		KeyValue color = new KeyValue(circle.fillProperty(), Color.color(Math.random(), Math.random(), Math.random()));
 		KeyFrame kFrame = new KeyFrame(Duration.millis(5000 + (Math.random() * 5000)), kValueX, kValueY, color, loadingkValueX, loadingkValueY);
 
@@ -75,38 +81,6 @@ public class LoadingScreen extends Group {
 		linhaT.setAutoReverse(true);
 		linhaT.setCycleCount(Animation.INDEFINITE);
 		linhaT.play();
+		
 	}
-
-	public void drag(Circle circle, double x, double y) {
-		if (circle.contains(new Point2D(x, y))) {
-			circle.setCenterX(x);
-			circle.setCenterY(y);
-		}
-	}
-
-	public void run(Circle circle) {
-		double maxX = circle.getCenterX() + circle.getBoundsInLocal().getWidth() / 2;
-		double minX = circle.getCenterX() - circle.getBoundsInLocal().getWidth() / 2;
-		double maxY = circle.getCenterY() + circle.getBoundsInLocal().getHeight() / 2;
-		double minY = circle.getCenterY() - circle.getBoundsInLocal().getHeight() / 2;
-
-		if (minX > 10 && maxX < minWidth - 10 && minY > 10 && maxY < minHeight - 10) {
-			circle.setOnMouseMoved(e -> drag(circle, e.getX(), e.getY()));
-		}
-
-	}
-
-	private void moveCircleOnMousePress(Scene scene, final Circle circle, final TranslateTransition transition) {
-		scene.setOnMousePressed(event -> {
-			if (!event.isControlDown()) {
-				circle.setCenterX(event.getSceneX());
-				circle.setCenterY(event.getSceneY());
-			} else {
-				transition.setToX(event.getSceneX() - circle.getCenterX());
-				transition.setToY(event.getSceneY() - circle.getCenterY());
-				transition.playFromStart();
-			}
-		});
-	}
-
 }
