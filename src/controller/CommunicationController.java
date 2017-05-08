@@ -511,7 +511,13 @@ public class CommunicationController implements Controller {
 		});
 	}
 
-	
+
+	/**
+	 * This method removes a unit from a location on the grid
+	 * @param unitName is the name of the unit
+	 * @param unitLocation is the location that the unit is to be removed from
+	 * @return none
+	 */
 	@Override
 	public void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation) {
 		sendModifier((AuthoringGameState gameState) -> {
@@ -521,6 +527,15 @@ public class CommunicationController implements Controller {
 
 	}
 
+	/**
+	 * This method handles using an AcitveAbility. It is called from the frontend and accomplishes this by calling the appropriate backend methods.
+	 * @param abilityName is name of the ability
+	 * @param userName is name of unit or template using the ability
+	 * @param userLocation is the ActveAbility user's CoordinateTuple
+	 * @param targetName is name of unit or template being targetted with the ability
+	 * @param targetLocation is location of the target
+	 * @return none
+	 */
 	@Override
 	public void useActiveAbility(String abilityName, String userName, CoordinateTuple userLocation, String targetName, CoordinateTuple targetLocation) {
 		sendModifier((GameplayState gameState) -> {
