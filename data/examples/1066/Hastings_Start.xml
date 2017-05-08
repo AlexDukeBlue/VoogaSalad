@@ -16398,7 +16398,7 @@ import java.util.regex.*;
  */
 public class VoogaJavaEngine_generated_source$0 {
 	public static Object voogaFunction(%s) {
-		if (target.getDefensiveModifiers().stream().map(InteractionModifier::getName).anyMatch(e -&gt; e.equals(&quot;Mounted&quot;))){
+		if (target.getDefensiveModifiers().stream().map(e -> e.getName()).anyMatch(e -&gt; e.equals(&quot;Mounted&quot;))){
 		    return originalValue;
 		} else {
 		    return gameState.random() &lt; .5 ? originalValue : 0;

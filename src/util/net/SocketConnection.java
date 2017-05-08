@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
+ * This entire class is part of my masterpiece. I chose it because it encapsulates and abstracts the network connection, upon which the entire rest of the project resides. This all networked information transfer in the entire project.
+ * <p>
  * This class provides a interface to for hosts to communicate by sending and receiving requests over a socket.
  * <p>
  * It can listen to a socket's input stream and send requests to a socket's output stream.
@@ -53,10 +55,7 @@ public class SocketConnection {
 				Request request = (Request) inputStream.readObject();
 				executor.execute(() -> requestHandler.accept(request));
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ObservableHost.RemoteConnectionException(e);
 		} finally {
 			shutDown();
