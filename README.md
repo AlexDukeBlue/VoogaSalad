@@ -58,6 +58,7 @@ Work on this project began March 24 and ended on April 30 with an estimated tota
     > * User script creator
     > * Chat client
     > * Frontend UI component refactoring
+    > * Debugging
 
 
 **Getting Started**
