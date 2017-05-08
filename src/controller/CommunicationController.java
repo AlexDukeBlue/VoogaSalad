@@ -18,16 +18,13 @@ import backend.util.*;
 import backend.util.Actionable.SerializableBiConsumer;
 import backend.util.Requirement.SerializableBiPredicate;
 import backend.util.io.XMLSerializer;
-import frontend.factory.wizard.Wizard;
 import frontend.factory.wizard.strategies.BaseStrategy;
-import frontend.factory.wizard.strategies.WizardStrategy;
 import frontend.factory.wizard.strategies.wizard_pages.WizardPage;
 import frontend.util.BaseUIManager;
 import frontend.util.ScriptingDialog;
 import frontend.util.UIComponentListener;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import util.AlertFactory;
 import util.io.Serializer;
 import util.net.Modifier;
 import util.net.ObservableClient;
@@ -49,34 +46,40 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * @author Created by Noah Pritt (ncp14) This class is the communication
- *         controller which communicates between the frontend and backend. The
- *         primary purpose of my controller is to hide implementation of backend
- *         structure, specifically how our networking works and how the
- *         GameState is structured. Most of the methods have the following basic
- *         design. They are usually called from the frontend and contain the
- *         paramters of one or more VoogaEntities and then objects needed for
- *         actions, like an ActiveAbility. The corresponding method in the
- *         backend is then called using these parameters. Several methods,
- *         however, are called from the backend and make changes to the
- *         frontend.
- *         
- *         In order to make this communication work, an instance of Controller is passed into almost every 
- *         class in the frontend.
+ * @author Created by Noah Pritt (ncp14)
+ * @version 2.0; see Noah Pritt's analysis for changes from initial Controller
+ *          design.
+ * @since 2017-05-05
  * 
- *         CommunicationController also allows classes in the backend or
- *         frontend communicate with classes also in the backend or frontend,
- *         respectfully. For example, communication often needs to occur between
- *         ScriptingDialog.java, located in frontend.util, and
- *         QuickAbilityPage.java found in
- *         frontend.factory.wizard.strategies.wizard_pages, as values are needed in both classes and
- *         are often changed by one class or the other. As discussed above, both classes contain instances of
- *         the CommunicationController. So, I added these fields to the controller along with getter and setter methods. 
- *         Then, in those classes I simply cast the contained Controller to CommunicationController. I can then
- *         get the values, change them, and add them back to the controller with the appropriate setter.
- *         Although this is not the main purpose of the CommunicationController,
- *         it makes a difficult and complicated action very simple, and thus I
- *         conclude that it is a good design.
+ *        This class is the communication controller which communicates between
+ *        the frontend and backend. The primary purpose of my controller is to
+ *        hide implementation of backend structure, specifically how our
+ *        networking works and how the GameState is structured. Most of the
+ *        methods have the following basic design. They are usually called from
+ *        the frontend and contain the paramters of one or more VoogaEntities
+ *        and then objects needed for actions, like an ActiveAbility. The
+ *        corresponding method in the backend is then called using these
+ *        parameters. Several methods, however, are called from the backend and
+ *        make changes to the frontend.
+ * 
+ *        In order to make this communication work, an instance of Controller is
+ *        passed into almost every class in the frontend.
+ * 
+ *        CommunicationController also allows classes in the backend or frontend
+ *        communicate with classes also in the backend or frontend,
+ *        respectfully. For example, communication often needs to occur between
+ *        ScriptingDialog.java, located in frontend.util, and
+ *        QuickAbilityPage.java found in
+ *        frontend.factory.wizard.strategies.wizard_pages, as values are needed
+ *        in both classes and are often changed by one class or the other. As
+ *        discussed above, both classes contain instances of the
+ *        CommunicationController. So, I added these fields to the controller
+ *        along with getter and setter methods. Then, in those classes I simply
+ *        cast the contained Controller to CommunicationController. I can then
+ *        get the values, change them, and add them back to the controller with
+ *        the appropriate setter. Although this is not the main purpose of the
+ *        CommunicationController, it makes a difficult and complicated action
+ *        very simple, and thus I conclude that it is a good design.
  */
 public class CommunicationController implements Controller {
 
@@ -101,7 +104,7 @@ public class CommunicationController implements Controller {
 	private String quickSoundPath;
 	private ObservableList<WizardPage> pages;
 	private ScriptingDialog dialog;
-	private BaseStrategy strategy;
+	private BaseStrategy<?> strategy;
 	private String quickType;
 
 
@@ -228,6 +231,7 @@ public class CommunicationController implements Controller {
 		return getGameplayState().getPlayerByName(name);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <U extends ReadonlyGameplayState> void sendModifier(Modifier<U> modifier) {
 		try {
@@ -327,7 +331,6 @@ public class CommunicationController implements Controller {
 	@Override
 	public void setPlayer(String name, String description, String imgPath) {
 		this.playerName = name;
-		Team temp = new Team(name + "'s Team", "Temporary team for " + name, Team.COLORS.get((int) (Math.random() * Team.COLORS.size())), imgPath);
 		Player me = new Player(name, description, imgPath);
 		sendModifier((AuthoringGameState state) -> {
 			state.addPlayer(me);
@@ -649,7 +652,7 @@ public class CommunicationController implements Controller {
 		return dialog;
 	};
 
-	public BaseStrategy getStrategy() {
+	public BaseStrategy<?> getStrategy() {
 		return strategy;
 	};
 
@@ -686,7 +689,7 @@ public class CommunicationController implements Controller {
 		this.dialog = dialog;
 	};
 
-	public void setStrategy(BaseStrategy strategy) {
+	public void setStrategy(BaseStrategy<?> strategy) {
 		this.strategy = strategy;
 	};
 
