@@ -19728,7 +19728,7 @@ public class VoogaJavaEngine_generated_source$0 {
             <backend.cell.ModifiableTerrain>
               <name>Black Space</name>
               <description></description>
-              <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+              <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
               <triggeredAbilities>
                 <name>Triggered abilities</name>
                 <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -19779,7 +19779,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -19964,7 +19964,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -20341,7 +20341,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -20382,7 +20382,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -20604,7 +20604,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -20808,7 +20808,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -21329,7 +21329,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -21388,7 +21388,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -21609,7 +21609,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -21805,7 +21805,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -22172,7 +22172,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -22213,7 +22213,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -22272,7 +22272,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -22621,7 +22621,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -22806,7 +22806,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -23020,7 +23020,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -23079,7 +23079,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -23264,7 +23264,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -23641,7 +23641,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -23682,7 +23682,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -23904,7 +23904,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -24108,7 +24108,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -24629,7 +24629,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -24688,7 +24688,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -24909,7 +24909,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -25105,7 +25105,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -25472,7 +25472,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -25513,7 +25513,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -25572,7 +25572,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -25921,7 +25921,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -26106,7 +26106,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
@@ -26320,7 +26320,7 @@ public class VoogaJavaEngine_generated_source$0 {
           <terrain class="backend.cell.ModifiableTerrain">
             <name>Black Space</name>
             <description></description>
-            <imgPath>../../../Desktop/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
+            <imgPath>data/ChessResources/square-black-box-clip-art-at-clker-com-vector-clip-art-online-iy3HF5-clipart.png</imgPath>
             <triggeredAbilities>
               <name>Triggered abilities</name>
               <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
