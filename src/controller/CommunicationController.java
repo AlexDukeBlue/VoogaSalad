@@ -49,7 +49,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * @author Created by ncp14, th174
+ * @author Created by Noah Pritt (ncp14)
  *         This class is the communication controller which communicates between the frontend and backend.
  *         The primary purpose of my controller is to hide implementation of backend structure, specifically how
  *         our networking works and how the GameState is structured.
@@ -68,19 +68,19 @@ public class CommunicationController implements Controller {
 	private Deque<Path> saveHistory;
 	private DieselEngine engine;
 	
-		//These five fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
-		//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages. So basically,
-		//it allows one end of the frontend to communicate with the other end. Although this is not the main
-		//purpose of the CommunicationController, it makes a difficult and complicated action very simple,
-		//and thus I conclude that it is a good design.
-		private String quickName;
-		private String quickDescription;
-		private String quickImagePath;
-		private String quickSoundPath;
-		private ObservableList<WizardPage> pages;
-		private ScriptingDialog dialog;
-		private BaseStrategy strategy;
-		private String quickType;
+	//These five fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
+	//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages. So basically,
+	//it allows one end of the frontend to communicate with the other end. Although this is not the main
+	//purpose of the CommunicationController, it makes a difficult and complicated action very simple,
+	//and thus I conclude that it is a good design.
+	private String quickName;
+	private String quickDescription;
+	private String quickImagePath;
+	private String quickSoundPath;
+	private ObservableList<WizardPage> pages;
+	private ScriptingDialog dialog;
+	private BaseStrategy strategy;
+	private String quickType;
 
 
 
@@ -98,6 +98,11 @@ public class CommunicationController implements Controller {
 		this.engine = new DieselEngine();
 	}
 
+	/**
+	 * The purpose of this method is to hide the how the networking works from the frontend.
+	 * We want the networking to begin when a new game is created in the frontend. A box pops up asking the user to
+	 * enter a port number. Then, this method and startServer are called. 
+	 */
 	public void startClient(String host, int port, Duration timeout) {
 		try {
 			client = new ObservableClient<>(host, port, XML, XML, timeout);
@@ -109,6 +114,10 @@ public class CommunicationController implements Controller {
 		}
 	}
 
+	/**
+	 * The purpose of this method is to hide the how the networking works from the frontend.
+	 * See method startClient()
+	 */
 	@Override
 	public void startServer(ReadonlyGameplayState gameState, int port, Duration timeout) {
 		try {
@@ -468,6 +477,12 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	/**
+	 * This method takes a VoogaEntity and a destination and adds the VoogaEntity to the destination location of the grid
+	 * @param template is a VoogaEntity that should be added to a grid
+	 * @param destination is the location of the grid that template should be added to
+	 * @return none
+	 */
 	@Override
 	public void copyTemplateToGrid(VoogaEntity template, HasLocation destination) {
 		String templateName = template.getFormattedName();
@@ -496,6 +511,7 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	
 	@Override
 	public void removeUnitFromGrid(String unitName, CoordinateTuple unitLocation) {
 		sendModifier((AuthoringGameState gameState) -> {
@@ -514,6 +530,10 @@ public class CommunicationController implements Controller {
 		});
 	}
 
+	/**
+	 * Undo method, which undoes the last action.
+	 * Manipulates the saveHistory Deque, which is a double ended queue of paths, by popping the top and then loading the previous gamestate.
+	 */
 	@Override
 	public void undo() {
 		try {
@@ -524,6 +544,10 @@ public class CommunicationController implements Controller {
 		}
 	}
 
+	/**
+	 * Get grid's shape. Method called in body is from class Cell.
+	 * We implemented shape square and shape hexagon.
+	 */
 	@Override
 	public Shape getShape() {
 		return getGrid().getShape();
@@ -552,28 +576,79 @@ public class CommunicationController implements Controller {
 		//waitForReady.countDown();
 	}
 	
-	//See instance variables section at the top of this class for discussion about purpose of these methods.
-		//getters
-		public String getQuickName(){return quickName;}
-		public String getQuickDescription(){return quickDescription;}
-		public String getQuickImagePath(){return quickImagePath;};
-		public String getQuickSoundPath(){return quickSoundPath;};
-		public ObservableList<WizardPage> getPages(){return pages;};
-		public ScriptingDialog getDialog(){return dialog;};
-		public BaseStrategy getStrategy(){return strategy;};
-		public String getQuickType(){return quickType;};
-	
-		//setters
-		public void setQuickName(String quickName){this.quickName = quickName;}
-		public void setQuickDescription(String quickDescription){this.quickDescription = quickDescription;}
-		public void setQuickImagePath(String quickImagePath){this.quickImagePath = quickImagePath;}
-		public void setQuickSoundPath(String quickSoundPath){this.quickSoundPath = quickSoundPath;}
-		public void setPages(ObservableList<WizardPage> pages){this.pages = pages;}
-		public void setDialog(ScriptingDialog dialog){this.dialog = dialog;};
-		public void setStrategy(BaseStrategy strategy){this.strategy = strategy;};
-		public void setQuickType(String quickType){this.quickType = quickType;};
+	/**
+	 * This getter method, along with the ones that follow, are for accessing variables that are needed and edited 
+	 * by two different areas of the frontend or backend. Because the run's instance of CommunicationController is available
+	 * pretty much everywhere in the code, this is an easy to use and powerful design to share these values.
+	 */
+	public String getQuickName() {
+		return quickName;
+	}
 
-		
+	public String getQuickDescription() {
+		return quickDescription;
+	}
+
+	public String getQuickImagePath() {
+		return quickImagePath;
+	};
+
+	public String getQuickSoundPath() {
+		return quickSoundPath;
+	};
+
+	public ObservableList<WizardPage> getPages() {
+		return pages;
+	};
+
+	public ScriptingDialog getDialog() {
+		return dialog;
+	};
+
+	public BaseStrategy getStrategy() {
+		return strategy;
+	};
+
+	public String getQuickType() {
+		return quickType;
+	};
+
+	/**
+	 * This setter method, along with the ones that follow, are for accessing variables that are needed and edited 
+	 * by two different areas of the frontend or backend. Because the run's instance of CommunicationController is available
+	 * pretty much everywhere in the code, this is an easy to use and powerful design to share these values.
+	 */
+	public void setQuickName(String quickName) {
+		this.quickName = quickName;
+	}
+
+	public void setQuickDescription(String quickDescription) {
+		this.quickDescription = quickDescription;
+	}
+
+	public void setQuickImagePath(String quickImagePath) {
+		this.quickImagePath = quickImagePath;
+	}
+
+	public void setQuickSoundPath(String quickSoundPath) {
+		this.quickSoundPath = quickSoundPath;
+	}
+
+	public void setPages(ObservableList<WizardPage> pages) {
+		this.pages = pages;
+	}
+
+	public void setDialog(ScriptingDialog dialog) {
+		this.dialog = dialog;
+	};
+
+	public void setStrategy(BaseStrategy strategy) {
+		this.strategy = strategy;
+	};
+
+	public void setQuickType(String quickType) {
+		this.quickType = quickType;
+	};
 		
 
 }
