@@ -49,10 +49,34 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * @author Created by Noah Pritt (ncp14)
- *         This class is the communication controller which communicates between the frontend and backend.
- *         The primary purpose of my controller is to hide implementation of backend structure, specifically how
- *         our networking works and how the GameState is structured.
+ * @author Created by Noah Pritt (ncp14) This class is the communication
+ *         controller which communicates between the frontend and backend. The
+ *         primary purpose of my controller is to hide implementation of backend
+ *         structure, specifically how our networking works and how the
+ *         GameState is structured. Most of the methods have the following basic
+ *         design. They are usually called from the frontend and contain the
+ *         paramters of one or more VoogaEntities and then objects needed for
+ *         actions, like an ActiveAbility. The corresponding method in the
+ *         backend is then called using these parameters. Several methods,
+ *         however, are called from the backend and make changes to the
+ *         frontend.
+ *         
+ *         In order to make this communication work, an instance of Controller is passed into almost every 
+ *         class in the frontend.
+ * 
+ *         CommunicationController also allows classes in the backend or
+ *         frontend communicate with classes also in the backend or frontend,
+ *         respectfully. For example, communication often needs to occur between
+ *         ScriptingDialog.java, located in frontend.util, and
+ *         QuickAbilityPage.java found in
+ *         frontend.factory.wizard.strategies.wizard_pages, as values are needed in both classes and
+ *         are often changed by one class or the other. As discussed above, both classes contain instances of
+ *         the CommunicationController. So, I added these fields to the controller along with getter and setter methods. 
+ *         Then, in those classes I simply cast the contained Controller to CommunicationController. I can then
+ *         get the values, change them, and add them back to the controller with the appropriate setter.
+ *         Although this is not the main purpose of the CommunicationController,
+ *         it makes a difficult and complicated action very simple, and thus I
+ *         conclude that it is a good design.
  */
 public class CommunicationController implements Controller {
 
@@ -69,9 +93,7 @@ public class CommunicationController implements Controller {
 	private DieselEngine engine;
 	
 	//These five fields are used to communicate between ScriptingDialog.java, located in frontend.util, and 
-	//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages. So basically,
-	//it allows one end of the frontend to communicate with the other end. Although this is not the main
-	//purpose of the CommunicationController, it makes a difficult and complicated action very simple,
+	//QuickAbilityPage.java found in frontend.factory.wizard.strategies.wizard_pages.ult and complicated action very simple,
 	//and thus I conclude that it is a good design.
 	private String quickName;
 	private String quickDescription;
@@ -455,6 +477,13 @@ public class CommunicationController implements Controller {
 		sendModifier(GameplayState::endTurn);
 	}
 
+	/**
+	 * This method handles moving a unit. It is called from the frontend and accomplishes this by calling the appropriate backend methods.
+	 * @param unitName is name of the unit
+	 * @param unitLocation is current location of unit
+	 * @param targetLocation is location it is to be moved to
+	 * @return none
+	 */
 	@Override
 	public void moveUnit(String unitName, CoordinateTuple unitLocation, CoordinateTuple targetLocation) {
 		sendModifier((GameplayState state) -> {
