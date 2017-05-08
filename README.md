@@ -40,23 +40,23 @@ Work on this project began March 24 and ended on April 30 with an estimated tota
 * Noah Pritt (ncp14) Implemented the controller to communicate between the frontend and the backend. The classes that he created to achieve this are in the controller package, with most functionality found under CommuniationController.java. Helped Timmy implement the GameState classes (AuthoringGameState.java, GameplayState.java, ReadonlyGameplayState.java) which store the information of the current game in both the authoring and play states. Also implemented a QuickAdd feature to allow many types of ActiveAbilities to be created without scripting; to accomplish this, had teamates come up with numerous game ideas and then selected the most common recurring ActiveAbility types. Implemented a number of frontend features, including loading script files and handling the server frontend wizards. Implemented really awesome animated buttons (no, really, they're great).  
 * Timmy Huang (th174)
 
-> * Overall game design
-> * Backend grid, terrain, cell, unit, abilities, player, and team design and implementation
-> * TCPIP Socket networking design, and implementation
-> * JSR_223 Scripting design and implementation
->   * Also added Java Scripting design and implementation
-> * Networked Model View Controller design
-> * Multithreaded concurrency expert
-> * Code Maintainence and support
-> * Controller design and refactoring
-> * Visual game board UI
-> * Minimap 
-> * Visual UnitView and CellView UI components
-> * AbilityPane UI 
-> * Universal UI component interaction event handler framework 
-> * Player-Team-Turn UI component
-> * User script creator
-> * Chat client
+    > * Overall game design
+    > * Backend grid, terrain, cell, unit, abilities, player, and team design and implementation
+    > * TCPIP Socket networking design, and implementation
+    > * JSR_223 Scripting design and implementation
+    >   * Also added Java Scripting design and implementation
+    > * Networked Model View Controller design
+    > * Multithreaded concurrency expert
+    > * Code Maintainence and support
+    > * Controller design and refactoring
+    > * Visual game board UI
+    > * Minimap 
+    > * Visual UnitView and CellView UI components
+    > * AbilityPane UI 
+    > * Universal UI component interaction event handler framework 
+    > * Player-Team-Turn UI component
+    > * User script creator
+    > * Chat client
 
 
 **Getting Started**
