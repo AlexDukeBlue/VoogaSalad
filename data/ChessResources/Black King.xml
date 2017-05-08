@@ -1,0 +1,295 @@
+<backend.unit.ModifiableUnit>
+  <name>Black King</name>
+  <description></description>
+  <imgPath>img/ChessUnits/black_king.png</imgPath>
+  <activeAbilities>
+    <name>Active Abilities</name>
+    <description>Each unit has a set of active abilities which the user can use on the users&apos; own turn.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>King Consume</string>
+        <backend.unit.properties.ActiveAbility>
+          <name>King Consume</name>
+          <description>Set the name, image, and description for the active ability.</description>
+          <imgPath></imgPath>
+          <effect class="backend.unit.properties.Attack">
+            <damage>1.0</damage>
+            <numHits>1</numHits>
+            <damageModifiers/>
+          </effect>
+          <range>
+            <name></name>
+            <description></description>
+            <imgPath></imgPath>
+            <relativeCoordinates class="set">
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>0</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>0</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>-1</int>
+                    <int>1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+              <backend.grid.CoordinateTuple>
+                <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+                  <c class="list">
+                    <int>1</int>
+                    <int>-1</int>
+                  </c>
+                  <list reference="../c"/>
+                </coordinates>
+              </backend.grid.CoordinateTuple>
+            </relativeCoordinates>
+          </range>
+          <cost>1.0</cost>
+        </backend.unit.properties.ActiveAbility>
+      </entry>
+    </gameObjects>
+  </activeAbilities>
+  <triggeredAbilities>
+    <name>Triggered abilities</name>
+    <description>Each unit has passive abilities that automatically trigger in response to certain events in the game. Note that not all triggered abilities are positive.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </triggeredAbilities>
+  <offensiveModifiers>
+    <name>Offensive Modifiers</name>
+    <description>Each unit has a set of offensive modifiers that can change the amount of damage the unit deals under different conditions.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </offensiveModifiers>
+  <defensiveModifiers>
+    <name>Defensive modifiers</name>
+    <description>Each unit has a set of defensive modifiers that can change the amount of damage the unit receives under different conditions.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map"/>
+  </defensiveModifiers>
+  <terrainMoveCosts>
+    <entry>
+      <string>Water</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Empty</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Mountain</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Black Square</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Flat</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Fortified</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>Forest</string>
+      <int>1</int>
+    </entry>
+  </terrainMoveCosts>
+  <stats>
+    <name>Unit stats</name>
+    <description>Each unit has its own set of numerical stats, such as hitpoints or movement points.</description>
+    <imgPath></imgPath>
+    <gameObjects class="linked-hash-map">
+      <entry>
+        <string>Ability Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Ability Points</name>
+          <description>Most active abilities use ability points. They limit the number of actions a unit can do each turn.</description>
+          <imgPath>resources/images/ability_points.png</imgPath>
+          <maxValue class="double">1.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">1.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Gold</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Gold</name>
+          <description>Players have a limited amount of gold to spend on their units.</description>
+          <imgPath>resources/images/gold.png</imgPath>
+          <maxValue class="double">2.147483647E9</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">2.147483647E9</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Energy</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Energy</name>
+          <description>Energy points are required for and consumed by some powerful abilities.</description>
+          <imgPath>resources/images/energy.png</imgPath>
+          <maxValue class="double">100.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">100.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Hit Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Hit Points</name>
+          <description>Units lose HP when taking damage. When a unit&apos;s hitpoints reach 0, the unit dies.</description>
+          <imgPath>resources/images/heart.png</imgPath>
+          <maxValue class="double">34.0</maxValue>
+          <minValue class="double">0.0</minValue>
+          <currentValue class="double">34.0</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+      <entry>
+        <string>Move Points</string>
+        <backend.unit.properties.ModifiableUnitStat>
+          <name>Move Points</name>
+          <description>Movepoints are consumed by moving on the map. Difficult terrain costs more movepoints, while more mobile units have more to spare.</description>
+          <imgPath>resources/images/timbs.png</imgPath>
+          <maxValue class="int">6</maxValue>
+          <minValue class="int">0</minValue>
+          <currentValue class="int">6</currentValue>
+        </backend.unit.properties.ModifiableUnitStat>
+      </entry>
+    </gameObjects>
+  </stats>
+  <movePattern>
+    <name></name>
+    <description></description>
+    <imgPath></imgPath>
+    <relativeCoordinates class="set">
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>0</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>0</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>-1</int>
+            <int>1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+      <backend.grid.CoordinateTuple>
+        <coordinates class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+          <c class="list">
+            <int>1</int>
+            <int>-1</int>
+          </c>
+          <list reference="../c"/>
+        </coordinates>
+      </backend.grid.CoordinateTuple>
+    </relativeCoordinates>
+  </movePattern>
+  <isVisible>false</isVisible>
+</backend.unit.ModifiableUnit>
