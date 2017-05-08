@@ -37,6 +37,29 @@ Work on this project began March 24 and ended on April 30 with an estimated tota
 * Dylan Peters (dlp22) Designed the Wizard hierarchy in order to allow as much flexibility in the creation of new VoogaEntities as possible. Coded almost all of the wizard classes. Implemented the support for Polyglot and language changing. Refactored the front end to use the factory design pattern in order to improve encapsulation. Created the BaseUIManager class that every front end class extends in order to allow flexibility for the front end classes while creating a uniform inheretance hierarchy that provides built-in behavior for every front end class. Refactored startup package to use a delegate design pattern so that the startup screen does not have to implement the actual code that is required to start, load, or join games, but rather delegates to a dedicated class to handle that. Designed the WorldView class structure (the differentiation of WorldView, GridView, CellView, UnitView, and the LayoutManagers that the GridView uses so that it doesn't have to differentiate between hexagonal and square grids. Wrote back end tests.
 * Stone Mathers (smm117) Worked with Dylan in the overarching design of the frontend. Specifically implemented the StartupScreen, StartupSelectionScreen, View, VoogaMenuBar, Hexagon, GridLayoutDelegate and HexagonalLayoutDelegate classes, along with the entire frontend.conditionspane package. Also implemented communication between the frontend and Controller, as well as some communication between the Controller and backend. This included some implementation in the Controller, GameEngine, Resultant, Actionable, and Requirement classes. Served alongside Dylan as primary delegators of frontend responsibilities and helped communicate backend functionality to fronted when necessary. Contributed to overall debugging and UX design decisions. 
 * Alex Zapata (az73) Worked with Timmy on the complete back-end of the project. Helped decide on the design implementation of all of the back-end classes (except the ScriptEngine and the Networking). Completely implemented the DieselEngine implementation of the GameEngine class to rule-check and act as a managing agent for TurnRequirments, TurnActions, and EndConditions. Wrote the implementations of the Actionable, Requirement, and Resultant wrapping classes for the named use of specific Predicates, Consumers, and ResultQuadPredicates (which I also wrote). Rules, turn reuirements, and beginning of turn actions are completely implemented on the back-end, but have had trouble being implemented on the front-end for front-end people. Helped come up with the AuthoringGameState and GameplayState interfaces, and implemented/refactored the GameplayState throughout. Came up with the idea for a factory design pattern on the front-end explained to teammates with the ComponentFactory class. Came up with Observer/Observable idea for front-end clicks, explained to teammates with ObserverViewTrial class. Refactored and debugged front-end code, including code for grid-pattern display and creation. 
+* Noah Pritt (ncp14) Implemented the controller to communicate between the frontend and the backend. The classes that he created to achieve this are in the controller package, with most functionality found under CommuniationController.java. Helped Timmy implement the GameState classes (AuthoringGameState.java, GameplayState.java, ReadonlyGameplayState.java) which store the information of the current game in both the authoring and play states. Also implemented a QuickAdd feature to allow many types of ActiveAbilities to be created without scripting; to accomplish this, had teamates come up with numerous game ideas and then selected the most common recurring ActiveAbility types. Implemented a number of frontend features, including loading script files and handling the server frontend wizards. Implemented really awesome animated buttons (no, really, they're great).  
+* Timmy Huang (th174)
+
+    > * Overall game design
+    > * Backend grid, terrain, cell, unit, abilities, player, and team design and implementation
+    > * TCPIP Socket networking design, and implementation
+    > * JSR_223 Scripting design and implementation
+    >   * Also added Java Scripting design and implementation
+    > * Networked Model View Controller design
+    > * Multithreaded concurrency expert
+    > * Code Maintainence and support
+    > * Controller design and refactoring
+    > * Visual game board UI
+    > * Minimap 
+    > * Visual UnitView and CellView UI components
+    > * AbilityPane UI 
+    > * Universal UI component interaction event handler framework 
+    > * Player-Team-Turn UI component
+    > * User script creator
+    > * Chat client
+    > * Frontend UI component refactoring
+    > * Debugging
+
 
 **Getting Started**
 
