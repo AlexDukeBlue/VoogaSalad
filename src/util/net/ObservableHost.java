@@ -17,15 +17,19 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
+ * This entire class is part of my masterpiece. I chose it because it models a networked host, upon which the entire rest of the project resides. It would not be a stretch to say the entire project is built upon this small class. All meaningful user input is sent though this class, and all meaningful program response arrives through this class. This class provides the framework by which the user can interact with a shared networked state, and see that interaction replicated identically among all networked clients.
+ * <p>
  * This class provides a basic implementation of a host process that connects to and communicates with a remote host.
  * <p>
  * It modifies a state of type T, and notifies listeners of changes to the state.
  * <p>
  * The shared network state should model the distributed networked state of your program, and contain information that needs to be replicated on each of the clients.
+ * <p>
+ * Note, this class is Runnable, and must be run on its own thread, either with an Executor or calling Thread::start
  *
  * @param <T> The type of variable used to represent network shared state.
  * @author Created by th174 on 4/1/2017.
- * @see Request,Modifier,ObservableServer,ObservableServer.ServerDelegate,ObservableClient,ObservableHost
+ * @see Request,Modifier,ObservableServer,ObservableServer.ServerDelegate,ObservableClient,ObservableHost,java.lang.Runnable
  */
 public abstract class ObservableHost<T> implements Runnable {
 	public static final Duration NEVER_TIMEOUT = Duration.ZERO;
@@ -83,10 +87,19 @@ public abstract class ObservableHost<T> implements Runnable {
 		return commitIndex;
 	}
 
+	/**
+	 * Changes the commit index. The commit index is used on all sent requests, and is also used to validate with the commit index of all received requests.
+	 *
+	 * @param value new commit index.
+	 */
 	protected final void setCommitIndex(int value) {
 		commitIndex = value;
 	}
 
+	/**
+	 * Increments the commit index. The commit index is used on all sent requests, and is also used to validate with the commit index of all received requests.
+	 * The commit index is incremented once for each new change introduced to the system.
+	 */
 	protected final void incrementCommitIndex() {
 		commitIndex++;
 	}
@@ -102,17 +115,22 @@ public abstract class ObservableHost<T> implements Runnable {
 	 *
 	 * @param request Incoming request received from remote host
 	 * @return Returns true if the incoming request was valid
+	 * @throws InvalidRequestException Thrown if an exception arises in handling a request.
 	 */
-	protected boolean handleRequest(Request request) {
-		if (requestValidators.getOrDefault(request.getClass(), r -> true).test(request)) {
-			Consumer<? super Request> handler = requestHandlers.get(request.getClass());
-			if (Objects.nonNull(handler)) {
-				setCommitIndex(request.getCommitIndex());
-				handler.accept(request);
-				return true;
+	protected boolean handleRequest(Request request) throws InvalidRequestException {
+		try {
+			if (requestValidators.getOrDefault(request.getClass(), r -> true).test(request)) {
+				Consumer<? super Request> handler = requestHandlers.get(request.getClass());
+				if (Objects.nonNull(handler)) {
+					setCommitIndex(request.getCommitIndex());
+					handler.accept(request);
+					return true;
+				}
 			}
+			handleError(request);
+		} catch (Exception e) {
+			throw new InvalidRequestException(getClass().getSimpleName() + ":\t" + request.toString());
 		}
-		handleError(request);
 		return false;
 	}
 
@@ -252,6 +270,9 @@ public abstract class ObservableHost<T> implements Runnable {
 		stateUpdateListeners.remove(stateUpdateListener);
 	}
 
+	/**
+	 * Notifies all observers of a likely state change.
+	 */
 	private void fireStateUpdatedEvent() {
 		if (Objects.nonNull(state)) {
 			stateUpdateListeners.forEach(e -> e.accept(getState()));
@@ -285,7 +306,7 @@ public abstract class ObservableHost<T> implements Runnable {
 	}
 
 	/**
-	 * Wraps exceptions thrown from in socket I/O
+	 * Wraps exceptions thrown in socket I/O
 	 */
 	public static class RemoteConnectionException extends RuntimeException {
 		protected RemoteConnectionException(Exception e) {
